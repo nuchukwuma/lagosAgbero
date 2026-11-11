@@ -1,0 +1,37 @@
+{
+  "name": "area-boy",
+  "version": "0.0.1",
+  "description": "Area Boy: a story-driven 3D agbero game",
+  "scripts": {
+    "dev": "vite --host",
+    "build": "vite build",
+    "preview": "vite preview --host",
+    "assets:import": "node scripts/import-assets.mjs",
+    "assets:check": "node scripts/check-assets.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nuchukwuma/lagosAgbero.git"
+  },
+  "author": "",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/nuchukwuma/lagosAgbero/issues"
+  },
+  "homepage": "https://github.com/nuchukwuma/lagosAgbero#readme",
+  "dependencies": {
+    "@react-three/drei": "^9.114.0",
+    "@react-three/fiber": "^8.17.10",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "three": "^0.169.0",
+    "zustand": "^4.5.5"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.3",
+    "fflate": "^0.8.2",
+    "vite": "^5.4.10"
+  },
+  "private": true,
+  "type": "module"
+}
