@@ -1,0 +1,323 @@
+{
+ "clips": {
+  "walk": {
+   "file": "characters/clips/walk.json",
+   "source": "Start Walking.fbx",
+   "duration": 1.333,
+   "loop": true,
+   "rootMotion": {
+    "metres": 1.25,
+    "speed": 0.93
+   },
+   "use": "Normal walk (loop cut from Start Walking)"
+  },
+  "drunkWalk": {
+   "file": "characters/clips/drunkWalk.json",
+   "source": "Drunk Walk.fbx",
+   "duration": 3,
+   "loop": true,
+   "rootMotion": {
+    "metres": 2.51,
+    "speed": 0.84
+   },
+   "use": "Low-energy stagger, red-eye side effects"
+  },
+  "run": {
+   "file": "characters/clips/run.json",
+   "source": "Running.fbx",
+   "duration": 0.625,
+   "loop": true,
+   "rootMotion": {
+    "metres": 3.57,
+    "speed": 5.72
+   },
+   "use": "Run (street, chases)"
+  },
+  "goofyRun": {
+   "file": "characters/clips/goofyRun.json",
+   "source": "Goofy Running.fbx",
+   "duration": 0.625,
+   "loop": true,
+   "rootMotion": {
+    "metres": 1.08,
+    "speed": 1.73
+   },
+   "use": "Comic panic run (fleeing defaulters, runner mode)"
+  },
+  "sneak": {
+   "file": "characters/clips/sneak.json",
+   "source": "Crouch Walk Forward.fbx",
+   "duration": 1.125,
+   "loop": true,
+   "rootMotion": {
+    "metres": 1.93,
+    "speed": 1.71
+   },
+   "use": "Sneaking during raids"
+  },
+  "crouchWalk": {
+   "file": "characters/clips/crouchWalk.json",
+   "source": "Crouched Walking.fbx",
+   "duration": 1.042,
+   "loop": true,
+   "rootMotion": {
+    "metres": 1.42,
+    "speed": 1.37
+   },
+   "use": "Alternative sneak"
+  },
+  "crouchDown": {
+   "file": "characters/clips/crouchDown.json",
+   "source": "Crouching.fbx",
+   "duration": 4.083,
+   "loop": false,
+   "rootMotion": {
+    "metres": 0.08,
+    "speed": 0.02
+   },
+   "use": "Duck down to hide"
+  },
+  "crouchIdle": {
+   "file": "characters/clips/crouchIdle.json",
+   "source": "Crouching Idle.fbx",
+   "duration": 2.5,
+   "loop": true,
+   "rootMotion": {
+    "metres": 0,
+    "speed": 0
+   },
+   "use": "Hiding behind a dumpster"
+  },
+  "slide": {
+   "file": "characters/clips/slide.json",
+   "source": "Running Slide.fbx",
+   "duration": 1.542,
+   "loop": false,
+   "rootMotion": {
+    "metres": 6.48,
+    "speed": 4.2
+   },
+   "use": "Runner-mode slide under obstacles"
+  },
+  "talk": {
+   "file": "characters/clips/talk.json",
+   "source": "Talking.fbx",
+   "duration": 3.917,
+   "loop": true,
+   "rootMotion": {
+    "metres": 0,
+    "speed": 0
+   },
+   "use": "Dialogue: speaker gesture"
+  },
+  "argue": {
+   "file": "characters/clips/argue.json",
+   "source": "Standing Arguing.fbx",
+   "duration": 6.333,
+   "loop": true,
+   "rootMotion": {
+    "metres": 0.07,
+    "speed": 0.01
+   },
+   "use": "Dialogue: angry driver, haggling"
+  },
+  "bumped": {
+   "file": "characters/clips/bumped.json",
+   "source": "Walking Hit Reaction.fbx",
+   "duration": 1.375,
+   "loop": false,
+   "rootMotion": {
+    "metres": 1.28,
+    "speed": 0.93
+   },
+   "use": "Bumped on the street"
+  },
+  "turnLeft": {
+   "file": "characters/clips/turnLeft.json",
+   "source": "Walking Left Turn.fbx",
+   "duration": 1.208,
+   "loop": false,
+   "rootMotion": {
+    "metres": 1.62,
+    "speed": 1.34
+   },
+   "use": "Spare: walking turn"
+  },
+  "fightIdle": {
+   "file": "characters/clips/fightIdle.json",
+   "source": "Boxing.fbx",
+   "duration": 1.75,
+   "loop": true,
+   "rootMotion": {
+    "metres": 0,
+    "speed": 0
+   },
+   "use": "Fight stance"
+  },
+  "punch": {
+   "file": "characters/clips/punch.json",
+   "source": "Punching.fbx",
+   "duration": 1.25,
+   "loop": false,
+   "rootMotion": {
+    "metres": 0,
+    "speed": 0
+   },
+   "use": "Fight: punch"
+  },
+  "jabCombo": {
+   "file": "characters/clips/jabCombo.json",
+   "source": "Jab To Elbow Punch.fbx",
+   "duration": 3.25,
+   "loop": false,
+   "rootMotion": {
+    "metres": 0,
+    "speed": 0
+   },
+   "use": "Fight: jab + elbow combo"
+  },
+  "uppercut": {
+   "file": "characters/clips/uppercut.json",
+   "source": "Uppercut Jab.fbx",
+   "duration": 3.583,
+   "loop": false,
+   "rootMotion": {
+    "metres": 0,
+    "speed": 0
+   },
+   "use": "Fight: uppercut"
+  },
+  "kick": {
+   "file": "characters/clips/kick.json",
+   "source": "Side Kick.fbx",
+   "duration": 2,
+   "loop": false,
+   "rootMotion": {
+    "metres": 0,
+    "speed": 0
+   },
+   "use": "Fight: kick"
+  },
+  "roundhouse": {
+   "file": "characters/clips/roundhouse.json",
+   "source": "Roundhouse Kick.fbx",
+   "duration": 2.5,
+   "loop": false,
+   "rootMotion": {
+    "metres": 0,
+    "speed": 0
+   },
+   "use": "Fight: special move (\"Lagos Roundabout\")"
+  },
+  "block": {
+   "file": "characters/clips/block.json",
+   "source": "Blocking.fbx",
+   "duration": 1.208,
+   "loop": false,
+   "rootMotion": {
+    "metres": 0,
+    "speed": 0
+   },
+   "use": "Fight: block"
+  },
+  "blockInward": {
+   "file": "characters/clips/blockInward.json",
+   "source": "Inward Block.fbx",
+   "duration": 1.458,
+   "loop": false,
+   "rootMotion": {
+    "metres": 0,
+    "speed": 0
+   },
+   "use": "Fight: block variation"
+  },
+  "blockOutward": {
+   "file": "characters/clips/blockOutward.json",
+   "source": "Outward Block.fbx",
+   "duration": 2.542,
+   "loop": false,
+   "rootMotion": {
+    "metres": 0,
+    "speed": 0
+   },
+   "use": "Fight: parry / dodge"
+  },
+  "bodyBlock": {
+   "file": "characters/clips/bodyBlock.json",
+   "source": "Body Block.fbx",
+   "duration": 3.417,
+   "loop": false,
+   "rootMotion": {
+    "metres": 0,
+    "speed": 0
+   },
+   "use": "Fight: body block"
+  },
+  "hit": {
+   "file": "characters/clips/hit.json",
+   "source": "Hit Reaction.fbx",
+   "duration": 2.75,
+   "loop": false,
+   "rootMotion": {
+    "metres": 0,
+    "speed": 0
+   },
+   "use": "Fight: got hit"
+  },
+  "takePunch": {
+   "file": "characters/clips/takePunch.json",
+   "source": "Taking Punch.fbx",
+   "duration": 5.667,
+   "loop": false,
+   "rootMotion": {
+    "metres": 0,
+    "speed": 0
+   },
+   "use": "Fight: taking a beating (cutscenes)"
+  },
+  "stunned": {
+   "file": "characters/clips/stunned.json",
+   "source": "Stunned.fbx",
+   "duration": 2.125,
+   "loop": false,
+   "rootMotion": {
+    "metres": 1.04,
+    "speed": 0.49
+   },
+   "use": "Fight: dizzy / stunned"
+  },
+  "knockedOut": {
+   "file": "characters/clips/knockedOut.json",
+   "source": "Dying.fbx",
+   "duration": 4.417,
+   "loop": false,
+   "rootMotion": {
+    "metres": 0.33,
+    "speed": 0.08
+   },
+   "use": "Cartoon knock-out and energy collapse (no gore)"
+  },
+  "fallFlail": {
+   "file": "characters/clips/fallFlail.json",
+   "source": "Falling.fbx",
+   "duration": 4.5,
+   "loop": true,
+   "rootMotion": {
+    "metres": 0,
+    "speed": 0
+   },
+   "use": "Flailing in the air (runner fall, thrown out)"
+  }
+ },
+ "unusedSourceFiles": [
+  "Crouching (1).fbx",
+  "Jab To Elbow Punch (1).fbx",
+  "Roundhouse Kick (1).fbx",
+  "Running Slide (1).fbx",
+  "Running Slide (2).fbx",
+  "Side Kick (1).fbx",
+  "Standing Arguing (1).fbx",
+  "Stunned (1).fbx",
+  "Taking Punch (1).fbx"
+ ]
+}

@@ -7,7 +7,8 @@
     "build": "vite build",
     "preview": "vite preview --host",
     "assets:import": "node scripts/import-assets.mjs",
-    "assets:check": "node scripts/check-assets.mjs"
+    "assets:check": "node scripts/check-assets.mjs",
+    "assets:animations": "node scripts/import-animations.mjs"
   },
   "repository": {
     "type": "git",
@@ -30,6 +31,7 @@
   "devDependencies": {
     "@vitejs/plugin-react": "^4.3.3",
     "fflate": "^0.8.2",
+    "node-unrar-js": "^2.0.2",
     "vite": "^5.4.10"
   },
   "private": true,

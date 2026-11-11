@@ -60,6 +60,11 @@ async function main() {
     charFile('body', m.CHARACTER.body, 'The one body mesh for every person in the game')
     for (const [k, f] of Object.entries(m.CHARACTER.animations)) charFile(`anim: ${k}`, f, k === 'run' ? 'Run; slowed down = walk' : k)
     for (const [k, f] of Object.entries(m.CHARACTER.skins)) charFile(`skin: ${k}`, f, k.startsWith('zombie') ? 'Collapse-dream joke only' : 'Base skin, re-toned and tinted per character')
+    lines.push('', '## Retargeted Mixamo animations', '', '`npm run assets:animations` builds these from your Mixamo FBX files.', '', '| Clip | Source file | Length | Loop | Root motion | Download | Planned use |', '|---|---|---|---|---|---|---|')
+    for (const [k, c] of Object.entries(m.CHARACTER.clips)) {
+      const p = path.join(PUBLIC_ASSETS, c.file)
+      lines.push(`| \`${k}\` | ${c.source} | ${c.duration.toFixed(2)} s | ${c.loop ? 'yes' : 'no'} | ${c.rootMotion.speed} m/s | ${fs.existsSync(p) ? kb(fs.statSync(p).size) : 'MISSING'} | ${c.use} |`)
+    }
     lines.push('', '## Built in code (no model of their own)', '', '| Name | Uses | How |', '|---|---|---|')
     for (const [k, v] of Object.entries(m.PROCEDURAL)) lines.push(`| \`${k}\` | ${v.parts.map((p) => `\`${p}\``).join(', ') || '—'} | ${v.use} |`)
     lines.push('', '## GLB files on disk not used yet', '', unusedGlb.length ? unusedGlb.map((f) => `- \`${f}\``).join('\n') : '_none_', '')

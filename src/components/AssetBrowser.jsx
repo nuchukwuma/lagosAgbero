@@ -4,16 +4,18 @@ import { OrbitControls, Grid } from '@react-three/drei'
 import { MODELS, getAsset } from '../assets/assetManifest.js'
 import ModelPreview from './ModelPreview.jsx'
 import CharacterPreview from './CharacterPreview.jsx'
+import { CLIP_NAMES } from '../game/characters/clipLoader.js'
 
 // Developer screen: pick any manifest name and see it at real scale, next to
 // a 1.75 m person for comparison. Lets you check names, sizes and fallbacks.
 
 const CATEGORIES = ['vehicle', 'prop', 'road', 'street', 'building', 'nature']
+// Kenney's 3 animations first, then every retargeted Mixamo clip.
 const ANIMS = [
-  { id: 'idle', label: 'Idle', speed: 1 },
-  { id: 'run', label: 'Walk (run ×0.45)', speed: 0.45 },
-  { id: 'run', label: 'Run', speed: 1 },
-  { id: 'jump', label: 'Jump', speed: 1 },
+  { id: 'idle', label: 'idle (Kenney)', speed: 1 },
+  { id: 'run', label: 'run (Kenney)', speed: 1 },
+  { id: 'jump', label: 'jump (Kenney)', speed: 1 },
+  ...CLIP_NAMES.map((id) => ({ id, label: `${id} (Mixamo)`, speed: 1 })),
 ]
 
 // Moves the camera back far enough to see the whole model plus the person.

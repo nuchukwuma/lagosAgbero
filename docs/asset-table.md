@@ -186,6 +186,41 @@ Sizes in metres are after pack scaling (1 unit = 1 m).
 | skin: zombieMale | `characters/skins/zombieMaleA.png` | 39 KB | Collapse-dream joke only |
 | skin: zombieFemale | `characters/skins/zombieFemaleA.png` | 34 KB | Collapse-dream joke only |
 
+## Retargeted Mixamo animations
+
+`npm run assets:animations` builds these from your Mixamo FBX files.
+
+| Clip | Source file | Length | Loop | Root motion | Download | Planned use |
+|---|---|---|---|---|---|---|
+| `walk` | Start Walking.fbx | 1.33 s | yes | 0.93 m/s | 31 KB | Normal walk (loop cut from Start Walking) |
+| `drunkWalk` | Drunk Walk.fbx | 3.00 s | yes | 0.84 m/s | 69 KB | Low-energy stagger, red-eye side effects |
+| `run` | Running.fbx | 0.63 s | yes | 5.72 m/s | 16 KB | Run (street, chases) |
+| `goofyRun` | Goofy Running.fbx | 0.63 s | yes | 1.73 m/s | 15 KB | Comic panic run (fleeing defaulters, runner mode) |
+| `sneak` | Crouch Walk Forward.fbx | 1.13 s | yes | 1.71 m/s | 27 KB | Sneaking during raids |
+| `crouchWalk` | Crouched Walking.fbx | 1.04 s | yes | 1.37 m/s | 25 KB | Alternative sneak |
+| `crouchDown` | Crouching.fbx | 4.08 s | no | 0.02 m/s | 93 KB | Duck down to hide |
+| `crouchIdle` | Crouching Idle.fbx | 2.50 s | yes | 0 m/s | 57 KB | Hiding behind a dumpster |
+| `slide` | Running Slide.fbx | 1.54 s | no | 4.2 m/s | 36 KB | Runner-mode slide under obstacles |
+| `talk` | Talking.fbx | 3.92 s | yes | 0 m/s | 89 KB | Dialogue: speaker gesture |
+| `argue` | Standing Arguing.fbx | 6.33 s | yes | 0.01 m/s | 143 KB | Dialogue: angry driver, haggling |
+| `bumped` | Walking Hit Reaction.fbx | 1.38 s | no | 0.93 m/s | 32 KB | Bumped on the street |
+| `turnLeft` | Walking Left Turn.fbx | 1.21 s | no | 1.34 m/s | 28 KB | Spare: walking turn |
+| `fightIdle` | Boxing.fbx | 1.75 s | yes | 0 m/s | 41 KB | Fight stance |
+| `punch` | Punching.fbx | 1.25 s | no | 0 m/s | 30 KB | Fight: punch |
+| `jabCombo` | Jab To Elbow Punch.fbx | 3.25 s | no | 0 m/s | 74 KB | Fight: jab + elbow combo |
+| `uppercut` | Uppercut Jab.fbx | 3.58 s | no | 0 m/s | 82 KB | Fight: uppercut |
+| `kick` | Side Kick.fbx | 2.00 s | no | 0 m/s | 46 KB | Fight: kick |
+| `roundhouse` | Roundhouse Kick.fbx | 2.50 s | no | 0 m/s | 58 KB | Fight: special move ("Lagos Roundabout") |
+| `block` | Blocking.fbx | 1.21 s | no | 0 m/s | 28 KB | Fight: block |
+| `blockInward` | Inward Block.fbx | 1.46 s | no | 0 m/s | 34 KB | Fight: block variation |
+| `blockOutward` | Outward Block.fbx | 2.54 s | no | 0 m/s | 58 KB | Fight: parry / dodge |
+| `bodyBlock` | Body Block.fbx | 3.42 s | no | 0 m/s | 78 KB | Fight: body block |
+| `hit` | Hit Reaction.fbx | 2.75 s | no | 0 m/s | 63 KB | Fight: got hit |
+| `takePunch` | Taking Punch.fbx | 5.67 s | no | 0 m/s | 128 KB | Fight: taking a beating (cutscenes) |
+| `stunned` | Stunned.fbx | 2.13 s | no | 0.49 m/s | 49 KB | Fight: dizzy / stunned |
+| `knockedOut` | Dying.fbx | 4.42 s | no | 0.08 m/s | 101 KB | Cartoon knock-out and energy collapse (no gore) |
+| `fallFlail` | Falling.fbx | 4.50 s | yes | 0 m/s | 103 KB | Flailing in the air (runner fall, thrown out) |
+
 ## Built in code (no model of their own)
 
 | Name | Uses | How |

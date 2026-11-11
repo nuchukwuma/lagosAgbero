@@ -18,6 +18,7 @@
 // Never import file paths anywhere else. Use getAsset(name) / assetUrl(name).
 
 import assetIndex from './assetIndex.json'
+import clipIndex from './clipIndex.json'
 
 export const ASSET_ROOT = '/assets'
 
@@ -224,11 +225,17 @@ export const MODELS = {
 export const CHARACTER = {
   body: 'characters/characterMedium.fbx',
   targetHeight: 1.75, // metres; the loader scales the mesh to this height
+  // Kenney's own 3 animations (FBX, played directly on the body).
   animations: {
     idle: 'characters/anims/idle.fbx',
-    run: 'characters/anims/run.fbx', // also used slowed down (~0.45x) as "walk"
+    run: 'characters/anims/run.fbx',
     jump: 'characters/anims/jump.fbx',
   },
+  // Mixamo animations, retargeted to this body by `npm run assets:animations`
+  // (walk, drunkWalk, punch, kick, block, hit, knockedOut, slide, talk...).
+  // Each entry: { file, duration, loop, rootMotion: { metres, speed }, use }.
+  // Load them with loadClip(name) from src/game/characters/clipLoader.js.
+  clips: clipIndex.clips,
   skins: {
     male: 'characters/skins/humanMaleA.png',
     female: 'characters/skins/humanFemaleA.png',
@@ -320,6 +327,7 @@ export function allManifestFiles() {
     CHARACTER.body,
     ...Object.values(CHARACTER.animations),
     ...Object.values(CHARACTER.skins),
+    ...Object.values(CHARACTER.clips).map((c) => c.file),
     ...Object.values(ATLASES).flatMap((a) => Object.values(a)),
   ]
 }
