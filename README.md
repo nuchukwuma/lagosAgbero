@@ -32,10 +32,19 @@ npm run assets:check
 Game code only ever uses names from `assetManifest.js` (`danfo`,
 `taskForceVan`, `richManHouse`...), never file paths.
 
+## Story, tests and animations
+
+```bash
+npm run story:check      # validate story JSON + random play-throughs
+npm test                 # engine unit tests
+npm run assets:animations -- a1.zip a2.zip a3.zip a4.rar a5.zip   # re-import Mixamo clips
+```
+
 ## Docs
 
 - `docs/asset-table.md`: every model, its file, size and planned use
-- `docs/story-outline.md`: cast, backstory, acts and endings (draft)
+- `docs/story-outline.md`: cast, backstory, acts, endings and the Ada paths (approved)
+- `docs/story-format.md`: how to write story JSON (beats, choices, effects, callbacks)
 
 ## Folder layout
 

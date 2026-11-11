@@ -1,8 +1,7 @@
-# Area Boy: story outline (DRAFT, for approval)
+# Area Boy: story outline (APPROVED)
 
-Everything here is a proposal. Change any name, relationship or plot point and
-I'll update the outline before writing Chapter 1. All people, parties, cults,
-agencies and brands are invented.
+You approved the backstory, names and secret endings, and that skins can be
+re-toned. All people, parties, cults, agencies and brands are invented.
 
 ## Setting
 
@@ -124,6 +123,27 @@ game happens around it:
 | 7 | **Jailed** | Caught in a raid or the crackdown with high heat and no bribe | "Kirikiri Awaiting Trial", where Professor's old cellmate greets you. |
 | S1 | **Go Home** *(secret)* | Mama's ₦850k fully repaid by the deadline, low notoriety, high mentor and friend bonds, never joined a cult | You arrive back in Ìlú-Àlàáfíà with a danfo full of gifts. |
 | S2 | **The Honourable** *(secret)* | Very high community goodwill, and you exposed Owó Ńlá while keeping both parties' "respect" | You win the councillorship. Your first act is to hand out rice with your own face on the bags. The cycle continues. |
+
+## Ada: the player decides what she is
+
+You approved that the relationship with Ada is up to the player and must
+affect the game. It runs on the `friendBond` meter plus three path flags, and
+the player chooses at three moments:
+
+| Moment | Choice |
+|---|---|
+| Act 1 (Ch2) | First impressions: help her, flirt, or ignore her |
+| Act 2 (Ch7) | Open up about the debt, or keep lying |
+| Act 3 (Ch10) | **The question:** ask her out (needs bond ≥ 60), stay close friends, or walk away |
+
+| Path | Flag | How it changes the game |
+|---|---|---|
+| Romance | `ada_romance` | She covers some of your debt payments if you stay honest. She leaves you if you lie about cult membership. The Hyenas can target her in the Act 3 war, which raises the stakes of the loyalty test. Her epilogue line changes in every ending, and Legit Businessman becomes "Iyana-Wahala Transport Ltd, owned by the Okafor family". |
+| Close friend | `ada_friend` | She keeps your hustle savings safe from raids. She warns you before Task Force sweeps. In the Legit ending she becomes your business partner. |
+| Walked away / estranged | `ada_estranged` | No credit at Ada's Corner, and the market gossips against you (community goodwill goes down). Go Home and Legit Businessman get harder. She has one last scene in Act 4 where you can reconcile. |
+
+Low `friendBond` (under 20) at the Act 3 question sets `ada_estranged`
+automatically, so ignoring her is also a choice.
 
 ## Meters and flags the story tracks
 

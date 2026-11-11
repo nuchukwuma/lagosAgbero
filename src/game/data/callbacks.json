@@ -1,0 +1,11 @@
+{
+  "biodun_test": {
+    "caught": { "speaker": "ada", "text": "I hear say you catch Bíọ́dún for road this morning. Ah-ah, you wan kill the man? E get five pikin o." },
+    "escaped": { "speaker": "ada", "text": "Bíọ́dún dey tell everybody for park say JJC no fit run. Dem dey laugh you since morning." },
+    "let_go": { "speaker": "ada", "text": "Bíọ́dún say you be good person. That one go remember you, you hear?" }
+  },
+  "professor_tea": {
+    "bought": { "speaker": "professor", "text": "That tea wey you buy me this morning... e sweet. Rule One: never forget who buy you tea. I no go forget." },
+    "refused": { "speaker": "professor", "text": "You no buy me tea this morning. No wahala. Street go teach you manners, I no need to." }
+  }
+}

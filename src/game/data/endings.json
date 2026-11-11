@@ -1,0 +1,20 @@
+{
+  "street_king": { "title": "Street King", "draft": true, "epilogue": ["Epilogue written in Phase 12."] },
+  "cult_boss": { "title": "Cult Boss", "draft": true, "epilogue": ["Epilogue written in Phase 12."] },
+  "wanted": { "title": "Wanted", "draft": true, "epilogue": ["Epilogue written in Phase 12."] },
+  "legit_businessman": { "title": "Legit Businessman", "draft": true, "epilogue": ["Epilogue written in Phase 12."] },
+  "informant": { "title": "The Informant", "draft": true, "epilogue": ["Epilogue written in Phase 12."] },
+  "rock_bottom": {
+    "title": "Rock Bottom",
+    "draft": true,
+    "epilogue": [
+      "You wake up in a ward at General Hospital Iyana-Wahala. Nurse Rónkẹ́ dey count drip like say na money.",
+      "Your phone ring. Na Mama. You no get strength to lie again.",
+      "\"{name}, come home. We go find the money together.\"",
+      "(Test ending. The real Rock Bottom epilogue comes in Phase 12.)"
+    ]
+  },
+  "jailed": { "title": "Jailed", "draft": true, "epilogue": ["Epilogue written in Phase 12."] },
+  "go_home": { "title": "Go Home", "secret": true, "draft": true, "epilogue": ["Epilogue written in Phase 12."] },
+  "the_honourable": { "title": "The Honourable", "secret": true, "draft": true, "epilogue": ["Epilogue written in Phase 12."] }
+}

@@ -1,0 +1,188 @@
+{
+  "id": "test_run",
+  "act": 0,
+  "number": 0,
+  "title": "Test Run",
+  "description": "A tiny story that exercises every beat type. Not part of the real game.",
+  "startScene": "arrival",
+  "scenes": {
+    "arrival": {
+      "background": "busStopDawn",
+      "beats": [
+        {
+          "type": "cutscene",
+          "cards": [
+            { "title": "5:40 a.m.", "text": "Iyana-Wahala Bus Stop, Lagos." },
+            { "title": "Your situation", "text": "{money} in your pocket. Phone on 3%. And {debt} that is not yours, but is somehow yours." }
+          ]
+        },
+        { "type": "dialogue", "speaker": "narrator", "text": "The night bus spits you out under the flyover. Somebody is already shouting \"Oshodi! Oshodi! Enter with your change!\"" },
+        { "type": "dialogue", "speaker": "professor", "text": "Ehen. New face. You dey look the bus stop like say e owe you money. Who be you?" },
+        { "type": "dialogue", "speaker": "player", "text": "Good morning sir. My name na {name}." },
+        { "type": "dialogue", "speaker": "professor", "text": "{name}? Street no dey call person by government name. Until you earn your name, na JJC we go call you. Johnny Just Come." },
+        {
+          "type": "choice",
+          "speaker": "professor",
+          "text": "Rule number zero: nothing free for Lagos. Even advice. My throat dry o.",
+          "options": [
+            {
+              "text": "Buy Professor tea from Mallam Garba",
+              "cost": 300,
+              "effects": { "changeStat": { "mentorBond": 5 }, "remember": { "professor_tea": "bought" }, "setFlag": "boughtProfessorTea" }
+            },
+            {
+              "text": "\"Sir, I no even get for myself.\"",
+              "effects": { "remember": { "professor_tea": "refused" } }
+            },
+            {
+              "text": "Call him \"Baba\" and ask for his blessing",
+              "requires": { "stats": { "mentorBond": ">= 50" } },
+              "showLocked": true,
+              "lockedText": "You never reach that level with Professor"
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "professor",
+          "text": "Hmm. We go see.",
+          "variants": [
+            { "if": "boughtProfessorTea", "text": "Ahhh. This boy get home training. Sit down, make I teach you something." }
+          ]
+        },
+        {
+          "type": "newsBroadcast",
+          "source": "Baba Radio's stall — Wahala FM 99.9",
+          "headline": "FUEL PRICE GO UP AGAIN",
+          "text": "Government say the new price na \"temporary permanent adjustment\". Drivers dey vex. Baba Radio turn the volume up, as if loud news fit reduce the price.",
+          "effects": { "changeStat": { "energy": -5 } }
+        },
+        { "type": "dialogue", "speaker": "biodun", "text": "Professor, abeg, I go pay tomorrow! Tomorrow by God's grace!", "mood": "nervous" },
+        { "type": "dialogue", "speaker": "narrator", "text": "Driver Bíọ́dún jumps into his danfo, \"God's Time Is The Best\", and pulls off without paying the stop fee." },
+        {
+          "type": "choice",
+          "speaker": "professor",
+          "text": "Oga, that driver don run again. You go chase am or you go let am go? Quick quick!",
+          "timeout": 10,
+          "timeoutOption": 1,
+          "options": [
+            {
+              "text": "Chase him!",
+              "effects": {
+                "startMode": "chase",
+                "params": { "target": "driver_biodun", "difficulty": 1 },
+                "results": {
+                  "won": { "changeStat": { "chairmanTrust": 5 }, "remember": { "biodun_test": "caught" }, "goto": "caught" },
+                  "lost": { "changeStat": { "energy": -10 }, "remember": { "biodun_test": "escaped" }, "goto": "escaped" }
+                }
+              }
+            },
+            {
+              "text": "Let am go, na small money",
+              "effects": {
+                "setFlag": "letDriverGo",
+                "changeStat": { "chairmanTrust": -5, "communityGoodwill": 5 },
+                "remember": { "biodun_test": "let_go" },
+                "goto": "letGo"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "caught": {
+      "background": "busStopDawn",
+      "next": "market",
+      "beats": [
+        { "type": "dialogue", "speaker": "biodun", "text": "Okay o! Okay! Take your ₦500. Na today you wan collect am, abi?", "mood": "angry" },
+        { "type": "dialogue", "speaker": "professor", "text": "See leg! You run like person wey NEPA take light from. Baba Ticket go hear of this." }
+      ]
+    },
+    "escaped": {
+      "background": "busStopDawn",
+      "next": "market",
+      "beats": [
+        { "type": "dialogue", "speaker": "professor", "text": "Ehn ehn. Danfo don pass you like say you be bus stop sign. You need to eat something." }
+      ]
+    },
+    "letGo": {
+      "background": "busStopDawn",
+      "next": "market",
+      "beats": [
+        { "type": "dialogue", "speaker": "professor", "text": "Soft heart. Baba Ticket no go like am, but the drivers go talk am for park. Sometimes that one better pass money." }
+      ]
+    },
+    "market": {
+      "background": "market",
+      "beats": [
+        {
+          "type": "randomEvent",
+          "outcomes": [
+            { "weight": 1, "effects": { "setFlag": "raining", "changeStat": { "energy": -5 }, "toast": "Rain don start!" } },
+            { "weight": 1, "effects": { "clearFlag": "raining" } }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ada",
+          "text": "Customer or trouble? Because you no resemble customer.",
+          "variants": [
+            { "if": "raining", "text": "See as rain soak you like agbalumo. Come stand for my shade before you catch cold. Customer or trouble?" }
+          ]
+        },
+        { "type": "dialogue", "callback": "biodun_test" },
+        {
+          "type": "choice",
+          "speaker": "ada",
+          "text": "Na me be Ada. This na Ada's Corner. Anything you wan buy, I get am. Anything you wan talk, I get ear, but e no free.",
+          "options": [
+            {
+              "text": "Help Ada carry her cartons inside",
+              "effects": { "changeStat": { "friendBond": 10, "communityGoodwill": 2, "energy": -5 }, "setFlag": "helpedAda" }
+            },
+            {
+              "text": "\"Fine girl like you, you get boyfriend?\"",
+              "effects": { "changeStat": { "friendBond": 3 }, "setFlag": "adaFlirted" }
+            },
+            {
+              "text": "Ask Ada for goods on credit",
+              "requires": { "stats": { "friendBond": ">= 30" } },
+              "showLocked": true,
+              "lockedText": "Ada no know you reach to give you credit"
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ada",
+          "text": "Thank you o. At least you get hand. Plenty men for this market get only mouth.",
+          "variants": [
+            { "if": "adaFlirted", "text": "Boyfriend? I get JAMB. That one dey disturb me pass any man. Come back when you get your own shop.", "mood": "laughing" }
+          ]
+        },
+        { "type": "goto", "scene": "night" }
+      ]
+    },
+    "night": {
+      "background": "night",
+      "beats": [
+        { "type": "dialogue", "speaker": "narrator", "text": "Night. The generators start their choir. You sit under the flyover with Professor." },
+        { "type": "dialogue", "callback": "professor_tea" },
+        { "type": "dialogue", "speaker": "mama", "text": "{name}, Iya Bọ́sẹ̀ come house again today. I tell am say you don find work for Lagos. You don find work, abi?" },
+        {
+          "type": "choice",
+          "text": "How you wan end this test day?",
+          "options": [
+            { "text": "\"Yes Mama. Work don start.\" (Sleep under the flyover)", "effects": { "setFlag": "liedToMama", "changeStat": { "energy": 20 } } },
+            { "text": "Tell Mama everything and give up (test ending)", "effects": { "ending": "rock_bottom" } }
+          ]
+        },
+        {
+          "type": "endChapter",
+          "title": "End of the Test Run",
+          "summary": "You survived your first test day with {money} in your pocket. Ada bond: {stat:friendBond}. Professor bond: {stat:mentorBond}."
+        }
+      ]
+    }
+  }
+}

@@ -1,4 +1,7 @@
-export default function TitleScreen({ onNavigate }) {
+import { latestSave } from '../game/store/saveSystem.js'
+
+export default function TitleScreen({ onNavigate, onContinue }) {
+  const hasSave = Boolean(latestSave())
   return (
     <div className="screen title-screen">
       <div className="title-block">
@@ -6,17 +9,27 @@ export default function TitleScreen({ onNavigate }) {
         <p className="tagline">Owo da? Na street go teach you.</p>
       </div>
       <div className="menu">
-        <button className="btn btn-primary" disabled title="Arrives in Phase 1">
-          New Game (Phase 1)
+        {hasSave && (
+          <button className="btn btn-primary" onClick={onContinue}>
+            Continue
+          </button>
+        )}
+        <button className={`btn ${hasSave ? '' : 'btn-primary'}`} onClick={() => onNavigate('newGame')}>
+          New Game
         </button>
-        <button className="btn" onClick={() => onNavigate('assets')}>
-          Asset Check (dev)
-        </button>
+        {hasSave && (
+          <button className="btn" onClick={() => onNavigate('load')}>
+            Load
+          </button>
+        )}
         <button className="btn" onClick={() => onNavigate('about')}>
           About
         </button>
+        <button className="btn btn-small" onClick={() => onNavigate('assets')}>
+          Asset Check (dev)
+        </button>
       </div>
-      <p className="footnote">Phase 0 build</p>
+      <p className="footnote">Phase 1 build · story engine test</p>
     </div>
   )
 }
