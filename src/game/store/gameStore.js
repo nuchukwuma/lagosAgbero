@@ -52,9 +52,15 @@ export const useGameStore = create((set, get) => {
 
     goTo: (screen) => set({ screen }),
 
-    newGame: ({ name, nickname }) => {
-      set({ game: engine.newGameState({ name, nickname }), screen: 'story', toasts: [] })
+    newGame: ({ name, nickname, look }) => {
+      set({ game: engine.newGameState({ name, nickname, look }), screen: 'story', toasts: [] })
       dispatch((g) => engine.startChapter(storyCtx, g, FIRST_CHAPTER))
+    },
+
+    // Developer: new test player dropped straight into a chapter.
+    devStart: (chapterId) => {
+      set({ game: engine.newGameState({ name: 'Tester' }), screen: 'story', toasts: [] })
+      dispatch((g) => engine.startChapter(storyCtx, g, chapterId))
     },
 
     // Jump straight into any chapter (used by the dev chapter picker).

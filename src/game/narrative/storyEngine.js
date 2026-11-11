@@ -15,11 +15,20 @@ import { interpolate, pickVariant } from './text.js'
 import { defaultStats, formatNaira } from './stats.js'
 
 const MAX_STEPS = 500
-const INTERACTIVE = new Set(['dialogue', 'choice', 'newsBroadcast', 'cutscene', 'startMode', 'endChapter'])
+const INTERACTIVE = new Set(['dialogue', 'choice', 'newsBroadcast', 'cutscene', 'startMode', 'endChapter', 'freeRoam'])
+const ADVANCEABLE = ['dialogue', 'newsBroadcast', 'cutscene', 'endChapter', 'freeRoam']
 
-export function newGameState({ name = 'Tunde', nickname = 'JJC' } = {}) {
+// Old 2D background names -> 3D location + time of day.
+const LEGACY_BACKGROUNDS = {
+  busStopDawn: { location: 'frontStop', time: 'dawn' },
+  market: { location: 'market', time: 'day' },
+  night: { location: 'underBridge', time: 'night' },
+  underBridge: { location: 'underBridge', time: 'day' },
+}
+
+export function newGameState({ name = 'Tunde', nickname = 'JJC', look = null } = {}) {
   return {
-    player: { name, nickname },
+    player: { name, nickname, look },
     stats: defaultStats(),
     flags: {},
     memory: {},
@@ -153,6 +162,7 @@ function run(ctx, state, events, random = Math.random) {
       case 'newsBroadcast':
       case 'cutscene':
       case 'endChapter':
+      case 'freeRoam':
         return apply(state, beat.effects, events)
       default:
         throw new Error(`Unknown beat type "${beat.type}" in scene "${story.sceneId}"`)
@@ -194,7 +204,7 @@ export function startChapter(ctx, state, chapterId, sceneId) {
 export function advance(ctx, state, random) {
   const events = []
   const beat = currentBeat(ctx, state)
-  if (!beat || !['dialogue', 'newsBroadcast', 'cutscene', 'endChapter'].includes(beat.type)) return { state, events }
+  if (!beat || !ADVANCEABLE.includes(beat.type)) return { state, events }
 
   if (beat.type === 'endChapter') {
     const completed = [...state.story.completedChapters, state.story.chapterId]
@@ -251,7 +261,17 @@ export function renderView(ctx, state) {
 
   const chapter = chapterOf(ctx, story.chapterId)
   const scene = sceneOf(ctx, story)
-  const base = { chapterTitle: chapter.title, act: chapter.act, background: scene.background || 'default', sceneId: story.sceneId }
+  const legacy = LEGACY_BACKGROUNDS[scene.background] || {}
+  const base = {
+    chapterTitle: chapter.title,
+    act: chapter.act,
+    background: scene.background || 'default',
+    chapterId: story.chapterId,
+    sceneId: story.sceneId,
+    location: scene.location ?? legacy.location ?? null, // where the player stands when the scene starts
+    time: scene.time ?? legacy.time ?? 'day',
+    positions: scene.positions || {}, // NPC position overrides for this scene
+  }
 
   if (story.pendingMode) {
     const { mode, params, results } = story.pendingMode
@@ -284,6 +304,8 @@ export function renderView(ctx, state) {
       return { ...base, key, type: 'news', source: beat.source || 'Radio', headline: interpolate(beat.headline, state), text: interpolate(beat.text, state) }
     case 'cutscene':
       return { ...base, key, type: 'cutscene', cards: (beat.cards || [{ title: beat.title, text: beat.text }]).map((c) => ({ title: interpolate(c.title, state), text: interpolate(c.text, state), background: c.background || null })) }
+    case 'freeRoam':
+      return { ...base, key, type: 'freeRoam', objective: interpolate(beat.objective || '', state), goal: beat.goal || null }
     case 'endChapter':
       return { ...base, key, type: 'chapterEnd', title: interpolate(beat.title || `End of ${chapter.title}`, state), summary: interpolate(beat.summary || '', state) }
     default:

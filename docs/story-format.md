@@ -39,8 +39,14 @@ plays every chapter 200 times with random choices to catch dead ends.
 - When a scene runs out of beats, it continues to `next`. Otherwise the last
   beat must be a `goto`, an `endChapter`, or a choice where every option jumps
   away.
-- Backgrounds so far are `busStopDawn`, `market`, `night` and `underBridge`.
-  In Phase 2 these become 3D camera spots.
+- Scenes play in the 3D street. Three optional scene fields control it:
+  - `"location": "frontStop"` puts the player at that spot when the scene
+    starts. Spots are listed in `src/game/data/world/iyanaWahala.json`.
+  - `"time"` sets the lighting: `"dawn"`, `"day"`, `"dusk"` or `"night"`.
+  - `"positions": { "professor": [x, z, facing] }` moves story characters
+    for this scene only.
+- The older `"background"` names still work: `busStopDawn` means the Front
+  Stop at dawn, and `market` and `night` are mapped to spots in the same way.
 
 ## Beat types
 
@@ -56,8 +62,24 @@ plays every chapter 200 times with random choices to catch dead ends.
 | `cutscene` | `cards: [{ title, text }]` | Full-screen title cards |
 | `endChapter` | `title`, `summary`, and `next` (chapter id) or `ending` | Chapter-complete card |
 | `goto` | `scene` (`"scene"` or `"chapter:scene"`) | Jumps instantly |
+| `freeRoam` | `objective`, optional `goal` | The player walks around until the goal is met |
 
 Every beat can have `"if"`. If the condition is false, the beat is skipped.
+
+### Free roam: handing control to the player
+
+```json
+{ "type": "freeRoam", "objective": "Walk to the motor park office.", "goal": { "reach": "babaTicketOffice" } }
+{ "type": "freeRoam", "objective": "Find Professor under the flyover.", "goal": { "talkTo": "professor" } }
+{ "type": "freeRoam", "objective": "Explore Iyana-Wahala." }
+```
+
+- `reach`: the story continues when the player walks into the spot's circle.
+- `talkTo`: the story continues when the player walks up to that character
+  and presses TALK (or E / Enter).
+- With no goal, the player can wander freely.
+
+A yellow ring and an arrow mark where the goal is.
 
 ### Speakers
 

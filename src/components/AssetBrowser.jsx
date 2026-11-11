@@ -3,22 +3,23 @@ import { Canvas, useThree } from '@react-three/fiber'
 import { OrbitControls, Grid } from '@react-three/drei'
 import { MODELS, getAsset } from '../assets/assetManifest.js'
 import ModelPreview from './ModelPreview.jsx'
-import CharacterPreview from './CharacterPreview.jsx'
+import Character from '../game/characters/Character.jsx'
 import { CLIP_NAMES } from '../game/characters/clipLoader.js'
+import characters from '../game/data/characters.json'
 
-// Developer screen: pick any manifest name and see it at real scale, next to
-// a 1.75 m person for comparison. Lets you check names, sizes and fallbacks.
+// Developer screen: pick any manifest name and see it at real scale (with its
+// Nigerian-look tweaks), next to a 1.75 m person. The "cast" category shows
+// every story character's look side by side.
 
-const CATEGORIES = ['vehicle', 'prop', 'road', 'street', 'building', 'nature']
-// Kenney's 3 animations first, then every retargeted Mixamo clip.
+const CATEGORIES = ['vehicle', 'prop', 'road', 'street', 'building', 'nature', 'cast']
 const ANIMS = [
-  { id: 'idle', label: 'idle (Kenney)', speed: 1 },
-  { id: 'run', label: 'run (Kenney)', speed: 1 },
-  { id: 'jump', label: 'jump (Kenney)', speed: 1 },
-  ...CLIP_NAMES.map((id) => ({ id, label: `${id} (Mixamo)`, speed: 1 })),
+  { id: 'idle', label: 'idle (Kenney)' },
+  { id: 'run', label: 'run (Kenney)' },
+  { id: 'jump', label: 'jump (Kenney)' },
+  ...CLIP_NAMES.map((id) => ({ id, label: `${id} (Mixamo)` })),
 ]
+const CAST = Object.entries(characters).filter(([, c]) => c.look)
 
-// Moves the camera back far enough to see the whole model plus the person.
 function FitCamera({ radius, height }) {
   const camera = useThree((s) => s.camera)
   const controls = useThree((s) => s.controls)
@@ -33,14 +34,25 @@ function FitCamera({ radius, height }) {
   return null
 }
 
+function CastLineup({ animation }) {
+  const spacing = 1.4
+  return CAST.map(([id, c], i) => (
+    <Suspense key={id} fallback={null}>
+      <Character look={c.look} animation={animation} position={[(i - (CAST.length - 1) / 2) * spacing, 0, 0]} />
+    </Suspense>
+  ))
+}
+
 export default function AssetBrowser({ onBack }) {
   const [category, setCategory] = useState('vehicle')
   const names = useMemo(() => Object.keys(MODELS).filter((n) => MODELS[n].category === category), [category])
   const [selected, setSelected] = useState('danfo')
   const [anim, setAnim] = useState(0)
-  const [skin, setSkin] = useState('male')
+  const [person, setPerson] = useState('player')
+  const cast = category === 'cast'
   const asset = getAsset(selected)
-  const radius = Math.max(...asset.size, 3)
+  const radius = cast ? 15 : Math.max(...asset.size, 3)
+  const look = person === 'player' ? undefined : characters[person]?.look
 
   return (
     <div className="screen asset-browser">
@@ -48,37 +60,53 @@ export default function AssetBrowser({ onBack }) {
         <button className="btn btn-small" onClick={onBack}>
           ← Back
         </button>
-        <select value={category} onChange={(e) => setCategory(e.target.value)}>
+        <select value={category} onChange={(e) => setCategory(e.target.value)} aria-label="Category">
           {CATEGORIES.map((c) => (
             <option key={c}>{c}</option>
           ))}
         </select>
-        <select value={names.includes(selected) ? selected : ''} onChange={(e) => setSelected(e.target.value)}>
-          <option value="" disabled>
-            pick a model…
-          </option>
-          {names.map((n) => (
-            <option key={n}>{n}</option>
-          ))}
-        </select>
-        <select value={anim} onChange={(e) => setAnim(Number(e.target.value))}>
+        {!cast && (
+          <select value={names.includes(selected) ? selected : ''} onChange={(e) => setSelected(e.target.value)} aria-label="Model">
+            <option value="" disabled>
+              pick a model…
+            </option>
+            {names.map((n) => (
+              <option key={n}>{n}</option>
+            ))}
+          </select>
+        )}
+        <select value={anim} onChange={(e) => setAnim(Number(e.target.value))} aria-label="Animation">
           {ANIMS.map((a, i) => (
             <option key={a.label} value={i}>
               {a.label}
             </option>
           ))}
         </select>
-        <select value={skin} onChange={(e) => setSkin(e.target.value)}>
-          <option value="male">male skin</option>
-          <option value="female">female skin</option>
-        </select>
+        {!cast && (
+          <select value={person} onChange={(e) => setPerson(e.target.value)} aria-label="Person">
+            <option value="player">player (default look)</option>
+            {CAST.map(([id]) => (
+              <option key={id} value={id}>
+                {id}
+              </option>
+            ))}
+          </select>
+        )}
       </div>
 
       <div className="asset-info">
-        <strong>{selected}</strong> · <code>{asset.file}</code> · {asset.size.map((v) => v.toFixed(1)).join(' × ')} m
-        {!asset.available && <span className="warn"> · MISSING → placeholder</span>}
-        <div className="asset-use">{asset.use}</div>
-        {asset.tweak && <div className="asset-use">Planned tweak: {JSON.stringify(asset.tweak)}</div>}
+        {cast ? (
+          <>
+            <strong>Cast lineup</strong> · {CAST.map(([id]) => id).join(', ')}
+          </>
+        ) : (
+          <>
+            <strong>{selected}</strong> · <code>{asset.file}</code> · {asset.size.map((v) => v.toFixed(1)).join(' × ')} m
+            {!asset.available && <span className="warn"> · MISSING → placeholder</span>}
+            <div className="asset-use">{asset.use}</div>
+            {asset.tweak && <div className="asset-use">Tweaks: {JSON.stringify(asset.tweak)}</div>}
+          </>
+        )}
       </div>
 
       <div className="asset-canvas">
@@ -87,14 +115,18 @@ export default function AssetBrowser({ onBack }) {
           <hemisphereLight args={['#fff6e0', '#6b5a3a', 1.1]} />
           <directionalLight position={[5, 8, 3]} intensity={1.6} />
           <Grid args={[40, 40]} cellSize={1} sectionSize={8} cellColor="#b5a37c" sectionColor="#8a7650" fadeDistance={60} />
-          <group position={[asset.size[0] / 2 + 1, 0, asset.size[2] / 4]}>
-            <Suspense fallback={null}>
-              <CharacterPreview skin={skin} animation={ANIMS[anim].id} speed={ANIMS[anim].speed} />
-            </Suspense>
-          </group>
-          <ModelPreview key={selected} name={selected} />
+          {cast ? (
+            <CastLineup animation={ANIMS[anim].id} />
+          ) : (
+            <>
+              <Suspense fallback={null}>
+                <Character look={look} animation={ANIMS[anim].id} position={[asset.size[0] / 2 + 1, 0, asset.size[2] / 4]} />
+              </Suspense>
+              <ModelPreview key={selected} name={selected} />
+            </>
+          )}
           <OrbitControls makeDefault />
-          <FitCamera radius={radius} height={asset.size[1]} />
+          <FitCamera radius={radius} height={cast ? 1.2 : asset.size[1]} />
         </Canvas>
       </div>
     </div>

@@ -1,7 +1,9 @@
 import { useState } from 'react'
 import { useGameStore } from '../../game/store/gameStore.js'
-import StoryBackground from './StoryBackground.jsx'
-import TopBar from './TopBar.jsx'
+import GameCanvas from '../../game/world/GameCanvas.jsx'
+import HUD from '../hud/HUD.jsx'
+import FreeRoamControls from '../hud/FreeRoamControls.jsx'
+import LoadingOverlay from '../hud/LoadingOverlay.jsx'
 import DialogueBox from './DialogueBox.jsx'
 import ChoiceMenu from './ChoiceMenu.jsx'
 import NewsBroadcast from './NewsBroadcast.jsx'
@@ -13,7 +15,8 @@ import GameMenu from './GameMenu.jsx'
 import Toasts from './Toasts.jsx'
 import ModeHost from './ModeHost.jsx'
 
-// The story screen: background + mini HUD + whatever the engine says to show.
+// The story screen: the 3D street + HUD + whatever the engine says to show.
+// During a freeRoam beat the player walks; otherwise the story has the floor.
 export default function StoryScreen() {
   const { game, view, toasts, error, advance, choose, save, load, quitToTitle, dismissToast, goTo } = useGameStore()
   const [overlay, setOverlay] = useState(null) // 'status' | 'menu' | null
@@ -45,6 +48,9 @@ export default function StoryScreen() {
     case 'mode':
       content = <ModeHost key={view.key} view={view} />
       break
+    case 'freeRoam':
+      content = null
+      break
     case 'finished':
       content = (
         <div className="cutscene">
@@ -64,10 +70,11 @@ export default function StoryScreen() {
 
   return (
     <div className="story-screen">
-      <StoryBackground name={view.background} />
+      <GameCanvas view={view} game={game} paused={Boolean(overlay)} onGoalReached={advance} />
       {raining && <div className="rain" aria-hidden="true" />}
-      <TopBar game={game} onStatus={() => setOverlay('status')} onMenu={() => setOverlay('menu')} />
+      <HUD game={game} onStatus={() => setOverlay('status')} onMenu={() => setOverlay('menu')} />
       {view.chapterTitle && view.type !== 'cutscene' && <div className="chapter-chip">{view.chapterTitle}</div>}
+      {view.type === 'freeRoam' && !overlay && <FreeRoamControls view={view} onTalk={advance} />}
       <div className="story-content">{content}</div>
       {error && (
         <div className="story-error">
@@ -77,6 +84,7 @@ export default function StoryScreen() {
         </div>
       )}
       <Toasts toasts={toasts} onDone={dismissToast} />
+      <LoadingOverlay />
       {overlay === 'status' && <StatusPanel game={game} onClose={() => setOverlay(null)} />}
       {overlay === 'menu' && (
         <GameMenu

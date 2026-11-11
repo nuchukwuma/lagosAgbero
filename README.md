@@ -44,7 +44,8 @@ npm run assets:animations -- a1.zip a2.zip a3.zip a4.rar a5.zip   # re-import Mi
 
 - `docs/asset-table.md`: every model, its file, size and planned use
 - `docs/story-outline.md`: cast, backstory, acts, endings and the Ada paths (approved)
-- `docs/story-format.md`: how to write story JSON (beats, choices, effects, callbacks)
+- `docs/story-format.md`: how to write story JSON (beats, choices, effects, callbacks, free roam)
+- `docs/world-format.md`: how the 3D street is laid out (and the `?cam=top` map view)
 
 ## Folder layout
 
@@ -57,6 +58,10 @@ src/
     narrative/     story engine, flags, relationships, callbacks
     systems/       energy, economy, events, notoriety, cult
     modes/         street, conductor, fight, runner
+    characters/    one body, many looks: skin/clothes tinting, accessories, animations
+    world/         3D street: model loader + tweaks, layout, camera, NPCs
+    player/        input (keyboard + joystick) and the player controller
     data/story/    story JSON (editable without touching code)
+    data/world/    street layout JSON
 scripts/           asset import and check tools
 ```

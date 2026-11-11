@@ -1,4 +1,21 @@
 import { latestSave } from '../game/store/saveSystem.js'
+import { storyCtx } from '../game/narrative/storyData.js'
+import { useGameStore } from '../game/store/gameStore.js'
+
+// Developer shortcut: jump into any chapter with a test player.
+function DevChapterPicker() {
+  const devStart = useGameStore((s) => s.devStart)
+  return (
+    <select className="dev-picker" value="" onChange={(e) => e.target.value && devStart(e.target.value)} aria-label="Dev: start chapter">
+      <option value="">Dev: jump to chapter…</option>
+      {Object.values(storyCtx.chapters).map((c) => (
+        <option key={c.id} value={c.id}>
+          {c.title} ({c.id})
+        </option>
+      ))}
+    </select>
+  )
+}
 
 export default function TitleScreen({ onNavigate, onContinue }) {
   const hasSave = Boolean(latestSave())
@@ -28,8 +45,9 @@ export default function TitleScreen({ onNavigate, onContinue }) {
         <button className="btn btn-small" onClick={() => onNavigate('assets')}>
           Asset Check (dev)
         </button>
+        {import.meta.env.DEV && <DevChapterPicker />}
       </div>
-      <p className="footnote">Phase 1 build · story engine test</p>
+      <p className="footnote">Phase 2 build · Iyana-Wahala street</p>
     </div>
   )
 }

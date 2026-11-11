@@ -6,10 +6,11 @@
 // every pack has a scale factor (PACK_SCALE). Sizes in comments are metres
 // AFTER scaling.
 //
-// `tweak` describes how code changes a model so it looks Nigerian. The tweak
-// functions are built in later phases (Phase 2–3); here they are just data.
-//   recolor: { from: swatch, to: swatch }  — move UVs from one colour swatch of
-//            the shared 512x512 colormap atlas to another (no new textures)
+// `tweak` describes how code changes a model so it looks Nigerian. Applied by
+// src/game/world/models.js (decals arrive with the systems that need them).
+//   recolor: { from: [col,row], to: 'danfoYellow' | [col,row] } — move UVs
+//            from one swatch of the shared colormap atlas to another
+//            (see src/game/world/swatches.js; no new textures)
 //   stretch: [x, y, z]  — scale the body node only (wheels keep their shape)
 //   hideNodes: [...]    — hide named sub-meshes (e.g. kart drivers)
 //   decal / stripe / weathering — extra primitive planes or material tweaks
@@ -56,7 +57,7 @@ const nature = (file, use, extra = {}) => ({ file: `city-kit-suburban/${file}.gl
 export const MODELS = {
   // ---------------- Vehicles (car-kit) ----------------
   danfo: car('van', 'Danfo bus: yellow, black side stripe, body stretched ~5.7 m', {
-    tweak: { recolor: { from: 'body', to: 'yellow' }, stripe: 'black', stretch: [1, 1.08, 1.3], weathering: 0.4 },
+    tweak: { recolor: { from: [7, 1], to: 'danfoYellow' }, stripe: 'black', stretch: [1, 1.08, 1.3], weathering: 0.25 },
   }),
   taxi: car('taxi', 'Yellow taxi, kept yellow, faded', { tweak: { weathering: 0.3 } }),
   lorry: car('truck', 'Commercial lorry bringing goods to the market'),
@@ -68,15 +69,15 @@ export const MODELS = {
   privateCar: car('sedan', 'Ordinary "tokunbo" private car', { tweak: { weathering: 0.3 } }),
   familyJeep: car('suv', 'Middle-class jeep'),
   bigManSuv: car('suv-luxury', "Rich man's SUV: begging target, convoy car", {
-    tweak: { recolor: { from: 'body', to: 'black' } },
+    tweak: { recolor: { from: [4, 1], to: 'black' } },
   }),
   bigManSportsCar: car('sedan-sports', "Rich kid's sports car: begging target"),
   flashyHatchback: car('hatchback-sports', 'Flashy young-money car: loud music, small tip'),
   taskForceVan: car('police', 'Task Force van: recoloured khaki-green with fictional TF badge', {
-    tweak: { recolor: { from: 'body', to: 'green' }, decal: 'taskForceBadge' },
+    tweak: { recolor: { from: [6, 2], to: 'green' }, decal: 'taskForceBadge' },
   }),
   taskForceTow: car('tractor-police', 'Task Force tow tractor that drags away impounded danfos', {
-    tweak: { recolor: { from: 'body', to: 'green' }, decal: 'taskForceBadge' },
+    tweak: { recolor: { from: [6, 2], to: 'green' }, decal: 'taskForceBadge' },
   }),
   ambulance: car('ambulance', 'Hospital branch after a collapse or a lost fight'),
   wasteTruck: car('garbage-truck', 'Fictional waste agency truck, street-clearing event'),
@@ -300,6 +301,9 @@ export function getAsset(name) {
   const scale = PACK_SCALE[pack] ?? 1
   const bounds = boundsOf(entry.file)
   const size = bounds ? bounds.size.map((v) => v * scale) : [1, 1, 1]
+  // centre of the model's footprint relative to its pivot (Kenney pivots are
+  // not always centred); used for colliders and placeholder boxes
+  const offset = bounds ? bounds.min.map((v, i) => ((v + bounds.max[i]) / 2) * scale) : [0, 0.5, 0]
   return {
     name,
     ...entry,
@@ -307,6 +311,7 @@ export function getAsset(name) {
     url: `${ASSET_ROOT}/${entry.file}`,
     scale,
     size,
+    offset,
     available: Boolean(bounds),
     fallbackColor: FALLBACK_COLOR[entry.category] || '#888888',
   }

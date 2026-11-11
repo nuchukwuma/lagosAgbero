@@ -1,0 +1,70 @@
+import { useFrame, useThree } from '@react-three/fiber'
+import * as THREE from 'three'
+import { playerState, npcRegistry } from './worldState.js'
+
+// Camera behaviour:
+//   follow    behind and above the player (looks north), for walking around
+//   dialogue  side-on shot of the player and whoever is talking
+// Movement is smoothed so cuts never feel jumpy.
+
+const FOLLOW_OFFSET = new THREE.Vector3(0, 9, 12.5)
+
+// Developer: add ?cam=top to the URL for an overhead map view.
+export const TOP_VIEW = import.meta.env.DEV && typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('cam') === 'top'
+const tmpPos = new THREE.Vector3()
+const tmpLook = new THREE.Vector3()
+const lookAt = new THREE.Vector3()
+
+export default function CameraRig({ mode = 'follow', speaker = null }) {
+  const camera = useThree((s) => s.camera)
+  const size = useThree((s) => s.size)
+
+  useFrame((_, delta) => {
+    const p = playerState.position
+    const portrait = size.height > size.width
+    const npc = speaker ? npcRegistry.get(speaker) : null
+
+    if (TOP_VIEW) {
+      camera.position.set(0, 135, 1)
+      camera.lookAt(0, 0, 0)
+      return
+    }
+    if (mode === 'dialogue' && npc) {
+      // Raised three-quarter shot from the street side (south), so poles and
+      // parked danfos rarely block the faces.
+      const n = npc.position
+      const mid = tmpLook.set((p.x + n.x) / 2, 1.25, (p.z + n.z) / 2)
+      const dx = n.x - p.x
+      const dz = n.z - p.z
+      const d = Math.hypot(dx, dz) || 1
+      let px = dz / d
+      let pz = -dx / d
+      if (pz < 0) {
+        px = -px
+        pz = -pz
+      }
+      // blend the side direction with "south" and normalise
+      let ox = px * 0.7
+      let oz = pz * 0.7 + 0.7
+      const ol = Math.hypot(ox, oz) || 1
+      ox /= ol
+      oz /= ol
+      const dist = (portrait ? 7.5 : 5.8) + d * 0.5
+      tmpPos.set(mid.x + ox * dist, portrait ? 4.6 : 3.8, mid.z + oz * dist)
+    } else if (mode === 'dialogue') {
+      // nobody to frame (narrator / phone call): closer shot of the player
+      tmpLook.set(p.x, 1.2, p.z)
+      tmpPos.set(p.x + 2, portrait ? 4.8 : 4, p.z + (portrait ? 7.5 : 6.5))
+    } else {
+      const k = portrait ? 1.25 : 1
+      tmpLook.set(p.x, 1.1, p.z - 2)
+      tmpPos.set(p.x + FOLLOW_OFFSET.x, FOLLOW_OFFSET.y * k, p.z + FOLLOW_OFFSET.z * k)
+    }
+
+    const t = 1 - Math.exp(-delta * (mode === 'dialogue' ? 3 : 5))
+    camera.position.lerp(tmpPos, t)
+    lookAt.lerp(tmpLook, t)
+    camera.lookAt(lookAt)
+  })
+  return null
+}

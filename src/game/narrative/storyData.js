@@ -18,5 +18,5 @@ for (const [path, chapter] of Object.entries(files)) {
 
 export const storyCtx = { chapters, characters, callbacks, endings }
 
-// The chapter a new game starts on. Phase 1 only has the test run.
-export const FIRST_CHAPTER = 'test_run'
+// The chapter a new game starts on.
+export const FIRST_CHAPTER = 'ch1_jjc'

@@ -5,7 +5,8 @@
 import { parseComparison } from './conditions.js'
 import { isKnownStat } from './stats.js'
 
-const BEAT_TYPES = ['dialogue', 'choice', 'startMode', 'setFlag', 'changeStat', 'randomEvent', 'newsBroadcast', 'cutscene', 'endChapter', 'goto']
+const BEAT_TYPES = ['dialogue', 'choice', 'startMode', 'setFlag', 'changeStat', 'randomEvent', 'newsBroadcast', 'cutscene', 'endChapter', 'goto', 'freeRoam']
+const TIMES = ['dawn', 'day', 'dusk', 'night']
 const SPECIAL_SPEAKERS = ['narrator', 'player']
 
 // True when effects always move the story elsewhere (goto / ending, or a mode
@@ -20,7 +21,8 @@ function leavesScene(fx) {
   return false
 }
 
-export function validateStory({ chapters, characters = {}, callbacks = {}, endings = {}, modes = [] }) {
+// world (optional): { spots: [...ids], npcs: [...ids] } to check locations and goals
+export function validateStory({ chapters, characters = {}, callbacks = {}, endings = {}, modes = [], world = null }) {
   const errors = []
   const warnings = []
   const checkSpeaker = (s, at) => {
@@ -60,6 +62,9 @@ export function validateStory({ chapters, characters = {}, callbacks = {}, endin
     for (const [sceneId, scene] of Object.entries(chapter.scenes || {})) {
       if (!Array.isArray(scene.beats)) { errors.push(`${where(sceneId)}: "beats" must be a list`); continue }
       if (scene.next) checkTarget(scene.next, where(sceneId))
+      if (scene.time && !TIMES.includes(scene.time)) errors.push(`${where(sceneId)}: time must be one of ${TIMES.join(', ')}`)
+      if (world && scene.location && !world.spots.includes(scene.location)) errors.push(`${where(sceneId)}: location "${scene.location}" is not a spot in the world layout`)
+      for (const id of Object.keys(scene.positions || {})) if (world && !world.npcs.includes(id)) errors.push(`${where(sceneId)}: positions.${id} — no such NPC in the world layout`)
       const last = scene.beats[scene.beats.length - 1]
       if (!scene.next && !['endChapter', 'goto'].includes(last?.type) && !(last?.type === 'choice' && last.options?.every((o) => leavesScene(o.effects)))) {
         warnings.push(`${where(sceneId)}: last beat is "${last?.type}" and the scene has no "next" — make sure every path jumps away`)
@@ -100,6 +105,11 @@ export function validateStory({ chapters, characters = {}, callbacks = {}, endin
           case 'randomEvent':
             if (!beat.outcomes?.length) errors.push(`${at}: randomEvent needs "outcomes"`)
             beat.outcomes?.forEach((o, j) => { checkCondition(o.if, `${at} outcome ${j}`); checkEffects(o.effects, `${at} outcome ${j}`) })
+            break
+          case 'freeRoam':
+            if (!beat.objective) warnings.push(`${at}: freeRoam without an objective — the player won't know what to do`)
+            if (world && beat.goal?.reach && !world.spots.includes(beat.goal.reach)) errors.push(`${at}: goal spot "${beat.goal.reach}" not in the world layout`)
+            if (world && beat.goal?.talkTo && !world.npcs.includes(beat.goal.talkTo)) errors.push(`${at}: goal NPC "${beat.goal.talkTo}" not in the world layout`)
             break
           case 'goto':
             if (!beat.scene) errors.push(`${at}: goto needs "scene"`)

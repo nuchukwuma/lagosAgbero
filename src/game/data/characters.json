@@ -1,27 +1,433 @@
 {
-  "professor": { "name": "Professor", "fullName": "Jimoh \"Professor\" Ṣàngóbíyìí", "color": "#c9a227", "role": "mentor" },
-  "babaTicket": { "name": "Baba Ticket", "fullName": "Alhaji Ganiyu Àrẹ̀mú", "color": "#2f8f5b", "role": "chairman" },
-  "ada": { "name": "Ada", "fullName": "Adaeze Okafor", "color": "#d9586b", "role": "friend" },
-  "sunday": { "name": "Sunday", "fullName": "Sunday \"Shoki\" Ezekiel", "color": "#3a8fd9", "role": "sidekick" },
-  "scatter": { "name": "Scatter", "fullName": "Tunde \"Scatter\" Bákàrè", "color": "#d96a2b", "role": "rival" },
-  "bassey": { "name": "Commander Bassey", "fullName": "Commander Hezekiah Bassey", "color": "#6b8f3a", "role": "taskForce" },
-  "owoNla": { "name": "Hon. Owó Ńlá", "fullName": "Hon. Chief Bankọ́lé Ọ̀gúnṣẹ̀yẹ́", "color": "#7a4fd9", "role": "politician" },
-  "settlement": { "name": "Barrister Settlement", "fullName": "Barrister Wálé \"Settlement\" Àjàyí", "color": "#8a8a8a", "role": "fixer" },
-  "chuks": { "name": "Chuks", "fullName": "Chuks \"Smooth Operator\"", "color": "#b8862b", "role": "tortoiseRecruiter" },
-  "numberOneShell": { "name": "Number One Shell", "fullName": "Number One Shell", "color": "#8b6a2b", "role": "tortoiseBoss" },
-  "lordLaffy": { "name": "Lord Laffy", "fullName": "Lord Laffy", "color": "#8e44ad", "role": "hyenaBoss" },
-  "biodun": { "name": "Driver Bíọ́dún", "fullName": "Bíọ́dún, driver of \"God's Time Is The Best\"", "color": "#e0b400", "role": "driver" },
-  "mamaPut": { "name": "Mama Put", "fullName": "Mama Nkechi", "color": "#c0392b", "role": "foodSeller" },
-  "garba": { "name": "Mallam Garba", "fullName": "Mallam Garba", "color": "#16a085", "role": "teaSeller" },
-  "babaRadio": { "name": "Baba Radio", "fullName": "Baba Radio", "color": "#7f8c8d", "role": "radioStall" },
-  "mama": { "name": "Mama (phone)", "fullName": "Mama", "color": "#e67e22", "role": "family" },
-  "iyaBose": { "name": "Iya Bọ́sẹ̀", "fullName": "Iya Bọ́sẹ̀, leader of the market women", "color": "#d35400", "role": "creditor" },
-  "prophet": { "name": "Prophet Fire-Fire", "fullName": "Prophet Fire-Fire", "color": "#e74c3c", "role": "preacher" },
-  "iyaKeke": { "name": "Iya Keke", "fullName": "Mrs. Folake", "color": "#27ae60", "role": "kekeDriver" },
-  "formulaOne": { "name": "Formula One", "fullName": "Mustapha \"Formula One\"", "color": "#2c3e50", "role": "okadaRider" },
-  "kelvin": { "name": "Kelvin Crypto", "fullName": "Kelvin \"Crypto\"", "color": "#1abc9c", "role": "hustler" },
-  "nurse": { "name": "Nurse Rónkẹ́", "fullName": "Nurse Rónkẹ́", "color": "#5dade2", "role": "nurse" },
-  "comedian": { "name": "Comedian Ẹ̀wọ̀", "fullName": "Comedian Ẹ̀wọ̀", "color": "#f39c12", "role": "jokeSeller" },
-  "fakeConductor": { "name": "\"Conductor\"", "fullName": "A man who is definitely not a conductor", "color": "#95a5a6", "role": "scammer" },
-  "passenger": { "name": "Passenger", "fullName": "Passenger", "color": "#95a5a6", "role": "extra" }
+  "professor": {
+    "name": "Professor",
+    "fullName": "Jimoh \"Professor\" Ṣàngóbíyìí",
+    "color": "#c9a227",
+    "role": "mentor",
+    "look": {
+      "base": "male",
+      "skin": "#6e4329",
+      "shirt": "#8b6a2b",
+      "trousers": "#3e2723",
+      "shoes": "#3e2723",
+      "height": 0.97,
+      "width": 1.05,
+      "accessories": [
+        {
+          "type": "cap",
+          "color": "#34495e"
+        }
+      ]
+    }
+  },
+  "babaTicket": {
+    "name": "Baba Ticket",
+    "fullName": "Alhaji Ganiyu Àrẹ̀mú",
+    "color": "#2f8f5b",
+    "role": "chairman",
+    "look": {
+      "base": "male",
+      "skin": "#7d4c2e",
+      "shirt": "#2f8f5b",
+      "trousers": "#2f8f5b",
+      "shoes": "#5d4037",
+      "height": 1.0,
+      "width": 1.3,
+      "accessories": [
+        {
+          "type": "fila",
+          "color": "#1e6b43"
+        },
+        {
+          "type": "chain",
+          "color": "#d4af37"
+        }
+      ]
+    }
+  },
+  "ada": {
+    "name": "Ada",
+    "fullName": "Adaeze Okafor",
+    "color": "#d9586b",
+    "role": "friend",
+    "look": {
+      "base": "female",
+      "skin": "#8d5524",
+      "shirt": "#d9586b",
+      "trousers": "#2c3e50",
+      "shoes": "#5d4037",
+      "height": 0.95,
+      "width": 0.95,
+      "accessories": [
+        {
+          "type": "bandana",
+          "color": "#f39c12"
+        }
+      ]
+    }
+  },
+  "sunday": {
+    "name": "Sunday",
+    "fullName": "Sunday \"Shoki\" Ezekiel",
+    "color": "#3a8fd9",
+    "role": "sidekick",
+    "look": {
+      "base": "male",
+      "skin": "#a0623a",
+      "shirt": "#3a8fd9",
+      "trousers": "#1a1a1a",
+      "height": 0.95,
+      "width": 0.92,
+      "accessories": [
+        {
+          "type": "beanie",
+          "color": "#e0b400"
+        }
+      ]
+    }
+  },
+  "scatter": {
+    "name": "Scatter",
+    "fullName": "Tunde \"Scatter\" Bákàrè",
+    "color": "#d96a2b",
+    "role": "rival",
+    "look": {
+      "base": "male",
+      "skin": "#5e3a24",
+      "shirt": "#d96a2b",
+      "trousers": "#1a1a1a",
+      "height": 0.86,
+      "width": 1.05,
+      "accessories": [
+        {
+          "type": "glasses"
+        },
+        {
+          "type": "chain",
+          "color": "#d4af37"
+        }
+      ]
+    }
+  },
+  "bassey": {
+    "name": "Commander Bassey",
+    "fullName": "Commander Hezekiah Bassey",
+    "color": "#6b8f3a",
+    "role": "taskForce",
+    "look": {
+      "base": "male",
+      "skin": "#6e4329",
+      "shirt": "#6b8f3a",
+      "trousers": "#3d5226",
+      "shoes": "#1a1a1a",
+      "height": 1.04,
+      "width": 1.15,
+      "accessories": [
+        {
+          "type": "beanie",
+          "color": "#2d3d1a"
+        }
+      ]
+    }
+  },
+  "owoNla": {
+    "name": "Hon. Owó Ńlá",
+    "fullName": "Hon. Chief Bankọ́lé Ọ̀gúnṣẹ̀yẹ́",
+    "color": "#7a4fd9",
+    "role": "politician",
+    "look": {
+      "base": "male",
+      "skin": "#8d5524",
+      "shirt": "#ecf0f1",
+      "trousers": "#ecf0f1",
+      "height": 1.0,
+      "width": 1.35,
+      "accessories": [
+        {
+          "type": "fila",
+          "color": "#7a4fd9"
+        },
+        {
+          "type": "glasses"
+        }
+      ]
+    }
+  },
+  "settlement": {
+    "name": "Barrister Settlement",
+    "fullName": "Barrister Wálé \"Settlement\" Àjàyí",
+    "color": "#8a8a8a",
+    "role": "fixer",
+    "look": {
+      "base": "male",
+      "skin": "#7d4c2e",
+      "shirt": "#2c3e50",
+      "trousers": "#2c3e50",
+      "shoes": "#1a1a1a",
+      "height": 1.02,
+      "width": 0.95,
+      "accessories": [
+        {
+          "type": "glasses",
+          "color": "#333333"
+        }
+      ]
+    }
+  },
+  "chuks": {
+    "name": "Chuks",
+    "fullName": "Chuks \"Smooth Operator\"",
+    "color": "#b8862b",
+    "role": "tortoiseRecruiter",
+    "look": {
+      "base": "male",
+      "skin": "#7d4c2e",
+      "shirt": "#b8862b",
+      "trousers": "#5d4037",
+      "accessories": [
+        {
+          "type": "glasses"
+        },
+        {
+          "type": "wristband",
+          "color": "#e0b400"
+        }
+      ]
+    }
+  },
+  "numberOneShell": {
+    "name": "Number One Shell",
+    "fullName": "Number One Shell",
+    "color": "#8b6a2b",
+    "role": "tortoiseBoss"
+  },
+  "lordLaffy": {
+    "name": "Lord Laffy",
+    "fullName": "Lord Laffy",
+    "color": "#8e44ad",
+    "role": "hyenaBoss"
+  },
+  "biodun": {
+    "name": "Driver Bíọ́dún",
+    "fullName": "Bíọ́dún, driver of \"God's Time Is The Best\"",
+    "color": "#e0b400",
+    "role": "driver",
+    "look": {
+      "base": "male",
+      "skin": "#6e4329",
+      "shirt": "#e0b400",
+      "trousers": "#5d4037",
+      "width": 1.1,
+      "accessories": [
+        {
+          "type": "cap",
+          "color": "#1a1a1a"
+        }
+      ]
+    }
+  },
+  "mamaPut": {
+    "name": "Mama Put",
+    "fullName": "Mama Nkechi",
+    "color": "#c0392b",
+    "role": "foodSeller",
+    "look": {
+      "base": "female",
+      "skin": "#7d4c2e",
+      "shirt": "#c0392b",
+      "trousers": "#7f2a1f",
+      "width": 1.3,
+      "accessories": [
+        {
+          "type": "bandana",
+          "color": "#c0392b"
+        }
+      ]
+    }
+  },
+  "garba": {
+    "name": "Mallam Garba",
+    "fullName": "Mallam Garba",
+    "color": "#16a085",
+    "role": "teaSeller",
+    "look": {
+      "base": "male",
+      "skin": "#8d5524",
+      "shirt": "#ecf0f1",
+      "trousers": "#ecf0f1",
+      "accessories": [
+        {
+          "type": "fila",
+          "color": "#16a085"
+        }
+      ]
+    }
+  },
+  "babaRadio": {
+    "name": "Baba Radio",
+    "fullName": "Baba Radio",
+    "color": "#7f8c8d",
+    "role": "radioStall",
+    "look": {
+      "base": "male",
+      "skin": "#6e4329",
+      "shirt": "#7f8c8d",
+      "trousers": "#34495e",
+      "height": 0.95,
+      "accessories": [
+        {
+          "type": "fila",
+          "color": "#7f8c8d"
+        },
+        {
+          "type": "glasses",
+          "color": "#5d4037"
+        }
+      ]
+    }
+  },
+  "mama": {
+    "name": "Mama (phone)",
+    "fullName": "Mama",
+    "color": "#e67e22",
+    "role": "family"
+  },
+  "iyaBose": {
+    "name": "Iya Bọ́sẹ̀",
+    "fullName": "Iya Bọ́sẹ̀, leader of the market women",
+    "color": "#d35400",
+    "role": "creditor"
+  },
+  "prophet": {
+    "name": "Prophet Fire-Fire",
+    "fullName": "Prophet Fire-Fire",
+    "color": "#e74c3c",
+    "role": "preacher",
+    "look": {
+      "base": "male",
+      "skin": "#5e3a24",
+      "shirt": "#ffffff",
+      "trousers": "#ffffff",
+      "shoes": "#ffffff",
+      "accessories": [
+        {
+          "type": "bandana",
+          "color": "#e74c3c"
+        }
+      ]
+    }
+  },
+  "iyaKeke": {
+    "name": "Iya Keke",
+    "fullName": "Mrs. Folake",
+    "color": "#27ae60",
+    "role": "kekeDriver",
+    "look": {
+      "base": "female",
+      "skin": "#6e4329",
+      "shirt": "#27ae60",
+      "trousers": "#1a1a1a",
+      "accessories": [
+        {
+          "type": "cap",
+          "color": "#27ae60"
+        }
+      ]
+    }
+  },
+  "formulaOne": {
+    "name": "Formula One",
+    "fullName": "Mustapha \"Formula One\"",
+    "color": "#2c3e50",
+    "role": "okadaRider",
+    "look": {
+      "base": "male",
+      "skin": "#5e3a24",
+      "shirt": "#2c3e50",
+      "trousers": "#1a1a1a",
+      "accessories": [
+        {
+          "type": "beanie",
+          "color": "#c0392b"
+        }
+      ]
+    }
+  },
+  "kelvin": {
+    "name": "Kelvin Crypto",
+    "fullName": "Kelvin \"Crypto\"",
+    "color": "#1abc9c",
+    "role": "hustler",
+    "look": {
+      "base": "male",
+      "skin": "#a0623a",
+      "shirt": "#1abc9c",
+      "trousers": "#2c3e50",
+      "accessories": [
+        {
+          "type": "glasses"
+        },
+        {
+          "type": "chain",
+          "color": "#bdc3c7"
+        }
+      ]
+    }
+  },
+  "nurse": {
+    "name": "Nurse Rónkẹ́",
+    "fullName": "Nurse Rónkẹ́",
+    "color": "#5dade2",
+    "role": "nurse",
+    "look": {
+      "base": "female",
+      "skin": "#8d5524",
+      "shirt": "#5dade2",
+      "trousers": "#5dade2",
+      "shoes": "#ecf0f1"
+    }
+  },
+  "comedian": {
+    "name": "Comedian Ẹ̀wọ̀",
+    "fullName": "Comedian Ẹ̀wọ̀",
+    "color": "#f39c12",
+    "role": "jokeSeller",
+    "look": {
+      "base": "male",
+      "skin": "#8d5524",
+      "shirt": "#f39c12",
+      "trousers": "#1a1a1a",
+      "accessories": [
+        {
+          "type": "glasses",
+          "color": "#e74c3c"
+        }
+      ]
+    }
+  },
+  "fakeConductor": {
+    "name": "\"Conductor\"",
+    "fullName": "A man who is definitely not a conductor",
+    "color": "#95a5a6",
+    "role": "scammer",
+    "look": {
+      "base": "male",
+      "skin": "#7d4c2e",
+      "shirt": "#95a5a6",
+      "trousers": "#34495e",
+      "height": 0.93,
+      "accessories": [
+        {
+          "type": "cap",
+          "color": "#e74c3c"
+        }
+      ]
+    }
+  },
+  "passenger": {
+    "name": "Passenger",
+    "fullName": "Passenger",
+    "color": "#95a5a6",
+    "role": "extra"
+  }
 }

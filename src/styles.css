@@ -830,3 +830,311 @@ body,
     animation: none;
   }
 }
+
+/* ---------------- Phase 2: 3D street + HUD ---------------- */
+
+.game-canvas {
+  position: absolute !important;
+  inset: 0;
+  touch-action: none;
+}
+
+.hud {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 8px 10px;
+  padding-top: max(8px, env(safe-area-inset-top));
+  background: linear-gradient(rgba(10, 8, 4, 0.8), rgba(10, 8, 4, 0));
+  z-index: 5;
+  pointer-events: none;
+}
+
+.hud > * {
+  pointer-events: auto;
+}
+
+.hud-left {
+  min-width: 0;
+  flex: 1;
+}
+
+.hud-name {
+  font-weight: 800;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.hud-name span {
+  color: var(--danfo);
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.hud-money {
+  font-size: 20px;
+  font-weight: 900;
+  color: #8ff0a4;
+  text-shadow: 0 2px 0 #000;
+}
+
+.hud-mid {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.red-eyes {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.energy-bar,
+.notoriety-bar {
+  width: 58px;
+  height: 5px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.2);
+  overflow: hidden;
+}
+
+.energy-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ffd1c9, #e2253a);
+}
+
+.hud-notoriety {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--danfo);
+}
+
+.notoriety-fill {
+  height: 100%;
+  background: var(--danfo);
+}
+
+.hud-right {
+  display: flex;
+  gap: 6px;
+  flex: 1;
+  justify-content: flex-end;
+}
+
+.objective {
+  position: absolute;
+  top: calc(max(8px, env(safe-area-inset-top)) + 70px);
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: calc(100% - 24px);
+  padding: 8px 14px;
+  border-radius: 10px;
+  background: rgba(26, 20, 8, 0.88);
+  border: 2px solid var(--danfo);
+  font-size: 15px;
+  z-index: 6;
+  text-align: center;
+}
+
+.objective-tag {
+  color: var(--danfo);
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 1px;
+  margin-right: 4px;
+}
+
+.controls {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 16px 20px;
+  padding-bottom: max(20px, env(safe-area-inset-bottom));
+  z-index: 6;
+  pointer-events: none;
+}
+
+.joystick {
+  pointer-events: auto;
+  width: 132px;
+  height: 132px;
+  border-radius: 50%;
+  background: rgba(26, 20, 8, 0.35);
+  border: 2px solid rgba(246, 236, 210, 0.45);
+  display: grid;
+  place-items: center;
+  touch-action: none;
+  user-select: none;
+}
+
+.joystick-knob {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: rgba(242, 195, 0, 0.85);
+  border: 2px solid #1a1408;
+  pointer-events: none;
+}
+
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+  pointer-events: auto;
+}
+
+.action-btn {
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  border: 3px solid #1a1408;
+  font-weight: 900;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  touch-action: none;
+}
+
+.action-btn small {
+  font-size: 10px;
+  font-weight: 600;
+  max-width: 76px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.action-btn.run {
+  background: rgba(246, 236, 210, 0.85);
+  color: #1a1408;
+}
+
+.action-btn.talk {
+  background: var(--danfo);
+  color: #1a1408;
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  50% {
+    transform: scale(1.06);
+  }
+}
+
+.keyboard-hint {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 11px;
+  color: rgba(246, 236, 210, 0.7);
+  text-shadow: 0 1px 2px #000;
+  z-index: 5;
+  pointer-events: none;
+}
+
+@media (pointer: coarse) {
+  .keyboard-hint {
+    display: none;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .joystick {
+    opacity: 0.6;
+  }
+}
+
+.loading-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  background: var(--bg);
+}
+
+.loading-overlay h2 {
+  color: var(--danfo);
+  letter-spacing: 3px;
+  margin: 0;
+}
+
+.loading-bar {
+  width: min(280px, 70vw);
+  height: 10px;
+  border-radius: 5px;
+  background: var(--panel);
+  overflow: hidden;
+}
+
+.loading-fill {
+  height: 100%;
+  background: var(--danfo);
+  transition: width 0.2s;
+}
+
+.loading-overlay p {
+  color: var(--muted);
+}
+
+.dev-picker {
+  min-height: 36px;
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--muted);
+  border: 1px dashed var(--muted);
+  padding: 4px 8px;
+}
+
+.swatch-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.swatch-row span {
+  width: 44px;
+  text-align: left;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.swatch {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 3px solid transparent;
+  cursor: pointer;
+  box-shadow: 0 0 0 1px rgba(246, 236, 210, 0.4);
+}
+
+.swatch.on {
+  border-color: var(--danfo);
+}

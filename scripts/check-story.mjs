@@ -19,7 +19,7 @@ function walk(dir) {
 
 const chapters = {}
 let parseErrors = 0
-for (const file of walk(path.join(DATA, 'story'))) {
+for (const file of walk(path.join(DATA, 'story'))) {  // chapters only
   try {
     const ch = readJson(file)
     chapters[ch.id] = ch
@@ -36,7 +36,10 @@ const ctx = {
   endings: readJson(path.join(DATA, 'endings.json')),
 }
 
-const { errors, warnings } = validateStory({ ...ctx, modes: [] })
+const worldJson = readJson(path.join(DATA, 'world/iyanaWahala.json'))
+const world = { spots: Object.keys(worldJson.spots || {}), npcs: (worldJson.npcs || []).map((n) => n.id) }
+
+const { errors, warnings } = validateStory({ ...ctx, modes: [], world })
 for (const w of warnings) console.warn(`! ${w}`)
 for (const e of errors) console.error(`✗ ${e}`)
 

@@ -1,0 +1,19 @@
+{
+  "id": "dev_sandbox",
+  "act": 0,
+  "title": "Sandbox (dev)",
+  "description": "Walk around Iyana-Wahala freely. Developer tool, not part of the story.",
+  "startScene": "walk",
+  "scenes": {
+    "walk": {
+      "location": "arrival",
+      "time": "day",
+      "beats": [
+        { "type": "freeRoam", "objective": "Walk around. Find Ada's Corner in the market.", "goal": { "talkTo": "ada" } },
+        { "type": "dialogue", "speaker": "ada", "text": "You don find me. Sandbox works. Abeg go and test something else." },
+        { "type": "freeRoam", "objective": "Free walk. Open the pause menu to quit." },
+        { "type": "endChapter", "title": "Sandbox over" }
+      ]
+    }
+  }
+}
