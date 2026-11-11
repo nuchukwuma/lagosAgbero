@@ -9,6 +9,11 @@ import GoalTracker from './GoalTracker.jsx'
 import PlayerController from '../player/PlayerController.jsx'
 import { parseLayout } from './layout.js'
 import { playerState } from './worldState.js'
+import { loadClips } from '../characters/clipLoader.js'
+import Traffic from './Traffic.jsx'
+import FeeRunDirector from '../modes/feeCollection/FeeRunDirector.jsx'
+import { useFeeRun } from '../modes/feeCollection/feeRunStore.js'
+import { WORLD_MODES } from '../modes/modeRegistry.js'
 import street from '../data/world/iyanaWahala.json'
 
 // The 3D street behind the story. The story view decides:
@@ -34,11 +39,20 @@ function useSceneTeleport(view, layout) {
   }, [view.chapterId, view.sceneId, view.location, layout])
 }
 
+// Fetch the clips everyone uses straight away, so nobody pops from the
+// fallback pose into breathing/walking a second later.
+const COMMON_CLIPS = ['breathingIdle', 'walk', 'run', 'talk', 'argue']
+
 export default function GameCanvas({ view, game, paused = false, onGoalReached }) {
   const layout = STREET_LAYOUT
   useSceneTeleport(view, layout)
+  useEffect(() => {
+    loadClips(COMMON_CLIPS).catch(() => {})
+  }, [])
 
   const freeRoam = view.type === 'freeRoam'
+  const worldMode = view.type === 'mode' && WORLD_MODES.has(view.mode)
+  const feeRunActive = useFeeRun((s) => s.active && s.started && !s.ended)
   const talking = DIALOGUE_VIEWS.has(view.type)
   const speaker = talking ? view.speaker : null
   const eyeRed = Math.min(1, Math.max(0, game.stats.energy / 100))
@@ -58,10 +72,12 @@ export default function GameCanvas({ view, game, paused = false, onGoalReached }
       <Suspense fallback={null}>
         <StreetScene layout={layout} />
         <NPCs layout={layout} flags={game.flags} positions={view.positions} speaker={speaker} mood={view.mood} />
-        <PlayerController layout={layout} look={look} enabled={freeRoam && !paused} eyeRed={eyeRed} />
+        <PlayerController layout={layout} look={look} enabled={(freeRoam || feeRunActive) && !paused} eyeRed={eyeRed} />
+        <Traffic paused={paused} />
+        {worldMode && view.mode === 'feeCollection' && <FeeRunDirector />}
       </Suspense>
       {freeRoam && <GoalTracker key={view.key} goal={view.goal} layout={layout} onReached={onGoalReached} />}
-      <CameraRig mode={talking ? 'dialogue' : 'follow'} speaker={speaker} />
+      <CameraRig mode={talking ? 'dialogue' : 'follow'} speaker={speaker} ceiling={layout.raw.flyover} />
     </Canvas>
   )
 }

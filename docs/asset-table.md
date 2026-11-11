@@ -192,7 +192,9 @@ Sizes in metres are after pack scaling (1 unit = 1 m).
 
 | Clip | Source file | Length | Loop | Root motion | Download | Planned use |
 |---|---|---|---|---|---|---|
-| `walk` | Start Walking.fbx | 1.33 s | yes | 0.93 m/s | 31 KB | Normal walk (loop cut from Start Walking) |
+| `breathingIdle` | Breathing Idle.fbx | 9.93 s | yes | 0 m/s | 140 KB | Default standing idle for everyone |
+| `walk` | Walking.fbx | 0.96 s | yes | 1.62 m/s | 23 KB | Normal walk |
+| `startWalk` | Start Walking.fbx | 2.92 s | no | 0.65 m/s | 67 KB | Spare: idle-to-walk start |
 | `drunkWalk` | Drunk Walk.fbx | 3.00 s | yes | 0.84 m/s | 69 KB | Low-energy stagger, red-eye side effects |
 | `run` | Running.fbx | 0.63 s | yes | 5.72 m/s | 16 KB | Run (street, chases) |
 | `goofyRun` | Goofy Running.fbx | 0.63 s | yes | 1.73 m/s | 15 KB | Comic panic run (fleeing defaulters, runner mode) |
@@ -225,8 +227,8 @@ Sizes in metres are after pack scaling (1 unit = 1 m).
 
 | Name | Uses | How |
 |---|---|---|
-| `keke` | `kekeChassis`, `kekeWheel` | Keke: kart chassis + one centre front wheel + yellow/green primitive cabin and canvas canopy |
-| `okada` | `okadaWheel` | Okada: primitive frame, seat, tank, handlebar + 2 wheels |
+| `keke` | `kekeWheel` | Keke: simple-shape body, canvas canopy and 3 Kenney wheels (src/game/vehicles/Keke.jsx). The kart chassis looked like a race car, so it is kept only as a spare. |
+| `okada` | `okadaWheel` | Okada: simple-shape frame, tank, seat, handlebar + 2 Kenney wheels (src/game/vehicles/Okada.jsx) |
 | `marketStall` | `shippingContainerA`, `carton` | Container + sagging cloth roof (plane) + wooden table (boxes) + goods |
 | `containerShop` | `shippingContainerB`, `shopSign` | Container shop with painted name board |
 | `busStopShelter` | `busStopSign` | Primitive shelter (posts + roof + bench) + bus stop sign |

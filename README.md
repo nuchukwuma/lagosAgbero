@@ -37,7 +37,7 @@ Game code only ever uses names from `assetManifest.js` (`danfo`,
 ```bash
 npm run story:check      # validate story JSON + random play-throughs
 npm test                 # engine unit tests
-npm run assets:animations -- a1.zip a2.zip a3.zip a4.rar a5.zip   # re-import Mixamo clips
+npm run assets:animations -- a1.zip a2.zip a3.zip a4.rar a5.zip "source-assets/mixamo/Breathing Idle.fbx" source-assets/mixamo/Walking.fbx   # re-import Mixamo clips
 ```
 
 ## Docs
@@ -61,6 +61,7 @@ src/
     characters/    one body, many looks: skin/clothes tinting, accessories, animations
     world/         3D street: model loader + tweaks, layout, camera, NPCs
     player/        input (keyboard + joystick) and the player controller
+    vehicles/      keke, okada (built from shapes) and the Vehicle component
     data/story/    story JSON (editable without touching code)
     data/world/    street layout JSON
 scripts/           asset import and check tools

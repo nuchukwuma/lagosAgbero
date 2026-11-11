@@ -13,9 +13,9 @@ import characters from '../game/data/characters.json'
 
 const CATEGORIES = ['vehicle', 'prop', 'road', 'street', 'building', 'nature', 'cast']
 const ANIMS = [
-  { id: 'idle', label: 'idle (Kenney)' },
-  { id: 'run', label: 'run (Kenney)' },
-  { id: 'jump', label: 'jump (Kenney)' },
+  { id: 'kenneyIdle', label: 'kenneyIdle (Kenney)' },
+  { id: 'kenneyRun', label: 'kenneyRun (Kenney)' },
+  { id: 'kenneyJump', label: 'kenneyJump (Kenney)' },
   ...CLIP_NAMES.map((id) => ({ id, label: `${id} (Mixamo)` })),
 ]
 const CAST = Object.entries(characters).filter(([, c]) => c.look)
@@ -47,7 +47,7 @@ export default function AssetBrowser({ onBack }) {
   const [category, setCategory] = useState('vehicle')
   const names = useMemo(() => Object.keys(MODELS).filter((n) => MODELS[n].category === category), [category])
   const [selected, setSelected] = useState('danfo')
-  const [anim, setAnim] = useState(0)
+  const [anim, setAnim] = useState(3 + CLIP_NAMES.indexOf('breathingIdle'))
   const [person, setPerson] = useState('player')
   const cast = category === 'cast'
   const asset = getAsset(selected)

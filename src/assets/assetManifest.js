@@ -273,8 +273,8 @@ export const ATLASES = {
 // Things with no model of their own, built in code from primitives plus parts.
 // `parts` lists the manifest models each recipe uses.
 export const PROCEDURAL = {
-  keke: { parts: ['kekeChassis', 'kekeWheel'], use: 'Keke: kart chassis + one centre front wheel + yellow/green primitive cabin and canvas canopy' },
-  okada: { parts: ['okadaWheel'], use: 'Okada: primitive frame, seat, tank, handlebar + 2 wheels' },
+  keke: { parts: ['kekeWheel'], use: 'Keke: simple-shape body, canvas canopy and 3 Kenney wheels (src/game/vehicles/Keke.jsx). The kart chassis looked like a race car, so it is kept only as a spare.' },
+  okada: { parts: ['okadaWheel'], use: 'Okada: simple-shape frame, tank, seat, handlebar + 2 Kenney wheels (src/game/vehicles/Okada.jsx)' },
   marketStall: { parts: ['shippingContainerA', 'carton'], use: 'Container + sagging cloth roof (plane) + wooden table (boxes) + goods' },
   containerShop: { parts: ['shippingContainerB', 'shopSign'], use: 'Container shop with painted name board' },
   busStopShelter: { parts: ['busStopSign'], use: 'Primitive shelter (posts + roof + bench) + bus stop sign' },

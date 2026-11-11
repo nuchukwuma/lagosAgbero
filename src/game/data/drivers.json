@@ -1,0 +1,21 @@
+{
+  "named": {
+    "biodun": { "name": "Driver Bíọ́dún", "kind": "danfo", "slogan": "GOD'S TIME IS THE BEST", "tolerance": 1.0, "stingy": 0.8 },
+    "iyaKeke": { "name": "Iya Keke", "kind": "keke", "tolerance": 0.3, "stingy": 1, "lines": { "refuse": ["I no dey pay agbero. Na law. My own law. Next!"] } },
+    "formulaOne": { "name": "Formula One", "kind": "okada", "tolerance": 1.3, "stingy": 0.2, "lines": { "pay": ["Take am quick, I get passenger for Ikeja wey dey shout!"] } },
+    "pastorDriver": { "name": "Pastor Driver", "kind": "danfo", "slogan": "NO WEAPON FASHIONED", "tolerance": 1.2, "stingy": 0.3, "lines": { "pay": ["Take, my son. And come to church on Sunday. Offering na separate matter."] } }
+  },
+  "names": ["Driver Kúnlé", "Driver Emeka", "Driver Musa", "Mama Tobi", "Driver Ṣẹ̀gun", "Uncle Bayo", "Driver Chidi", "Driver Yusuf", "Driver Ọlá", "Driver Effiong", "Baba Ibeji", "Driver Femi"],
+  "lines": {
+    "pay": ["Oya take. Make Baba Ticket no hear say I no pay.", "Collect. God go bless your hustle.", "Here. Na the last money for my pocket be that o.", "Take your money, abeg, passengers dey vex.", "No wahala. Na today?"],
+    "payOver": ["₦{fee}?! Una dey rob us with receipt now!", "Take am. But God dey watch you, JJC.", "This fee na armed robbery wey get union card."],
+    "haggle": ["Ah, ₦{fee}? Fuel don cost! Take ₦{offer}.", "My brother, market dull. ₦{offer} na wetin I get.", "Abeg collect ₦{offer}. I go settle you tomorrow.", "₦{offer}. Final. My wife dey hospital. (She no dey hospital.)"],
+    "refuse": ["I no get money today. Na God go pay you.", "Who you be? I no know you for this park!", "I don pay for Front Stop already. Double ticket?", "Go and collect from your papa!"],
+    "insistPay": ["Ehen, take am! Wicked man.", "Okay o, take. Lagos no get mercy."],
+    "insistRefuse": ["I no go pay. Do wetin you wan do!", "Insist, insist. I don go!"],
+    "threatenPay": ["Okay! Okay! No vex. Take am.", "Ehn ehn, I don hear. Take. No touch my mirror."],
+    "threatenRefuse": ["You wan fight? Me wey carry eighteen passengers since 5 a.m.?", "Touch me make you see. My conductor na boxer."],
+    "letGo": ["God bless you, my brother!", "You get good heart. Rare thing for this Lagos.", "I no go forget this one."],
+    "default": ["I go pay tomorrow! Tomorrow by God's grace!"]
+  }
+}

@@ -36,5 +36,33 @@
       "speaker": "professor",
       "text": "That your fake phone call this morning... e good. Lagos na stage play. Everybody dey act. Make sure say you know your own script."
     }
+  },
+  "biodun_ch1": {
+    "caught": {
+      "speaker": "professor",
+      "text": "You catch Bíọ́dún! For your first day! Baba Ticket go hear am before lunch. But that man get long memory. Watch your back for park."
+    },
+    "escaped": {
+      "speaker": "professor",
+      "text": "Danfo pass you like say you be bus stop sign. No vex, everybody lose to Bíọ́dún once. Na the second time dem dey count."
+    },
+    "let_go": {
+      "speaker": "professor",
+      "text": "Soft heart. Baba Ticket no go like am. But the drivers go talk am for park, and sometimes that one better pass money."
+    }
+  },
+  "ch1_firstRun": {
+    "metQuota": {
+      "speaker": "professor",
+      "text": "Wait... you don pass Baba Ticket share for your FIRST day? From the Back Side? Who you be? Abeg, borrow me your leg."
+    },
+    "half": {
+      "speaker": "professor",
+      "text": "Half of Baba Ticket money for first day. E no bad for JJC. E no good either. Na Lagos: everything na half."
+    },
+    "poor": {
+      "speaker": "professor",
+      "text": "Hmm. Your bag light o. Baba Ticket go look your face well well this evening. Start to practise your sorry face."
+    }
   }
 }

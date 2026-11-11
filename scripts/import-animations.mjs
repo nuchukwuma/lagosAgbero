@@ -1,7 +1,7 @@
 // Imports Mixamo animations and retargets them onto the Kenney character.
 //
 // Usage:
-//   npm run assets:animations -- a1.zip a2.zip a3.zip a4.rar a5.zip
+//   npm run assets:animations -- a1.zip a2.zip a3.zip a4.rar a5.zip "Breathing Idle.fbx" Walking.fbx
 //   (any mix of .zip, .rar, folders or single .fbx files)
 //
 // Why this exists:
@@ -30,13 +30,15 @@ const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..')
 const BODY = path.join(ROOT, 'public/assets/characters/characterMedium.fbx')
 const OUT_DIR = path.join(ROOT, 'public/assets/characters/clips')
 const INDEX = path.join(ROOT, 'src/assets/clipIndex.json')
-const FPS = 24
+const DEFAULT_FPS = 24
 const DECIMALS = 4
 
 // game name -> source file and how to treat it
 const CLIPS = {
   // street / story
-  walk: { file: 'Start Walking.fbx', loop: true, inPlace: true, findLoop: { from: 1.2, to: 2.0, minPeriod: 0.8, maxPeriod: 1.4 }, use: 'Normal walk (loop cut from Start Walking)' },
+  breathingIdle: { file: 'Breathing Idle.fbx', loop: true, inPlace: true, fps: 15, use: 'Default standing idle for everyone' },
+  walk: { file: 'Walking.fbx', loop: true, inPlace: true, use: 'Normal walk' },
+  startWalk: { file: 'Start Walking.fbx', loop: false, inPlace: true, use: 'Spare: idle-to-walk start' },
   drunkWalk: { file: 'Drunk Walk.fbx', loop: true, inPlace: true, use: 'Low-energy stagger, red-eye side effects' },
   run: { file: 'Running.fbx', loop: true, inPlace: true, use: 'Run (street, chases)' },
   goofyRun: { file: 'Goofy Running.fbx', loop: true, inPlace: true, use: 'Comic panic run (fleeing defaulters, runner mode)' },
@@ -137,6 +139,7 @@ function prepareRig(root) {
 
 // ---------- main retarget ----------
 function retargetClip(target, source, clip, cfg) {
+  const FPS = cfg.fps || DEFAULT_FPS
   const tBone = (n) => target.getObjectByName(n)
   const sBone = (n) => source.getObjectByName(`mixamorig${n}`)
 

@@ -177,7 +177,8 @@ function visibleOptions(state, beat) {
     .map((opt, index) => {
       const meets = checkCondition(opt.requires, state)
       if (!meets && !opt.showLocked) return null
-      const cost = opt.cost || 0
+      // cost: a number, or "stat:quota" to charge whatever that stat is now
+      const cost = typeof opt.cost === 'string' && opt.cost.startsWith('stat:') ? Math.round(state.stats[opt.cost.slice(5)] || 0) : opt.cost || 0
       const affordable = state.stats.money >= cost
       let lockedReason = null
       if (!meets) lockedReason = opt.lockedText || `Needs ${describeCondition(opt.requires)}`

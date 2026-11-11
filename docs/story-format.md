@@ -131,7 +131,8 @@ The first variant whose condition is true is used.
 - `requires`: the option is hidden unless this condition is true. Add
   `"showLocked": true` to show it greyed out with `lockedText` instead.
 - `cost`: naira taken from the pocket. If the player can't afford it, the
-  option is locked.
+  option is locked. Use `"cost": "stat:quota"` to charge the current value of
+  a stat.
 - `timeout` and `timeoutOption`: a countdown bar. When time runs out, the
   game picks `timeoutOption`, which is the index of an option starting at 0.
 - With no `goto`, the story continues with the next beat after the choice.
@@ -174,7 +175,7 @@ comparisons are `>=`, `<=`, `>`, `<`, `==` and `!=`. A bare number means `>=`.
 
 | Group | Stats |
 |---|---|
-| Money (naira) | `money` (pocket), `hustleMoney`, `cultMoney`, `debt` |
+| Money (naira) | `money` (pocket), `hustleMoney`, `cultMoney`, `debt`, `quota` (Baba Ticket's daily share), `stopFee` (your fee per danfo) |
 | Street | `energy` (0–100), `notoriety` (0–100) |
 | People (0–100) | `chairmanTrust`, `mentorBond`, `friendBond` (Ada), `communityGoodwill`, `policeHeat`, `cultLoyalty`, `rivalCultHatred` |
 
@@ -195,6 +196,49 @@ comparisons are `>=`, `<=`, `>`, `<`, `==` and `!=`. A bare number means `>=`.
 
 The line matching what the player did is shown. If nothing matches, the beat
 is skipped.
+
+### Fee collection (`"mode": "feeCollection"`)
+
+The fee run is played in the 3D street. Vehicles pull in at the stop, and the
+player walks up to each one and presses COLLECT. Each driver then pays,
+haggles or refuses, depending on the player's `stopFee` compared to the fair
+fee.
+
+```json
+{ "type": "startMode", "mode": "feeCollection",
+  "params": { "spot": "backSide", "duration": 120, "vehicles": 14,
+              "drivers": ["pastorDriver", "iyaKeke"], "defaulter": "biodun", "defaulterAt": 0.72,
+              "rememberAs": "ch1_firstRun" },
+  "results": { "defaulter": { "goto": "defaulter" }, "done": { "goto": "evening" } } }
+```
+
+| Param | Meaning |
+|---|---|
+| `spot` | Where vehicles stop: `backSide` or `frontStop` |
+| `duration` | Length of the run in seconds |
+| `vehicles` | How many vehicles come |
+| `wait` | How many seconds a vehicle waits before driving off |
+| `drivers` | Named drivers from `drivers.json` who take part |
+| `defaulter` | A named driver who runs off. Meeting him (or ignoring him) ends the run with outcome `defaulter`. |
+| `defaulterAt` | When he arrives, as a fraction of the run from 0 to 1 |
+| `fairFee` | What drivers think is normal (default ₦500). The economy changes this later. |
+| `rememberAs` | A memory key that gets `metQuota`, `half` or `poor` |
+
+**Outcomes:** `done` (time ran out) or `defaulter`.
+
+**What the result applies:**
+
+- the money collected goes into the pocket
+- `communityGoodwill` and `notoriety` change
+- flags are set: `feeRun_threatened`, `feeRun_letGo`, `feeRun_overcharged`,
+  `feeRun_metQuota`, `feeRun_ignoredDefaulter`
+
+**Related stats:**
+
+- `stopFee`: the player's fee per danfo. Other vehicles pay a share of it:
+  keke 40%, okada 20%, taxi 60%, lorry 200%.
+- `quota`: Baba Ticket's daily share. A choice can charge exactly that with
+  `"cost": "stat:quota"`.
 
 ### Gameplay modes
 

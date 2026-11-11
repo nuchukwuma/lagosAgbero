@@ -8,10 +8,15 @@
 //   { outcome: "won", moneyChange: 500, flags: ["caughtDefaulter"], stats: { energy: -10 } }
 
 import StandInMode from './StandInMode.jsx'
+import FeeCollectionMode from './feeCollection/FeeCollectionMode.jsx'
 
 export const MODES = {
+  feeCollection: FeeCollectionMode,
   // chase: ChaseMode,   (Phase 4)
 }
+
+// Modes played inside the 3D street (the player walks with joystick/keys).
+export const WORLD_MODES = new Set(['feeCollection'])
 
 export const PLANNED_MODES = ['chase', 'fight', 'runner', 'raid', 'conductor', 'feeCollection', 'begging', 'shop']
 

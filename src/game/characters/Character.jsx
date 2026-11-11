@@ -10,13 +10,16 @@ import { attachAccessories } from './accessories.js'
 
 // One person in the 3D world. Everyone (player, NPCs, crowd) uses this.
 //   look       see look.js
-//   animation  'idle' | 'run' | 'jump' (Kenney) or any Mixamo clip name
+//   animation  any clip name from clipIndex (walk, run, punch...), 'idle'
+//              (= breathingIdle), 'jump', or kenneyIdle / kenneyRun / kenneyJump
 //   speed      animation playback speed
 //   once       for non-looping clips: called when the clip ends
 // The outer group is forwarded as ref so controllers can move/turn it.
 
 const url = (f) => `${ASSET_ROOT}/${f}`
-const KENNEY = ['idle', 'run', 'jump']
+// Kenney's own clips (always available instantly) and friendly aliases.
+const KENNEY = ['kenneyIdle', 'kenneyRun', 'kenneyJump']
+const ALIASES = { idle: 'breathingIdle', jump: 'kenneyJump' }
 const NATIVE_HEIGHT = 376.47 // Kenney units; measured once (see docs)
 
 function realClip(fbx, name) {
@@ -63,13 +66,13 @@ const Character = forwardRef(function Character({ look: lookInput, animation = '
   }
 
   const kenneyClips = useMemo(
-    () => ({ idle: realClip(idleFbx, 'idle'), run: realClip(runFbx, 'run'), jump: realClip(jumpFbx, 'jump') }),
+    () => ({ kenneyIdle: realClip(idleFbx, 'kenneyIdle'), kenneyRun: realClip(runFbx, 'kenneyRun'), kenneyJump: realClip(jumpFbx, 'kenneyJump') }),
     [idleFbx, runFbx, jumpFbx],
   )
 
   const mixer = useMemo(() => new THREE.AnimationMixer(object), [object])
   const current = useRef(null)
-  const [clip, setClip] = useState(kenneyClips.idle)
+  const [clip, setClip] = useState(kenneyClips.kenneyIdle)
   const endRef = useRef(onClipEnd)
   endRef.current = onClipEnd
 
@@ -80,9 +83,10 @@ const Character = forwardRef(function Character({ look: lookInput, animation = '
 
   useEffect(() => {
     let cancelled = false
-    if (KENNEY.includes(animation)) setClip(kenneyClips[animation])
+    const name = ALIASES[animation] || animation
+    if (KENNEY.includes(name)) setClip(kenneyClips[name])
     else
-      loadClip(animation)
+      loadClip(name)
         .then((c) => !cancelled && setClip(c))
         .catch((e) => console.warn(`[anim] "${animation}" failed to load`, e))
     return () => {
@@ -99,6 +103,9 @@ const Character = forwardRef(function Character({ look: lookInput, animation = '
     if (current.current !== action) {
       action.reset()
       if (current.current) action.crossFadeFrom(current.current, 0.2, false)
+      // first clip of a looping animation starts at a random point, so a
+      // crowd doesn't breathe in perfect sync
+      else if (loops) action.time = Math.random() * clip.duration
       action.play()
       current.current = action
     }

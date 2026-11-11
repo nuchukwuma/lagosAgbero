@@ -15,7 +15,9 @@ const tmpPos = new THREE.Vector3()
 const tmpLook = new THREE.Vector3()
 const lookAt = new THREE.Vector3()
 
-export default function CameraRig({ mode = 'follow', speaker = null }) {
+// `ceiling` (optional): { x, width, deckY, fromZ, toZ } — the flyover. Under it
+// the camera drops below the deck instead of filming concrete.
+export default function CameraRig({ mode = 'follow', speaker = null, ceiling = null }) {
   const camera = useThree((s) => s.camera)
   const size = useThree((s) => s.size)
 
@@ -61,6 +63,15 @@ export default function CameraRig({ mode = 'follow', speaker = null }) {
       tmpPos.set(p.x + FOLLOW_OFFSET.x, FOLLOW_OFFSET.y * k, p.z + FOLLOW_OFFSET.z * k)
     }
 
+    if (ceiling && Math.abs(tmpPos.x - ceiling.x) < ceiling.width / 2 + 2 && tmpPos.z > ceiling.fromZ && tmpPos.z < ceiling.toZ) {
+      const maxY = ceiling.deckY - 1.4
+      if (tmpPos.y > maxY) {
+        // pull in closer and lower so the player stays in view under the bridge
+        tmpPos.x = p.x + (tmpPos.x - p.x) * 0.6
+        tmpPos.z = p.z + (tmpPos.z - p.z) * 0.6
+        tmpPos.y = maxY
+      }
+    }
     const t = 1 - Math.exp(-delta * (mode === 'dialogue' ? 3 : 5))
     camera.position.lerp(tmpPos, t)
     lookAt.lerp(tmpLook, t)

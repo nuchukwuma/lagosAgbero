@@ -3,34 +3,90 @@
   "act": 1,
   "number": 1,
   "title": "Chapter 1 — JJC",
-  "description": "DRAFT for approval. Phase 2 covers the opening up to the Back Side; Phase 3 adds the first fee run and the first defaulter.",
+  "description": "DRAFT for approval. Phase 2: opening to the Back Side. Phase 3: first night, fee level, Day 1 fee run, first defaulter. Phase 4 adds the real chase.",
   "startScene": "arrival",
   "scenes": {
     "arrival": {
       "location": "arrival",
       "time": "dawn",
-      "positions": { "professor": [-9, -8.4, 240] },
+      "positions": {
+        "professor": [
+          -9,
+          -8.4,
+          240
+        ]
+      },
       "beats": [
         {
           "type": "cutscene",
           "cards": [
-            { "title": "5:40 a.m.", "text": "Iyana-Wahala Bus Stop, Lagos." },
-            { "title": "What you have", "text": "{money}. A phone on 3%. One bag. One OND certificate in a nylon." },
-            { "title": "What you owe", "text": "{debt}. Your mother's market women gave it to Double-Double Investment Club because you told them to. Double-Double \"migrated to a new server\". You cannot go home." }
+            {
+              "title": "5:40 a.m.",
+              "text": "Iyana-Wahala Bus Stop, Lagos."
+            },
+            {
+              "title": "What you have",
+              "text": "{money}. A phone on 3%. One bag. One OND certificate in a nylon."
+            },
+            {
+              "title": "What you owe",
+              "text": "{debt}. Your mother's market women gave it to Double-Double Investment Club because you told them to. Double-Double \"migrated to a new server\". You cannot go home."
+            }
           ]
         },
-        { "type": "dialogue", "speaker": "narrator", "text": "The night bus from Ìlú-Àlàáfíà coughs you out under the flyover. Lagos is already awake. Lagos did not sleep." },
-        { "type": "dialogue", "speaker": "fakeConductor", "text": "Ehen! Fine boy! Welcome to Lagos! You dey go Oshodi? Na here! Pay your ₦500 for ticket, the bus dey come now now!" },
-        { "type": "dialogue", "speaker": "player", "text": "Ticket? For bus stop? Bus never even come." },
-        { "type": "dialogue", "speaker": "fakeConductor", "text": "Na new law! Government ticket! E dey go up by 6 o'clock. Pay now, you save money. Na investment!", "mood": "nervous" },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "The night bus from Ìlú-Àlàáfíà coughs you out under the flyover. Lagos is already awake. Lagos did not sleep."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "fakeConductor",
+          "text": "Ehen! Fine boy! Welcome to Lagos! You dey go Oshodi? Na here! Pay your ₦500 for ticket, the bus dey come now now!"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "player",
+          "text": "Ticket? For bus stop? Bus never even come."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "fakeConductor",
+          "text": "Na new law! Government ticket! E dey go up by 6 o'clock. Pay now, you save money. Na investment!",
+          "mood": "nervous"
+        },
         {
           "type": "choice",
           "speaker": "fakeConductor",
           "text": "Quick quick! Before price go up!",
           "options": [
-            { "text": "Pay the ₦500. Lagos get rules.", "cost": 500, "effects": { "setFlag": "ch1_paidScammer", "remember": { "ch1_scam": "paid" }, "noticedBy": [] } },
-            { "text": "\"Oga, show me your ID card first.\"", "effects": { "remember": { "ch1_scam": "questioned" } } },
-            { "text": "Pretend your phone is ringing and walk away", "effects": { "remember": { "ch1_scam": "dodged" } } }
+            {
+              "text": "Pay the ₦500. Lagos get rules.",
+              "cost": 500,
+              "effects": {
+                "setFlag": "ch1_paidScammer",
+                "remember": {
+                  "ch1_scam": "paid"
+                },
+                "noticedBy": []
+              }
+            },
+            {
+              "text": "\"Oga, show me your ID card first.\"",
+              "effects": {
+                "remember": {
+                  "ch1_scam": "questioned"
+                }
+              }
+            },
+            {
+              "text": "Pretend your phone is ringing and walk away",
+              "effects": {
+                "remember": {
+                  "ch1_scam": "dodged"
+                }
+              }
+            }
           ]
         },
         {
@@ -38,29 +94,96 @@
           "speaker": "professor",
           "text": "Hey! Hey! Na who send you to my bus stop?",
           "variants": [
-            { "if": "ch1_paidScammer", "text": "Hey! Ole! Thief! Bring that boy money back before I give you government ticket for your head!" },
-            { "if": { "memory": { "ch1_scam": "questioned" } }, "text": "ID card? Hahaha! Ask am again! Ask am which government! Oya go, before I call Baba Ticket!" }
+            {
+              "if": "ch1_paidScammer",
+              "text": "Hey! Ole! Thief! Bring that boy money back before I give you government ticket for your head!"
+            },
+            {
+              "if": {
+                "memory": {
+                  "ch1_scam": "questioned"
+                }
+              },
+              "text": "ID card? Hahaha! Ask am again! Ask am which government! Oya go, before I call Baba Ticket!"
+            }
           ]
         },
-        { "type": "dialogue", "speaker": "fakeConductor", "text": "Professor! Na joke! I dey do orientation for the new boy!", "mood": "nervous" },
+        {
+          "type": "dialogue",
+          "speaker": "fakeConductor",
+          "text": "Professor! Na joke! I dey do orientation for the new boy!",
+          "mood": "nervous"
+        },
         {
           "type": "changeStat",
           "if": "ch1_paidScammer",
-          "stats": { "money": 500 }
+          "stats": {
+            "money": 500
+          }
         },
-        { "type": "setFlag", "flag": "ch1_scammerGone" },
-        { "type": "dialogue", "speaker": "narrator", "text": "The \"conductor\" disappears faster than NEPA light.", "variants": [{ "if": "ch1_paidScammer", "text": "Your ₦500 comes back to your hand, slightly wet. The \"conductor\" disappears faster than NEPA light." }] },
-        { "type": "dialogue", "speaker": "professor", "text": "JJC. I fit smell am from Ojota. Fresh from village, your eyes still white like rice. Lagos go redden am small small." },
-        { "type": "dialogue", "speaker": "player", "text": "My name na {name}, sir. I come Lagos to find work." },
-        { "type": "dialogue", "speaker": "professor", "text": "Work? See am for your front. Danfo stop. Drivers. Money wey dey fly. Agbero, area boy, union boy — call am anything, na work. But na Baba Ticket dey give the work." },
+        {
+          "type": "setFlag",
+          "flag": "ch1_scammerGone"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "The \"conductor\" disappears faster than NEPA light.",
+          "variants": [
+            {
+              "if": "ch1_paidScammer",
+              "text": "Your ₦500 comes back to your hand, slightly wet. The \"conductor\" disappears faster than NEPA light."
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "professor",
+          "text": "JJC. I fit smell am from Ojota. Fresh from village, your eyes still white like rice. Lagos go redden am small small."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "player",
+          "text": "My name na {name}, sir. I come Lagos to find work."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "professor",
+          "text": "Work? See am for your front. Danfo stop. Drivers. Money wey dey fly. Agbero, area boy, union boy — call am anything, na work. But na Baba Ticket dey give the work."
+        },
         {
           "type": "choice",
           "speaker": "professor",
           "text": "So? You wan meet the Chairman, or you wan stand there dey look like Sunday school teacher?",
           "options": [
-            { "text": "\"Abeg, carry me go meet am.\"", "effects": { "changeStat": { "mentorBond": 5 }, "setFlag": "ch1_eager" } },
-            { "text": "\"Agbero? Me? I get OND o!\"", "effects": { "changeStat": { "mentorBond": 2 }, "setFlag": "ch1_proud" } },
-            { "text": "\"Wetin be your own gain for this one?\"", "effects": { "setFlag": "ch1_dealWithProfessor", "remember": { "professor_cut": "agreed" }, "noticedBy": [] } }
+            {
+              "text": "\"Abeg, carry me go meet am.\"",
+              "effects": {
+                "changeStat": {
+                  "mentorBond": 5
+                },
+                "setFlag": "ch1_eager"
+              }
+            },
+            {
+              "text": "\"Agbero? Me? I get OND o!\"",
+              "effects": {
+                "changeStat": {
+                  "mentorBond": 2
+                },
+                "setFlag": "ch1_proud"
+              }
+            },
+            {
+              "text": "\"Wetin be your own gain for this one?\"",
+              "effects": {
+                "setFlag": "ch1_dealWithProfessor",
+                "remember": {
+                  "professor_cut": "agreed"
+                },
+                "noticedBy": []
+              }
+            }
           ]
         },
         {
@@ -68,101 +191,552 @@
           "speaker": "professor",
           "text": "Good. Hunger dey your eye. Hunger na the first qualification.",
           "variants": [
-            { "if": "ch1_proud", "text": "OND! Hahaha! Why you think say dem dey call me Professor? I get HND. Lagos no dey read certificate, my brother. Lagos dey read pocket." },
-            { "if": "ch1_dealWithProfessor", "text": "Ehen! Sense. Ten percent of your first week. Na so Lagos dey run: nobody dey help person for free, and anybody wey talk say e dey help you for free, hold your pocket." }
+            {
+              "if": "ch1_proud",
+              "text": "OND! Hahaha! Why you think say dem dey call me Professor? I get HND. Lagos no dey read certificate, my brother. Lagos dey read pocket."
+            },
+            {
+              "if": "ch1_dealWithProfessor",
+              "text": "Ehen! Sense. Ten percent of your first week. Na so Lagos dey run: nobody dey help person for free, and anybody wey talk say e dey help you for free, hold your pocket."
+            }
           ]
         },
-        { "type": "dialogue", "speaker": "narrator", "text": "Your phone vibrates. 2%. \"MAMA\"." },
-        { "type": "dialogue", "speaker": "mama", "text": "{name}! You reach? Iya Bọ́sẹ̀ come house yesterday with three women. Dem sit for our parlour until ten o'clock. Dem drink all our water. Tell me something good." },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Your phone vibrates. 2%. \"MAMA\"."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "mama",
+          "text": "{name}! You reach? Iya Bọ́sẹ̀ come house yesterday with three women. Dem sit for our parlour until ten o'clock. Dem drink all our water. Tell me something good."
+        },
         {
           "type": "choice",
           "text": "What do you tell Mama?",
           "options": [
-            { "text": "\"I don get job already, Mama. Big job.\"", "effects": { "setFlag": "liedToMama", "remember": { "mama_ch1": "lied" }, "noticedBy": [] } },
-            { "text": "\"I reach, Mama. I go find am. I promise.\"", "effects": { "remember": { "mama_ch1": "honest" }, "noticedBy": [] } }
+            {
+              "text": "\"I don get job already, Mama. Big job.\"",
+              "effects": {
+                "setFlag": "liedToMama",
+                "remember": {
+                  "mama_ch1": "lied"
+                },
+                "noticedBy": []
+              }
+            },
+            {
+              "text": "\"I reach, Mama. I go find am. I promise.\"",
+              "effects": {
+                "remember": {
+                  "mama_ch1": "honest"
+                },
+                "noticedBy": []
+              }
+            }
           ]
         },
         {
           "type": "dialogue",
           "speaker": "narrator",
           "text": "The phone dies before she answers. Lagos 1, You 0.",
-          "variants": [{ "if": "liedToMama", "text": "You hear her start to cry with joy. Then the phone dies. Somehow that is worse. Lagos 1, You 0." }]
+          "variants": [
+            {
+              "if": "liedToMama",
+              "text": "You hear her start to cry with joy. Then the phone dies. Somehow that is worse. Lagos 1, You 0."
+            }
+          ]
         },
-        { "type": "dialogue", "speaker": "professor", "text": "Motor park dey that side, behind the danfos. Baba Ticket office get green signboard. I go meet you there. No follow strange man again o!" },
-        { "type": "goto", "scene": "walkToPark" }
+        {
+          "type": "dialogue",
+          "speaker": "professor",
+          "text": "Motor park dey that side, behind the danfos. Baba Ticket office get green signboard. I go meet you there. No follow strange man again o!"
+        },
+        {
+          "type": "goto",
+          "scene": "walkToPark"
+        }
       ]
     },
     "walkToPark": {
       "time": "dawn",
-      "positions": { "professor": [-35.5, -22.5, 230] },
+      "positions": {
+        "professor": [
+          -35.5,
+          -22.5,
+          230
+        ]
+      },
       "beats": [
-        { "type": "freeRoam", "objective": "Walk to the motor park office (west, green signboard). Baba Ticket dey wait.", "goal": { "reach": "babaTicketOffice" } },
-        { "type": "goto", "scene": "meetChairman" }
+        {
+          "type": "freeRoam",
+          "objective": "Walk to the motor park office (west, green signboard). Baba Ticket dey wait.",
+          "goal": {
+            "reach": "babaTicketOffice"
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "meetChairman"
+        }
       ]
     },
     "meetChairman": {
       "location": "babaTicketOffice",
       "time": "dawn",
-      "positions": { "professor": [-35.5, -22.5, 230] },
+      "positions": {
+        "professor": [
+          -35.5,
+          -22.5,
+          230
+        ]
+      },
       "beats": [
-        { "type": "dialogue", "speaker": "babaTicket", "text": "Professor. Who be this one? E dey look like person wey come borrow money." },
-        { "type": "dialogue", "speaker": "professor", "text": "New boy, Chairman. JJC. Him get strong leg and him no too talk." },
-        { "type": "dialogue", "speaker": "babaTicket", "text": "Strong leg no be qualification. Even goat get four. Ehen. Wetin your name?" },
-        { "type": "dialogue", "speaker": "player", "text": "{name}, sir." },
-        { "type": "dialogue", "speaker": "babaTicket", "text": "Listen, {name}. For Iyana-Wahala, everything na ticket. Danfo stop, ticket. Keke park, ticket. Person sneeze for bus stop... ticket. As the elders say: the rain that beats the farmer... ehn... also needs ticket." },
-        { "type": "dialogue", "speaker": "babaTicket", "text": "I go give you the Back Side. Under the bridge. Where Professor dey sleep." },
-        { "type": "dialogue", "speaker": "professor", "text": "I no dey sleep there, Chairman. I dey rest there. Strategically." },
-        { "type": "dialogue", "speaker": "babaTicket", "text": "Every day, you bring ₦15,000 for me. Wetin pass am, na your own. Wetin no reach am..." },
-        { "type": "dialogue", "speaker": "narrator", "text": "Baba Ticket takes a long, slow bite of suya. He does not finish the sentence. He does not need to." },
+        {
+          "type": "dialogue",
+          "speaker": "babaTicket",
+          "text": "Professor. Who be this one? E dey look like person wey come borrow money."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "professor",
+          "text": "New boy, Chairman. JJC. Him get strong leg and him no too talk."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "babaTicket",
+          "text": "Strong leg no be qualification. Even goat get four. Ehen. Wetin your name?"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "player",
+          "text": "{name}, sir."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "babaTicket",
+          "text": "Listen, {name}. For Iyana-Wahala, everything na ticket. Danfo stop, ticket. Keke park, ticket. Person sneeze for bus stop... ticket. As the elders say: the rain that beats the farmer... ehn... also needs ticket."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "babaTicket",
+          "text": "I go give you the Back Side. Under the bridge. Where Professor dey sleep."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "professor",
+          "text": "I no dey sleep there, Chairman. I dey rest there. Strategically."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "babaTicket",
+          "text": "Every day, you bring ₦15,000 for me. Wetin pass am, na your own. Wetin no reach am..."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Baba Ticket takes a long, slow bite of suya. He does not finish the sentence. He does not need to."
+        },
         {
           "type": "choice",
           "speaker": "babaTicket",
           "text": "You hear me?",
           "options": [
-            { "text": "\"Yes sir! ₦15,000 every day. You go see work.\"", "effects": { "changeStat": { "chairmanTrust": 5 }, "setFlag": "ch1_acceptedQuota" } },
-            { "text": "\"Chairman, Back Side no fit bring ₦15,000. Make e be ₦10,000.\"", "effects": { "changeStat": { "chairmanTrust": -5, "communityGoodwill": 2 }, "setFlag": "ch1_negotiatedQuota" } },
+            {
+              "text": "\"Yes sir! ₦15,000 every day. You go see work.\"",
+              "effects": {
+                "changeStat": {
+                  "chairmanTrust": 5
+                },
+                "setFlag": "ch1_acceptedQuota"
+              }
+            },
+            {
+              "text": "\"Chairman, Back Side no fit bring ₦15,000. Make e be ₦10,000.\"",
+              "effects": {
+                "changeStat": {
+                  "chairmanTrust": -5,
+                  "communityGoodwill": 2
+                },
+                "setFlag": "ch1_negotiatedQuota"
+              }
+            },
             {
               "text": "Say nothing. Nod slowly, like Professor does.",
-              "requires": { "stats": { "mentorBond": ">= 15" } },
+              "requires": {
+                "stats": {
+                  "mentorBond": ">= 15"
+                }
+              },
               "showLocked": true,
               "lockedText": "You never study Professor well enough",
-              "effects": { "changeStat": { "chairmanTrust": 3, "mentorBond": 3 }, "setFlag": "ch1_silentNod" }
+              "effects": {
+                "changeStat": {
+                  "chairmanTrust": 3,
+                  "mentorBond": 3
+                },
+                "setFlag": "ch1_silentNod"
+              }
             }
           ]
+        },
+        {
+          "type": "changeStat",
+          "if": "ch1_negotiatedQuota",
+          "stats": {
+            "quota": -3000
+          }
         },
         {
           "type": "dialogue",
           "speaker": "babaTicket",
           "text": "Good. Ambition. I like ambition, as long as e no pass my own.",
           "variants": [
-            { "if": "ch1_negotiatedQuota", "text": "This one get mouth! Ehen. ₦12,000 for this first week. After that we go see whether your mouth fit carry your leg.", "mood": "angry" },
-            { "if": "ch1_silentNod", "text": "Hmm. This one sabi silence. Professor, you don dey teach am already? Good. Silence na the first ticket." }
+            {
+              "if": "ch1_negotiatedQuota",
+              "text": "This one get mouth! Ehen. ₦12,000 for this first week. After that we go see whether your mouth fit carry your leg.",
+              "mood": "angry"
+            },
+            {
+              "if": "ch1_silentNod",
+              "text": "Hmm. This one sabi silence. Professor, you don dey teach am already? Good. Silence na the first ticket."
+            }
           ]
         },
-        { "type": "dialogue", "speaker": "babaTicket", "text": "Professor, show am the Back Side. And JJC — welcome to Iyana-Wahala. Na here people dey come to become somebody. Or to become nobody. The bus dey go both ways." },
-        { "type": "goto", "scene": "walkToBackSide" }
+        {
+          "type": "dialogue",
+          "speaker": "babaTicket",
+          "text": "Professor, show am the Back Side. And JJC — welcome to Iyana-Wahala. Na here people dey come to become somebody. Or to become nobody. The bus dey go both ways."
+        },
+        {
+          "type": "goto",
+          "scene": "walkToBackSide"
+        }
       ]
     },
     "walkToBackSide": {
       "time": "day",
-      "positions": { "professor": [5, -8.5, 160] },
+      "positions": {
+        "professor": [
+          5,
+          -8.5,
+          160
+        ]
+      },
       "beats": [
-        { "type": "freeRoam", "objective": "Go to the Back Side, under the flyover. Professor dey there.", "goal": { "talkTo": "professor" } },
-        { "type": "goto", "scene": "backSideTour" }
+        {
+          "type": "freeRoam",
+          "objective": "Go to the Back Side, under the flyover. Professor dey there.",
+          "goal": {
+            "talkTo": "professor"
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "backSideTour"
+        }
       ]
     },
     "backSideTour": {
       "time": "day",
-      "positions": { "professor": [5, -8.5, 160] },
+      "positions": {
+        "professor": [
+          5,
+          -8.5,
+          160
+        ]
+      },
       "beats": [
-        { "type": "dialogue", "speaker": "narrator", "text": "The Back Side. A bus stop sign with no bus stop. A gutter with ambition. Pillars that smell of everything. Your new office." },
-        { "type": "dialogue", "speaker": "professor", "text": "Rule number one: never count money in front of the person wey give you am. E dey make dem remember say dem get am before." },
-        { "type": "dialogue", "speaker": "professor", "text": "Rule number two: every driver get story. Learn the story, you go collect the money. Ignore the story, you go collect wahala." },
-        { "type": "dialogue", "callback": "ch1_scam" },
-        { "type": "dialogue", "speaker": "professor", "text": "And my ten percent. No forget. I get good memory for numbers, bad memory for excuses.", "if": "ch1_dealWithProfessor" },
-        { "type": "dialogue", "speaker": "professor", "text": "Go look around. Learn the place. Mallam Garba get tea, Baba Radio get news, the market get everything. Tomorrow morning, we start work." },
-        { "type": "freeRoam", "objective": "Explore Iyana-Wahala. (Chapter 1 continues in the next update: your first fee run.)" },
-        { "type": "endChapter", "title": "To be continued", "summary": "Chapter 1 continues in Phase 3 with your first fee collection and your first defaulter." }
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "The Back Side. A bus stop sign with no bus stop. A gutter with ambition. Pillars that smell of everything. Your new office."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "professor",
+          "text": "Rule number one: never count money in front of the person wey give you am. E dey make dem remember say dem get am before."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "professor",
+          "text": "Rule number two: every driver get story. Learn the story, you go collect the money. Ignore the story, you go collect wahala."
+        },
+        {
+          "type": "dialogue",
+          "callback": "ch1_scam"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "professor",
+          "text": "And my ten percent. No forget. I get good memory for numbers, bad memory for excuses.",
+          "if": "ch1_dealWithProfessor"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "professor",
+          "text": "Go look around. Learn the place. Mallam Garba get tea, Baba Radio get news, the market get everything. When night reach, come back here. Tomorrow morning, we start work."
+        },
+        {
+          "type": "freeRoam",
+          "objective": "Explore Iyana-Wahala. When you're ready to rest, go back to Professor at the Back Side.",
+          "goal": {
+            "talkTo": "professor"
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "night1"
+        }
+      ]
+    },
+    "night1": {
+      "location": "backSide",
+      "time": "night",
+      "positions": {
+        "professor": [
+          5,
+          -8.5,
+          160
+        ]
+      },
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Night. Under the bridge, a hundred generators sing a song with no chorus. Professor spreads a flattened carton like a king laying out his bed."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "professor",
+          "text": "Tomorrow na your first day. Before you sleep, answer me one question. Na the most important question for this work."
+        },
+        {
+          "type": "choice",
+          "speaker": "professor",
+          "text": "How much you go collect from each danfo?",
+          "options": [
+            {
+              "text": "\"₦300. Make the drivers like me first.\"",
+              "effects": {
+                "changeStat": {
+                  "stopFee": -200,
+                  "communityGoodwill": 3
+                },
+                "setFlag": "ch1_feeSoft"
+              }
+            },
+            {
+              "text": "\"₦500. Wetin everybody dey charge.\"",
+              "effects": {
+                "setFlag": "ch1_feeStandard"
+              }
+            },
+            {
+              "text": "\"₦700. Baba Ticket quota no be joke.\"",
+              "effects": {
+                "changeStat": {
+                  "stopFee": 200
+                },
+                "setFlag": "ch1_feeHard",
+                "noticedBy": [
+                  "The drivers"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "professor",
+          "text": "₦500. Middle road. Na where most people dey crash, but na also where most people dey reach.",
+          "variants": [
+            {
+              "if": "ch1_feeSoft",
+              "text": "₦300. Soft man. Drivers go love you, and Baba Ticket go ask why your bag light like Sunday offering."
+            },
+            {
+              "if": "ch1_feeHard",
+              "text": "₦700?! Ehen. You wan make enemy before breakfast. Okay. The danfo people get long memory and short temper o."
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "professor",
+          "text": "Your fee fit change any day. But every change, somebody go feel am. Sleep. Mosquito go do the rest."
+        },
+        {
+          "type": "cutscene",
+          "cards": [
+            {
+              "title": "Day 1",
+              "text": "6:10 a.m. The Back Side. Your first fee run."
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "day1"
+        }
+      ]
+    },
+    "day1": {
+      "location": "backSide",
+      "time": "day",
+      "positions": {
+        "professor": [
+          8,
+          -6.2,
+          200
+        ]
+      },
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "professor",
+          "text": "Danfo go stop for this side. Collect from every vehicle wey stop: danfo, keke, okada, even lorry. Smile, collect, move to the next."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "professor",
+          "text": "Rule number three: the driver wey smile too much na him never pay. Watch Bíọ́dún. Him owe everybody for this junction."
+        },
+        {
+          "type": "startMode",
+          "mode": "feeCollection",
+          "params": {
+            "spot": "backSide",
+            "duration": 120,
+            "vehicles": 14,
+            "drivers": [
+              "pastorDriver",
+              "iyaKeke",
+              "formulaOne"
+            ],
+            "defaulter": "biodun",
+            "defaulterAt": 0.72,
+            "rememberAs": "ch1_firstRun"
+          },
+          "results": {
+            "defaulter": {
+              "goto": "defaulter"
+            },
+            "done": {
+              "goto": "defaulter"
+            }
+          }
+        }
+      ]
+    },
+    "defaulter": {
+      "time": "day",
+      "positions": {
+        "professor": [
+          8,
+          -6.2,
+          200
+        ]
+      },
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Bíọ́dún jumps back into \"God's Time Is The Best\" and stamps on the accelerator. Passengers scream. One chicken also screams.",
+          "variants": [
+            {
+              "if": "feeRun_ignoredDefaulter",
+              "text": "While you were busy with another driver, \"God's Time Is The Best\" quietly pulls away. Bíọ́dún waves. He is laughing."
+            }
+          ]
+        },
+        {
+          "type": "choice",
+          "speaker": "professor",
+          "text": "Oga, that driver don run again. You go chase am or you go let am go? Quick quick!",
+          "timeout": 10,
+          "timeoutOption": 1,
+          "options": [
+            {
+              "text": "Chase him!",
+              "effects": {
+                "startMode": "chase",
+                "params": {
+                  "target": "driver_biodun",
+                  "difficulty": 1
+                },
+                "results": {
+                  "won": {
+                    "changeStat": {
+                      "chairmanTrust": 5
+                    },
+                    "remember": {
+                      "biodun_ch1": "caught"
+                    },
+                    "goto": "afterChase"
+                  },
+                  "lost": {
+                    "changeStat": {
+                      "energy": -10
+                    },
+                    "remember": {
+                      "biodun_ch1": "escaped"
+                    },
+                    "goto": "afterChase"
+                  }
+                }
+              }
+            },
+            {
+              "text": "Let am go, na small money",
+              "effects": {
+                "setFlag": "letDriverGo",
+                "changeStat": {
+                  "chairmanTrust": -5,
+                  "communityGoodwill": 5
+                },
+                "remember": {
+                  "biodun_ch1": "let_go"
+                },
+                "goto": "afterChase"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "afterChase": {
+      "time": "day",
+      "positions": {
+        "professor": [
+          8,
+          -6.2,
+          200
+        ]
+      },
+      "beats": [
+        {
+          "type": "dialogue",
+          "callback": "biodun_ch1"
+        },
+        {
+          "type": "dialogue",
+          "callback": "ch1_firstRun"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "professor",
+          "text": "Evening go reach, and Baba Ticket go come for him money. Count your bag. Hide small for your sock. Rule number four: sock na the only bank wey no dey close."
+        },
+        {
+          "type": "freeRoam",
+          "objective": "Walk around Iyana-Wahala. (Chapter 1 continues in the next update: the real chase, Baba Ticket's collection and the fuel hike.)"
+        },
+        {
+          "type": "endChapter",
+          "title": "To be continued",
+          "summary": "Chapter 1 continues in Phase 4 with the chase, and Phase 5 with energy, Baba Ticket's evening collection and the fuel hike."
+        }
       ]
     }
   }

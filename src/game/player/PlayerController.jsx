@@ -5,6 +5,7 @@ import { input, readMove, attachKeyboard } from './input.js'
 import { playerState } from '../world/worldState.js'
 import { resolveCollisions, GROUND_Y } from '../world/layout.js'
 import { CHARACTER } from '../../assets/assetManifest.js'
+import { vehicleColliders } from '../systems/traffic.js'
 
 // Moves the player around the street. The camera looks north, so "up" on the
 // joystick / W walks north (-Z). Animations follow speed: idle / walk / run.
@@ -57,6 +58,7 @@ export default function PlayerController({ layout, look, enabled, eyeRed = 0 }) 
       p.x += (dx / len) * speed * dt
       p.z += (dz / len) * speed * dt
       resolveCollisions(p, RADIUS, layout.colliders, layout.bounds)
+      resolveCollisions(p, RADIUS, vehicleColliders(), layout.bounds)
       const target = Math.atan2(dx, dz)
       let diff = target - playerState.facing
       diff = Math.atan2(Math.sin(diff), Math.cos(diff))

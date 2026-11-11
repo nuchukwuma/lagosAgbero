@@ -66,7 +66,7 @@ export function validateStory({ chapters, characters = {}, callbacks = {}, endin
       if (world && scene.location && !world.spots.includes(scene.location)) errors.push(`${where(sceneId)}: location "${scene.location}" is not a spot in the world layout`)
       for (const id of Object.keys(scene.positions || {})) if (world && !world.npcs.includes(id)) errors.push(`${where(sceneId)}: positions.${id} — no such NPC in the world layout`)
       const last = scene.beats[scene.beats.length - 1]
-      if (!scene.next && !['endChapter', 'goto'].includes(last?.type) && !(last?.type === 'choice' && last.options?.every((o) => leavesScene(o.effects)))) {
+      if (!scene.next && !['endChapter', 'goto'].includes(last?.type) && !(last?.type === 'choice' && last.options?.every((o) => leavesScene(o.effects))) && !(last?.type === 'startMode' && leavesScene({ startMode: last.mode, results: last.results }))) {
         warnings.push(`${where(sceneId)}: last beat is "${last?.type}" and the scene has no "next" — make sure every path jumps away`)
       }
 
@@ -88,6 +88,7 @@ export function validateStory({ chapters, characters = {}, callbacks = {}, endin
             beat.options?.forEach((o, j) => {
               if (!o.text) errors.push(`${at} option ${j}: no text`)
               checkCondition(o.requires, `${at} option ${j}`)
+              if (typeof o.cost === 'string' && !(o.cost.startsWith('stat:') && isKnownStat(o.cost.slice(5)))) errors.push(`${at} option ${j}: cost "${o.cost}" must be a number or "stat:<name>"`)
               checkEffects(o.effects, `${at} option ${j}`)
             })
             if (beat.timeout && beat.options && !(beat.timeoutOption in beat.options)) errors.push(`${at}: timeout needs a valid "timeoutOption"`)

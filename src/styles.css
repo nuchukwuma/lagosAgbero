@@ -1138,3 +1138,118 @@ body,
 .swatch.on {
   border-color: var(--danfo);
 }
+
+/* ---------------- Phase 3: fee run ---------------- */
+
+.fee-intro {
+  width: min(520px, 100%);
+  background: rgba(26, 20, 8, 0.95);
+  border: 2px solid var(--danfo);
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 30vh;
+}
+
+.fee-intro h2 {
+  margin: 0 0 8px;
+  color: var(--danfo);
+}
+
+.fee-intro ul {
+  padding-left: 18px;
+  margin: 8px 0;
+}
+
+.fee-hud {
+  position: fixed;
+  top: calc(max(8px, env(safe-area-inset-top)) + 66px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(380px, calc(100% - 24px));
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: rgba(26, 20, 8, 0.88);
+  border: 2px solid var(--danfo);
+  font-size: 13px;
+  z-index: 7;
+}
+
+.fee-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.fee-timer,
+.fee-quota {
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.15);
+  margin: 4px 0 6px;
+  overflow: hidden;
+}
+
+.fee-timer div {
+  height: 100%;
+  background: var(--danfo);
+}
+
+.fee-quota div {
+  height: 100%;
+  background: #8ff0a4;
+  transition: width 0.3s;
+}
+
+.fee-log div {
+  font-size: 12px;
+  animation: fadeUp 0.4s ease-out;
+}
+
+.fee-log .good {
+  color: #8ff0a4;
+}
+
+.fee-log .bad {
+  color: #ffb3a7;
+}
+
+.fee-popup {
+  position: fixed;
+  left: 50%;
+  bottom: calc(max(20px, env(safe-area-inset-bottom)) + 150px);
+  transform: translateX(-50%);
+  width: min(460px, calc(100% - 24px));
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(26, 20, 8, 0.95);
+  border: 2px solid var(--danfo);
+  z-index: 8;
+}
+
+.fee-popup p {
+  margin: 4px 0 8px;
+  font-size: 16px;
+}
+
+.fee-options {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.fee-options .btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  justify-content: center;
+  min-width: 140px;
+}
+
+.dev-end {
+  position: fixed;
+  left: 12px;
+  bottom: calc(max(20px, env(safe-area-inset-bottom)) + 150px);
+  z-index: 9;
+  opacity: 0.7;
+}

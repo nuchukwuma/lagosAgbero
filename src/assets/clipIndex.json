@@ -1,15 +1,37 @@
 {
  "clips": {
-  "walk": {
-   "file": "characters/clips/walk.json",
-   "source": "Start Walking.fbx",
-   "duration": 1.333,
+  "breathingIdle": {
+   "file": "characters/clips/breathingIdle.json",
+   "source": "Breathing Idle.fbx",
+   "duration": 9.933,
    "loop": true,
    "rootMotion": {
-    "metres": 1.25,
-    "speed": 0.93
+    "metres": 0,
+    "speed": 0
    },
-   "use": "Normal walk (loop cut from Start Walking)"
+   "use": "Default standing idle for everyone"
+  },
+  "walk": {
+   "file": "characters/clips/walk.json",
+   "source": "Walking.fbx",
+   "duration": 0.958,
+   "loop": true,
+   "rootMotion": {
+    "metres": 1.56,
+    "speed": 1.62
+   },
+   "use": "Normal walk"
+  },
+  "startWalk": {
+   "file": "characters/clips/startWalk.json",
+   "source": "Start Walking.fbx",
+   "duration": 2.917,
+   "loop": false,
+   "rootMotion": {
+    "metres": 1.91,
+    "speed": 0.65
+   },
+   "use": "Spare: idle-to-walk start"
   },
   "drunkWalk": {
    "file": "characters/clips/drunkWalk.json",

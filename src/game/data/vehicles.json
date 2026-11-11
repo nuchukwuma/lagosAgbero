@@ -1,0 +1,31 @@
+{
+  "kinds": {
+    "danfo": { "model": "danfo", "length": 5.7, "width": 2.4, "maxSpeed": 9, "feeFactor": 1, "stops": true, "weight": 34 },
+    "keke": { "procedural": "keke", "length": 2.6, "width": 1.3, "maxSpeed": 7, "feeFactor": 0.4, "stops": true, "weight": 18, "rider": "crouchIdle" },
+    "okada": { "procedural": "okada", "length": 1.9, "width": 0.8, "maxSpeed": 10, "feeFactor": 0.2, "stops": true, "weight": 14, "rider": "crouchIdle" },
+    "taxi": { "model": "taxi", "length": 4.4, "width": 2.4, "maxSpeed": 10, "feeFactor": 0.6, "stops": true, "weight": 10 },
+    "privateCar": { "model": "privateCar", "length": 4.1, "width": 2.4, "maxSpeed": 11, "feeFactor": 0, "stops": false, "weight": 10 },
+    "lorry": { "model": "lorry", "length": 4.7, "width": 2.4, "maxSpeed": 7, "feeFactor": 2, "stops": true, "weight": 5 },
+    "boxTruck": { "model": "boxTruck", "length": 5.2, "width": 2.4, "maxSpeed": 7.5, "feeFactor": 1.6, "stops": true, "weight": 5 },
+    "bigManSuv": { "model": "bigManSuv", "length": 4.6, "width": 2.4, "maxSpeed": 12, "feeFactor": 0, "stops": false, "weight": 3 },
+    "taskForceVan": { "model": "taskForceVan", "length": 5.0, "width": 2.4, "maxSpeed": 11, "feeFactor": 0, "stops": false, "weight": 0 }
+  },
+  "slogans": [
+    "NO TELLING",
+    "PSALM 23",
+    "MUMMY'S BLESSING",
+    "WHO KNOW TOMORROW?",
+    "STILL STANDING",
+    "NO WEAPON FASHIONED",
+    "GOD DEY",
+    "ONE DAY YES",
+    "EYES DON SEE",
+    "NO CONDITION IS PERMANENT",
+    "AWA LA KAN",
+    "FEAR WOMEN",
+    "SMALL CHOPS, BIG GOD",
+    "HATERS GO HATE"
+  ],
+  "kekeColors": ["#e8c21c", "#e8c21c", "#2f8f5b", "#e8c21c", "#3a8fd9"],
+  "okadaColors": ["#c0392b", "#1a1a1a", "#2c5aa0", "#8e44ad"]
+}

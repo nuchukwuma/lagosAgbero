@@ -6,7 +6,8 @@
   "spawn": { "pos": [-14, -8], "facing": 180 },
 
   "roads": [
-    { "model": "roadStraight", "rotation": 0, "line": { "from": [-52, 0], "to": [52, 0], "step": 8 }, "skip": [[28, 0]] },
+    { "model": "roadStraight", "rotation": 0, "line": { "from": [-92, 0], "to": [92, 0], "step": 8 }, "skip": [[28, 0], [-12, 0]] },
+    { "model": "roadCrossing", "rotation": 0, "at": [[-12, 0]] },
     { "model": "roadJunctionT", "rotation": 0, "at": [[28, 0]] },
     { "model": "roadStraight", "rotation": 90, "line": { "from": [28, 8], "to": [28, 40], "step": 8 } },
     { "model": "pavedLot", "rotation": 0, "at": [[-46, -14], [-38, -14], [-30, -14], [-46, -22], [-38, -22], [-30, -22], [-46, -30], [-38, -30], [-30, -30]] }
@@ -62,7 +63,7 @@
   ],
 
   "vehicles": [
-    { "model": "danfo", "rotation": 90, "at": [[-18, -2.2], [-27, -2.2]], "solid": true },
+    { "model": "danfo", "rotation": 90, "at": [[-40, -18.5], [-32, -28]], "solid": true },
     { "model": "danfo", "rotation": 0, "at": [[-46, -24], [-42, -24], [-34, -16]], "solid": true },
     { "model": "taxi", "rotation": 0, "at": [[-30, -24]], "solid": true },
     { "model": "lorry", "rotation": 270, "at": [[44, -10.5]], "solid": true },

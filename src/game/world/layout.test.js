@@ -12,7 +12,8 @@ describe('world layout', () => {
 
   it('expands lines into tiles and skips the junction', () => {
     const main = layout.groups.find((g) => g.model === 'roadStraight')
-    expect(main.items.length).toBe(13) // 14 tiles from -52 to 52 minus the junction
+    expect(main.items.length).toBe(22) // 24 tiles from -92 to 92 minus the junction and the zebra crossing
+    expect(main.items.some((it) => it.position[0] === 28)).toBe(false)
   })
 
   it('every spot and the spawn point are walkable', () => {
