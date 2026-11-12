@@ -1457,3 +1457,14 @@ body,
   z-index: 5;
   touch-action: none;
 }
+
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.fee-options.column {
+  flex-direction: column;
+}

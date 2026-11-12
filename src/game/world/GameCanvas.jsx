@@ -19,6 +19,8 @@ import FightDirector from '../modes/fight/FightDirector.jsx'
 import { useFight, opponentProfile } from '../modes/fight/fightStore.js'
 import RunnerScene from '../modes/runner/RunnerScene.jsx'
 import { useRunner } from '../modes/runner/runnerStore.js'
+import ConductorDirector from '../modes/conductor/ConductorDirector.jsx'
+import { useBus } from '../modes/conductor/ConductorMode.jsx'
 import { WORLD_MODES } from '../modes/modeRegistry.js'
 import { LOW_ENERGY } from '../systems/energy.js'
 import VendorTracker from './VendorTracker.jsx'
@@ -67,6 +69,7 @@ export default function GameCanvas({ view, game, activity = null, paused = false
   const chaseActive = useChase((s) => s.active && s.started && !s.ended)
   const fightOn = useFight((s) => s.active)
   const runnerOn = useRunner((s) => s.active) && modeName === 'runner'
+  const busOn = useBus((s) => s.active) && modeName === 'conductor'
   const fightOpponent = useFight((s) => (s.active ? opponentProfile(s.params.opponent).character : null))
   const talking = DIALOGUE_VIEWS.has(view.type)
   const speaker = talking ? view.speaker : null
@@ -92,17 +95,18 @@ export default function GameCanvas({ view, game, activity = null, paused = false
       <Suspense fallback={null}>
           <StreetScene layout={layout} />
           <NPCs layout={layout} flags={game.flags} positions={view.positions} speaker={speaker} mood={view.mood} hidden={fightOpponent ? [fightOpponent] : []} />
-          {!(fightOn && modeName === 'fight') && <PlayerController layout={layout} look={look} enabled={(freeRoam || feeRunActive || chaseActive) && !paused} eyeRed={eyeRed} tired={game.stats.energy < LOW_ENERGY} />}
+          {!(fightOn && modeName === 'fight') && !busOn && <PlayerController layout={layout} look={look} enabled={(freeRoam || feeRunActive || chaseActive) && !paused} eyeRed={eyeRed} tired={game.stats.energy < LOW_ENERGY} />}
           {freeRoam && <VendorTracker />}
           {freeRoam && <ActivityTracker layout={layout} game={game} />}
           <Traffic paused={paused} raining={Boolean(game.flags.raining)} />
           {worldMode && modeName === 'feeCollection' && <FeeRunDirector />}
           {worldMode && modeName === 'chase' && <ChaseDirector />}
           {worldMode && modeName === 'fight' && fightOn && <FightDirector playerLook={look} />}
+          {busOn && <ConductorDirector playerLook={look} slogan={(activity?.params || view.params)?.slogan} />}
         </Suspense>
       )}
       {freeRoam && <GoalTracker key={view.key} goal={view.goal} layout={layout} onReached={onGoalReached} />}
-      <CameraRig mode={runnerOn ? 'runner' : modeName === 'fight' && fightOn ? 'fight' : talking ? 'dialogue' : 'follow'} speaker={speaker} ceiling={runnerOn ? null : layout.raw.flyover} />
+      <CameraRig mode={busOn ? 'vehicle' : runnerOn ? 'runner' : modeName === 'fight' && fightOn ? 'fight' : talking ? 'dialogue' : 'follow'} speaker={speaker} ceiling={runnerOn ? null : layout.raw.flyover} />
     </Canvas>
   )
 }

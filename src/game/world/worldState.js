@@ -16,6 +16,7 @@ export const playerState = {
   stunUntil: 0, // performance.now() ms; the player stumbles until then
   fightView: null, // { x, z } centre of a fight in progress (camera)
   runnerView: null, // { x, z } runner position during an escape run (camera)
+  vehicleView: null, // { x, z } the conductor's danfo (camera)
 }
 
 /** id -> { position: Vector3 } for every NPC currently in the world */

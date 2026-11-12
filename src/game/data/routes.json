@@ -1,0 +1,24 @@
+{
+  "routes": {
+    "oshodi": {
+      "name": "Iyana-Wahala → Mile 12",
+      "call": "OSHODI! OSHODI! IKEJA ALONG! MILE 12!",
+      "wrongCalls": ["LEKKI! AJAH! VI!", "ABUJA! ENTER WITH YOUR PASSPORT!"],
+      "stops": ["Iyana-Wahala", "Under-Bridge", "Oshodi", "Ikeja Along", "Ojota", "Mile 12"],
+      "fare": 300
+    }
+  },
+  "passengerNames": ["Mama Ronke", "Chinedu", "Aunty Bisi", "Mallam Sani", "Tolu", "Baba Tunde", "Ifeoma", "Segun", "Blessing", "Uche", "Hauwa", "Femi", "Kemi", "Obinna"],
+  "named": {
+    "kelvin": { "name": "Kelvin Crypto", "quirk": "transfer", "boardAt": 1, "line": "Bros, I go transfer. My bank app dey do update. Trust me, I be crypto person." },
+    "prophet": { "name": "Prophet Fire-Fire", "quirk": "prophecy", "boardAt": 2, "line": "My son, instead of money, I give you a prophecy. A big one. Okay, medium." },
+    "mamaPepper": { "name": "Mama Pepper", "quirk": "exact", "boardAt": 0, "line": "Exact change. I no dey fight conductor. I dey fight life." }
+  },
+  "lines": {
+    "angryShort": ["Conductor! Where my change?!", "You wan thief my ₦200? For this economy?!"],
+    "angryMissed": ["CONDUCTOR! You don pass my stop! You dey carry me go Ghana?!"],
+    "angryWrongDrop": ["Why you drop me here? Na here I talk?!"],
+    "happy": ["Correct conductor!", "God bless you, conductor.", "This one get sense."],
+    "refuse": ["I no dey pay this bus. Na rubbish bus.", "Fare? After how you treat us? I no pay."]
+  }
+}

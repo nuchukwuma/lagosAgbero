@@ -40,7 +40,11 @@ export default function CameraRig({ mode = 'follow', speaker = null, ceiling = n
       camera.lookAt(lookAt)
       return
     }
-    if (mode === 'fight' && playerState.fightView) {
+    if (mode === 'vehicle' && playerState.vehicleView) {
+      const v = playerState.vehicleView
+      tmpLook.set(v.x + 1, 1.3, v.z)
+      tmpPos.set(v.x - 3, portrait ? 6 : 4.5, v.z + (portrait ? 12 : 9.5))
+    } else if (mode === 'fight' && playerState.fightView) {
       // side-on, fighting-game style
       const c = playerState.fightView
       tmpLook.set(c.x, 1.05, c.z)

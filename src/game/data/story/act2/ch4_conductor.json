@@ -1,0 +1,444 @@
+{
+  "id": "ch4_conductor",
+  "act": 2,
+  "number": 4,
+  "title": "Chapter 4 — Hang For Door",
+  "description": "A day as a danfo conductor on the Oshodi route. Kelvin Crypto, Prophet Fire-Fire, and Scatter's boys at Under-Bridge.",
+  "startScene": "morning",
+  "scenes": {
+    "morning": {
+      "location": "frontStop",
+      "time": "dawn",
+      "beats": [
+        {
+          "type": "setFlag",
+          "flags": [
+            "dayLoop"
+          ],
+          "clear": [
+            "raining",
+            "basseyAround"
+          ]
+        },
+        {
+          "type": "cutscene",
+          "cards": [
+            {
+              "title": "Day {stat:day}",
+              "text": "Collection money no reach. Professor says a hungry agbero must learn every trade in the park, including hanging from a danfo door at 60 km/h."
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "professor",
+          "text": "Conductor work. Ten hours. Thirty percent. Shout correct, give correct change, remember where everybody dey go. Lagos no dey forgive conductor wey forget."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "biodun",
+          "text": "Ehen! The JJC wey treat me well! Enter my bus. 'God's Time Is The Best' need conductor wey get sense.",
+          "if": "biodunAlly"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "pastorDriver",
+          "text": "My son, my conductor run go Ghana with my Tuesday money. You go do the work. No stealing — the Lord sees, and I get mirror.",
+          "if": {
+            "notFlags": [
+              "biodunAlly"
+            ]
+          }
+        },
+        {
+          "type": "setFlag",
+          "flag": "busDriverBiodun",
+          "if": "biodunAlly"
+        },
+        {
+          "type": "choice",
+          "speaker": "professor",
+          "text": "Before you climb: Scatter's boys don dey block Under-Bridge since last week. Dem dey collect 'road money'. Wetin be your plan?",
+          "options": [
+            {
+              "text": "\"I go pay. Na business.\"",
+              "effects": {
+                "remember": {
+                  "underBridgePlan": "pay"
+                }
+              }
+            },
+            {
+              "text": "\"Make dem try me.\"",
+              "effects": {
+                "remember": {
+                  "underBridgePlan": "fight"
+                },
+                "changeStat": {
+                  "notoriety": 2
+                }
+              }
+            },
+            {
+              "text": "\"I go think when I reach there.\"",
+              "effects": {
+                "remember": {
+                  "underBridgePlan": "wait"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "route"
+        }
+      ]
+    },
+    "route": {
+      "location": "frontStop",
+      "beats": [
+        {
+          "type": "startMode",
+          "mode": "conductor",
+          "params": {
+            "route": "oshodi",
+            "named": [
+              "mamaPepper",
+              "kelvin",
+              "prophet"
+            ],
+            "extortionAt": 1,
+            "extortion": 2000,
+            "slogan": "GOD'S TIME IS THE BEST",
+            "seed": 404
+          },
+          "results": {
+            "done": {
+              "changeStat": {
+                "mentorBond": 2
+              },
+              "remember": {
+                "conductorDay": "clean"
+              },
+              "goto": "lastStop"
+            },
+            "brawl": {
+              "changeStat": {
+                "communityGoodwill": -3,
+                "energy": -10
+              },
+              "remember": {
+                "conductorDay": "brawl"
+              },
+              "goto": "busBrawl"
+            },
+            "extorted": {
+              "remember": {
+                "conductorDay": "stood"
+              },
+              "goto": "underBridge"
+            }
+          }
+        }
+      ]
+    },
+    "busBrawl": {
+      "location": "frontStop",
+      "time": "dusk",
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "At Ojota the passengers decide, together, that you are the reason for the economy. A man in agbada leads the charge."
+        },
+        {
+          "type": "startMode",
+          "mode": "fight",
+          "params": {
+            "opponent": "passenger",
+            "difficulty": 1
+          },
+          "results": {
+            "won": {
+              "changeStat": {
+                "notoriety": 3,
+                "communityGoodwill": -2
+              },
+              "goto": "lastStop"
+            },
+            "lost": {
+              "changeStat": {
+                "energy": -15,
+                "money": -500
+              },
+              "goto": "lastStop"
+            }
+          }
+        }
+      ]
+    },
+    "underBridge": {
+      "location": "frontStop",
+      "time": "day",
+      "positions": {
+        "scatter": [
+          -12,
+          -6,
+          180
+        ]
+      },
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "scatter",
+          "text": "Ehen. Na the JJC. You wan pass my bridge free? This road get owner."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "player",
+          "text": "The road get government. You no be government."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "scatter",
+          "text": "Today, I be government. Come down make I collect my tax with hand."
+        },
+        {
+          "type": "startMode",
+          "mode": "fight",
+          "params": {
+            "opponent": "scatter",
+            "difficulty": 1
+          },
+          "results": {
+            "won": {
+              "changeStat": {
+                "notoriety": 10,
+                "chairmanTrust": 3
+              },
+              "setFlag": "beatScatter",
+              "goto": "scatterDown"
+            },
+            "lost": {
+              "changeStat": {
+                "money": -2000,
+                "energy": -20,
+                "notoriety": -3
+              },
+              "setFlag": "lostToScatter",
+              "remember": {
+                "underBridge": "lost"
+              },
+              "goto": "lostBridge"
+            }
+          }
+        }
+      ]
+    },
+    "scatterDown": {
+      "location": "frontStop",
+      "time": "day",
+      "positions": {
+        "scatter": [
+          -12,
+          -6,
+          180
+        ]
+      },
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Scatter is on the ground, glasses in a puddle. His boys are filming. Everybody is waiting to see what you do."
+        },
+        {
+          "type": "choice",
+          "speaker": "scatter",
+          "text": "(spitting) Finish am now. Shey na wetin you want?",
+          "options": [
+            {
+              "text": "Help him up. \"Under-Bridge get space for two hustlers.\"",
+              "effects": {
+                "setFlag": "scatterAlly",
+                "changeStat": {
+                  "communityGoodwill": 4,
+                  "notoriety": -1
+                },
+                "remember": {
+                  "scatter": "spared"
+                },
+                "noticedBy": "professor",
+                "goto": "spared"
+              }
+            },
+            {
+              "text": "Take his chain and make him beg on camera.",
+              "effects": {
+                "setFlag": "scatterEnemy",
+                "changeStat": {
+                  "notoriety": 8,
+                  "communityGoodwill": -3,
+                  "money": 1500
+                },
+                "remember": {
+                  "scatter": "humiliated"
+                },
+                "goto": "humiliated"
+              }
+            },
+            {
+              "text": "Walk away without a word.",
+              "effects": {
+                "changeStat": {
+                  "notoriety": 4
+                },
+                "remember": {
+                  "scatter": "ignored"
+                },
+                "goto": "lastStop"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "spared": {
+      "location": "frontStop",
+      "time": "day",
+      "positions": {
+        "scatter": [
+          -12,
+          -6,
+          180
+        ]
+      },
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "scatter",
+          "text": "...You no get sense. But I go remember am. When wahala come, I no go stand for your front. I go stand for your side."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "professor",
+          "text": "(later) Rule number nine: enemy wey you spare na half friend. Enemy wey you shame na full enemy with interest."
+        },
+        {
+          "type": "goto",
+          "scene": "lastStop"
+        }
+      ]
+    },
+    "humiliated": {
+      "location": "frontStop",
+      "time": "day",
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "The video reaches every phone in Iyana-Wahala before the bus reaches Oshodi. They call you \"Bridge Collector\" now."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "scatter",
+          "text": "(from far away) Enjoy am. Lagos na round. E go reach your turn."
+        },
+        {
+          "type": "goto",
+          "scene": "lastStop"
+        }
+      ]
+    },
+    "lostBridge": {
+      "location": "frontStop",
+      "time": "day",
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Scatter's boys empty your pocket and hang your slippers on the bridge rail like a flag."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "biodun",
+          "text": "Climb back. Bruise no be death. We still get Mile 12 to reach.",
+          "if": "biodunAlly"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "pastorDriver",
+          "text": "Climb back, my son. Even Joseph entered pit before palace.",
+          "if": {
+            "notFlags": [
+              "biodunAlly"
+            ]
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "lastStop"
+        }
+      ]
+    },
+    "lastStop": {
+      "location": "frontStop",
+      "time": "dusk",
+      "beats": [
+        {
+          "type": "setFlag",
+          "flag": "conductorDone"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "biodun",
+          "text": "You do well today. If you ever need bus for wahala, call me.",
+          "if": {
+            "flags": [
+              "biodunAlly"
+            ],
+            "notFlags": [
+              "conductor_brawl"
+            ]
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "pastorDriver",
+          "text": "Here, your share. And your soul still need offering.",
+          "if": {
+            "notFlags": [
+              "biodunAlly"
+            ]
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ada",
+          "text": "Conductor! You smell like danfo and Oshodi. Come and drink water before you faint.",
+          "if": {
+            "stats": {
+              "friendBond": ">= 10"
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "sunday",
+          "text": "Omo, they say you scatter Scatter for Under-Bridge! Everybody dey talk am!",
+          "if": "beatScatter"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "professor",
+          "text": "Tomorrow, somebody important dey come Iyana-Wahala. Big man with big car. Wear your cleanest singlet."
+        },
+        {
+          "type": "endChapter",
+          "title": "End of Chapter 4 — Hang For Door",
+          "summary": "Money {money}. Notoriety {stat:notoriety}. Goodwill {stat:communityGoodwill}. A big man is coming to the park."
+        }
+      ]
+    }
+  }
+}

@@ -376,7 +376,8 @@
         {
           "type": "endChapter",
           "title": "End of Chapter 3 — Rain and Raid",
-          "summary": "Task Force heat {stat:policeHeat}. Bribes paid {stat:bribesPaid}. Arrests {stat:arrests}. Tomorrow: conductor work."
+          "summary": "Task Force heat {stat:policeHeat}. Bribes paid {stat:bribesPaid}. Arrests {stat:arrests}. Tomorrow: conductor work.",
+          "next": "ch4_conductor"
         }
       ]
     }

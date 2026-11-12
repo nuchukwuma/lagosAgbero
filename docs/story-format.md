@@ -338,6 +338,16 @@ An endless-runner escape along a Lagos road.
 - Three stumbles, or letting the pursuers catch up, gets you caught. With
   low energy you get only two stumbles.
 
+### Bus conductor (`"mode": "conductor"`)
+
+```json
+{ "type": "startMode", "mode": "conductor",
+  "params": { "route": "oshodi", "named": ["mamaPepper", "kelvin", "prophet"], "extortionAt": 1, "extortion": 2000, "slogan": "GOD'S TIME IS THE BEST" },
+  "results": { "done": { "goto": "lastStop" }, "brawl": { "goto": "busBrawl" }, "extorted": { "goto": "underBridge" } } }
+```
+
+The player hangs from a danfo's door. At each stop they drop off the passengers who said this was their stop, shout the right route (a wrong call brings wrong passengers), and give correct change. Mistakes raise **bus anger**: angry passengers refuse to pay, and at 100 a brawl breaks out (`brawl`). Named passengers come from `routes.json` (`named`): Kelvin Crypto offers a "transfer", Prophet Fire-Fire offers a prophecy, Mama Pepper pays exact. At `extortionAt` Scatter's boys block the bus: pay from the fares, let the driver pay (anger +10), or refuse, which ends the mode with `extorted` so the story can start a fight. The player keeps 30% of fares plus tips (`moneyChange`). Routes, stops, fares and passenger lines live in `src/game/data/routes.json`.
+
 ### Task Force raids
 
 `story/common/raids.json` holds the raid scenes:

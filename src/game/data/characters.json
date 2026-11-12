@@ -475,5 +475,23 @@
         }
       ]
     }
+  },
+  "pastorDriver": {
+    "name": "Pastor Driver",
+    "fullName": "Pastor Driver, owner of \"No Weapon Fashioned\"",
+    "color": "#2c3e8f",
+    "role": "driver",
+    "look": {
+      "body": "male_suit",
+      "skin": "#46291a",
+      "shirt": "#ffffff",
+      "trousers": "#2c3e8f",
+      "width": 1.15,
+      "accessories": [
+        {
+          "type": "glasses"
+        }
+      ]
+    }
   }
 }
