@@ -579,7 +579,8 @@
         {
           "type": "endChapter",
           "title": "End of Act 2 — Shell Knock",
-          "summary": "You knocked twice. Money {money}. Tortoise loyalty {stat:cultLoyalty}. Hyena hatred {stat:rivalCultHatred}."
+          "summary": "You knocked twice. Money {money}. Tortoise loyalty {stat:cultLoyalty}. Hyena hatred {stat:rivalCultHatred}.",
+          "next": "ch7_brotherhood"
         }
       ]
     },
@@ -600,7 +601,8 @@
         {
           "type": "endChapter",
           "title": "End of Act 2 — Shell Knock",
-          "summary": "You stayed your own man. Money {money}. Goodwill {stat:communityGoodwill}. Hyena hatred {stat:rivalCultHatred}."
+          "summary": "You stayed your own man. Money {money}. Goodwill {stat:communityGoodwill}. Hyena hatred {stat:rivalCultHatred}.",
+          "next": "ch7_brotherhood"
         }
       ]
     }

@@ -1,0 +1,655 @@
+{
+  "id": "ch8_war",
+  "act": 3,
+  "number": 8,
+  "title": "Chapter 8 — Purple Rain",
+  "description": "The Hyena war. Promotions or pressure. Raids get harder. Ada asks the question.",
+  "startScene": "start",
+  "scenes": {
+    "start": {
+      "location": "frontStop",
+      "time": "dawn",
+      "beats": [
+        {
+          "type": "setFlag",
+          "flags": [
+            "dayLoop",
+            "canCollectFees",
+            "hyenaWar"
+          ]
+        },
+        {
+          "type": "cutscene",
+          "cards": [
+            {
+              "title": "Day {stat:day}",
+              "text": "Overnight, someone painted purple laughing faces on every Tortoise wall in Iyana-Wahala. The war has a colour now."
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "cultWar",
+          "if": "cultPath"
+        },
+        {
+          "type": "goto",
+          "scene": "indieWar"
+        }
+      ]
+    },
+    "cultWar": {
+      "location": "frontStop",
+      "time": "day",
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "chuks",
+          "text": "They attacked our Front Stop collectors at 5 a.m. The Shell wants a reply. A polite reply. With hands."
+        },
+        {
+          "type": "startMode",
+          "mode": "fight",
+          "params": {
+            "opponent": "hyenaBoy",
+            "difficulty": 2
+          },
+          "results": {
+            "won": {
+              "changeStat": {
+                "notoriety": 5,
+                "cultLoyalty": 4,
+                "rivalCultHatred": 8
+              },
+              "goto": "promotion"
+            },
+            "lost": {
+              "changeStat": {
+                "energy": -20,
+                "rivalCultHatred": 4
+              },
+              "goto": "promotion"
+            }
+          }
+        }
+      ]
+    },
+    "promotion": {
+      "location": "shellHouse",
+      "time": "day",
+      "positions": {
+        "chuks": [
+          -30,
+          9.5,
+          200
+        ]
+      },
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "chuks",
+          "text": "Promotion committee is in session. You are {rank}. To be Hard Shell, the committee needs proof. Proof of strength, or proof of... resources."
+        },
+        {
+          "type": "choice",
+          "speaker": "chuks",
+          "text": "Promotion bout, or promotion fee?",
+          "options": [
+            {
+              "text": "Fight the committee's champion.",
+              "effects": {
+                "startMode": "fight",
+                "params": {
+                  "opponent": "tortoiseBoy",
+                  "difficulty": 2
+                },
+                "results": {
+                  "won": {
+                    "changeStat": {
+                      "cultRank": 1,
+                      "cultLoyalty": 5,
+                      "notoriety": 4
+                    },
+                    "setFlag": "promotedByFight",
+                    "goto": "raid"
+                  },
+                  "lost": {
+                    "changeStat": {
+                      "energy": -15
+                    },
+                    "goto": "raid"
+                  }
+                }
+              }
+            },
+            {
+              "text": "Pay the fee (₦20,000).",
+              "cost": 20000,
+              "effects": {
+                "changeStat": {
+                  "cultRank": 1,
+                  "cultLoyalty": 2
+                },
+                "setFlag": "promotedByMoney",
+                "goto": "raid"
+              }
+            },
+            {
+              "text": "Pay from cult funds (₦10,000).",
+              "requires": {
+                "stats": {
+                  "cultMoney": ">= 10000"
+                }
+              },
+              "lockedText": "Needs ₦10,000 in cult funds",
+              "effects": {
+                "changeStat": {
+                  "cultMoney": -10000,
+                  "cultRank": 1
+                },
+                "setFlag": "promotedByMoney",
+                "goto": "raid"
+              }
+            },
+            {
+              "text": "\"I dey okay as I be.\"",
+              "effects": {
+                "changeStat": {
+                  "cultLoyalty": -3
+                },
+                "goto": "raid"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "raid": {
+      "location": "frontStop",
+      "time": "day",
+      "positions": {
+        "bassey": [
+          -12,
+          -6,
+          180
+        ],
+        "shellLawyer": [
+          -15,
+          -8,
+          90
+        ]
+      },
+      "beats": [
+        {
+          "type": "cutscene",
+          "cards": [
+            {
+              "title": "LETS CLEAN UP!",
+              "text": "The Task Force raid hits the Front Stop in the middle of the war. Bassey points straight at your yellow scarf."
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "bassey",
+          "text": "Tortoise now? Rank and file? I don get warrant for everybody wey wear yellow this week."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "shellLawyer",
+          "text": "Commander. Barrister Shell, Esquire. My client is a registered member of a registered society with registered grievances. Here are four files. Here is a fifth file about the first four."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "bassey",
+          "text": "(he looks at the files for a long time) ...I hate this town.",
+          "effects": {
+            "changeStat": {
+              "policeHeat": -5
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "bassey",
+          "text": "(to you, quietly) I thought you be different. Na so una all dey start.",
+          "effects": {
+            "setFlag": "basseyDisappointed"
+          },
+          "if": {
+            "anyOf": [
+              "basseyRespect",
+              "basseySympathy"
+            ]
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "hyenaRevenge"
+        }
+      ]
+    },
+    "hyenaRevenge": {
+      "location": "underBridge",
+      "time": "night",
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "That night, under the bridge, the laughter starts again. This time it is for you."
+        },
+        {
+          "type": "startMode",
+          "mode": "runner",
+          "params": {
+            "chaser": "hyenas",
+            "goal": 300,
+            "difficulty": 2,
+            "seed": 81
+          },
+          "results": {
+            "escaped": {
+              "changeStat": {
+                "rivalCultHatred": 5
+              },
+              "goto": "adaQuestion"
+            },
+            "caught": {
+              "changeStat": {
+                "energy": -25,
+                "money": -3000,
+                "rivalCultHatred": 5
+              },
+              "setFlag": "beatenByHyenas",
+              "goto": "adaQuestion"
+            }
+          }
+        }
+      ]
+    },
+    "indieWar": {
+      "location": "frontStop",
+      "time": "day",
+      "positions": {
+        "chuks": [
+          -13,
+          -7,
+          200
+        ]
+      },
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Both cults have decided the co-op is a business opportunity. The Tortoises send paperwork. The Hyenas send laughter."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "chuks",
+          "text": "Registration fee for the co-op. ₦10,000. Or we cannot guarantee... continuity."
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "(The co-op is caught between yellow and purple.)",
+          "options": [
+            {
+              "text": "Pay the Tortoises (₦10,000).",
+              "cost": 10000,
+              "effects": {
+                "setFlag": "paidTortoises",
+                "changeStat": {
+                  "rivalCultHatred": 5
+                },
+                "goto": "indieRaid"
+              }
+            },
+            {
+              "text": "Refuse both. Fight whoever comes.",
+              "effects": {
+                "setFlag": "refusedCults",
+                "startMode": "fight",
+                "params": {
+                  "opponent": "hyenaBoy",
+                  "difficulty": 2
+                },
+                "results": {
+                  "won": {
+                    "changeStat": {
+                      "notoriety": 6,
+                      "communityGoodwill": 5,
+                      "rivalCultHatred": 8
+                    },
+                    "goto": "indieRaid"
+                  },
+                  "lost": {
+                    "changeStat": {
+                      "energy": -20,
+                      "rivalCultHatred": 4
+                    },
+                    "goto": "indieRaid"
+                  }
+                }
+              }
+            },
+            {
+              "text": "Tell each cult the other one already owns you.",
+              "requires": {
+                "stats": {
+                  "notoriety": ">= 30"
+                }
+              },
+              "lockedText": "Needs notoriety 30 to pull this off",
+              "effects": {
+                "setFlag": "playedCults",
+                "changeStat": {
+                  "notoriety": 4
+                },
+                "remember": {
+                  "cults": "played"
+                },
+                "goto": "indieRaid"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "indieRaid": {
+      "location": "frontStop",
+      "time": "day",
+      "positions": {
+        "bassey": [
+          -12,
+          -6,
+          180
+        ]
+      },
+      "beats": [
+        {
+          "type": "cutscene",
+          "cards": [
+            {
+              "title": "LETS CLEAN UP!",
+              "text": "No Shell lawyer. No Hyena cousin. Just you, the co-op board, and a green van."
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "bassey",
+          "text": "Co-operative. (He reads the board.) Three o's. (He almost smiles.) Still illegal collection. Run or talk."
+        },
+        {
+          "type": "choice",
+          "speaker": "bassey",
+          "text": "You get five seconds.",
+          "timeout": 7,
+          "timeoutOption": 0,
+          "options": [
+            {
+              "text": "RUN!",
+              "effects": {
+                "startMode": "runner",
+                "params": {
+                  "chaser": "taskForce",
+                  "goal": 320,
+                  "difficulty": 2,
+                  "seed": 83
+                },
+                "results": {
+                  "escaped": {
+                    "goto": "adaQuestion"
+                  },
+                  "caught": {
+                    "changeStat": {
+                      "arrests": 1,
+                      "policeHeat": 8,
+                      "money": -4000
+                    },
+                    "goto": "adaQuestion"
+                  }
+                }
+              }
+            },
+            {
+              "text": "Hide in Bíọ́dún's bus.",
+              "requires": "biodunAlly",
+              "effects": {
+                "changeStat": {
+                  "communityGoodwill": 2
+                },
+                "toast": "Bíọ́dún hides you under a sack of garri. 'God's Time Is The Best' drives away at a holy speed.",
+                "goto": "adaQuestion"
+              }
+            },
+            {
+              "text": "\"Commander, the co-op dey register with government. Give us one month.\"",
+              "requires": {
+                "stats": {
+                  "communityGoodwill": ">= 40"
+                }
+              },
+              "lockedText": "Needs goodwill 40",
+              "effects": {
+                "setFlag": "basseyRespect",
+                "changeStat": {
+                  "policeHeat": -10
+                },
+                "goto": "adaQuestion"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "adaQuestion": {
+      "location": "adaShop",
+      "time": "dusk",
+      "positions": {
+        "ada": [
+          22,
+          -10.5,
+          180
+        ]
+      },
+      "beats": [
+        {
+          "type": "goto",
+          "scene": "adaDrift",
+          "if": {
+            "stats": {
+              "friendBond": "< 20"
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ada",
+          "text": "{name}. Sit down. I close shop early today. (She never closes shop early.)"
+        },
+        {
+          "type": "choice",
+          "speaker": "ada",
+          "text": "So... wetin we be? You and me?",
+          "options": [
+            {
+              "text": "\"Ada, I like you. Make we try.\"",
+              "requires": {
+                "stats": {
+                  "friendBond": ">= 60"
+                }
+              },
+              "showLocked": true,
+              "lockedText": "Needs a stronger bond with Ada (60)",
+              "effects": {
+                "setFlag": "ada_romance",
+                "changeStat": {
+                  "friendBond": 10
+                },
+                "goto": "adaRomance"
+              }
+            },
+            {
+              "text": "\"You be my person. My best friend.\"",
+              "effects": {
+                "setFlag": "ada_friend",
+                "changeStat": {
+                  "friendBond": 5
+                },
+                "goto": "adaFriend"
+              }
+            },
+            {
+              "text": "\"I no get time for this. Lagos dey wait.\"",
+              "effects": {
+                "setFlag": "ada_estranged",
+                "changeStat": {
+                  "friendBond": -20,
+                  "communityGoodwill": -3
+                },
+                "goto": "adaGone"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "adaDrift": {
+      "location": "adaShop",
+      "time": "dusk",
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "You pass Ada's Corner. She is laughing with a customer. She does not look up. Somewhere along the way, you stopped stopping."
+        },
+        {
+          "type": "setFlag",
+          "flag": "ada_estranged"
+        },
+        {
+          "type": "changeStat",
+          "stats": {
+            "communityGoodwill": -3
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "afterAda"
+        }
+      ]
+    },
+    "adaRomance": {
+      "location": "adaShop",
+      "time": "dusk",
+      "positions": {
+        "ada": [
+          22,
+          -10.5,
+          180
+        ]
+      },
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "ada",
+          "text": "(she laughs, then stops, then laughs again) Okay. Okay! But I get one rule: no lies. Not one. I fit handle debt. I no fit handle lie."
+        },
+        {
+          "type": "choice",
+          "speaker": "ada",
+          "text": "So I go ask once. That yellow scarf. Are you Tortoise?",
+          "options": [
+            {
+              "text": "\"Yes. I joined for protection.\"",
+              "effects": {
+                "changeStat": {
+                  "friendBond": -5
+                },
+                "setFlag": "ada_knowsCult",
+                "goto": "afterAda"
+              }
+            },
+            {
+              "text": "\"Na fashion. Yellow dey in season.\"",
+              "effects": {
+                "setFlag": "ada_liedCult",
+                "goto": "afterAda"
+              }
+            }
+          ],
+          "if": "tortoise"
+        },
+        {
+          "type": "goto",
+          "scene": "afterAda"
+        }
+      ]
+    },
+    "adaFriend": {
+      "location": "adaShop",
+      "time": "dusk",
+      "positions": {
+        "ada": [
+          22,
+          -10.5,
+          180
+        ]
+      },
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "ada",
+          "text": "Best friend. Good. Then as your best friend: bring your hustle savings here. Raid no dey enter my shop. I keep am safe.",
+          "effects": {
+            "setFlag": "adaKeepsSavings"
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "afterAda"
+        }
+      ]
+    },
+    "adaGone": {
+      "location": "adaShop",
+      "time": "dusk",
+      "positions": {
+        "ada": [
+          22,
+          -10.5,
+          180
+        ]
+      },
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "ada",
+          "text": "(very quietly) Okay. Then go. Lagos dey wait for you. Make e no wait too long."
+        },
+        {
+          "type": "goto",
+          "scene": "afterAda"
+        }
+      ]
+    },
+    "afterAda": {
+      "location": "frontStop",
+      "time": "night",
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "sunday",
+          "text": "(very late, out of breath, not dancing) {name}... I need talk to you tomorrow. Something serious. Please."
+        },
+        {
+          "type": "endChapter",
+          "title": "End of Chapter 8 — Purple Rain",
+          "summary": "Hyena hatred {stat:rivalCultHatred}. Police heat {stat:policeHeat}. Sunday has something to tell you.",
+          "next": "ch9_professor"
+        }
+      ]
+    }
+  }
+}

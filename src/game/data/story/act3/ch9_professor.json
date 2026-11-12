@@ -1,0 +1,673 @@
+{
+  "id": "ch9_professor",
+  "act": 3,
+  "number": 9,
+  "title": "Chapter 9 — The Laugh",
+  "description": "Sunday is a Hyena. The loyalty test. Professor's son. Professor's fate.",
+  "startScene": "start",
+  "scenes": {
+    "start": {
+      "location": "backSide",
+      "time": "dawn",
+      "positions": {
+        "sunday": [
+          5,
+          -5,
+          160
+        ]
+      },
+      "beats": [
+        {
+          "type": "setFlag",
+          "flags": [
+            "dayLoop"
+          ]
+        },
+        {
+          "type": "cutscene",
+          "cards": [
+            {
+              "title": "Day {stat:day}",
+              "text": "Sunday is waiting at the Back Side. He is wearing a purple bandana. He is not dancing."
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "sunday",
+          "text": "I be Hyena. Since before I meet you. Na dem give me the conductor job. Na dem dey collect half my money. I no fit comot."
+        },
+        {
+          "type": "goto",
+          "scene": "cultTest",
+          "if": "cultPath"
+        },
+        {
+          "type": "goto",
+          "scene": "indieHelp"
+        }
+      ]
+    },
+    "cultTest": {
+      "location": "backSide",
+      "time": "day",
+      "positions": {
+        "chuks": [
+          8,
+          -6,
+          200
+        ]
+      },
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "chuks",
+          "text": "(later) Number One Shell has a request. There is a Hyena inside Iyana-Wahala who passes our routes to Lord Laffy. We know it is your conductor friend. We need you to bring him to the Shell House tonight."
+        },
+        {
+          "type": "choice",
+          "speaker": "chuks",
+          "text": "Loyalty is a file, brother. Today we open yours.",
+          "options": [
+            {
+              "text": "Warn Sunday. Tell him to run tonight.",
+              "effects": {
+                "setFlag": "warnedSunday",
+                "changeStat": {
+                  "cultLoyalty": -10,
+                  "friendBond": 3
+                },
+                "remember": {
+                  "sunday": "warned"
+                },
+                "goto": "sundayRuns"
+              }
+            },
+            {
+              "text": "Pretend you couldn't find him.",
+              "effects": {
+                "setFlag": "sparedSunday",
+                "changeStat": {
+                  "cultLoyalty": -5
+                },
+                "remember": {
+                  "sunday": "spared"
+                },
+                "goto": "sundaySpared"
+              }
+            },
+            {
+              "text": "Bring Sunday to the Shell House.",
+              "effects": {
+                "setFlag": [
+                  "gaveUpSunday",
+                  "lostSunday"
+                ],
+                "changeStat": {
+                  "cultLoyalty": 15,
+                  "cultRank": 1,
+                  "rivalCultHatred": 15,
+                  "mentorBond": -10,
+                  "friendBond": -10
+                },
+                "remember": {
+                  "sunday": "betrayed"
+                },
+                "goto": "sundayTaken"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "sundayRuns": {
+      "location": "backSide",
+      "time": "night",
+      "positions": {
+        "sunday": [
+          5,
+          -5,
+          160
+        ]
+      },
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "sunday",
+          "text": "You... you for don carry me go. (He hugs you, then he runs. At the corner, he dances. Just two steps.)"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "chuks",
+          "text": "(the next day) Strange. The Hyena vanished an hour before we came. Very strange. I have opened a file called 'Strange'.",
+          "effects": {
+            "setFlag": "chuksSuspicious"
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "son"
+        }
+      ]
+    },
+    "sundaySpared": {
+      "location": "backSide",
+      "time": "night",
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "You tell Chuks you searched everywhere. You did not search anywhere. Sunday stays, quieter now, and pays you back the only way he can: he tells you everything the Hyenas plan."
+        },
+        {
+          "type": "setFlag",
+          "flag": "sundayInformant"
+        },
+        {
+          "type": "goto",
+          "scene": "son"
+        }
+      ]
+    },
+    "sundayTaken": {
+      "location": "shellHouse",
+      "time": "night",
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Sunday does not fight. He just looks at you all the way into the Shell House. The door closes. Somebody inside starts to type."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "professor",
+          "text": "(the next morning) Sunday? ...I see. (He does not say anything else to you for the rest of the day.)"
+        },
+        {
+          "type": "goto",
+          "scene": "son"
+        }
+      ]
+    },
+    "indieHelp": {
+      "location": "backSide",
+      "time": "day",
+      "positions": {
+        "sunday": [
+          5,
+          -5,
+          160
+        ]
+      },
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "sunday",
+          "text": "Lord Laffy say anybody wey wan comot must pay \"exit fee\" — ₦30,000 — or beat him for fair fight. Nobody don beat am. Abeg. Help me."
+        },
+        {
+          "type": "choice",
+          "speaker": "sunday",
+          "text": "(He is shaking.)",
+          "options": [
+            {
+              "text": "Pay Lord Laffy (₦30,000).",
+              "cost": 30000,
+              "effects": {
+                "setFlag": "sundayFree",
+                "changeStat": {
+                  "friendBond": 2,
+                  "communityGoodwill": 4
+                },
+                "remember": {
+                  "sunday": "bought"
+                },
+                "goto": "sundayFreed"
+              }
+            },
+            {
+              "text": "Fight Lord Laffy for him.",
+              "effects": {
+                "startMode": "fight",
+                "params": {
+                  "opponent": "lordLaffy",
+                  "difficulty": 2
+                },
+                "results": {
+                  "won": {
+                    "setFlag": [
+                      "sundayFree",
+                      "beatLordLaffy"
+                    ],
+                    "changeStat": {
+                      "notoriety": 12,
+                      "rivalCultHatred": 20
+                    },
+                    "goto": "sundayFreed"
+                  },
+                  "lost": {
+                    "changeStat": {
+                      "energy": -25,
+                      "rivalCultHatred": 10
+                    },
+                    "goto": "sundayStuck"
+                  }
+                }
+              }
+            },
+            {
+              "text": "\"Sunday, I no fit. Sorry.\"",
+              "effects": {
+                "setFlag": "lostSunday",
+                "changeStat": {
+                  "communityGoodwill": -3
+                },
+                "remember": {
+                  "sunday": "refused"
+                },
+                "goto": "sundayStuck"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "sundayFreed": {
+      "location": "backSide",
+      "time": "dusk",
+      "positions": {
+        "sunday": [
+          5,
+          -5,
+          160
+        ]
+      },
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "sunday",
+          "text": "(he throws the purple bandana into the gutter and dances on top of it) FREEDOM! Co-op go get new conductor! The best one! Me!"
+        },
+        {
+          "type": "goto",
+          "scene": "son"
+        }
+      ]
+    },
+    "sundayStuck": {
+      "location": "backSide",
+      "time": "dusk",
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Sunday goes back to Under-Bridge. The laughter takes him in. He waves at you once from the far side of the road, and then he doesn't."
+        },
+        {
+          "type": "setFlag",
+          "flag": "lostSunday"
+        },
+        {
+          "type": "goto",
+          "scene": "son"
+        }
+      ]
+    },
+    "son": {
+      "location": "underBridge",
+      "time": "night",
+      "positions": {
+        "giggles": [
+          0,
+          -13,
+          180
+        ],
+        "professor": [
+          2,
+          -15.5,
+          0
+        ]
+      },
+      "beats": [
+        {
+          "type": "cutscene",
+          "cards": [
+            {
+              "title": "Under-Bridge",
+              "text": "The Hyenas come for you at night. Their leader laughs a laugh you have heard before: in a hospital, through a swollen lip."
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "giggles",
+          "text": "So you be Daddy's new son. The one wey him dey teach rules. Rule number one: never count money in front of... HA HA HA. I know all the rules. I learn dem first."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "professor",
+          "text": "Kúnlé. (Everyone stops.) Kúnlé, go home."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "giggles",
+          "text": "Home? Which home? The one you left to go fight for money? HA. HA."
+        },
+        {
+          "type": "startMode",
+          "mode": "fight",
+          "params": {
+            "opponent": "giggles",
+            "difficulty": 2
+          },
+          "results": {
+            "won": {
+              "setFlag": "beatGiggles",
+              "changeStat": {
+                "notoriety": 6,
+                "rivalCultHatred": 10
+              },
+              "goto": "fate"
+            },
+            "lost": {
+              "setFlag": "lostToGiggles",
+              "changeStat": {
+                "energy": -20
+              },
+              "goto": "fate"
+            }
+          }
+        }
+      ]
+    },
+    "fate": {
+      "location": "underBridge",
+      "time": "night",
+      "positions": {
+        "professor": [
+          2,
+          -15.5,
+          0
+        ]
+      },
+      "beats": [
+        {
+          "type": "goto",
+          "scene": "professorDies",
+          "if": {
+            "flags": [
+              "gaveUpSunday"
+            ],
+            "stats": {
+              "rivalCultHatred": ">= 30"
+            }
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "professorDies",
+          "if": {
+            "flags": [
+              "lostToGiggles"
+            ],
+            "stats": {
+              "mentorBond": "< 15"
+            }
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "professorJailed",
+          "if": {
+            "stats": {
+              "policeHeat": ">= 50"
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "professor",
+          "text": "(sitting on the kerb, very tired) My son hates me. My hand has three fingers. My knees have no cartilage. {name}... what do I do now?"
+        },
+        {
+          "type": "choice",
+          "speaker": "professor",
+          "text": "(For the first time, Professor is asking you for a rule.)",
+          "options": [
+            {
+              "text": "Give him ₦50,000 to open a buka.",
+              "cost": 50000,
+              "requires": {
+                "stats": {
+                  "mentorBond": ">= 35"
+                }
+              },
+              "showLocked": true,
+              "lockedText": "Needs a strong bond with Professor (35)",
+              "effects": {
+                "goto": "professorBuka"
+              }
+            },
+            {
+              "text": "\"Go home to the village. Rest.\"",
+              "effects": {
+                "goto": "professorVillage"
+              }
+            },
+            {
+              "text": "\"Na you get rules. I no fit tell you.\"",
+              "effects": {
+                "changeStat": {
+                  "mentorBond": -5
+                },
+                "goto": "professorStays"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "professorDies": {
+      "location": "underBridge",
+      "time": "night",
+      "beats": [
+        {
+          "type": "cutscene",
+          "cards": [
+            {
+              "title": "The last rule",
+              "text": "The Hyenas come back an hour later for revenge. Professor steps in front of you. He is very fast, for an old boxer. Not fast enough."
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "At the funeral, Giggles stands at the back, not laughing. Nobody at Iyana-Wahala calls out the stops that morning. The silence is the loudest thing the junction has ever done."
+        },
+        {
+          "type": "setFlag",
+          "flags": [
+            "professor_dead"
+          ]
+        },
+        {
+          "type": "changeStat",
+          "stats": {
+            "communityGoodwill": -5,
+            "rivalCultHatred": 10
+          }
+        },
+        {
+          "type": "endChapter",
+          "title": "End of Act 3 — The Laugh",
+          "summary": "Professor is gone. Some rules die with the man who made them."
+        }
+      ]
+    },
+    "professorJailed": {
+      "location": "frontStop",
+      "time": "night",
+      "positions": {
+        "bassey": [
+          -12,
+          -6,
+          180
+        ],
+        "professor": [
+          -14,
+          -6.5,
+          0
+        ]
+      },
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "bassey",
+          "text": "Somebody must answer for the Under-Bridge wahala tonight. Na you, {name}. Your heat too high."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "professor",
+          "text": "No. Na me. (He holds out his wrists.) Old man, old crimes. Plenty paperwork. Take me."
+        },
+        {
+          "type": "setFlag",
+          "flags": [
+            "professor_jailed"
+          ]
+        },
+        {
+          "type": "changeStat",
+          "stats": {
+            "policeHeat": -20,
+            "mentorBond": 10
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "The green van leaves with Professor in the back, waving with his three fingers like a man on a parade float."
+        },
+        {
+          "type": "endChapter",
+          "title": "End of Act 3 — The Laugh",
+          "summary": "Professor took your fall. Police heat {stat:policeHeat}."
+        }
+      ]
+    },
+    "professorBuka": {
+      "location": "mamaPut",
+      "time": "dusk",
+      "beats": [
+        {
+          "type": "cutscene",
+          "cards": [
+            {
+              "title": "Professor's Kitchen",
+              "text": "Two weeks later, beside Mama Put, a new buka opens. The menu has twelve items. The rules of the road are painted on the wall. Rule number one is spelled wrong."
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "professor",
+          "text": "Customer number one: you. Free. Customer number two: also you, but you pay."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "On opening day, a young man in a white shirt with no bandana buys one plate of rice and eats it slowly at the back table. He does not laugh. Professor gives him extra meat.",
+          "if": "beatGiggles"
+        },
+        {
+          "type": "setFlag",
+          "flags": [
+            "professor_buka"
+          ]
+        },
+        {
+          "type": "changeStat",
+          "stats": {
+            "mentorBond": 15,
+            "communityGoodwill": 5
+          }
+        },
+        {
+          "type": "endChapter",
+          "title": "End of Act 3 — The Laugh",
+          "summary": "Professor's Kitchen is open. Bond with Professor {stat:mentorBond}."
+        }
+      ]
+    },
+    "professorVillage": {
+      "location": "frontStop",
+      "time": "dawn",
+      "positions": {
+        "professor": [
+          -14,
+          -6.5,
+          180
+        ]
+      },
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "professor",
+          "text": "Village. Hm. Goats. Silence. My sister's cooking. (He laughs.) Okay. Okay. Somebody must teach the goats the rules of the road."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "You put him on the 6 a.m. bus. Bíọ́dún refuses his fare. Professor pays anyway. Rule number one."
+        },
+        {
+          "type": "setFlag",
+          "flags": [
+            "professor_village"
+          ]
+        },
+        {
+          "type": "changeStat",
+          "stats": {
+            "mentorBond": 8
+          }
+        },
+        {
+          "type": "endChapter",
+          "title": "End of Act 3 — The Laugh",
+          "summary": "Professor went home. You still can't."
+        }
+      ]
+    },
+    "professorStays": {
+      "location": "backSide",
+      "time": "dawn",
+      "positions": {
+        "professor": [
+          8,
+          -6.2,
+          200
+        ]
+      },
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "professor",
+          "text": "Then I go stay. Back Side, same corner, same chair. Somebody must watch you."
+        },
+        {
+          "type": "setFlag",
+          "flags": [
+            "professor_stays"
+          ]
+        },
+        {
+          "type": "endChapter",
+          "title": "End of Act 3 — The Laugh",
+          "summary": "Professor stays on the street. Bond with Professor {stat:mentorBond}."
+        }
+      ]
+    }
+  }
+}

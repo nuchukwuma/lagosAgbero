@@ -18,6 +18,7 @@ import { useChase } from '../modes/chase/chaseStore.js'
 import FightDirector from '../modes/fight/FightDirector.jsx'
 import { useFight, opponentProfile } from '../modes/fight/fightStore.js'
 import RunnerScene from '../modes/runner/RunnerScene.jsx'
+import { withAllegiance } from '../characters/look.js'
 import { useRunner } from '../modes/runner/runnerStore.js'
 import ConductorDirector from '../modes/conductor/ConductorDirector.jsx'
 import { useBus } from '../modes/conductor/ConductorMode.jsx'
@@ -74,7 +75,7 @@ export default function GameCanvas({ view, game, activity = null, paused = false
   const talking = DIALOGUE_VIEWS.has(view.type)
   const speaker = talking ? view.speaker : null
   const eyeRed = Math.min(1, Math.max(0, game.stats.energy / 100))
-  const look = useMemo(() => game.player.look || {}, [game.player.look])
+  const look = useMemo(() => withAllegiance(game.player.look || {}, game.flags), [game.player.look, game.flags.tortoise, game.flags.leftTortoises, game.flags.hidesColours]) // eslint-disable-line react-hooks/exhaustive-deps
   // Drop the render resolution on slow phones, raise it again if there's room.
   const [dpr, setDpr] = useState(1.5)
 

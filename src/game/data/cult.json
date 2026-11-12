@@ -1,0 +1,78 @@
+{
+  "colours": {
+    "tortoise": {
+      "scarf": "#e0b400",
+      "shirt": "#8b6a2b"
+    }
+  },
+  "questions": {
+    "fastest": {
+      "q": "Who walks fastest in the forest?",
+      "answers": [
+        "The one who carries his house.",
+        "The cheetah, obviously.",
+        "Okada man with no brakes."
+      ],
+      "right": 0
+    },
+    "knocks": {
+      "q": "How many knocks open the shell?",
+      "answers": [
+        "One. Quick and clean.",
+        "Two. Never three.",
+        "As many as it takes."
+      ],
+      "right": 1
+    },
+    "money": {
+      "q": "Where does a Tortoise keep his money?",
+      "answers": [
+        "Under his shell.",
+        "In the bank, with interest.",
+        "In the register. Signed, stamped, filed."
+      ],
+      "right": 2
+    },
+    "hyena": {
+      "q": "What does the Tortoise say to the Hyena?",
+      "answers": [
+        "Nothing. The Tortoise files a report.",
+        "Ha ha ha!",
+        "Come and fight me now now."
+      ],
+      "right": 0
+    },
+    "late": {
+      "q": "When is a Tortoise late?",
+      "answers": [
+        "On Mondays.",
+        "Never. Everybody else is early.",
+        "When the danfo breaks down."
+      ],
+      "right": 1
+    },
+    "form": {
+      "q": "What is Form T-12?",
+      "answers": [
+        "A tax form.",
+        "Chuks's phone number.",
+        "Membership. Nine pages. In triplicate."
+      ],
+      "right": 2
+    },
+    "boss": {
+      "q": "Who is Number One Shell?",
+      "answers": [
+        "Nobody knows, and nobody asks.",
+        "Baba Ticket in disguise.",
+        "Chuks, after his promotion."
+      ],
+      "right": 0
+    }
+  },
+  "warnings": [
+    "A shell boy cracks his knuckles behind you.",
+    "Somebody in the dark says \"Hmm.\" It is not a friendly hmm.",
+    "The candle flickers. Two brown shirts step closer."
+  ]
+}

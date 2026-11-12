@@ -15,6 +15,7 @@ import RunnerMode from './runner/RunnerMode.jsx'
 import ConductorMode from './conductor/ConductorMode.jsx'
 import BeggingMode from './begging/BeggingMode.jsx'
 import RallyMode from './rally/RallyMode.jsx'
+import InitiationMode from './initiation/InitiationMode.jsx'
 
 export const MODES = {
   feeCollection: FeeCollectionMode,
@@ -24,6 +25,7 @@ export const MODES = {
   conductor: ConductorMode,
   begging: BeggingMode,
   rally: RallyMode,
+  initiation: InitiationMode,
 }
 
 // Modes played inside the 3D street (the player walks with joystick/keys).

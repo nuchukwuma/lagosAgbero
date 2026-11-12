@@ -18,6 +18,7 @@ export const STAT_DEFS = {
   fairFee: { label: 'What drivers call fair', group: 'hidden', start: 500, min: 100, max: 5000 },
   day: { label: 'Day', group: 'hidden', start: 1, min: 1, max: 999 },
   arrests: { label: 'Times arrested', group: 'hidden', start: 0, min: 0, max: 99 },
+  cultRank: { label: 'Tortoise rank', group: 'hidden', start: 0, min: 0, max: 5 },
   bribesPaid: { label: 'Bribes paid to Bassey', group: 'hidden', start: 0, min: 0, max: 99 },
 
   // relationships (0–100)
@@ -30,6 +31,9 @@ export const STAT_DEFS = {
   cultLoyalty: { label: 'Tortoise loyalty', group: 'relationship', start: 0, min: 0, max: 100, who: 'The Tortoises' },
   rivalCultHatred: { label: 'Hyena hatred', group: 'relationship', start: 0, min: 0, max: 100, who: 'The Hyenas' },
 }
+
+// Tortoise ranks, indexed by the cultRank stat.
+export const RANK_NAMES = ['Outsider', 'Egg', 'Hatchling', 'Shell', 'Hard Shell', 'Number Two Shell']
 
 export const STAT_KEYS = Object.keys(STAT_DEFS)
 

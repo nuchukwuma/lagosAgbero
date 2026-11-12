@@ -59,13 +59,16 @@ export default function CameraRig({ mode = 'follow', speaker = null, ceiling = n
       const d = Math.hypot(dx, dz) || 1
       let px = dz / d
       let pz = -dx / d
-      if (pz < 0) {
+      // Film from the street side. On the south side of the road the houses
+      // are behind the camera, so film from the north instead.
+      const fromNorth = (p.z + n.z) / 2 > 4
+      if (fromNorth ? pz > 0 : pz < 0) {
         px = -px
         pz = -pz
       }
-      // blend the side direction with "south" and normalise
+      // blend the side direction with the street side and normalise
       let ox = px * 0.7
-      let oz = pz * 0.7 + 0.7
+      let oz = pz * 0.7 + (fromNorth ? -0.7 : 0.7)
       const ol = Math.hypot(ox, oz) || 1
       ox /= ol
       oz /= ol
@@ -74,7 +77,8 @@ export default function CameraRig({ mode = 'follow', speaker = null, ceiling = n
     } else if (mode === 'dialogue') {
       // nobody to frame (narrator / phone call): closer shot of the player
       tmpLook.set(p.x, 1.2, p.z)
-      tmpPos.set(p.x + 2, portrait ? 4.8 : 4, p.z + (portrait ? 7.5 : 6.5))
+      const side = p.z > 4 ? -1 : 1
+      tmpPos.set(p.x + 2, portrait ? 4.8 : 4, p.z + side * (portrait ? 7.5 : 6.5))
     } else {
       const k = portrait ? 1.25 : 1
       tmpLook.set(p.x, 1.1, p.z - 2)

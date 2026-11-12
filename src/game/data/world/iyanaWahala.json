@@ -1077,6 +1077,14 @@
       ],
       "facing": 0,
       "radius": 2.5
+    },
+    "shellHouse": {
+      "pos": [
+        -32,
+        8.5
+      ],
+      "facing": 0,
+      "radius": 3.5
     }
   },
   "npcs": [
@@ -1260,6 +1268,36 @@
       "facing": 0,
       "anim": "idle",
       "if": "pastorDriverAround"
+    },
+    {
+      "id": "giggles",
+      "pos": [
+        60,
+        20
+      ],
+      "facing": 0,
+      "anim": "idle",
+      "if": "gigglesAround"
+    },
+    {
+      "id": "shellLawyer",
+      "pos": [
+        60,
+        20
+      ],
+      "facing": 0,
+      "anim": "idle",
+      "if": "shellLawyerAround"
+    },
+    {
+      "id": "iyaKeke",
+      "pos": [
+        60,
+        20
+      ],
+      "facing": 0,
+      "anim": "idle",
+      "if": "iyaKekeAround"
     }
   ],
   "extras": [
@@ -1400,6 +1438,63 @@
         "job": "crowd"
       },
       "where": "The Roundabout road"
+    },
+    {
+      "id": "shellWork",
+      "label": "SHELL WORK",
+      "spot": "shellHouse",
+      "if": {
+        "flags": [
+          "shellWork"
+        ],
+        "notFlags": [
+          "leftTortoises"
+        ]
+      },
+      "mode": "fight",
+      "minutes": 120,
+      "params": {
+        "opponent": "hyenaBoy",
+        "difficulty": 1
+      },
+      "where": "Shell House",
+      "results": {
+        "won": {
+          "changeStat": {
+            "cultMoney": 3000,
+            "cultLoyalty": 2,
+            "rivalCultHatred": 3
+          }
+        },
+        "lost": {
+          "changeStat": {
+            "energy": -10,
+            "cultLoyalty": -1
+          }
+        }
+      }
+    },
+    {
+      "id": "coopDay",
+      "label": "CO-OP DAY",
+      "spot": "frontStop",
+      "if": "coopFounded",
+      "mode": "feeCollection",
+      "minutes": 90,
+      "params": {
+        "spot": "frontStop",
+        "duration": 90,
+        "vehicles": 12
+      },
+      "where": "Front Stop",
+      "results": {
+        "default": {
+          "changeStat": {
+            "hustleMoney": 1000,
+            "communityGoodwill": 1
+          }
+        }
+      }
     }
   ]
 }

@@ -1468,3 +1468,22 @@ body,
 .fee-options.column {
   flex-direction: column;
 }
+
+.initiation {
+  background: rgba(20, 12, 4, 0.94);
+  border-color: #8b6a2b;
+}
+
+/* initiation: a dark room lit by one candle */
+.candle-room {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at 50% 38%, rgba(255, 170, 60, 0.28) 0, rgba(40, 20, 5, 0.85) 30%, rgba(5, 3, 1, 0.97) 70%);
+  animation: candle 2.4s ease-in-out infinite alternate;
+}
+
+@keyframes candle {
+  from { opacity: 0.92; }
+  to { opacity: 1; }
+}

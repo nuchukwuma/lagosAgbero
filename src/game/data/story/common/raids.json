@@ -106,6 +106,37 @@
               }
             },
             {
+              "text": "Call the Shell (₦2,000 from cult funds)",
+              "requires": {
+                "flags": [
+                  "tortoise"
+                ],
+                "notFlags": [
+                  "leftTortoises"
+                ],
+                "stats": {
+                  "cultMoney": ">= 2000"
+                }
+              },
+              "effects": {
+                "changeStat": {
+                  "cultMoney": -2000,
+                  "policeHeat": -8
+                },
+                "toast": "Barrister Shell arrives with four files and a stamp. Bassey leaves with a headache and nothing else."
+              }
+            },
+            {
+              "text": "Duck into a co-op driver's bus",
+              "requires": "coopFounded",
+              "effects": {
+                "changeStat": {
+                  "communityGoodwill": 1
+                },
+                "toast": "A co-op driver opens his door without a word. You ride two stops under a pile of yam."
+              }
+            },
+            {
               "text": "\"Oga Commander, make we talk am.\" (₦2,000)",
               "cost": 2000,
               "requires": {

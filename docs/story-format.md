@@ -384,6 +384,44 @@ almost every round gives `faked` (half pay). Jobs and events live in
 A scene's `positions` shows an NPC even when its world `"if"` flag is off, so
 characters like Settlement or Chuks appear only in the scenes that place them.
 
+### Tortoise initiation (`"mode": "initiation"`)
+
+```json
+{ "type": "startMode", "mode": "initiation",
+  "params": { "questions": ["knocks", "money", "hyena", "form", "boss"], "seconds": 12 },
+  "results": { "perfect": {}, "passed": {}, "attacked": { "goto": "corrected" } } }
+```
+
+Coded questions in a candle-lit room (`src/game/data/cult.json`). Each has a
+timer; a timeout counts as wrong. Two wrong answers end with `attacked`, and
+the story starts a fight. Chuks teaches some answers in dialogue beforehand,
+so players who read carefully pass.
+
+### The cult system
+
+- **Paths:** the flag `cultPath` + `tortoise` (joined) or `independentPath`.
+  Chapters branch at their start scene with `goto` beats that have an `if`.
+- **Ranks:** the hidden stat `cultRank` (0–5). `{rank}` in any text shows the
+  rank name (`RANK_NAMES` in `stats.js`: Outsider, Egg, Hatchling, Shell,
+  Hard Shell, Number Two Shell). Ranks rise through fights or fees.
+- **Three pockets:** `money`, `hustleMoney` (co-op work, kept safe) and
+  `cultMoney` (Shell allowances and SHELL WORK).
+- **Cult help:** the raid choice "Call the Shell" (needs `tortoise` and
+  ₦2,000 cult funds) and "Duck into a co-op driver's bus" (needs `coopFounded`).
+- **Colours:** a Tortoise automatically wears a yellow scarf and brown
+  trousers (`withAllegiance` in `look.js`; turned off by `leftTortoises` or
+  `hidesColours`).
+
+### Activity rewards
+
+A world activity can add effects per outcome on top of the mode's result:
+
+```json
+{ "id": "shellWork", "label": "SHELL WORK", "spot": "shellHouse", "mode": "fight",
+  "params": { "opponent": "hyenaBoy" },
+  "results": { "won": { "changeStat": { "cultMoney": 3000 } }, "default": { } } }
+```
+
 ### Task Force raids
 
 `story/common/raids.json` holds the raid scenes:

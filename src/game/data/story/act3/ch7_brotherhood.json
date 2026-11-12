@@ -1,0 +1,531 @@
+{
+  "id": "ch7_brotherhood",
+  "act": 3,
+  "number": 7,
+  "title": "Chapter 7 — The Brotherhood",
+  "description": "Cult path: study, initiation and the first Shell job. Independent path: the Ọmọ Onílẹ̀ drivers' co-op.",
+  "startScene": "start",
+  "scenes": {
+    "start": {
+      "location": "frontStop",
+      "time": "dawn",
+      "beats": [
+        {
+          "type": "setFlag",
+          "flags": [
+            "dayLoop",
+            "canCollectFees"
+          ]
+        },
+        {
+          "type": "cutscene",
+          "cards": [
+            {
+              "title": "Act 3 — The Brotherhood",
+              "text": "Day {stat:day}. Professor is out of hospital, walking with a stick he insists is \"for style\"."
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "cultStart",
+          "if": "cultPath"
+        },
+        {
+          "type": "goto",
+          "scene": "coopStart"
+        }
+      ]
+    },
+    "cultStart": {
+      "location": "teaTable",
+      "time": "dawn",
+      "positions": {
+        "chuks": [
+          -4.5,
+          -7.4,
+          250
+        ]
+      },
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "chuks",
+          "text": "Study time. Initiation is tonight. Listen well, because I will only say this once. Okay, twice. Okay, as many times as you need, but don't tell anybody."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "chuks",
+          "text": "How many knocks open the shell? Two. NEVER three. Three is for Hyenas and people knocking on the wrong door."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "chuks",
+          "text": "Where does a Tortoise keep his money? In the register. Signed, stamped, filed. Money without paper is just paper without money."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "chuks",
+          "text": "And if they ask what the Tortoise says to the Hyena: nothing. The Tortoise files a report. Always a report."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "chuks",
+          "text": "Form T-12: membership. Nine pages. In triplicate. If you remember nothing else, remember the triplicate."
+        },
+        {
+          "type": "choice",
+          "speaker": "chuks",
+          "text": "Any questions?",
+          "options": [
+            {
+              "text": "\"Who is Number One Shell?\"",
+              "effects": {
+                "remember": {
+                  "askedBoss": "yes"
+                },
+                "goto": "askBoss"
+              }
+            },
+            {
+              "text": "\"I don hear. Make I go hustle.\"",
+              "effects": {
+                "goto": "cultDay"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "askBoss": {
+      "location": "teaTable",
+      "positions": {
+        "chuks": [
+          -4.5,
+          -7.4,
+          250
+        ]
+      },
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "chuks",
+          "text": "(he looks around very slowly) That is the one question you never ask. Nobody knows. And nobody asks. ...Did you hear what I just said? Remember it."
+        },
+        {
+          "type": "goto",
+          "scene": "cultDay"
+        }
+      ]
+    },
+    "cultDay": {
+      "location": "backSide",
+      "beats": [
+        {
+          "type": "freeRoam",
+          "objective": "Hustle until night. Initiation at the Shell House (Tenement A, south street) at 8 p.m.",
+          "goal": {
+            "atTime": "19:30"
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "initiation"
+        }
+      ]
+    },
+    "initiation": {
+      "location": "shellHouse",
+      "time": "night",
+      "beats": [
+        {
+          "type": "startMode",
+          "mode": "initiation",
+          "params": {
+            "questions": [
+              "knocks",
+              "money",
+              "hyena",
+              "form",
+              "boss"
+            ],
+            "seconds": 12
+          },
+          "results": {
+            "perfect": {
+              "changeStat": {
+                "cultRank": 1,
+                "cultLoyalty": 5
+              },
+              "setFlag": "initiatedPerfect",
+              "goto": "welcomed"
+            },
+            "passed": {
+              "changeStat": {
+                "cultRank": 1
+              },
+              "goto": "welcomed"
+            },
+            "attacked": {
+              "goto": "corrected"
+            }
+          }
+        }
+      ]
+    },
+    "corrected": {
+      "location": "shellHouse",
+      "time": "night",
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "The candle goes out. Somebody says \"Correction session\" in the tone of a man reading minutes."
+        },
+        {
+          "type": "startMode",
+          "mode": "fight",
+          "params": {
+            "opponent": "tortoiseBoy",
+            "difficulty": 1
+          },
+          "results": {
+            "won": {
+              "changeStat": {
+                "cultRank": 1,
+                "notoriety": 4
+              },
+              "setFlag": "foughtTheShell",
+              "goto": "welcomed"
+            },
+            "lost": {
+              "changeStat": {
+                "cultRank": 1,
+                "energy": -20
+              },
+              "goto": "beatenIn"
+            }
+          }
+        }
+      ]
+    },
+    "beatenIn": {
+      "location": "shellHouse",
+      "time": "night",
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "chuks",
+          "text": "(pressing ice wrapped in a file folder to your face) You passed. Barely. In this society, \"barely\" is still a stamp."
+        },
+        {
+          "type": "goto",
+          "scene": "welcomed"
+        }
+      ]
+    },
+    "welcomed": {
+      "location": "shellHouse",
+      "time": "night",
+      "positions": {
+        "chuks": [
+          -30,
+          9.5,
+          200
+        ]
+      },
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "From behind a curtain, a voice nobody can place: \"File him as {rank}.\" Applause. Slow, bureaucratic applause."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "chuks",
+          "text": "Everybody saw you fight back with two wrong answers. They don't respect the answers. They respect the fighting.",
+          "if": "foughtTheShell"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "chuks",
+          "text": "Your first allowance. Cult funds, not pocket money. Never mix the two. That is how Hyenas are born.",
+          "effects": {
+            "changeStat": {
+              "cultMoney": 2000
+            }
+          }
+        },
+        {
+          "type": "setFlag",
+          "flags": [
+            "shellWork",
+            "initiated"
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "chuks",
+          "text": "SHELL WORK is at this house whenever you want it. Hyenas keep touching our bus stops. Remove them. Politely. With hands."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "professor",
+          "text": "(the next morning, looking at your yellow scarf) Hm. Yellow suits you. Shame about the rest.",
+          "if": {
+            "stats": {
+              "mentorBond": ">= 20"
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ada",
+          "text": "You smell like candle wax and bad decisions. Wetin you join?",
+          "if": {
+            "stats": {
+              "friendBond": ">= 15"
+            }
+          }
+        },
+        {
+          "type": "endChapter",
+          "title": "End of Chapter 7 — The Brotherhood",
+          "summary": "You are a Tortoise: {rank}. Cult funds {cultMoney}. Hyena hatred {stat:rivalCultHatred}.",
+          "next": "ch8_war"
+        }
+      ]
+    },
+    "coopStart": {
+      "location": "adaShop",
+      "time": "day",
+      "positions": {
+        "ada": [
+          22,
+          -10.5,
+          180
+        ],
+        "iyaKeke": [
+          20,
+          -8.5,
+          120
+        ]
+      },
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "ada",
+          "text": "Listen. Every driver for this junction dey pay three, four people: union, Scatter, Task Force, cult. What if dem pay one co-operative, and the co-op protect dem?"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "biodun",
+          "text": "I dey inside. 'God's Time Is The Best' need structure. And a fair fee wey I fit plan with.",
+          "if": {
+            "notFlags": [
+              "biodunEnemy"
+            ]
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Bíọ́dún is not here. He says he will join \"when the chaser becomes the protector\". Fair.",
+          "if": "biodunEnemy"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "iyaKeke",
+          "text": "Me, I no dey pay agbero. But co-operative? Co-operative get minutes. I like minutes. I dey."
+        },
+        {
+          "type": "choice",
+          "speaker": "ada",
+          "text": "We need one rule to start. Wetin be our rule?",
+          "options": [
+            {
+              "text": "One fair fee for everybody, written on a board.",
+              "effects": {
+                "setFlag": [
+                  "coopFounded",
+                  "coopFairFee"
+                ],
+                "changeStat": {
+                  "communityGoodwill": 8,
+                  "chairmanTrust": -5,
+                  "friendBond": 5
+                },
+                "goto": "coopNamed"
+              }
+            },
+            {
+              "text": "Members pay half. Non-members pay full.",
+              "effects": {
+                "setFlag": [
+                  "coopFounded",
+                  "coopMembersOnly"
+                ],
+                "changeStat": {
+                  "communityGoodwill": 3,
+                  "hustleMoney": 2000
+                },
+                "goto": "coopNamed"
+              }
+            },
+            {
+              "text": "Every member saves ₦200 a day for emergencies.",
+              "effects": {
+                "setFlag": [
+                  "coopFounded",
+                  "coopSavings"
+                ],
+                "changeStat": {
+                  "communityGoodwill": 5,
+                  "friendBond": 3
+                },
+                "goto": "coopNamed"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "coopNamed": {
+      "location": "adaShop",
+      "time": "day",
+      "beats": [
+        {
+          "type": "cutscene",
+          "cards": [
+            {
+              "title": "Ọmọ Onílẹ̀ Drivers' Co-operative",
+              "text": "A hand-painted board goes up beside Ada's Corner. Somebody spells \"co-operative\" with three o's. Nobody corrects it. It is perfect."
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "babaTicket",
+          "text": "(arriving with suya) Co-operative. In my park. (He chews for a long time.) The tortoise that wants to carry the elephant... no, wait. The elephant that... Hm. We go see.",
+          "effects": {
+            "changeStat": {
+              "chairmanTrust": -3
+            }
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "leaning"
+        }
+      ]
+    },
+    "leaning": {
+      "location": "frontStop",
+      "time": "dusk",
+      "positions": {
+        "chuks": [
+          -13,
+          -7,
+          200
+        ]
+      },
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "chuks",
+          "text": "A co-op! Beautiful paperwork. Our offer stands: register your co-op with the Shell. A small annual fee. For filing."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Behind him, two boys in purple are laughing at the board. One of them writes \"HA HA\" under the three o's."
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "(The Hyena boys want a \"laughing tax\" from the co-op drivers.)",
+          "options": [
+            {
+              "text": "Pay them ₦5,000 to go away.",
+              "cost": 5000,
+              "effects": {
+                "setFlag": "paidHyenaTax",
+                "changeStat": {
+                  "communityGoodwill": -2
+                },
+                "goto": "coopEnd"
+              }
+            },
+            {
+              "text": "Chase them off the board.",
+              "effects": {
+                "startMode": "fight",
+                "params": {
+                  "opponent": "hyenaBoy",
+                  "difficulty": 1
+                },
+                "results": {
+                  "won": {
+                    "changeStat": {
+                      "rivalCultHatred": 10,
+                      "communityGoodwill": 4,
+                      "notoriety": 4
+                    },
+                    "goto": "coopEnd"
+                  },
+                  "lost": {
+                    "changeStat": {
+                      "energy": -15,
+                      "rivalCultHatred": 5
+                    },
+                    "goto": "coopEnd"
+                  }
+                }
+              }
+            },
+            {
+              "text": "Laugh louder than them.",
+              "requires": {
+                "stats": {
+                  "notoriety": ">= 25"
+                }
+              },
+              "lockedText": "Needs notoriety 25",
+              "effects": {
+                "changeStat": {
+                  "notoriety": 3
+                },
+                "remember": {
+                  "hyenaLaugh": "outlaughed"
+                },
+                "goto": "coopEnd"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "coopEnd": {
+      "location": "frontStop",
+      "time": "dusk",
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "professor",
+          "text": "Co-operative. (He smiles with his three good fingers.) Twenty years I wait for somebody to try this. Make dem no kill you for am."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "CO-OP DAY collections are open at the Front Stop. The money goes to your hustle savings, not your pocket."
+        },
+        {
+          "type": "endChapter",
+          "title": "End of Chapter 7 — Ọmọ Onílẹ̀",
+          "summary": "The co-op is born. Goodwill {stat:communityGoodwill}. Hustle savings {hustleMoney}.",
+          "next": "ch8_war"
+        }
+      ]
+    }
+  }
+}

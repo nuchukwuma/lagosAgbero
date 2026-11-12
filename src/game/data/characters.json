@@ -534,5 +534,29 @@
     "fullName": "A Purple Hyena",
     "color": "#8e44ad",
     "role": "extra"
+  },
+  "giggles": {
+    "name": "Giggles",
+    "fullName": "Kúnlé \"Giggles\" Ṣàngóbíyìí, a Purple Hyena",
+    "color": "#8e44ad",
+    "role": "hyena",
+    "look": {
+      "body": "male_shirt",
+      "skin": "#3d2516",
+      "shirt": "#8e44ad",
+      "trousers": "#ffffff",
+      "accessories": [
+        {
+          "type": "bandana",
+          "color": "#ffffff"
+        }
+      ]
+    }
+  },
+  "shellLawyer": {
+    "name": "Barrister Shell",
+    "fullName": "Barrister Shell, Esq. (Tortoise legal department)",
+    "color": "#8b6a2b",
+    "role": "tortoise"
   }
 }

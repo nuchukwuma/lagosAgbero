@@ -137,7 +137,14 @@ export const useGameStore = create((set, get) => {
     finishActivity: (result) => {
       const { game, activity } = get()
       if (!game || !activity) return set({ activity: null })
-      const r = applyEffects(game, resultToEffects(result))
+      let r = applyEffects(game, resultToEffects(result))
+      // world JSON activities may add their own rewards per outcome:
+      //   "results": { "won": { "changeStat": { "cultMoney": 3000 } } }
+      const extra = activity.results?.[result.outcome] || activity.results?.default
+      if (extra) {
+        const r2 = applyEffects(r.state, extra)
+        r = { state: r2.state, notices: [...r.notices, ...r2.notices] }
+      }
       const minutes = activity.minutes ?? 120
       const next = { ...r.state, time: Math.min((r.state.time ?? 0) + minutes, EVENING_AT - 1) }
       const summary = result.moneyChange ? `+₦${result.moneyChange.toLocaleString('en-NG')}` : 'No money this time'

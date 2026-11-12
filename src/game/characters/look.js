@@ -99,3 +99,10 @@ export function randomLook(seed, sex) {
     accessories: rnd() < 0.25 ? [{ type: female ? 'gele' : 'cap', color: pick(shirts) }] : [],
   })
 }
+
+/** Cult colours: a Tortoise wears yellow and brown (cult.json "colours"). */
+export function withAllegiance(look = {}, flags = {}) {
+  if (!flags.tortoise || flags.leftTortoises || flags.hidesColours) return look
+  const acc = (look.accessories || []).filter((a) => a.type !== 'scarf')
+  return { ...look, trousers: '#5d4325', accessories: [...acc, { type: 'scarf', color: '#e0b400' }] }
+}
