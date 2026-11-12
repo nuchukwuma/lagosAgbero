@@ -279,7 +279,7 @@ body,
 
 .chapter-chip {
   position: absolute;
-  top: calc(max(8px, env(safe-area-inset-top)) + 48px);
+  top: calc(max(8px, env(safe-area-inset-top)) + 66px);
   left: 12px;
   padding: 2px 10px;
   border-radius: 999px;
@@ -934,7 +934,7 @@ body,
 
 .objective {
   position: absolute;
-  top: calc(max(8px, env(safe-area-inset-top)) + 70px);
+  top: calc(max(8px, env(safe-area-inset-top)) + 92px);
   left: 50%;
   transform: translateX(-50%);
   max-width: calc(100% - 24px);
@@ -1162,7 +1162,7 @@ body,
 
 .fee-hud {
   position: fixed;
-  top: calc(max(8px, env(safe-area-inset-top)) + 66px);
+  top: calc(max(8px, env(safe-area-inset-top)) + 92px);
   left: 50%;
   transform: translateX(-50%);
   width: min(380px, calc(100% - 24px));
@@ -1298,4 +1298,10 @@ body,
 .shop-stats {
   font-size: 12px;
   color: #8ff0a4;
+}
+
+.hud-clock {
+  font-size: 12px;
+  color: var(--muted);
+  text-shadow: 0 1px 2px #000;
 }

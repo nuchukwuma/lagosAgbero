@@ -2,7 +2,7 @@ import { useEffect, useReducer, useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import Vehicle from '../vehicles/Vehicle.jsx'
 import { traffic, updateTraffic, spawnVehicle, clearTraffic, randomKind, randomSlogan, LANES } from '../systems/traffic.js'
-import { playerState } from './worldState.js'
+import { playerState, useWorldStore } from './worldState.js'
 import { randomLook } from '../characters/look.js'
 import { GROUND_Y } from './layout.js'
 import vehicleData from '../data/vehicles.json'
@@ -22,7 +22,7 @@ function TrafficVehicle({ v }) {
   return <Vehicle ref={ref} kind={v.kind} slogan={v.slogan} color={v.color} riderLook={v.riderLook} position={[v.x, GROUND_Y, LANES[v.lane].z]} rotation-y={yaw} />
 }
 
-export default function Traffic({ density = 3, paused = false }) {
+export default function Traffic({ density = 3, paused = false, raining = false }) {
   const [, rerender] = useReducer((n) => n + 1, 0)
   const seen = useRef(-1)
   const timers = useRef({ west: 0.5, east: 2 })
@@ -32,10 +32,12 @@ export default function Traffic({ density = 3, paused = false }) {
   useFrame((_, raw) => {
     const dt = Math.min(raw, 0.05)
     if (!paused) {
+      const jam = performance.now() < useWorldStore.getState().jamUntil
+      const want = jam ? density + 3 : density
       for (const lane of ['west', 'east']) {
         timers.current[lane] -= dt
         const ambient = traffic.vehicles.filter((v) => v.lane === lane && v.tag.ambient).length
-        if (timers.current[lane] <= 0 && ambient < density) {
+        if (timers.current[lane] <= 0 && ambient < want) {
           const kind = randomKind()
           const seed = traffic.nextId * 13 + 7
           const isDanfo = kind === 'danfo'
@@ -51,7 +53,7 @@ export default function Traffic({ density = 3, paused = false }) {
           timers.current[lane] = v ? 4 + Math.random() * 6 : 1
         }
       }
-      updateTraffic(dt, playerState.position)
+      updateTraffic(dt, playerState.position, jam ? 0.3 : raining ? 0.75 : 1)
     }
     if (traffic.version !== seen.current) {
       seen.current = traffic.version

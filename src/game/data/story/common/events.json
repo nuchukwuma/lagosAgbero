@@ -1,0 +1,266 @@
+{
+  "id": "events",
+  "act": 0,
+  "common": true,
+  "title": "Street life",
+  "description": "Small story moments that random events cut to. Each returns to the street.",
+  "startScene": "sickChild",
+  "scenes": {
+    "sickChild": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "passenger",
+          "text": "Abeg, abeg! My pikin dey hot like fire since morning. The chemist want ₦500 for drug. I no get am. Anybody?"
+        },
+        {
+          "type": "choice",
+          "text": "A woman holds a feverish child at the bus stop.",
+          "options": [
+            {
+              "text": "Give her ₦500",
+              "cost": 500,
+              "effects": {
+                "changeStat": {
+                  "communityGoodwill": 4
+                },
+                "setFlag": "helpedChild",
+                "noticedBy": [
+                  "The street"
+                ]
+              }
+            },
+            {
+              "text": "Carry them to Nurse Rónkẹ́ yourself",
+              "effects": {
+                "changeStat": {
+                  "communityGoodwill": 6,
+                  "energy": -10
+                },
+                "setFlag": [
+                  "helpedChild",
+                  "tookChildToNurse"
+                ]
+              }
+            },
+            {
+              "text": "\"Madam, me sef never chop.\"",
+              "effects": {
+                "changeStat": {
+                  "communityGoodwill": -1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "passenger",
+          "text": "God go bless you! You no be like other agbero!",
+          "if": "helpedChild"
+        },
+        {
+          "type": "goto",
+          "scene": "@resume"
+        }
+      ]
+    },
+    "stranded": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "passenger",
+          "text": "My son, which bus dey go Ikorodu? Since 7 o'clock I dey here. Everybody dey shout \"Oshodi! Oshodi!\" I no wan go Oshodi!"
+        },
+        {
+          "type": "choice",
+          "text": "An old woman with a tray of pepper is lost.",
+          "options": [
+            {
+              "text": "Put her on the right danfo, no charge",
+              "effects": {
+                "changeStat": {
+                  "communityGoodwill": 3
+                },
+                "setFlag": "helpedMamaPepper"
+              }
+            },
+            {
+              "text": "\"Consultation fee na ₦200, Mama.\"",
+              "effects": {
+                "changeStat": {
+                  "money": 200,
+                  "notoriety": 1,
+                  "communityGoodwill": -2
+                }
+              }
+            },
+            {
+              "text": "\"Ask that man.\" (point at nobody)",
+              "effects": {}
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "passenger",
+          "text": "Thank you! Take this pepper. E go burn your enemies. And your mouth.",
+          "if": "helpedMamaPepper"
+        },
+        {
+          "type": "goto",
+          "scene": "@resume"
+        }
+      ]
+    },
+    "streetFight": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Two conductors are fighting over one passenger. The passenger has already left in a keke."
+        },
+        {
+          "type": "choice",
+          "text": "A crowd gathers. Somebody is taking bets.",
+          "options": [
+            {
+              "text": "Break am up",
+              "effects": {
+                "startMode": "fight",
+                "params": {
+                  "opponent": "conductor",
+                  "difficulty": 1
+                },
+                "results": {
+                  "won": {
+                    "changeStat": {
+                      "notoriety": 3,
+                      "communityGoodwill": 2
+                    },
+                    "setFlag": "brokeUpFight"
+                  },
+                  "lost": {
+                    "changeStat": {
+                      "energy": -15,
+                      "notoriety": 1
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "text": "Bet ₦500 on the bigger one",
+              "cost": 500,
+              "effects": {
+                "setFlag": "betOnFight"
+              }
+            },
+            {
+              "text": "Walk away. Na their wahala.",
+              "effects": {}
+            }
+          ]
+        },
+        {
+          "type": "randomEvent",
+          "if": "betOnFight",
+          "outcomes": [
+            {
+              "weight": 1,
+              "effects": {
+                "changeStat": {
+                  "money": 1000
+                },
+                "toast": "The bigger one wins! +₦1,000. The smaller one says it was a draw."
+              }
+            },
+            {
+              "weight": 1,
+              "effects": {
+                "toast": "The smaller one wins with a slipper to the head. Your ₦500 is gone."
+              }
+            }
+          ]
+        },
+        {
+          "type": "setFlag",
+          "flag": "seenStreetFight",
+          "clear": [
+            "betOnFight"
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "@resume"
+        }
+      ]
+    },
+    "bigManConvoy": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "A black SUV with tinted windows crawls through the go-slow. The window comes down a little. A ring flashes."
+        },
+        {
+          "type": "choice",
+          "text": "Rich man for traffic. Na opportunity... or wahala.",
+          "options": [
+            {
+              "text": "\"Oga at the top! Happy Sunday! Your boy dey hungry!\" (beg)",
+              "effects": {
+                "setFlag": "beggedConvoy"
+              }
+            },
+            {
+              "text": "Salute and step back",
+              "effects": {
+                "changeStat": {
+                  "communityGoodwill": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "randomEvent",
+          "if": "beggedConvoy",
+          "outcomes": [
+            {
+              "weight": 3,
+              "effects": {
+                "changeStat": {
+                  "money": 2000,
+                  "notoriety": 1
+                },
+                "toast": "A ₦2,000 note floats out of the window like a blessing."
+              }
+            },
+            {
+              "weight": 2,
+              "effects": {
+                "changeStat": {
+                  "policeHeat": 10
+                },
+                "setFlag": "authorityTrouble",
+                "toast": "\"Do you know who I am?\" He is off-duty Task Force. He writes down your face."
+              }
+            }
+          ]
+        },
+        {
+          "type": "setFlag",
+          "flag": "metConvoy",
+          "clear": [
+            "beggedConvoy"
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "@resume"
+        }
+      ]
+    }
+  }
+}

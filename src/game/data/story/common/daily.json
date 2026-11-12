@@ -1,0 +1,143 @@
+{
+  "id": "daily",
+  "act": 0,
+  "common": true,
+  "title": "Another day",
+  "description": "The day loop: every evening at 9 p.m. Baba Ticket collects his share, then you sleep and a new day begins.",
+  "startScene": "evening",
+  "scenes": {
+    "evening": {
+      "location": "babaTicketOffice",
+      "time": "night",
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "babaTicket",
+          "text": "{name}! Day {stat:day}. My share na {quota}. Bring am.",
+          "variants": [
+            {
+              "if": "owesChairman",
+              "text": "{name}. You still dey owe me from before. Today share na {quota}, and my patience don dey finish like NEPA light."
+            }
+          ]
+        },
+        {
+          "type": "choice",
+          "speaker": "babaTicket",
+          "text": "Oya. How e go be?",
+          "options": [
+            {
+              "text": "Pay the full share",
+              "cost": "stat:quota",
+              "showLocked": true,
+              "lockedText": "Your bag no reach",
+              "effects": {
+                "changeStat": {
+                  "chairmanTrust": 3
+                },
+                "clearFlag": "owesChairman"
+              }
+            },
+            {
+              "text": "\"Na wetin I get be this, Chairman.\" (pay everything)",
+              "effects": {
+                "changeStat": {
+                  "money": -999999,
+                  "chairmanTrust": -3
+                }
+              }
+            },
+            {
+              "text": "\"I go double am tomorrow.\" (pay nothing)",
+              "effects": {
+                "changeStat": {
+                  "chairmanTrust": -7
+                },
+                "setFlag": "owesChairman"
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "babaTicket",
+          "text": "If you no fit carry Back Side, I get people wey fit. Scatter dey always ask me for that corner.",
+          "mood": "angry",
+          "if": {
+            "stats": {
+              "chairmanTrust": "< 4"
+            }
+          }
+        },
+        {
+          "type": "randomEvent",
+          "outcomes": [
+            {
+              "weight": 2,
+              "effects": {
+                "toast": "You sleep on Professor's spare carton. Mosquitoes hold a party in your honour."
+              }
+            },
+            {
+              "weight": 1,
+              "effects": {
+                "toast": "Mama calls at midnight. You pretend the generator noise na network wahala."
+              }
+            },
+            {
+              "weight": 1,
+              "if": "raining",
+              "effects": {
+                "toast": "Rain finds every hole in the flyover. You sleep sitting down."
+              }
+            },
+            {
+              "weight": 1,
+              "effects": {
+                "toast": "You dream of a danfo with your name on the back: \"NO TELLING\"."
+              }
+            }
+          ]
+        },
+        {
+          "type": "changeStat",
+          "stats": {
+            "day": 1,
+            "energy": 45
+          }
+        },
+        {
+          "type": "setFlag",
+          "flag": "slept",
+          "clear": [
+            "raining"
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "morning"
+        }
+      ]
+    },
+    "morning": {
+      "beats": [
+        {
+          "type": "cutscene",
+          "cards": [
+            {
+              "title": "Day {stat:day}",
+              "text": "6:00 a.m. The first danfo horn of the morning. Lagos don wake."
+            }
+          ],
+          "effects": {
+            "setTime": "06:00"
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "@resume"
+        }
+      ]
+    }
+  }
+}

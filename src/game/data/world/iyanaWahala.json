@@ -1161,7 +1161,7 @@
       ],
       "facing": 180,
       "anim": "talk",
-      "if": "ch1_metSunday"
+      "if": "metSunday"
     },
     {
       "id": "babaParaga",
@@ -1180,6 +1180,26 @@
       ],
       "facing": 180,
       "anim": "talk"
+    },
+    {
+      "id": "scatter",
+      "pos": [
+        48,
+        -6.4
+      ],
+      "facing": 270,
+      "anim": "idle",
+      "if": "scatterAround"
+    },
+    {
+      "id": "kpakpa",
+      "pos": [
+        46,
+        -6.6
+      ],
+      "facing": 270,
+      "anim": "idle",
+      "if": "scatterAround"
     }
   ],
   "extras": [
@@ -1254,6 +1274,41 @@
       ],
       "facing": 0,
       "anim": "crouchIdle"
+    }
+  ],
+  "activities": [
+    {
+      "id": "feeRunBackSide",
+      "label": "FEE RUN",
+      "spot": "backSide",
+      "if": "canCollectFees",
+      "mode": "feeCollection",
+      "minutes": 60,
+      "params": {
+        "spot": "backSide",
+        "duration": 90,
+        "vehicles": 11,
+        "drivers": [
+          "pastorDriver",
+          "iyaKeke",
+          "formulaOne"
+        ]
+      },
+      "where": "Back Side"
+    },
+    {
+      "id": "feeRunFrontStop",
+      "label": "FEE RUN",
+      "spot": "frontStop",
+      "if": "canCollectFrontStop",
+      "mode": "feeCollection",
+      "minutes": 60,
+      "params": {
+        "spot": "frontStop",
+        "duration": 90,
+        "vehicles": 13
+      },
+      "where": "Front Stop"
     }
   ]
 }

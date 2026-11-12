@@ -284,6 +284,33 @@ conditions, for example
 `{ "if": { "stats": { "habit": ">= 25" } } }` so a character comments on
 the drinking.
 
+### Time, the day loop and random events
+
+- The clock (`game.time`, in minutes) runs only while the flag `dayLoop` is
+  set. One real second is 4 game minutes.
+- A scene's `"time"` moves the clock (dawn 6:00, day 11:00, dusk 18:00,
+  night 21:00). An effect can also set it: `"setTime": "06:00"`.
+- **Evening:** at 9 p.m. during free roam the game cuts to
+  `daily:evening`. Baba Ticket collects his share, you sleep, the day goes
+  up by 1, energy is restored, the time becomes 6:00, and the game resumes.
+- **Writing day-loop scenes:** put the free-roam beat in a scene of its own
+  (for example `street`), because resuming restarts that scene.
+- **Free-roam goals that wait:**
+  - `"goal": { "until": { "stats": { "day": ">= 3" } } }` waits for a
+    condition.
+  - `"goal": { "atTime": "18:00" }` waits for a time.
+- **Random events** (`events.json`) roll every 40 game minutes of free roam.
+  Higher notoriety means more events, and it unlocks bigger ones
+  (`minNotoriety`).
+  - An event can apply effects (rain, toasts), start a go-slow (`jam`), or
+    cut to a scene in `events.json` under `story/common`, which ends with
+    `@resume`.
+  - `"once": true` events happen a single time.
+- **Activities** (world JSON `activities`) are things the player starts in
+  free roam, for example FEE RUN at the Back Side when the flag
+  `canCollectFees` is set. Their results go straight to the stats, and the
+  clock moves on.
+
 ### Gameplay modes
 
 `startMode` (as a beat, or inside effects) launches a mode with `params`.

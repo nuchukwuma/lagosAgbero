@@ -10,13 +10,15 @@
 //     "noticedBy": ["Professor"],         // shows "Professor will remember that."
 //     "goto": "sceneId"  or  "chapterId:sceneId",
 //     "startMode": "chase", "params": { ... }, "results": { "won": {...}, "lost": {...} },
-//     "ending": "rock_bottom"
+//     "ending": "rock_bottom",
+//     "setTime": "06:00"                  (or "dawn" / "day" / "dusk" / "night")
 //   }
 //
 // applyEffects only changes numbers, flags and memory. Flow keys (goto,
 // startMode, ending) are handled by the story engine.
 
 import { clampStat, STAT_DEFS } from './stats.js'
+import { parseTime } from '../systems/clock.js'
 
 const asList = (v) => (v === undefined ? [] : Array.isArray(v) ? v : [v])
 
@@ -49,7 +51,8 @@ export function applyEffects(state, effects) {
   for (const w of asList(effects.noticedBy)) notices.push(`${w} will remember that.`)
   if (effects.toast) notices.push(effects.toast)
 
-  return { state: { ...state, flags, stats, memory }, notices }
+  const time = effects.setTime != null ? parseTime(effects.setTime) : state.time
+  return { state: { ...state, flags, stats, memory, time }, notices }
 }
 
 /** Turns a mode result object into effects, e.g.

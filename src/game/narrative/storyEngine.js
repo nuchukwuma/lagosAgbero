@@ -13,6 +13,7 @@ import { checkCondition, describeCondition } from './conditions.js'
 import { applyEffects, resultToEffects } from './effects.js'
 import { interpolate, pickVariant } from './text.js'
 import { defaultStats, formatNaira } from './stats.js'
+import { TIME_OF, phaseOf } from '../systems/clock.js'
 
 const MAX_STEPS = 500
 const INTERACTIVE = new Set(['dialogue', 'choice', 'newsBroadcast', 'cutscene', 'startMode', 'endChapter', 'freeRoam'])
@@ -32,6 +33,7 @@ export function newGameState({ name = 'Tunde', nickname = 'JJC', look = null } =
     stats: defaultStats(),
     flags: {},
     memory: {},
+    time: TIME_OF.dawn, // minutes since midnight
     story: { chapterId: null, sceneId: null, beatIndex: 0, pendingMode: null, ending: null, completedChapters: [] },
   }
 }
@@ -60,6 +62,13 @@ function resolveTarget(target, story) {
 }
 
 const withStory = (state, patch) => ({ ...state, story: { ...state.story, ...patch } })
+
+// A scene with "time" moves the clock to that part of the day.
+function withSceneTime(ctx, state) {
+  const scene = ctx.chapters[state.story.chapterId]?.scenes?.[state.story.sceneId]
+  const t = scene?.time && TIME_OF[scene.time]
+  return t != null ? { ...state, time: t } : state
+}
 const nextBeat = (state) => withStory(state, { beatIndex: state.story.beatIndex + 1 })
 
 function jump(ctx, state, target, events) {
@@ -75,7 +84,7 @@ function jump(ctx, state, target, events) {
   events.push({ type: 'scene', ...p })
   // every scene start in a normal chapter is a checkpoint to retry from
   const checkpoint = ctx.chapters[p.chapterId].common ? state.story.checkpoint : { chapterId: p.chapterId, sceneId: p.sceneId }
-  return withStory(state, { ...p, checkpoint })
+  return withSceneTime(ctx, withStory(state, { ...p, checkpoint }))
 }
 
 // ---------- callbacks & dialogue ----------
@@ -206,6 +215,7 @@ export function startChapter(ctx, state, chapterId, sceneId) {
   const startScene = sceneId || chapter.startScene
   state = withStory(state, { chapterId, sceneId: startScene, beatIndex: 0, pendingMode: null, ending: null, checkpoint: chapter.common ? state.story.checkpoint : { chapterId, sceneId: startScene } })
   events.push({ type: 'chapter', chapterId, title: chapter.title })
+  state = withSceneTime(ctx, state)
   state = run(ctx, state, events)
   events.push({ type: 'autosave' })
   return { state, events }
@@ -295,7 +305,8 @@ export function renderView(ctx, state) {
     chapterId: story.chapterId,
     sceneId: story.sceneId,
     location: scene.location ?? legacy.location ?? null, // where the player stands when the scene starts
-    time: scene.time ?? legacy.time ?? 'day',
+    time: scene.time ?? legacy.time ?? phaseOf(state.time),
+    clock: state.time ?? TIME_OF.day,
     positions: scene.positions || {}, // NPC position overrides for this scene
   }
 

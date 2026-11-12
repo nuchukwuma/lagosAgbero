@@ -3,7 +3,7 @@
 // Placeholders in any story text:
 //   {name}      the player's name
 //   {nickname}  the player's street name ("JJC" until earned)
-//   {money} {hustleMoney} {cultMoney} {debt}  formatted as naira
+//   {money} {hustleMoney} {cultMoney} {debt} {quota} {stopFee} {fairFee}  formatted as naira
 //   {stat:friendBond}   any stat as a plain number
 //
 // Variants: a dialogue beat can carry
@@ -13,7 +13,7 @@
 import { checkCondition } from './conditions.js'
 import { formatNaira } from './stats.js'
 
-const MONEY_KEYS = new Set(['money', 'hustleMoney', 'cultMoney', 'debt'])
+const MONEY_KEYS = new Set(['money', 'hustleMoney', 'cultMoney', 'debt', 'quota', 'stopFee', 'fairFee'])
 
 export function interpolate(text, state) {
   if (!text) return ''

@@ -10,6 +10,11 @@ import { bus } from '../narrative/eventBus.js'
 import { saveGame, loadGame, latestSave } from './saveSystem.js'
 import { defaultStats, clampStat } from '../narrative/stats.js'
 import { useItem, dueEffects, drainRate, ITEMS } from '../systems/energy.js'
+import { TIME_SCALE, EVENING_AT, parseTime } from '../systems/clock.js'
+import { pickEvent, ROLL_EVERY } from '../systems/events.js'
+import { applyEffects, resultToEffects } from '../narrative/effects.js'
+import { checkCondition } from '../narrative/conditions.js'
+import { useWorldStore } from '../world/worldState.js'
 
 let toastId = 0
 
@@ -79,7 +84,7 @@ export const useGameStore = create((set, get) => {
      * Drains energy, lands drink crashes, and collapses the player at 0.
      */
     tick: (dt, { running = false } = {}) => {
-      const { game } = get()
+      const { game, view, activity } = get()
       if (!game || game.story.ending || game.story.chapterId === 'common') return
       const clock = (game.clock || 0) + dt
       const raining = Boolean(game.flags.raining)
@@ -91,8 +96,52 @@ export const useGameStore = create((set, get) => {
         for (const e of due) toasts.push({ id: ++toastId, text: `The ${ITEMS[e.item]?.name || 'drink'} don wear off. Your head dey bang (−${e.crash}).` })
       }
       energy = clampStat('energy', energy)
-      set((s) => ({ game: { ...game, clock, effects: remaining, stats: { ...game.stats, energy } }, toasts: [...s.toasts, ...toasts].slice(-4) }))
-      if (energy <= 0) get().interrupt('common:collapse')
+      // the clock only runs in the day loop (chapters switch it on with the flag "dayLoop")
+      const dayLoop = Boolean(game.flags.dayLoop)
+      const time = dayLoop ? (game.time ?? 360) + dt * TIME_SCALE : game.time
+      let next = { ...game, clock, time, effects: remaining, stats: { ...game.stats, energy } }
+
+      // random events, every ROLL_EVERY game minutes of the day loop
+      let eventScene = null
+      if (dayLoop && view?.type === 'freeRoam' && !activity && time >= (game.nextEventAt ?? (game.time ?? 0) + ROLL_EVERY)) {
+        next.nextEventAt = time + ROLL_EVERY
+        const ev = pickEvent(next)
+        if (ev) {
+          next.flags = { ...next.flags, [`event_${ev.id}`]: true }
+          if (ev.jam) useWorldStore.getState().setJam(ev.jam)
+          if (ev.effects) {
+            const r = applyEffects(next, ev.effects)
+            next = r.state
+            for (const text of r.notices) toasts.push({ id: ++toastId, text })
+          }
+          if (ev.scene) eventScene = ev.scene
+        }
+      }
+      set((s) => ({ game: next, toasts: [...s.toasts, ...toasts].slice(-4) }))
+
+      if (energy <= 0) return get().interrupt('common:collapse')
+      if (activity) return undefined
+      if (dayLoop && time >= EVENING_AT && view?.type === 'freeRoam') return get().interrupt('daily:evening')
+      if (eventScene) return get().interrupt(eventScene)
+      // freeRoam goals that wait for a time or a condition
+      const goal = view?.type === 'freeRoam' ? view.goal : null
+      if (goal?.until && checkCondition(goal.until, next)) return get().advance()
+      if (goal?.atTime && time >= parseTime(goal.atTime)) return get().advance()
+      return undefined
+    },
+
+    /** Free-roam activities the player starts (e.g. a fee run at the Back Side). */
+    activity: null,
+    startActivity: (activity) => set({ activity }),
+    finishActivity: (result) => {
+      const { game, activity } = get()
+      if (!game || !activity) return set({ activity: null })
+      const r = applyEffects(game, resultToEffects(result))
+      const minutes = activity.minutes ?? 120
+      const next = { ...r.state, time: Math.min((r.state.time ?? 0) + minutes, EVENING_AT - 1) }
+      const summary = result.moneyChange ? `+₦${result.moneyChange.toLocaleString('en-NG')}` : 'No money this time'
+      set((s) => ({ game: next, activity: null, toasts: [...s.toasts, { id: ++toastId, text: `${activity.label || 'Done'}: ${summary}` }, ...r.notices.map((t) => ({ id: ++toastId, text: t }))].slice(-4) }))
+      saveGame('auto', next, summaryOf(next, get().view))
     },
 
     /** Buy and use an item from a vendor. Returns an error message or null. */

@@ -1,5 +1,6 @@
 import RedEyes from './RedEyes.jsx'
 import { formatNaira } from '../../game/narrative/stats.js'
+import { formatClock } from '../../game/systems/clock.js'
 
 // Always-visible status: who you are, money, energy (red eyes), notoriety.
 export default function HUD({ game, onStatus, onMenu }) {
@@ -11,6 +12,10 @@ export default function HUD({ game, onStatus, onMenu }) {
           {player.name} <span>"{player.nickname}"</span>
         </div>
         <div className="hud-money">{formatNaira(stats.money)}</div>
+        <div className="hud-clock">
+          Day {stats.day} · {formatClock(game.time)}
+          {game.flags.raining ? ' · 🌧' : ''}
+        </div>
       </div>
       <div className="hud-mid">
         <RedEyes energy={stats.energy} />

@@ -1,0 +1,460 @@
+{
+  "id": "ch2_rules",
+  "act": 2,
+  "number": 2,
+  "title": "Chapter 2 — Rules of the Road",
+  "description": "Act 2 begins: the daily loop, Sunday the conductor, Ada, and Scatter's first test.",
+  "startScene": "morning",
+  "scenes": {
+    "morning": {
+      "location": "backSide",
+      "time": "dawn",
+      "positions": {
+        "professor": [
+          8,
+          -6.2,
+          200
+        ],
+        "sunday": [
+          4.5,
+          -5.2,
+          160
+        ]
+      },
+      "beats": [
+        {
+          "type": "cutscene",
+          "cards": [
+            {
+              "title": "Act 2 — Rising",
+              "text": "The fuel price don rise. So has the sun. So, small small, will you."
+            },
+            {
+              "title": "Day {stat:day}",
+              "text": "6:00 a.m. The Back Side."
+            }
+          ]
+        },
+        {
+          "type": "setFlag",
+          "flags": [
+            "dayLoop",
+            "canCollectFees",
+            "metSunday"
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "professor",
+          "text": "From today, na routine. Morning: collect. Afternoon: collect, chop. Evening by nine: Baba Ticket share. Night: sleep with one eye. Rule number seven: routine na wetin dey save agbero from madness."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "sunday",
+          "text": "Shoki! Shoki! Oshodi! Oshodi! Enter with your change! Ehen, you be the JJC wey catch Bíọ́dún? Or the one wey Bíọ́dún catch? I no too hear well.",
+          "variants": [
+            {
+              "if": {
+                "memory": {
+                  "biodun_ch1": [
+                    "escaped"
+                  ]
+                }
+              },
+              "text": "Shoki! Shoki! Ehen, na you be the JJC wey Bíọ́dún wave for? Hahaha! The whole park dey wave like am now. Welcome, my brother!"
+            },
+            {
+              "if": {
+                "memory": {
+                  "biodun_ch1": [
+                    "caught_fair",
+                    "caught_fined",
+                    "caught_forgiven"
+                  ]
+                }
+              },
+              "text": "Shoki! Shoki! Na you catch Bíọ́dún?! Ehen! Me na Sunday, the best conductor for this Lagos. My voice fit wake dead body. Hear: OSHODIIII!"
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "sunday",
+          "text": "Anything wey happen for this junction, I go hear am first. Na conductor be the radio of the street. Baba Radio just dey copy us."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "professor",
+          "text": "Before you start, go Ada's Corner for market, buy me bread. And no do anyhow with Ada. That girl sharp pass razor."
+        },
+        {
+          "type": "goto",
+          "scene": "findAda"
+        }
+      ]
+    },
+    "findAda": {
+      "positions": {
+        "professor": [
+          8,
+          -6.2,
+          200
+        ],
+        "sunday": [
+          4.5,
+          -5.2,
+          160
+        ]
+      },
+      "beats": [
+        {
+          "type": "freeRoam",
+          "objective": "Go to Ada's Corner in the market (north-east) and talk to Ada.",
+          "goal": {
+            "talkTo": "ada"
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "adaMeet"
+        }
+      ]
+    },
+    "adaMeet": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "ada",
+          "text": "Customer or trouble? Because you no resemble customer.",
+          "variants": [
+            {
+              "if": "helpedChild",
+              "text": "Wait... na you carry that woman pikin go hospital? The whole market dey talk am. Customer or saint?"
+            },
+            {
+              "if": "raisedFees",
+              "text": "So na you be the new agbero wey increase fee for Back Side? The drivers dey curse you for my shop since morning. Customer or trouble?"
+            },
+            {
+              "if": "absorbedHike",
+              "text": "Na you be the agbero wey no increase fee after fuel hike? Hmm. Either you get good heart or you no sabi maths. Customer or trouble?"
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "player",
+          "text": "Professor send me. Bread. And... good morning."
+        },
+        {
+          "type": "choice",
+          "speaker": "ada",
+          "text": "Na me be Ada. This na Ada's Corner. Anything you wan buy, I get am. Anything you wan talk, I get ear, but e no free.",
+          "options": [
+            {
+              "text": "Help her carry the new cartons inside first",
+              "effects": {
+                "changeStat": {
+                  "friendBond": 10,
+                  "communityGoodwill": 2,
+                  "energy": -5
+                },
+                "setFlag": "adaHelped",
+                "remember": {
+                  "ada_first": "helped"
+                }
+              }
+            },
+            {
+              "text": "\"Fine girl like you, you get boyfriend?\"",
+              "effects": {
+                "changeStat": {
+                  "friendBond": 3
+                },
+                "setFlag": "adaFlirted",
+                "remember": {
+                  "ada_first": "flirted"
+                }
+              }
+            },
+            {
+              "text": "Just buy the bread and go",
+              "effects": {
+                "setFlag": "adaCold",
+                "remember": {
+                  "ada_first": "cold"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ada",
+          "text": "Thank you o. At least you get hand. Plenty men for this market get only mouth. I dey save for university. JAMB this year. Then I go leave this market for my small brother.",
+          "variants": [
+            {
+              "if": "adaFlirted",
+              "text": "Boyfriend? I get JAMB. That one dey disturb me pass any man. Come back when you get your own shop, Mr. Back Side.",
+              "mood": "laughing"
+            },
+            {
+              "if": "adaCold",
+              "text": "₦200. Next. ... You know say people dey greet before dem buy for this market? Okay. Agbero manners."
+            }
+          ]
+        },
+        {
+          "type": "setFlag",
+          "flag": "metAda"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Ada goes back to arguing with a supplier about the price of Indomie. She wins."
+        },
+        {
+          "type": "goto",
+          "scene": "street"
+        }
+      ]
+    },
+    "street": {
+      "location": "backSide",
+      "positions": {
+        "professor": [
+          8,
+          -6.2,
+          200
+        ],
+        "sunday": [
+          4.5,
+          -5.2,
+          160
+        ]
+      },
+      "beats": [
+        {
+          "type": "freeRoam",
+          "objective": "Day {stat:day}: hustle. FEE RUN at the Back Side, eat, and have Baba Ticket's share ({quota}) by 9 p.m.",
+          "goal": {
+            "until": {
+              "stats": {
+                "day": ">= 3"
+              }
+            }
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "scatterTest"
+        }
+      ]
+    },
+    "scatterTest": {
+      "location": "backSide",
+      "time": "day",
+      "positions": {
+        "professor": [
+          8,
+          -6.2,
+          200
+        ],
+        "kpakpa": [
+          3,
+          -6,
+          90
+        ],
+        "scatter": [
+          1,
+          -6.8,
+          90
+        ]
+      },
+      "beats": [
+        {
+          "type": "setFlag",
+          "flag": "scatterAround"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Three boys in orange walk into the Back Side like they own the shadow under the bridge. The biggest one cracks his knuckles. It sounds like a bag of groundnuts."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "kpakpa",
+          "text": "Na you be the new boy? Scatter say from today, Back Side go pay ₦1,000 every day. Protection.",
+          "mood": "angry"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "player",
+          "text": "Protection from who?"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "kpakpa",
+          "text": "From us.",
+          "variants": [
+            {
+              "if": "biodunEnemy",
+              "text": "From us. And Bíọ́dún na Scatter cousin, so the price don include small interest. You understand?"
+            }
+          ]
+        },
+        {
+          "type": "choice",
+          "speaker": "kpakpa",
+          "text": "₦1,000. Now.",
+          "options": [
+            {
+              "text": "Pay the ₦1,000",
+              "cost": 1000,
+              "effects": {
+                "setFlag": "paysScatter",
+                "changeStat": {
+                  "notoriety": -1,
+                  "chairmanTrust": -2
+                },
+                "remember": {
+                  "scatter_test": "paid"
+                }
+              }
+            },
+            {
+              "text": "\"Comot for here.\" (fight Kpakpa)",
+              "effects": {
+                "startMode": "fight",
+                "params": {
+                  "opponent": "kpakpa",
+                  "difficulty": 1
+                },
+                "results": {
+                  "won": {
+                    "changeStat": {
+                      "notoriety": 6,
+                      "chairmanTrust": 4
+                    },
+                    "setFlag": "beatKpakpa",
+                    "remember": {
+                      "scatter_test": "won"
+                    },
+                    "goto": "afterTest"
+                  },
+                  "lost": {
+                    "changeStat": {
+                      "money": -1000,
+                      "energy": -15
+                    },
+                    "setFlag": "lostToKpakpa",
+                    "remember": {
+                      "scatter_test": "lost"
+                    },
+                    "goto": "afterTest"
+                  }
+                }
+              }
+            },
+            {
+              "text": "\"PROFESSOR!\"",
+              "requires": {
+                "stats": {
+                  "mentorBond": ">= 18"
+                }
+              },
+              "showLocked": true,
+              "lockedText": "You and Professor never close reach",
+              "effects": {
+                "setFlag": "professorProtected",
+                "changeStat": {
+                  "mentorBond": 3
+                },
+                "remember": {
+                  "scatter_test": "professor"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "afterTest"
+        }
+      ]
+    },
+    "afterTest": {
+      "location": "backSide",
+      "positions": {
+        "professor": [
+          8,
+          -6.2,
+          200
+        ],
+        "scatter": [
+          1,
+          -6.8,
+          90
+        ]
+      },
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "scatter",
+          "text": "Ehen. You pay. Sensible boy. See you tomorrow. And tomorrow. And tomorrow.",
+          "variants": [
+            {
+              "if": {
+                "memory": {
+                  "scatter_test": "won"
+                }
+              },
+              "text": "You touch my boy? For MY bridge? ... Okay. Na so e go be. Lagos small, JJC. I go see you.",
+              "mood": "angry"
+            },
+            {
+              "if": {
+                "memory": {
+                  "scatter_test": "lost"
+                }
+              },
+              "text": "Hahaha! See am! Kpakpa, help am get up. Na your ₦1,000 we carry, JJC. Next time, pay before you lie down."
+            },
+            {
+              "if": {
+                "memory": {
+                  "scatter_test": "professor"
+                }
+              },
+              "text": "Professor... Okay. Okay. Na your boy? We go talk am another day. No vex.",
+              "mood": "nervous"
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "professor",
+          "text": "Scatter na small man with big mouth and short legs. Him no go forget today. Neither go Baba Ticket, because news for this junction dey travel faster than danfo.",
+          "variants": [
+            {
+              "if": "paysScatter",
+              "text": "You pay Scatter? Hmm. Once you pay protection, you don become their ATM. Baba Ticket go hear say him agbero dey pay another agbero. E no go sweet am."
+            }
+          ]
+        },
+        {
+          "type": "setFlag",
+          "flag": "scatterRival",
+          "clear": [
+            "scatterAround"
+          ]
+        },
+        {
+          "type": "endChapter",
+          "title": "End of Chapter 2 — Rules of the Road",
+          "summary": "Notoriety {stat:notoriety}. Ada bond {stat:friendBond}. Baba Ticket trust {stat:chairmanTrust}. Scatter now knows your name."
+        }
+      ]
+    }
+  }
+}

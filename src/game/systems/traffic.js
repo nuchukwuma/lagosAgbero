@@ -21,6 +21,7 @@ const DESPAWN_X = 96
 const ACCEL = 4
 const BRAKE = 9
 const MIN_GAP = 2.2
+const HARD_GAP = 1.6
 
 export const traffic = { vehicles: [], nextId: 1, version: 0 }
 
@@ -81,8 +82,9 @@ export function releaseVehicle(v, { speedBoost = 1 } = {}) {
 
 const front = (v) => v.x + LANES[v.lane].dir * (v.length / 2)
 
-/** Advance all vehicles by dt seconds. `player` is {x, z} or null. */
-export function updateTraffic(dt, player) {
+/** Advance all vehicles by dt seconds. `player` is {x, z} or null.
+ *  speedScale < 1 slows everyone (go-slow, rain). */
+export function updateTraffic(dt, player, speedScale = 1) {
   const lanes = { west: [], east: [] }
   for (const v of traffic.vehicles) lanes[v.lane].push(v)
 
@@ -93,7 +95,7 @@ export function updateTraffic(dt, player) {
     for (let i = 0; i < list.length; i++) {
       const v = list[i]
       const ahead = list[i - 1]
-      let target = v.maxSpeed
+      let target = v.maxSpeed * (v.tag.chaseTarget ? 1 : speedScale)
 
       // keep distance from the vehicle ahead
       if (ahead) {
@@ -127,6 +129,14 @@ export function updateTraffic(dt, player) {
       const a = target > v.speed ? ACCEL : BRAKE
       v.speed += Math.sign(target - v.speed) * Math.min(Math.abs(target - v.speed), a * dt)
       v.x += L.dir * v.speed * dt
+      // hard guarantee: never closer than HARD_GAP to the vehicle ahead
+      if (ahead) {
+        const limit = ahead.x - L.dir * (ahead.length / 2 + v.length / 2 + HARD_GAP)
+        if ((v.x - limit) * L.dir > 0) {
+          v.x = limit
+          v.speed = Math.min(v.speed, ahead.speed)
+        }
+      }
     }
   }
 

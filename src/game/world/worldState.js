@@ -22,6 +22,10 @@ export const npcRegistry = new Map()
 export const useWorldStore = create((set) => ({
   canTalk: null, // npc id the player can talk to right now, or null
   setCanTalk: (id) => set((s) => (s.canTalk === id ? s : { canTalk: id })),
+  jamUntil: 0, // performance.now() ms until which traffic crawls (go-slow event)
+  setJam: (seconds) => set({ jamUntil: performance.now() + seconds * 1000 }),
+  nearActivity: null, // id of a free-roam activity the player can start here
+  setNearActivity: (id) => set((s) => (s.nearActivity === id ? s : { nearActivity: id })),
   nearVendor: null, // npc id of a seller the player is standing next to
   setNearVendor: (id) => set((s) => (s.nearVendor === id ? s : { nearVendor: id })),
 }))

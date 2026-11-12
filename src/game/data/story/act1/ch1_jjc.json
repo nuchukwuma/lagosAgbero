@@ -899,7 +899,7 @@
         {
           "type": "choice",
           "speaker": "babaTicket",
-          "text": "Today share na {stat:quota} naira. Oya.",
+          "text": "Today share na {quota}. Oya.",
           "options": [
             {
               "text": "Pay the full share",
@@ -1108,7 +1108,7 @@
         {
           "type": "dialogue",
           "speaker": "biodun",
-          "text": "Una hear am?! Fuel don cost! Me I no fit pay ₦{stat:stopFee} again. We go strike! Una agbero must reduce am!",
+          "text": "Una hear am?! Fuel don cost! Me I no fit pay {stopFee} again. We go strike! Una agbero must reduce am!",
           "mood": "angry",
           "variants": [
             {
@@ -1120,7 +1120,7 @@
         {
           "type": "dialogue",
           "speaker": "babaTicket",
-          "text": "Fuel don go up, so ticket go up. My share from tomorrow na {stat:quota}. If drivers dey cry, tell dem make dem cry inside danfo, e get roof."
+          "text": "Fuel don go up, so ticket go up. My share from tomorrow na {quota}. If drivers dey cry, tell dem make dem cry inside danfo, e get roof."
         },
         {
           "type": "dialogue",
@@ -1199,7 +1199,8 @@
         {
           "type": "endChapter",
           "title": "End of Chapter 1 — JJC",
-          "summary": "Pocket: {money}. Fee: ₦{stat:stopFee} per danfo. Baba Ticket's share: ₦{stat:quota}. Mama's debt: {debt}."
+          "summary": "Pocket: {money}. Fee: {stopFee} per danfo. Baba Ticket's share: {quota}. Mama's debt: {debt}.",
+          "next": "ch2_rules"
         }
       ]
     }

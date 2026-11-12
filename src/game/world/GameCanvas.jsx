@@ -18,6 +18,7 @@ import { useChase } from '../modes/chase/chaseStore.js'
 import { WORLD_MODES } from '../modes/modeRegistry.js'
 import { LOW_ENERGY } from '../systems/energy.js'
 import VendorTracker from './VendorTracker.jsx'
+import ActivityTracker from './ActivityTracker.jsx'
 import street from '../data/world/iyanaWahala.json'
 
 // The 3D street behind the story. The story view decides:
@@ -47,15 +48,17 @@ function useSceneTeleport(view, layout) {
 // fallback pose into breathing/walking a second later.
 const COMMON_CLIPS = ['breathingIdle', 'walk', 'run', 'talk', 'argue']
 
-export default function GameCanvas({ view, game, paused = false, onGoalReached }) {
+export default function GameCanvas({ view, game, activity = null, paused = false, onGoalReached }) {
   const layout = STREET_LAYOUT
   useSceneTeleport(view, layout)
   useEffect(() => {
     loadClips(COMMON_CLIPS).catch(() => {})
   }, [])
 
-  const freeRoam = view.type === 'freeRoam'
-  const worldMode = view.type === 'mode' && WORLD_MODES.has(view.mode)
+  const freeRoam = view.type === 'freeRoam' && !activity
+  // a street mode started by the story, or by the player (activity)
+  const modeName = activity ? activity.mode : view.type === 'mode' ? view.mode : null
+  const worldMode = Boolean(modeName && WORLD_MODES.has(modeName))
   const feeRunActive = useFeeRun((s) => s.active && s.started && !s.ended)
   const chaseActive = useChase((s) => s.active && s.started && !s.ended)
   const talking = DIALOGUE_VIEWS.has(view.type)
@@ -73,15 +76,16 @@ export default function GameCanvas({ view, game, paused = false, onGoalReached }
       camera={{ fov: 50, near: 0.3, far: 180, position: [0, 8, 12] }}
     >
       <PerformanceMonitor onDecline={() => setDpr(1)} onIncline={() => setDpr(1.5)} flipflops={3} onFallback={() => setDpr(1)} />
-      <Lighting time={view.time} />
+      <Lighting time={view.time} raining={Boolean(game.flags.raining)} />
       <Suspense fallback={null}>
         <StreetScene layout={layout} />
         <NPCs layout={layout} flags={game.flags} positions={view.positions} speaker={speaker} mood={view.mood} />
         <PlayerController layout={layout} look={look} enabled={(freeRoam || feeRunActive || chaseActive) && !paused} eyeRed={eyeRed} tired={game.stats.energy < LOW_ENERGY} />
         {freeRoam && <VendorTracker />}
-        <Traffic paused={paused} />
-        {worldMode && view.mode === 'feeCollection' && <FeeRunDirector />}
-        {worldMode && view.mode === 'chase' && <ChaseDirector />}
+        {freeRoam && <ActivityTracker layout={layout} game={game} />}
+        <Traffic paused={paused} raining={Boolean(game.flags.raining)} />
+        {worldMode && modeName === 'feeCollection' && <FeeRunDirector />}
+        {worldMode && modeName === 'chase' && <ChaseDirector />}
       </Suspense>
       {freeRoam && <GoalTracker key={view.key} goal={view.goal} layout={layout} onReached={onGoalReached} />}
       <CameraRig mode={talking ? 'dialogue' : 'follow'} speaker={speaker} ceiling={layout.raw.flyover} />

@@ -455,5 +455,25 @@
         }
       ]
     }
+  },
+  "kpakpa": {
+    "name": "Kpakpa",
+    "fullName": "Kpakpa, Scatter's boy",
+    "color": "#e67e22",
+    "role": "rivalBoy",
+    "look": {
+      "body": "male_casual",
+      "skin": "#3d2516",
+      "shirt": "#d96a2b",
+      "trousers": "#1a1a1a",
+      "height": 1.04,
+      "width": 1.1,
+      "accessories": [
+        {
+          "type": "bandana",
+          "color": "#d96a2b"
+        }
+      ]
+    }
   }
 }
