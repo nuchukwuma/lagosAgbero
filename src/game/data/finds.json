@@ -1,0 +1,38 @@
+{
+  "perWorld": 6,
+  "kinds": {
+    "note": {
+      "weight": 6,
+      "money": [100, 500],
+      "colour": "#3f9b4b",
+      "text": ["You find {amount} on the ground. The street giveth.", "{amount}, folded small-small. Somebody is looking for this. Not you.", "A naira note under a stone: {amount}. You look left. You look right. You pocket it."]
+    },
+    "bigNote": {
+      "weight": 1,
+      "money": [1000, 1000],
+      "colour": "#d4a72c",
+      "text": ["A clean ₦1,000 note! You check it against the sun. It's real. Today is your day."]
+    },
+    "pureWater": {
+      "weight": 2,
+      "campaigns": ["areaBoy"],
+      "stats": { "energy": 6 },
+      "colour": "#5fb7e5",
+      "text": ["A sealed sachet of pure water, still cold. Energy +6.", "Half a bottle of malt somebody forgot. You don't ask questions. Energy +6."]
+    },
+    "kola": {
+      "weight": 2,
+      "campaigns": ["grace"],
+      "stats": { "villageStanding": 1 },
+      "colour": "#b5651d",
+      "text": ["A kola nut by the path. You give it to the first elder you pass. He nods. The village notices small things.", "Somebody's goat rope, dropped. You tie it back to the right fence. A neighbour sees."]
+    },
+    "idCard": {
+      "weight": 2,
+      "campaigns": ["campus"],
+      "stats": { "campusRep": 1 },
+      "colour": "#e8e3d3",
+      "text": ["A lost student ID. You hand it in at the gate. Baba Gate writes your name down — the good list, for once.", "Somebody's handout, with notes in the margin. You pin it on the notice board. People notice."]
+    }
+  }
+}

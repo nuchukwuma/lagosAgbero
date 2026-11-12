@@ -88,6 +88,9 @@ const PAINT = ['#2e86c1', '#1e8449', '#d4ac0d', '#c0392b', '#7d3c98', '#d35400',
 const CLOTH = ['#e74c3c', '#f1c40f', '#3498db', '#2ecc71', '#e67e22', '#ecf0f1', '#9b59b6']
 const RUST = ['#7b4a2b', '#8d5a34', '#6e4a36', '#94623d']
 
+// leaf greens for the baked trees and bushes (dry-season to rainy-season)
+const LEAF = ['#3f7a2e', '#4f8a34', '#5c9438', '#6a9a3a', '#47803a']
+
 export const PROPS = {
   kiosk(rng) {
     const paint = PAINT[Math.floor(rng() * PAINT.length)]
@@ -227,6 +230,25 @@ export const PROPS = {
         { s: 'box', p: [0, 2.0, 0.03], d: [1.1, 0.14, 0.01], c: '#ffffff' },
       ],
     }
+  },
+  // --- from the nature pack (baked meshes: see scripts/import-nature.mjs) ---
+  tree(rng) {
+    const m = ['tree1', 'tree2', 'tree3', 'tree4', 'tree1', 'tree3'][Math.floor(rng() * 6)]
+    const k = (m === 'tree4' ? 0.85 : 1.15) + rng() * 0.5
+    return { solid: [0.3, 0.3], shadow: 3, prims: [{ s: 'mesh', m, p: [0, 0, 0], k, ry: rng() * 6.28, c: LEAF[Math.floor(rng() * LEAF.length)], c2: rng() < 0.5 ? '#5a4030' : '#6b4a33' }] }
+  },
+  bush(rng) {
+    const m = ['bush1', 'bush2', 'bush3'][Math.floor(rng() * 3)]
+    return { prims: [{ s: 'mesh', m, p: [0, 0, 0], k: 0.8 + rng() * 0.6, ry: rng() * 6.28, c: LEAF[Math.floor(rng() * LEAF.length)], c2: '#4d3829' }] }
+  },
+  rock(rng) {
+    const m = ['rock1', 'rock2', 'rock3'][Math.floor(rng() * 3)]
+    const k = 0.35 + rng() * 0.45
+    return { solid: [0.5 * k + 0.2, 0.5 * k + 0.2], prims: [{ s: 'mesh', m, p: [0, 0, 0], k, ry: rng() * 6.28, c2: rng() < 0.5 ? '#7d7468' : '#8a8378' }] }
+  },
+  grassTuft(rng) {
+    // one clump, scaled up (a clump is 172 triangles: three per tuft was too heavy for budget phones)
+    return { prims: [{ s: 'mesh', m: 'grass1', p: [0, 0, 0], k: 2.4 + rng() * 1.6, ry: rng() * 6.28, c: rng() < 0.5 ? '#6f9a3c' : '#84a544' }] }
   },
   palmTree(rng) {
     const h = 6 + rng() * 4
@@ -485,11 +507,17 @@ export function generateFill(json, existing = [], reserved = []) {
         if (Math.abs(cz + z) < 7) continue // the road runs through
         const px = cx + x + (rng() - 0.5) * 8
         const pz = cz + z + (rng() - 0.5) * 8
-        if (rng() < 0.55) prims.push(...transformPrims(PROPS.palmTree(rng).prims, px, pz, rng() * 6.28))
-        else {
-          const h = 3 + rng() * 4
-          prims.push({ s: 'cone', p: [px, h * 0.55, pz], d: [1.6 + rng() * 1.6, h], c: rng() < 0.5 ? '#3e6e2a' : '#4b7d30' })
-          prims.push({ s: 'cyl', p: [px, 0.6, pz], d: [0.2, 1.2], c: '#5d4037' })
+        const roll = rng()
+        if (roll < 0.4) prims.push(...transformPrims(PROPS.palmTree(rng).prims, px, pz, rng() * 6.28))
+        else if (roll < 0.62) {
+          // bush trees, bigger than the ones inside the village so the edge reads as forest
+          // (only the two lightest models: there are a lot of these)
+          const tree = PROPS.tree(rng).prims.map((q) => ({ ...q, m: rng() < 0.5 ? 'tree1' : 'tree3', k: 1.7 + rng() * 0.7 }))
+          prims.push(...transformPrims(tree, px, pz, 0))
+        } else {
+          // undergrowth: one big shrub
+          const shrub = PROPS.bush(rng).prims.map((q) => ({ ...q, m: rng() < 0.5 ? 'bush1' : 'bush3', k: 2.2 + rng() * 1.2 }))
+          prims.push(...transformPrims(shrub, px, pz, 0))
         }
       }
     })

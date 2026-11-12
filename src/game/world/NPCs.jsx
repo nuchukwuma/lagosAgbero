@@ -45,7 +45,8 @@ function NPC({ id, look, pos, facing, anim, speaking, mood }) {
   })
 
   const animation = speaking ? (mood === 'angry' || mood === 'nervous' ? 'argue' : 'talk') : anim || 'idle'
-  return <Character ref={ref} look={look} animation={animation} position={[pos[0], GROUND_Y, pos[1]]} />
+  // preachers and politicians gesture slowly when nobody is talking to them
+  return <Character ref={ref} look={look} animation={animation} speed={animation === 'preach' ? 0.55 : 1} position={[pos[0], GROUND_Y, pos[1]]} />
 }
 
 export default function NPCs({ layout, flags, positions = {}, speaker, mood, hidden = [] }) {

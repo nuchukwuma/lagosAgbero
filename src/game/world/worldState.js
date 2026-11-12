@@ -14,6 +14,7 @@ export const playerState = {
   // gameplay modes can limit the player:
   canRun: true, // e.g. out of stamina in a chase
   stunUntil: 0, // performance.now() ms; the player stumbles until then
+  gesture: null, // { name, speed, until } a one-shot clip (taking money, cheering); see playGesture()
   fightView: null, // { x, z } centre of a fight in progress (camera)
   runnerView: null, // { x, z } runner position during an escape run (camera)
   viewFlipped: false, // the follow camera is filming from the north (controls flip with it)
@@ -36,3 +37,8 @@ export const useWorldStore = create((set) => ({
   nearVendor: null, // npc id of a seller the player is standing next to
   setNearVendor: (id) => set((s) => (s.nearVendor === id ? s : { nearVendor: id })),
 }))
+
+/** Play a short one-shot animation on the player (they stand still for it). */
+export function playGesture(name, { speed = 1, seconds = 0.8 } = {}) {
+  playerState.gesture = { name, speed, until: performance.now() + seconds * 1000 }
+}

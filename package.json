@@ -10,10 +10,12 @@
     "assets:check": "node scripts/check-assets.mjs",
     "assets:animations": "node scripts/import-animations.mjs",
     "story:check": "node scripts/check-story.mjs",
+    "lint": "eslint src scripts",
     "test": "vitest run",
     "assets:characters": "node scripts/import-characters.mjs",
     "assets:clean": "node scripts/clean-assets.mjs",
-    "assets:crowd": "node scripts/make-crowd-lod.mjs"
+    "assets:crowd": "node scripts/make-crowd-lod.mjs",
+    "assets:nature": "node scripts/import-nature.mjs"
   },
   "repository": {
     "type": "git",
@@ -34,8 +36,13 @@
     "zustand": "^4.5.5"
   },
   "devDependencies": {
+    "@eslint/js": "^9.39.5",
     "@vitejs/plugin-react": "^4.3.3",
+    "eslint": "^9.39.5",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
     "fflate": "^0.8.2",
+    "globals": "^17.14.0",
     "node-unrar-js": "^2.0.2",
     "vite": "^5.4.10",
     "vitest": "^2.1.4"

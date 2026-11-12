@@ -25,8 +25,8 @@ export default function InitiationMode({ params, onFinish }) {
         maxWrong: params.maxWrong ?? 2,
         seed: params.seed ?? Math.floor(Math.random() * 999),
       }),
-    [],
-  ); // eslint-disable-line react-hooks/exhaustive-deps
+    [], // eslint-disable-line react-hooks/exhaustive-deps -- one quiz per mount
+  );
   const seconds = params.seconds ?? 12;
   const [started, setStarted] = useState(false);
   const [left, setLeft] = useState(seconds);

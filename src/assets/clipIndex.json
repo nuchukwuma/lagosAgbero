@@ -329,6 +329,50 @@
     "speed": 0
    },
    "use": "Flailing in the air (runner fall, thrown out)"
+  },
+  "roll": {
+   "file": "characters/clips/roll.json",
+   "source": "Cleric.fbx",
+   "duration": 1,
+   "loop": false,
+   "rootMotion": {
+    "metres": 0,
+    "speed": 0
+   },
+   "use": "Tuck-and-roll (runner, getting thrown)"
+  },
+  "pickUp": {
+   "file": "characters/clips/pickUp.json",
+   "source": "Cleric.fbx",
+   "duration": 1.267,
+   "loop": false,
+   "rootMotion": {
+    "metres": 0,
+    "speed": 0
+   },
+   "use": "Reach out and take something (a fee, a purchase)"
+  },
+  "cheer": {
+   "file": "characters/clips/cheer.json",
+   "source": "Cleric.fbx",
+   "duration": 1.2,
+   "loop": false,
+   "rootMotion": {
+    "metres": 0,
+    "speed": 0
+   },
+   "use": "Arm up: winning a fight, hailing, blessing"
+  },
+  "preach": {
+   "file": "characters/clips/preach.json",
+   "source": "Cleric.fbx",
+   "duration": 1.467,
+   "loop": true,
+   "rootMotion": {
+    "metres": 0,
+    "speed": 0
+   },
+   "use": "Arms wide then up: preachers, the dibia, rally speakers"
   }
  },
  "unusedSourceFiles": [

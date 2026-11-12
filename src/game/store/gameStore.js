@@ -9,7 +9,7 @@ import * as engine from '../narrative/storyEngine.js'
 import { bus } from '../narrative/eventBus.js'
 import { saveGame, loadGame, latestSave } from './saveSystem.js'
 import { defaultStats, clampStat } from '../narrative/stats.js'
-import { useItem, dueEffects, drainRate, ITEMS } from '../systems/energy.js'
+import { consumeItem, dueEffects, drainRate, ITEMS } from '../systems/energy.js'
 import { TIME_SCALE, EVENING_AT, parseTime } from '../systems/clock.js'
 import { pickEvent, ROLL_EVERY } from '../systems/events.js'
 import { applyEffects, resultToEffects } from '../narrative/effects.js'
@@ -173,7 +173,7 @@ export const useGameStore = create((set, get) => {
     /** Buy and use an item from a vendor. Returns an error message or null. */
     buy: (itemId) => {
       const { game } = get()
-      const r = useItem(itemId, game, game.clock || 0)
+      const r = consumeItem(itemId, game, game.clock || 0)
       if (r.error) return r.error
       const stats = { ...game.stats }
       for (const [k, d] of Object.entries(r.stats)) stats[k] = clampStat(k, (stats[k] ?? 0) + d)

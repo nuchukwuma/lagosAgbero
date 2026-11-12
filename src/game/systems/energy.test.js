@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { useItem, dueEffects, drainRate, ITEMS, VENDORS } from './energy.js'
+import { consumeItem, dueEffects, drainRate, ITEMS, VENDORS } from './energy.js'
 
 const game = (money) => ({ stats: { money, energy: 30 } })
 
@@ -10,17 +10,17 @@ describe('energy', () => {
   })
 
   it('buying a drink costs money, gives energy and schedules a crash', () => {
-    const r = useItem('agbaraBitters', game(1000), 100)
+    const r = consumeItem('agbaraBitters', game(1000), 100)
     expect(r.stats).toEqual({ money: -300, energy: 25, habit: 3 })
     expect(r.effects).toEqual([{ item: 'agbaraBitters', until: 220, crash: 10 }])
   })
 
   it('healthy food never crashes', () => {
-    expect(useItem('riceBeans', game(1000), 0).effects).toEqual([])
+    expect(consumeItem('riceBeans', game(1000), 0).effects).toEqual([])
   })
 
   it('cannot buy without money', () => {
-    expect(useItem('redEyeTonic', game(100), 0).error).toMatch(/600/)
+    expect(consumeItem('redEyeTonic', game(100), 0).error).toMatch(/600/)
   })
 
   it('crashes land when their time is up', () => {

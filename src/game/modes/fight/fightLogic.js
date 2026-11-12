@@ -8,7 +8,7 @@
 export const MOVES = {
   punch: { startup: 0.2, active: 0.12, recover: 0.3, range: 1.45, dmg: 8, anim: 'punch', animSpeed: 2.2 },
   kick: { startup: 0.34, active: 0.12, recover: 0.45, range: 1.9, dmg: 12, anim: 'kick', animSpeed: 1.7 },
-  special: { startup: 0.45, active: 0.2, recover: 0.6, range: 2.15, dmg: 26, anim: 'roundhouse', animSpeed: 1.35 },
+  special: { startup: 0.45, active: 0.2, recover: 0.6, range: 2.15, dmg: 26, anim: 'roundhouse', animSpeed: 1.95 },
 }
 const MOVE_SPEED = 2.3
 const DODGE_TIME = 0.42
@@ -31,7 +31,7 @@ export function createFight(profile, { energy = 70, notoriety = 0, difficulty = 
   return {
     p: fighter(-1.6, Math.round(70 + energy * 0.3)),
     o: fighter(1.6, Math.round((profile.hp || 90) * scale)),
-    profile: { power: 1, speed: 1, block: 0.25, aggression: 0.5, ...profile, power: (profile.power || 1) * scale },
+    profile: { speed: 1, block: 0.25, aggression: 0.5, ...profile, power: (profile.power || 1) * scale },
     time: 0,
     over: null,
     events: [],
@@ -162,7 +162,7 @@ export function stepFight(state, input, dt, rng = Math.random) {
 
 /** Which animation each fighter should play right now. */
 export function animOf(f, over, isWinner) {
-  if (over) return isWinner ? 'fightIdle' : 'knockedOut'
+  if (over) return isWinner ? 'cheer' : 'knockedOut'
   if (f.stunT > 0) return 'hit'
   if (f.action) return MOVES[f.action.type].anim
   if (f.dodgeT > 0) return 'blockOutward'
@@ -172,7 +172,7 @@ export function animOf(f, over, isWinner) {
 }
 
 export function animSpeedOf(f) {
-  if (f.stunT > 0) return 2
+  if (f.stunT > 0) return 3 // the flinch peaks about a second into the clip; the stun is short
   if (f.action) return MOVES[f.action.type].animSpeed
   if (f.dodgeT > 0) return 2
   return 1

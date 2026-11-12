@@ -17,7 +17,7 @@ export const useSettings = create((set, get) => ({
   update(patch) {
     set(patch)
     try {
-      const { update, ...data } = { ...get() } // eslint-disable-line no-unused-vars
+      const { update: _update, ...data } = { ...get() }
       window.localStorage.setItem(KEY, JSON.stringify(data))
     } catch {
       // storage blocked: settings last for this session only

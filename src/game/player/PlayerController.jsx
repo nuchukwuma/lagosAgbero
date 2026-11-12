@@ -49,10 +49,13 @@ export default function PlayerController({ layout, look, enabled, eyeRed = 0, ti
 
     let next = { name: 'idle', speed: 1 }
     const stunned = performance.now() < playerState.stunUntil
-    const m = enabled && !stunned ? readMove() : { x: 0, y: 0, len: 0 }
+    const gesture = playerState.gesture && performance.now() < playerState.gesture.until ? playerState.gesture : null
+    if (!gesture) playerState.gesture = null
+    const m = enabled && !stunned && !gesture ? readMove() : { x: 0, y: 0, len: 0 }
     playerState.running = false
     playerState.moving = false
     if (stunned) next = { name: 'bumped', speed: 1.3 }
+    else if (gesture) next = { name: gesture.name, speed: gesture.speed }
     else if (m.len > 0.08) {
       const running = (m.run || m.len > 0.95) && playerState.canRun && !tired
       playerState.running = running

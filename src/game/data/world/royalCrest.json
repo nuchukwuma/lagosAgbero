@@ -115,66 +115,6 @@
   ],
   "props": [
     {
-      "model": "treeLarge",
-      "rotation": 0,
-      "at": [
-        [
-          -20,
-          -12
-        ],
-        [
-          30,
-          -12
-        ],
-        [
-          -8,
-          -26
-        ],
-        [
-          22,
-          -28
-        ],
-        [
-          -54,
-          12
-        ],
-        [
-          56,
-          -20
-        ],
-        [
-          -12,
-          40
-        ],
-        [
-          26,
-          40
-        ]
-      ]
-    },
-    {
-      "model": "treeSmall",
-      "rotation": 0,
-      "at": [
-        [
-          2,
-          -12
-        ],
-        [
-          -26,
-          -22
-        ],
-        [
-          12,
-          22
-        ],
-        [
-          -2,
-          30
-        ]
-      ]
-    },
-    {
       "model": "streetLamp",
       "scale": 1.2,
       "rotation": 180,
@@ -501,6 +441,114 @@
         0
       ],
       "seed": 6
+    },
+    {
+      "kind": "tree",
+      "at": [
+        -20,
+        -12,
+        0
+      ],
+      "seed": 4
+    },
+    {
+      "kind": "tree",
+      "at": [
+        30,
+        -12,
+        0
+      ],
+      "seed": 11
+    },
+    {
+      "kind": "tree",
+      "at": [
+        -8,
+        -26,
+        0
+      ],
+      "seed": 18
+    },
+    {
+      "kind": "tree",
+      "at": [
+        22,
+        -28,
+        0
+      ],
+      "seed": 25
+    },
+    {
+      "kind": "tree",
+      "at": [
+        -54,
+        12,
+        0
+      ],
+      "seed": 32
+    },
+    {
+      "kind": "tree",
+      "at": [
+        56,
+        -20,
+        0
+      ],
+      "seed": 39
+    },
+    {
+      "kind": "tree",
+      "at": [
+        -12,
+        40,
+        0
+      ],
+      "seed": 46
+    },
+    {
+      "kind": "tree",
+      "at": [
+        26,
+        40,
+        0
+      ],
+      "seed": 53
+    },
+    {
+      "kind": "tree",
+      "at": [
+        2,
+        -12,
+        0
+      ],
+      "seed": 60
+    },
+    {
+      "kind": "tree",
+      "at": [
+        -26,
+        -22,
+        0
+      ],
+      "seed": 67
+    },
+    {
+      "kind": "tree",
+      "at": [
+        12,
+        22,
+        0
+      ],
+      "seed": 74
+    },
+    {
+      "kind": "tree",
+      "at": [
+        -2,
+        30,
+        0
+      ],
+      "seed": 81
     }
   ],
   "noClutter": [
@@ -603,6 +651,118 @@
       "seed": 74,
       "face": 180,
       "spin": 30
+    },
+    {
+      "nature": true,
+      "rect": [
+        -56,
+        -34,
+        36,
+        26
+      ],
+      "count": 12,
+      "seed": 40,
+      "spin": 180,
+      "kinds": [
+        "tree",
+        "bush",
+        "bush",
+        "grassTuft",
+        "grassTuft"
+      ]
+    },
+    {
+      "nature": true,
+      "rect": [
+        24,
+        -36,
+        32,
+        28
+      ],
+      "count": 10,
+      "seed": 43,
+      "spin": 180,
+      "kinds": [
+        "tree",
+        "bush",
+        "bush",
+        "grassTuft",
+        "grassTuft"
+      ]
+    },
+    {
+      "nature": true,
+      "rect": [
+        8,
+        18,
+        48,
+        16
+      ],
+      "count": 12,
+      "seed": 46,
+      "spin": 180,
+      "kinds": [
+        "tree",
+        "bush",
+        "bush",
+        "grassTuft",
+        "grassTuft"
+      ]
+    },
+    {
+      "nature": true,
+      "rect": [
+        -58,
+        6,
+        22,
+        26
+      ],
+      "count": 6,
+      "seed": 49,
+      "spin": 180,
+      "kinds": [
+        "tree",
+        "bush",
+        "bush",
+        "grassTuft",
+        "grassTuft"
+      ]
+    },
+    {
+      "nature": true,
+      "rect": [
+        -34,
+        26,
+        40,
+        8
+      ],
+      "count": 5,
+      "seed": 52,
+      "spin": 180,
+      "kinds": [
+        "tree",
+        "bush",
+        "bush",
+        "grassTuft",
+        "grassTuft"
+      ]
+    },
+    {
+      "nature": true,
+      "rect": [
+        6,
+        7,
+        13,
+        16
+      ],
+      "count": 4,
+      "seed": 55,
+      "spin": 180,
+      "kinds": [
+        "bush",
+        "grassTuft",
+        "tree"
+      ]
     }
   ],
   "stalls": [
@@ -989,7 +1149,7 @@
         40
       ],
       "facing": 0,
-      "anim": "idle",
+      "anim": "preach",
       "if": "owoNlaAround"
     },
     {

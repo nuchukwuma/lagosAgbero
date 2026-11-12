@@ -17,7 +17,6 @@ import characters from '../../data/characters.json'
 import { useDrive, readDriveInput, driveInput } from './driveStore.js'
 import { createDrive, stepDrive, placeAt, driveResult, SHOULDER, MAX_SPEED, kmh, upcoming } from './driveLogic.js'
 import { playerState } from '../../world/worldState.js'
-import { useGameStore } from '../../store/gameStore.js'
 import { sfx, engine } from '../../audio/audio.js'
 
 // The drive: a Lagos expressway that never ends. The bus goes towards -Z

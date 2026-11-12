@@ -9,6 +9,10 @@ import { GROUND_Y } from '../../world/layout.js'
 import { useGameStore } from '../../store/gameStore.js'
 import characters from '../../data/characters.json'
 import { sfx } from '../../audio/audio.js'
+import { loadClips } from '../../characters/clipLoader.js'
+
+// fetched before the first punch, so no move starts with a frozen frame
+const FIGHT_CLIPS = ['fightIdle', 'punch', 'kick', 'roundhouse', 'block', 'blockOutward', 'hit', 'knockedOut', 'cheer', 'walk']
 
 // Runs a fight in the street where the player stands: two fighters face
 // each other along the road (player on the left), the camera films from the
@@ -47,6 +51,10 @@ export default function FightDirector({ playerLook }) {
   const endScheduled = useRef(false)
 
   useEffect(() => {
+    loadClips(FIGHT_CLIPS).catch(() => {})
+  }, [])
+
+  useEffect(() => {
     playerState.fightView = center
     return () => {
       playerState.fightView = null
@@ -67,7 +75,7 @@ export default function FightDirector({ playerLook }) {
         if (ev.type === 'dodged') sfx('whoosh')
         else if (ev.type === 'blocked') sfx('block')
         else if (ev.move === 'special') sfx('special')
-        else if (ev.who === 'p') sfx(ev.move === 'kick' || ev.move === 'roundhouse' ? 'kick' : 'punch')
+        else if (ev.who === 'player') sfx(ev.move === 'kick' ? 'kick' : 'punch') // you landed one
         else sfx('hurt')
       }
       const taken = before.p - f.p.hp

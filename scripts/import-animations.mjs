@@ -4,6 +4,8 @@
 // Usage:
 //   npm run assets:animations -- a1.zip a2.zip a3.zip a4.rar a5.zip "Breathing Idle.fbx" Walking.fbx
 //   (any mix of .zip, .rar, folders or single .fbx files)
+//   Clips whose source isn't given are kept, so one pack can be added alone:
+//   npm run assets:animations -- path/to/rpg-pack/Cleric.fbx
 //
 // Why this exists:
 //   The Mixamo files were exported "with skin" on Mixamo's own Beta character,
@@ -75,6 +77,12 @@ const CLIPS = {
   stunned: { file: 'Stunned.fbx', loop: false, inPlace: false, use: 'Fight: dizzy / stunned' },
   knockedOut: { file: 'Dying.fbx', loop: false, inPlace: false, use: 'Cartoon knock-out and energy collapse (no gore)' },
   fallFlail: { file: 'Falling.fbx', loop: true, inPlace: true, use: 'Flailing in the air (runner fall, thrown out)' },
+  // From the Quaternius RPG pack (Cleric.fbx holds many clips: "clip" picks one).
+  // That pack's rig is a cousin of our people's rig, so these retarget cleanly.
+  roll: { file: 'Cleric.fbx', clip: 'Roll', rig: 'quaternius', loop: false, inPlace: true, fps: 30, use: 'Tuck-and-roll (runner, getting thrown)' },
+  pickUp: { file: 'Cleric.fbx', clip: 'PickUp', rig: 'quaternius', loop: false, inPlace: true, fps: 30, use: 'Reach out and take something (a fee, a purchase)' },
+  cheer: { file: 'Cleric.fbx', clip: 'Spell1', rig: 'quaternius', loop: false, inPlace: true, fps: 30, use: 'Arm up: winning a fight, hailing, blessing' },
+  preach: { file: 'Cleric.fbx', clip: 'Spell2', rig: 'quaternius', loop: true, inPlace: true, fps: 30, use: 'Arms wide then up: preachers, the dibia, rally speakers' },
 }
 
 // Our bone -> Mixamo bone. "Body" is the pelvis (it carries the hip movement).
@@ -89,6 +97,9 @@ for (const [q, m] of [['L', 'Left'], ['R', 'Right']]) {
 }
 const HIP_BONE = 'Body'
 
+// Our bone -> Quaternius RPG-pack bone: the same names, except the hands.
+const Q_BONE_MAP = Object.fromEntries(Object.keys(BONE_MAP).map((b) => [b, b.replace(/^Palm/, 'Fist')]))
+
 // To line up the rest poses we compare each bone's direction (towards the
 // bone named here) with the matching Mixamo direction.
 const DIRECTION = {
@@ -100,6 +111,21 @@ for (const [q, m] of [['L', 'Left'], ['R', 'Right']]) {
     [`Palm${q}`]: [`MiddleHand${q}`, `${m}HandIndex1`], [`UpperLeg${q}`]: [`LowerLeg${q}`, `${m}Leg`], [`LowerLeg${q}`]: [`Foot${q}`, `${m}Foot`],
     [`Foot${q}`]: [`Foot${q}_end`, `${m}ToeBase`],
   })
+}
+
+const Q_DIRECTION = { Body: ['Torso', 'Torso'], Hips: ['Abdomen', 'Abdomen'], Abdomen: ['Torso', 'Torso'], Torso: ['Neck', 'Neck'], Neck: ['Head', 'Head'] }
+for (const q of ['L', 'R']) {
+  Object.assign(Q_DIRECTION, {
+    [`Shoulder${q}`]: [`UpperArm${q}`, `UpperArm${q}`], [`UpperArm${q}`]: [`LowerArm${q}`, `LowerArm${q}`], [`LowerArm${q}`]: [`Palm${q}`, `Fist${q}`],
+    [`Palm${q}`]: [`MiddleHand${q}`, `Fist1${q}`], [`UpperLeg${q}`]: [`LowerLeg${q}`, `LowerLeg${q}`], [`LowerLeg${q}`]: [`Foot${q}`, `Foot${q}`],
+    [`Foot${q}`]: [`Foot${q}_end`, `Foot${q}_end`],
+  })
+}
+
+// The source skeletons we can read. Mixamo is the default.
+const RIGS = {
+  mixamo: { prefix: 'mixamorig', map: BONE_MAP, direction: DIRECTION, hips: 'Hips', arms: ['RightArm', 'LeftArm'] },
+  quaternius: { prefix: '', map: Q_BONE_MAP, direction: Q_DIRECTION, hips: 'Body', arms: ['UpperArmR', 'UpperArmL'] },
 }
 
 // Bones whose POSITION must follow another bone (feet hang off the root).
@@ -163,13 +189,16 @@ function prepareRig(root) {
 function retargetClip(target, source, clip, cfg) {
   const FPS = cfg.fps || DEFAULT_FPS
   const tBone = (n) => target.getObjectByName(n)
-  const sBone = (n) => source.getObjectByName(`mixamorig${n}`)
+  const rig = RIGS[cfg.rig || 'mixamo']
+  const BONE_MAP = rig.map // (shadows the Mixamo table above)
+  const DIRECTION = rig.direction
+  const sBone = (n) => source.getObjectByName(`${rig.prefix}${n}`)
 
   prepareRig(target)
   const sourceMesh = prepareRig(source)
 
   // Align facing: rotation that takes source-world directions into target-world.
-  const align = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), facingYaw(tBone, 'UpperArmR', 'UpperArmL') - facingYaw((n) => sBone(n), 'RightArm', 'LeftArm'))
+  const align = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), facingYaw(tBone, 'UpperArmR', 'UpperArmL') - facingYaw((n) => sBone(n), rig.arms[0], rig.arms[1]))
 
   // Target bones in parent-first order, with rest data.
   const targetBones = []
@@ -200,7 +229,7 @@ function retargetClip(target, source, clip, cfg) {
   }
 
   const tHips = tBone(HIP_BONE)
-  const sHips = sBone('Hips')
+  const sHips = sBone(rig.hips)
   const tHipsRestWorld = worldPos(tHips)
   const sHipsRestWorld = worldPos(sHips)
   const tGround = new THREE.Box3().setFromObject(firstSkinnedMesh(target)).min.y
@@ -327,18 +356,28 @@ async function main() {
   }
   const bodyBytes = fs.readFileSync(BODY)
   const loadTarget = async () => (await new GLTFLoader().parseAsync(bodyBytes.buffer.slice(bodyBytes.byteOffset, bodyBytes.byteOffset + bodyBytes.byteLength), '')).scene
-  fs.rmSync(OUT_DIR, { recursive: true, force: true })
   fs.mkdirSync(OUT_DIR, { recursive: true })
 
+  // Clips whose source file isn't given this time keep what was imported before,
+  // so you can add one pack without re-importing the rest.
+  const previous = fs.existsSync(INDEX) ? JSON.parse(fs.readFileSync(INDEX, 'utf8')) : { clips: {} }
   const index = {}
   const usedFiles = new Set()
   for (const [name, cfg] of Object.entries(CLIPS)) {
     const bytes = fbx[cfg.file]
-    if (!bytes) { console.log(`  - ${name.padEnd(12)} SKIPPED: ${cfg.file} not found`); continue }
+    if (!bytes) {
+      const kept = previous.clips[name] && fs.existsSync(path.join(OUT_DIR, `${name}.json`))
+      if (kept) index[name] = previous.clips[name]
+      console.log(`  - ${name.padEnd(12)} ${kept ? 'kept as it was' : 'SKIPPED'}: ${cfg.file} not given`)
+      continue
+    }
     usedFiles.add(cfg.file)
     const source = parseFbx(bytes)
     const target = await loadTarget() // fresh copy each time
-    const clip = source.animations.reduce((a, b) => (b.tracks.length > a.tracks.length ? b : a))
+    const clip = cfg.clip
+      ? source.animations.find((a) => a.name.endsWith(`|${cfg.clip}`) || a.name === cfg.clip)
+      : source.animations.reduce((a, b) => (b.tracks.length > a.tracks.length ? b : a))
+    if (!clip) { console.log(`  - ${name.padEnd(12)} SKIPPED: no "${cfg.clip}" clip in ${cfg.file}`); continue }
     const { out, rootMotion, start, end } = retargetClip(target, source, clip, cfg)
     const json = JSON.stringify(out)
     fs.writeFileSync(path.join(OUT_DIR, `${name}.json`), json)
@@ -346,7 +385,8 @@ async function main() {
     const cut = cfg.findLoop ? ` (loop ${start.toFixed(2)}–${end.toFixed(2)}s)` : ''
     console.log(`  ✓ ${name.padEnd(12)} ${out.duration.toFixed(2)}s ${String(Math.round(json.length / 1024)).padStart(4)} KB  travel ${rootMotion.speed} m/s${cut}`)
   }
-  const unused = Object.keys(fbx).filter((f) => !usedFiles.has(f)).sort()
+  const fresh = Object.keys(fbx).filter((f) => !usedFiles.has(f))
+  const unused = [...new Set([...(previous.unusedSourceFiles || []), ...fresh])].filter((f) => !usedFiles.has(f) && !Object.values(CLIPS).some((c) => c.file === f)).sort()
   fs.writeFileSync(INDEX, JSON.stringify({ clips: index, unusedSourceFiles: unused }, null, 1) + '\n')
   if (unused.length) console.log(`Not used (duplicates or spare): ${unused.join(', ')}`)
   console.log('Wrote public/assets/characters/clips/*.json and src/assets/clipIndex.json')

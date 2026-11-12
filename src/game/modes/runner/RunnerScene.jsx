@@ -156,7 +156,7 @@ export default function RunnerScene({ playerLook }) {
     }
     if (chasers.current) chasers.current.position.set(0, Y, z + run.pursuer + 2)
     playerState.runnerView = { x, z }
-    const next = run.over === 'caught' ? 'stunned' : run.stumbleT > 0 ? 'bumped' : run.slideT > 0 ? 'slide' : 'run'
+    const next = run.over === 'caught' ? 'stunned' : run.stumbleT > 0 ? 'bumped' : run.slideT > 0 ? 'slide' : run.jumpT > 0 ? 'roll' : 'run'
     if (next !== anim) setAnim(next)
   })
 
@@ -165,7 +165,7 @@ export default function RunnerScene({ playerLook }) {
       <Course run={run} />
       <Notes run={run} />
       <Suspense fallback={null}>
-        <Character ref={player} look={playerLook} animation={anim} speed={anim === 'run' ? 1.2 : 1.4} />
+        <Character ref={player} look={playerLook} animation={anim} speed={anim === 'run' ? 1.2 : anim === 'roll' ? 1.6 : 1.4} />
         <group ref={chasers}>
           {chaser.vehicle && <Model name={chaser.vehicle} position={[2.6, 0, 5]} rotation-y={Math.PI} />}
           <Character look={chaserLook} animation="run" speed={1.2} position={[-1.2, 0, 0]} rotation-y={Math.PI} />

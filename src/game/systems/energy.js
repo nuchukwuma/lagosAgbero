@@ -26,7 +26,7 @@ export function drainRate({ running = false, raining = false } = {}) {
  * Using an item. Returns { stats, effects, message } or { error }.
  * stats: the stat changes; effects: timers to add to game.effects.
  */
-export function useItem(itemId, game, clock) {
+export function consumeItem(itemId, game, clock) {
   const item = ITEMS[itemId]
   if (!item) return { error: 'Unknown item' }
   if ((game.stats.money ?? 0) < item.price) return { error: `You need ₦${item.price.toLocaleString('en-NG')}` }
