@@ -9,6 +9,7 @@ describe('fees', () => {
     expect(feeFor('keke', 500)).toBe(200)
     expect(feeFor('okada', 500)).toBe(100)
     expect(feeFor('lorry', 500)).toBe(1000)
+    expect(feeFor('molue', 500)).toBe(750)
   })
 
   it('a normal driver pays a fair fee', () => {

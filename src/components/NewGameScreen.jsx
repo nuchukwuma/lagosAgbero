@@ -5,11 +5,17 @@ import { SKIN_TONES } from '../game/characters/look.js'
 // a real nickname. Full customisation (outfits, accessories) comes later.
 
 const SHIRTS = ['#d8d2c4', '#c0392b', '#2c5aa0', '#2f8f5b', '#e0b400', '#1a1a1a']
+const OUTFITS = [
+  ['male_casual', 'T-shirt'],
+  ['male_shirt', 'Shirt'],
+  ['male_longsleeve', 'Long sleeve'],
+]
 
 export default function NewGameScreen({ onStart, onBack }) {
   const [name, setName] = useState('')
   const [skin, setSkin] = useState(SKIN_TONES[2])
   const [shirt, setShirt] = useState(SHIRTS[0])
+  const [body, setBody] = useState(OUTFITS[0][0])
   const clean = name.trim().slice(0, 20)
 
   return (
@@ -22,7 +28,7 @@ export default function NewGameScreen({ onStart, onBack }) {
         className="menu"
         onSubmit={(e) => {
           e.preventDefault()
-          if (clean) onStart({ name: clean, nickname: 'JJC', look: { base: 'male', skin, shirt, trousers: '#2c3e50', shoes: '#2a2a2a' } })
+          if (clean) onStart({ name: clean, nickname: 'JJC', look: { body, skin, shirt, trousers: '#2c3e50', shoes: '#1e1e1e' } })
         }}
       >
         <input
@@ -38,6 +44,14 @@ export default function NewGameScreen({ onStart, onBack }) {
           <span>Skin</span>
           {SKIN_TONES.map((c) => (
             <button type="button" key={c} className={`swatch ${skin === c ? 'on' : ''}`} style={{ background: c }} onClick={() => setSkin(c)} aria-label={`Skin tone ${c}`} aria-pressed={skin === c} />
+          ))}
+        </div>
+        <div className="swatch-row" role="radiogroup" aria-label="Outfit">
+          <span>Outfit</span>
+          {OUTFITS.map(([id, label]) => (
+            <button type="button" key={id} className={`chip ${body === id ? 'on' : ''}`} onClick={() => setBody(id)} aria-pressed={body === id}>
+              {label}
+            </button>
           ))}
         </div>
         <div className="swatch-row" role="radiogroup" aria-label="Shirt colour">

@@ -15,11 +15,14 @@
 //   hideNodes: [...]    — hide named sub-meshes (e.g. kart drivers)
 //   decal / stripe / weathering — extra primitive planes or material tweaks
 //   atlas: 'variation-b' — use one of the pack's alternate colour atlases
+//   yaw: 90 — turn a model that doesn't face +Z like the Kenney cars
+//   recenter: true — put the model's base on the ground, footprint centred
 //
 // Never import file paths anywhere else. Use getAsset(name) / assetUrl(name).
 
 import assetIndex from './assetIndex.json'
 import clipIndex from './clipIndex.json'
+import peopleIndex from './peopleIndex.json'
 
 export const ASSET_ROOT = '/assets'
 
@@ -32,6 +35,7 @@ export const PACK_SCALE = {
   'city-kit-industrial': 8,
   'city-kit-suburban': 8,
   characters: 1, // characters are normalised to CHARACTER.targetHeight instead
+  'vehicles-extra': 0.017, // Quaternius bus: ~7 m long, 2.9 m wide
 }
 
 // Placeholder colours used when a model is missing.
@@ -84,6 +88,7 @@ export const MODELS = {
   fireTruck: car('firetruck', 'Market fire random event'),
   demolitionShovel: car('tractor-shovel', 'Stall demolition during Task Force raids'),
   roadWorksTractor: car('tractor', 'Road-works scene, traffic-jam event'),
+  molue: { file: 'vehicles-extra/bus.glb', category: 'vehicle', use: 'Molue / big yellow bus (Quaternius; Kenney has no bus)', tweak: { yaw: 90, recenter: true } },
   kekeChassis: car('kart-oobi', 'Base for the keke: driver and front-left/right wheels hidden, one centre wheel and a primitive cabin added', {
     tweak: { hideNodes: ['character', 'wheel-front-left', 'wheel-front-right'] },
   }),
@@ -222,35 +227,24 @@ export const MODELS = {
   treeSmall: nature('tree-small', 'Small tree'),
 }
 
-// Characters: one body mesh, many looks.
+// Characters: 8 outfit bodies (Men / Women packs) sharing one skeleton.
+// `npm run assets:characters` converts them; peopleIndex.json lists each
+// body's parts (Skin, Hair, Shirt...) so looks can colour them.
 export const CHARACTER = {
-  body: 'characters/characterMedium.fbx',
-  targetHeight: 1.75, // metres; the loader scales the mesh to this height
-  // Kenney's own 3 animations (FBX, played directly on the body).
-  animations: {
-    idle: 'characters/anims/idle.fbx',
-    run: 'characters/anims/run.fbx',
-    jump: 'characters/anims/jump.fbx',
-  },
-  // Mixamo animations, retargeted to this body by `npm run assets:animations`
-  // (walk, drunkWalk, punch, kick, block, hit, knockedOut, slide, talk...).
+  targetHeight: 1.75, // metres; the loader scales each body to this height
+  bodies: peopleIndex.bodies,
+  // Mixamo animations, retargeted to this skeleton by `npm run assets:animations`
+  // (breathingIdle, walk, run, punch, kick, block, hit, knockedOut, talk...).
   // Each entry: { file, duration, loop, rootMotion: { metres, speed }, use }.
-  // Load them with loadClip(name) from src/game/characters/clipLoader.js.
   clips: clipIndex.clips,
-  skins: {
-    male: 'characters/skins/humanMaleA.png',
-    female: 'characters/skins/humanFemaleA.png',
-    // Zombie skins are kept for one joke only: the Rock Bottom collapse dream.
-    zombieMale: 'characters/skins/zombieMaleA.png',
-    zombieFemale: 'characters/skins/zombieFemaleA.png',
-  },
-  // Each animation FBX also contains a 1-frame T-pose clip ("Targeting Pose");
-  // loaders must skip it. Native height is ~376 units, so always normalise.
-  skipClipsNamed: 'Targeting Pose',
-  // Main bones in the FBX (Mixamo-style names) — used for procedural moves
-  // (punch, kick, block, hit, fall, slide) in later phases.
-  bones: ['Hips', 'Spine', 'Chest', 'UpperChest', 'Neck', 'Head', 'LeftShoulder', 'LeftArm', 'LeftForeArm', 'LeftHand', 'RightShoulder', 'RightArm', 'RightForeArm', 'RightHand', 'LeftUpLeg', 'LeftLeg', 'LeftFoot', 'LeftToes', 'RightUpLeg', 'RightLeg', 'RightFoot', 'RightToes'],
+  // Main bones (accessories and procedural moves use these names).
+  bones: ['Body', 'Hips', 'Abdomen', 'Torso', 'Neck', 'Head', 'ShoulderL', 'UpperArmL', 'LowerArmL', 'PalmL', 'ShoulderR', 'UpperArmR', 'LowerArmR', 'PalmR', 'UpperLegL', 'LowerLegL', 'FootL', 'UpperLegR', 'LowerLegR', 'FootR'],
+  // The old Kenney character is kept on disk until the final clean-up phase.
+  legacyKenney: { body: 'characters/characterMedium.fbx', skins: 'characters/skins/' },
 }
+
+// Extra models from the Low Poly Vehicles pack (Kenney has no bus).
+export const EXTRA_MODELS = peopleIndex.extras
 
 // Shared colour atlases. Every GLB in a pack points at Textures/colormap.png.
 export const ATLASES = {
@@ -290,7 +284,8 @@ function packOf(file) {
 
 function boundsOf(file) {
   const [pack, ...rest] = file.split('/')
-  return index[pack]?.[rest.join('/')]?.bounds || null
+  const extra = Object.values(peopleIndex.extras || {}).find((e) => e.file === file)
+  return index[pack]?.[rest.join('/')]?.bounds || extra?.bounds || null
 }
 
 /** Full info for a game name: url, scale, world size, fallback colour. */
@@ -303,7 +298,10 @@ export function getAsset(name) {
   const size = bounds ? bounds.size.map((v) => v * scale) : [1, 1, 1]
   // centre of the model's footprint relative to its pivot (Kenney pivots are
   // not always centred); used for colliders and placeholder boxes
-  const offset = bounds ? bounds.min.map((v, i) => ((v + bounds.max[i]) / 2) * scale) : [0, 0.5, 0]
+  let offset = bounds ? bounds.min.map((v, i) => ((v + bounds.max[i]) / 2) * scale) : [0, 0.5, 0]
+  const tw = entry.tweak || {}
+  if (tw.yaw && Math.abs(tw.yaw) % 180 === 90) size.splice(0, 3, size[2], size[1], size[0])
+  if (tw.recenter) offset = [0, size[1] / 2, 0]
   return {
     name,
     ...entry,
@@ -329,10 +327,9 @@ export function assetNamesByCategory(category) {
 export function allManifestFiles() {
   return [
     ...Object.values(MODELS).map((m) => m.file),
-    CHARACTER.body,
-    ...Object.values(CHARACTER.animations),
-    ...Object.values(CHARACTER.skins),
+    ...Object.values(CHARACTER.bodies).map((b) => b.file),
     ...Object.values(CHARACTER.clips).map((c) => c.file),
+    ...Object.values(EXTRA_MODELS).map((e) => e.file),
     ...Object.values(ATLASES).flatMap((a) => Object.values(a)),
   ]
 }

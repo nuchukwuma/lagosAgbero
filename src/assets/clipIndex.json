@@ -135,7 +135,7 @@
   "argue": {
    "file": "characters/clips/argue.json",
    "source": "Standing Arguing.fbx",
-   "duration": 6.333,
+   "duration": 6.083,
    "loop": true,
    "rootMotion": {
     "metres": 0.07,

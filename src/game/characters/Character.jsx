@@ -1,78 +1,61 @@
 import { forwardRef, useEffect, useMemo, useRef, useState } from 'react'
 import { useFrame } from '@react-three/fiber'
-import { useFBX, useTexture } from '@react-three/drei'
+import { useGLTF } from '@react-three/drei'
 import * as THREE from 'three'
 import { clone as cloneSkinned } from 'three/examples/jsm/utils/SkeletonUtils.js'
 import { ASSET_ROOT, CHARACTER } from '../../assets/assetManifest.js'
-import { loadClip } from './clipLoader.js'
-import { makeSkinTexture, normalizeLook } from './look.js'
+import { loadClip, readClip } from './clipLoader.js'
+import { bodyInfo, normalizeLook, paintGeometry } from './look.js'
 import { attachAccessories } from './accessories.js'
 
 // One person in the 3D world. Everyone (player, NPCs, crowd) uses this.
-//   look       see look.js
-//   animation  any clip name from clipIndex (walk, run, punch...), 'idle'
-//              (= breathingIdle), 'jump', or kenneyIdle / kenneyRun / kenneyJump
+//   look       see look.js (body/outfit, colours, size, accessories)
+//   animation  any clip name from clipIndex (walk, run, punch...); 'idle' = breathingIdle
 //   speed      animation playback speed
-//   once       for non-looping clips: called when the clip ends
+//   onClipEnd  for non-looping clips: called with the clip name when it ends
 // The outer group is forwarded as ref so controllers can move/turn it.
 
-const url = (f) => `${ASSET_ROOT}/${f}`
-// Kenney's own clips (always available instantly) and friendly aliases.
-const KENNEY = ['kenneyIdle', 'kenneyRun', 'kenneyJump']
-const ALIASES = { idle: 'breathingIdle', jump: 'kenneyJump' }
-const NATIVE_HEIGHT = 376.47 // Kenney units; measured once (see docs)
+const ALIASES = { idle: 'breathingIdle' }
 
-function realClip(fbx, name) {
-  const real = fbx.animations.find((a) => !a.name.includes(CHARACTER.skipClipsNamed)) || fbx.animations[0]
-  const c = real.clone()
-  c.name = name
-  return c
-}
+// One material for every person: colours come from vertex colours.
+const PERSON_MATERIAL = new THREE.MeshLambertMaterial({ vertexColors: true })
 
 const Character = forwardRef(function Character({ look: lookInput, animation = 'idle', speed = 1, onClipEnd, ...groupProps }, ref) {
   // compare looks by value, so passing a fresh object each render is harmless
   const lookKey = JSON.stringify(lookInput || {})
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const look = useMemo(() => normalizeLook(lookInput), [lookKey])
-  const body = useFBX(url(CHARACTER.body))
-  const idleFbx = useFBX(url(CHARACTER.animations.idle))
-  const runFbx = useFBX(url(CHARACTER.animations.run))
-  const jumpFbx = useFBX(url(CHARACTER.animations.jump))
-  const baseSkin = useTexture(url(CHARACTER.skins[look.base] || CHARACTER.skins.male))
+  const info = bodyInfo(look.body)
+  const gltf = useGLTF(`${ASSET_ROOT}/${info.file}`)
+  const idleClip = readClip('breathingIdle') // suspends until the idle is loaded: no T-pose flash
 
-  const rootScale = CHARACTER.targetHeight / NATIVE_HEIGHT
+  const rootScale = CHARACTER.targetHeight / info.nativeHeight
   const accessoriesKey = JSON.stringify(look.accessories)
 
-  // The mesh is cloned once per body/accessory set...
-  const { object, material } = useMemo(() => {
-    const o = cloneSkinned(body)
-    const m = new THREE.MeshLambertMaterial()
+  // Clone the body once per outfit/accessory set...
+  const { object, mesh } = useMemo(() => {
+    const o = cloneSkinned(gltf.scene)
+    let skinned = null
     o.traverse((child) => {
       if (child.isMesh) {
-        child.material = m
+        child.geometry = child.geometry.clone() // own vertex colours per person
+        child.material = PERSON_MATERIAL
         child.frustumCulled = false // skinned bounds are unreliable when animated
+        if (child.isSkinnedMesh) skinned = child
       }
     })
     attachAccessories(o, look.accessories, rootScale)
-    return { object: o, material: m }
+    return { object: o, mesh: skinned }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [body, accessoriesKey, rootScale])
+  }, [gltf, accessoriesKey, rootScale])
 
-  // ...while colours (skin, clothes, red eyes) only swap the texture.
-  const texture = makeSkinTexture(baseSkin.image, look)
-  if (material.map !== texture) {
-    material.map = texture
-    material.needsUpdate = true
-  }
-
-  const kenneyClips = useMemo(
-    () => ({ kenneyIdle: realClip(idleFbx, 'kenneyIdle'), kenneyRun: realClip(runFbx, 'kenneyRun'), kenneyJump: realClip(jumpFbx, 'kenneyJump') }),
-    [idleFbx, runFbx, jumpFbx],
-  )
+  // ...while colours (skin, clothes, red eyes) only repaint vertex colours.
+  const paintKey = JSON.stringify([look.body, look.skin, look.hair, look.shirt, look.shirt2, look.trousers, look.shoes, look.socks, look.accent, Math.round((look.eyeRed || 0) * 10)])
+  useMemo(() => mesh && paintGeometry(mesh.geometry, look), [mesh, paintKey]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const mixer = useMemo(() => new THREE.AnimationMixer(object), [object])
   const current = useRef(null)
-  const [clip, setClip] = useState(kenneyClips.kenneyIdle)
+  const [clip, setClip] = useState(idleClip)
   const endRef = useRef(onClipEnd)
   endRef.current = onClipEnd
 
@@ -84,20 +67,18 @@ const Character = forwardRef(function Character({ look: lookInput, animation = '
   useEffect(() => {
     let cancelled = false
     const name = ALIASES[animation] || animation
-    if (KENNEY.includes(name)) setClip(kenneyClips[name])
-    else
-      loadClip(name)
-        .then((c) => !cancelled && setClip(c))
-        .catch((e) => console.warn(`[anim] "${animation}" failed to load`, e))
+    loadClip(name)
+      .then((c) => !cancelled && setClip(c))
+      .catch((e) => console.warn(`[anim] "${name}" failed to load`, e))
     return () => {
       cancelled = true
     }
-  }, [animation, kenneyClips])
+  }, [animation])
 
   useEffect(() => {
     if (!clip) return
     const action = mixer.clipAction(clip)
-    const loops = KENNEY.includes(clip.name) || CHARACTER.clips[clip.name]?.loop
+    const loops = CHARACTER.clips[clip.name]?.loop
     action.setLoop(loops ? THREE.LoopRepeat : THREE.LoopOnce, Infinity)
     action.clampWhenFinished = true
     if (current.current !== action) {

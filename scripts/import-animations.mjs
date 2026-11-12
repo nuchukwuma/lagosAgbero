@@ -1,4 +1,5 @@
-// Imports Mixamo animations and retargets them onto the Kenney character.
+// Imports Mixamo animations and retargets them onto our characters
+// (the Men / Women packs: they share one 31-bone skeleton).
 //
 // Usage:
 //   npm run assets:animations -- a1.zip a2.zip a3.zip a4.rar a5.zip "Breathing Idle.fbx" Walking.fbx
@@ -7,12 +8,16 @@
 // Why this exists:
 //   The Mixamo files were exported "with skin" on Mixamo's own Beta character,
 //   so each is ~2 MB and uses a different skeleton (mixamorig*, 65 bones) from
-//   our Kenney body (45 bones, different bone axes). We can't just play them.
+//   our people (31 bones, different names, arms-down rest pose instead of a
+//   T-pose, and feet that hang off the root bone). We can't just play them.
 //   This script, for every clip in CLIPS below:
 //     1. picks the real clip (some files start with an empty "Take 001"),
 //     2. samples it at FPS frames per second,
 //     3. retargets each bone: "how far did the Mixamo bone turn away from its
-//        T-pose?" is applied as the same world-space turn to the Kenney bone,
+//        T-pose?" is applied as the same world-space turn to our bone, after
+//        first lining our bone up with Mixamo's T-pose direction,
+//     3b. moves each foot with the end of its lower leg (the feet are not
+//        children of the legs in this rig),
 //     4. removes forward drift for in-place clips (the game moves the body),
 //        and records how far the clip wanted to travel (rootMotion),
 //     5. optionally cuts out one clean loop (findLoop),
@@ -25,9 +30,12 @@ import { unzipSync } from 'fflate'
 import { createExtractorFromData } from 'node-unrar-js'
 import * as THREE from 'three'
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js'
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..')
-const BODY = path.join(ROOT, 'public/assets/characters/characterMedium.fbx')
+// The target skeleton: any converted body works (they share one skeleton).
+// Run `npm run assets:characters` first.
+const BODY = path.join(ROOT, 'public/assets/characters/people/male_casual.glb')
 const OUT_DIR = path.join(ROOT, 'public/assets/characters/clips')
 const INDEX = path.join(ROOT, 'src/assets/clipIndex.json')
 const DEFAULT_FPS = 24
@@ -69,18 +77,33 @@ const CLIPS = {
   fallFlail: { file: 'Falling.fbx', loop: true, inPlace: true, use: 'Flailing in the air (runner fall, thrown out)' },
 }
 
-// Kenney bone -> Mixamo bone
+// Our bone -> Mixamo bone. "Body" is the pelvis (it carries the hip movement).
 const BONE_MAP = {
-  Hips: 'Hips', Spine: 'Spine', Chest: 'Spine1', UpperChest: 'Spine2', Neck: 'Neck', Head: 'Head',
+  Body: 'Hips', Hips: 'Spine', Abdomen: 'Spine1', Torso: 'Spine2', Neck: 'Neck', Head: 'Head',
 }
-for (const s of ['Left', 'Right']) {
+for (const [q, m] of [['L', 'Left'], ['R', 'Right']]) {
   Object.assign(BONE_MAP, {
-    [`${s}Shoulder`]: `${s}Shoulder`, [`${s}Arm`]: `${s}Arm`, [`${s}ForeArm`]: `${s}ForeArm`, [`${s}Hand`]: `${s}Hand`,
-    [`${s}HandThumb1`]: `${s}HandThumb1`, [`${s}HandThumb2`]: `${s}HandThumb2`,
-    [`${s}HandIndex1`]: `${s}HandIndex1`, [`${s}HandIndex2`]: `${s}HandIndex2`, [`${s}HandIndex3`]: `${s}HandIndex3`,
-    [`${s}UpLeg`]: `${s}UpLeg`, [`${s}Leg`]: `${s}Leg`, [`${s}Foot`]: `${s}Foot`, [`${s}Toes`]: `${s}ToeBase`,
+    [`Shoulder${q}`]: `${m}Shoulder`, [`UpperArm${q}`]: `${m}Arm`, [`LowerArm${q}`]: `${m}ForeArm`, [`Palm${q}`]: `${m}Hand`,
+    [`UpperLeg${q}`]: `${m}UpLeg`, [`LowerLeg${q}`]: `${m}Leg`, [`Foot${q}`]: `${m}Foot`,
   })
 }
+const HIP_BONE = 'Body'
+
+// To line up the rest poses we compare each bone's direction (towards the
+// bone named here) with the matching Mixamo direction.
+const DIRECTION = {
+  Body: ['Torso', 'Spine2'], Hips: ['Abdomen', 'Spine1'], Abdomen: ['Torso', 'Spine2'], Torso: ['Neck', 'Neck'], Neck: ['Head', 'Head'],
+}
+for (const [q, m] of [['L', 'Left'], ['R', 'Right']]) {
+  Object.assign(DIRECTION, {
+    [`Shoulder${q}`]: [`UpperArm${q}`, `${m}Arm`], [`UpperArm${q}`]: [`LowerArm${q}`, `${m}ForeArm`], [`LowerArm${q}`]: [`Palm${q}`, `${m}Hand`],
+    [`Palm${q}`]: [`MiddleHand${q}`, `${m}HandIndex1`], [`UpperLeg${q}`]: [`LowerLeg${q}`, `${m}Leg`], [`LowerLeg${q}`]: [`Foot${q}`, `${m}Foot`],
+    [`Foot${q}`]: [`Foot${q}_end`, `${m}ToeBase`],
+  })
+}
+
+// Bones whose POSITION must follow another bone (feet hang off the root).
+const FOLLOW = { FootL: 'LowerLegL', FootR: 'LowerLegR' }
 
 // ---------- loading ----------
 // FBXLoader logs harmless warnings in Node; keep the output readable.
@@ -122,16 +145,15 @@ function firstSkinnedMesh(root) {
   return mesh
 }
 
-// Facing direction (yaw) of a rig in T-pose, from its shoulders.
-function facingYaw(get) {
-  const right = worldPos(get('RightArm')).sub(worldPos(get('LeftArm')))
+// Facing direction (yaw) of a rig, from its shoulders.
+function facingYaw(get, rightName, leftName) {
+  const right = worldPos(get(rightName)).sub(worldPos(get(leftName)))
   const forward = new THREE.Vector3(0, 1, 0).cross(right).normalize()
   return Math.atan2(forward.x, forward.z)
 }
 
-// A freshly parsed FBX is already in its T-pose, so that is our rest pose.
-// (Don't call skeleton.pose(): on the Kenney rig it ignores the x100 scale and
-// rotation on the "Root" node and produces a scrambled skeleton.)
+// A freshly parsed model is in its rest pose. (Don't call skeleton.pose():
+// on some rigs it ignores scale/rotation on the root node and scrambles it.)
 function prepareRig(root) {
   root.updateMatrixWorld(true)
   return firstSkinnedMesh(root)
@@ -147,7 +169,7 @@ function retargetClip(target, source, clip, cfg) {
   const sourceMesh = prepareRig(source)
 
   // Align facing: rotation that takes source-world directions into target-world.
-  const align = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), facingYaw(tBone) - facingYaw((n) => sBone(n)))
+  const align = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), facingYaw(tBone, 'UpperArmR', 'UpperArmL') - facingYaw((n) => sBone(n), 'RightArm', 'LeftArm'))
 
   // Target bones in parent-first order, with rest data.
   const targetBones = []
@@ -155,9 +177,29 @@ function retargetClip(target, source, clip, cfg) {
   const rest = new Map()
   for (const b of targetBones) rest.set(b, { local: b.quaternion.clone(), pos: b.position.clone(), world: worldQuat(b) })
   const sourceRest = new Map()
-  for (const [t, s] of Object.entries(BONE_MAP)) sourceRest.set(t, worldQuat(sBone(s)).premultiply(align))
+  for (const [t, s] of Object.entries(BONE_MAP)) if (sBone(s)) sourceRest.set(t, worldQuat(sBone(s)).premultiply(align))
 
-  const tHips = tBone('Hips')
+  // Rest-pose alignment: the turn that points our bone the way Mixamo's
+  // T-pose bone points (our characters rest with arms down).
+  const restAlign = new Map()
+  for (const [t, [tChild, sChild]] of Object.entries(DIRECTION)) {
+    const tb = tBone(t)
+    const tc = tBone(tChild)
+    const sb = sBone(BONE_MAP[t])
+    const sc = sBone(sChild)
+    if (!tb || !tc || !sb || !sc) continue
+    const dt = worldPos(tc).sub(worldPos(tb)).normalize()
+    const ds = worldPos(sc).sub(worldPos(sb)).applyQuaternion(align).normalize()
+    restAlign.set(t, new THREE.Quaternion().setFromUnitVectors(dt, ds))
+  }
+  // where each follower sits relative to the bone it follows, at rest
+  const followRest = {}
+  for (const [f, lead] of Object.entries(FOLLOW)) {
+    if (!tBone(f) || !tBone(lead)) continue
+    followRest[f] = tBone(lead).worldToLocal(worldPos(tBone(f)))
+  }
+
+  const tHips = tBone(HIP_BONE)
   const sHips = sBone('Hips')
   const tHipsRestWorld = worldPos(tHips)
   const sHipsRestWorld = worldPos(sHips)
@@ -179,6 +221,7 @@ function retargetClip(target, source, clip, cfg) {
   const mapped = Object.keys(BONE_MAP).filter((n) => tBone(n) && sBone(BONE_MAP[n]))
   const q = Object.fromEntries(mapped.map((n) => [n, []]))
   const hipsPos = []
+  const followPos = Object.fromEntries(Object.keys(followRest).map((f) => [f, []]))
   const pose = [] // source local quats per frame, for loop finding
   const travel = []
 
@@ -199,7 +242,7 @@ function retargetClip(target, source, clip, cfg) {
       // delta = how far the source bone turned from its rest, in target-aligned world space
       const sWorld = worldQuat(s).premultiply(align)
       const delta = sWorld.multiply(sourceRest.get(b.name).clone().invert())
-      const tWorld = delta.multiply(rest.get(b).world)
+      const tWorld = delta.multiply(restAlign.get(b.name) || new THREE.Quaternion()).multiply(rest.get(b).world)
       b.parent.getWorldQuaternion(parentWorld)
       b.quaternion.copy(parentWorld.invert().multiply(tWorld))
       b.updateMatrixWorld(true)
@@ -215,6 +258,17 @@ function retargetClip(target, source, clip, cfg) {
     const world = tHipsRestWorld.clone().add(d.multiplyScalar(hipScale))
     const local = tHips.parent.worldToLocal(world)
     hipsPos.push(local.x, local.y, local.z)
+    tHips.position.copy(local) // the feet below must see the moved hips
+
+    // feet follow the end of their lower leg
+    target.updateMatrixWorld(true)
+    for (const [f, local] of Object.entries(followRest)) {
+      const fb = tBone(f)
+      const world = tBone(FOLLOW[f]).localToWorld(local.clone())
+      fb.position.copy(fb.parent.worldToLocal(world))
+      followPos[f].push(fb.position.x, fb.position.y, fb.position.z)
+    }
+
   }
 
   // optional: cut one clean loop
@@ -244,12 +298,15 @@ function retargetClip(target, source, clip, cfg) {
     loop: Boolean(cfg.loop),
     bones: mapped,
     quaternions: mapped.map((n) => slice(q[n], 4).map(round)),
+    hipBone: HIP_BONE,
     hipsPosition: slice(hipsPos, 3).map(round),
+    positions: Object.fromEntries(Object.entries(followPos).map(([f, arr]) => [f, slice(arr, 3).map(round)])),
   }
   if (cfg.loop) {
     // make the last frame exactly the first so the loop is seamless
     for (const arr of out.quaternions) arr.splice(arr.length - 4, 4, ...arr.slice(0, 4))
     out.hipsPosition.splice(out.hipsPosition.length - 3, 3, ...out.hipsPosition.slice(0, 3))
+    for (const arr of Object.values(out.positions)) arr.splice(arr.length - 3, 3, ...arr.slice(0, 3))
   }
   const rootMotion = { metres: Number(metres.toFixed(2)), speed: Number((metres / Math.max(duration, 1e-3)).toFixed(2)) }
   return { out, rootMotion, start: start / FPS, end: end / FPS }
@@ -264,7 +321,12 @@ async function main() {
   const fbx = await collectFbx(inputs)
   console.log(`Found ${Object.keys(fbx).length} FBX files`)
 
-  const bodyBytes = new Uint8Array(fs.readFileSync(BODY))
+  if (!fs.existsSync(BODY)) {
+    console.error('Run `npm run assets:characters` first (the target skeleton comes from it).')
+    process.exit(1)
+  }
+  const bodyBytes = fs.readFileSync(BODY)
+  const loadTarget = async () => (await new GLTFLoader().parseAsync(bodyBytes.buffer.slice(bodyBytes.byteOffset, bodyBytes.byteOffset + bodyBytes.byteLength), '')).scene
   fs.rmSync(OUT_DIR, { recursive: true, force: true })
   fs.mkdirSync(OUT_DIR, { recursive: true })
 
@@ -275,7 +337,7 @@ async function main() {
     if (!bytes) { console.log(`  - ${name.padEnd(12)} SKIPPED: ${cfg.file} not found`); continue }
     usedFiles.add(cfg.file)
     const source = parseFbx(bytes)
-    const target = parseFbx(bodyBytes) // fresh copy each time
+    const target = await loadTarget() // fresh copy each time
     const clip = source.animations.reduce((a, b) => (b.tracks.length > a.tracks.length ? b : a))
     const { out, rootMotion, start, end } = retargetClip(target, source, clip, cfg)
     const json = JSON.stringify(out)

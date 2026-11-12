@@ -1,0 +1,398 @@
+{
+ "bodies": {
+  "male_casual": {
+   "file": "characters/people/male_casual.glb",
+   "source": "Male_Casual.fbx",
+   "parts": [
+    {
+     "name": "Skin",
+     "slot": "skin",
+     "color": "#7f512a"
+    },
+    {
+     "name": "Eyes",
+     "slot": "eyes",
+     "color": "#060606"
+    },
+    {
+     "name": "Hair",
+     "slot": "hair",
+     "color": "#0d0909"
+    },
+    {
+     "name": "Shirt",
+     "slot": "shirt",
+     "color": "#2a373b"
+    },
+    {
+     "name": "Pants",
+     "slot": "trousers",
+     "color": "#0f0e0e"
+    },
+    {
+     "name": "Socks",
+     "slot": "socks",
+     "color": "#816f6f"
+    },
+    {
+     "name": "Shoes",
+     "slot": "shoes",
+     "color": "#060606"
+    }
+   ],
+   "nativeHeight": 482.68
+  },
+  "male_shirt": {
+   "file": "characters/people/male_shirt.glb",
+   "source": "Male_Shirt.fbx",
+   "parts": [
+    {
+     "name": "Skin",
+     "slot": "skin",
+     "color": "#7f512a"
+    },
+    {
+     "name": "Eyes",
+     "slot": "eyes",
+     "color": "#050505"
+    },
+    {
+     "name": "Hair",
+     "slot": "hair",
+     "color": "#59430f"
+    },
+    {
+     "name": "Hair2",
+     "slot": "hair",
+     "color": "#594820"
+    },
+    {
+     "name": "Shirt",
+     "slot": "shirt",
+     "color": "#22030a"
+    },
+    {
+     "name": "Shirt2",
+     "slot": "shirt2",
+     "color": "#1e1615"
+    },
+    {
+     "name": "Pants",
+     "slot": "trousers",
+     "color": "#0c0f0b"
+    },
+    {
+     "name": "Socks",
+     "slot": "socks",
+     "color": "#161413"
+    },
+    {
+     "name": "Shoes",
+     "slot": "shoes",
+     "color": "#060606"
+    }
+   ],
+   "nativeHeight": 484.33
+  },
+  "male_longsleeve": {
+   "file": "characters/people/male_longsleeve.glb",
+   "source": "Male_LongSleeve.fbx",
+   "parts": [
+    {
+     "name": "Skin",
+     "slot": "skin",
+     "color": "#231812"
+    },
+    {
+     "name": "Eyes",
+     "slot": "eyes",
+     "color": "#060606"
+    },
+    {
+     "name": "Hair",
+     "slot": "hair",
+     "color": "#0d0909"
+    },
+    {
+     "name": "Shirt",
+     "slot": "shirt",
+     "color": "#252f1c"
+    },
+    {
+     "name": "Pants",
+     "slot": "trousers",
+     "color": "#101728"
+    },
+    {
+     "name": "Socks",
+     "slot": "socks",
+     "color": "#816f6f"
+    },
+    {
+     "name": "Shoes",
+     "slot": "shoes",
+     "color": "#060606"
+    }
+   ],
+   "nativeHeight": 481.2
+  },
+  "male_suit": {
+   "file": "characters/people/male_suit.glb",
+   "source": "Male_Suit.fbx",
+   "parts": [
+    {
+     "name": "Skin",
+     "slot": "skin",
+     "color": "#3f280d"
+    },
+    {
+     "name": "TieTexture",
+     "slot": "accent",
+     "color": "#ffffff"
+    },
+    {
+     "name": "Eyes",
+     "slot": "eyes",
+     "color": "#060606"
+    },
+    {
+     "name": "Hair",
+     "slot": "hair",
+     "color": "#4a474d"
+    },
+    {
+     "name": "Shirt",
+     "slot": "shirt",
+     "color": "#060506"
+    },
+    {
+     "name": "Pants",
+     "slot": "trousers",
+     "color": "#060506"
+    },
+    {
+     "name": "Details",
+     "slot": "accent",
+     "color": "#d6d6d6"
+    },
+    {
+     "name": "Shoes",
+     "slot": "shoes",
+     "color": "#060606"
+    }
+   ],
+   "nativeHeight": 482.83
+  },
+  "female_casual": {
+   "file": "characters/people/female_casual.glb",
+   "source": "Female_Casual.fbx",
+   "parts": [
+    {
+     "name": "Skin",
+     "slot": "skin",
+     "color": "#2d1d10"
+    },
+    {
+     "name": "Eyes",
+     "slot": "eyes",
+     "color": "#060606"
+    },
+    {
+     "name": "Hair",
+     "slot": "hair",
+     "color": "#080403"
+    },
+    {
+     "name": "Shirt",
+     "slot": "shirt",
+     "color": "#2f3b27"
+    },
+    {
+     "name": "Pants",
+     "slot": "trousers",
+     "color": "#0f0e0e"
+    },
+    {
+     "name": "Socks",
+     "slot": "socks",
+     "color": "#0b0a0a"
+    },
+    {
+     "name": "Shoes",
+     "slot": "shoes",
+     "color": "#060606"
+    },
+    {
+     "name": "HairBase",
+     "slot": "hair",
+     "color": "#161616"
+    }
+   ],
+   "nativeHeight": 463.63
+  },
+  "female_dress": {
+   "file": "characters/people/female_dress.glb",
+   "source": "Female_Dress.fbx",
+   "parts": [
+    {
+     "name": "Skin",
+     "slot": "skin",
+     "color": "#5c4624"
+    },
+    {
+     "name": "Eyes",
+     "slot": "eyes",
+     "color": "#060606"
+    },
+    {
+     "name": "Hair",
+     "slot": "hair",
+     "color": "#372a08"
+    },
+    {
+     "name": "Dress",
+     "slot": "shirt",
+     "color": "#200504"
+    },
+    {
+     "name": "Shoes",
+     "slot": "shoes",
+     "color": "#170906"
+    }
+   ],
+   "nativeHeight": 465.48
+  },
+  "female_tanktop": {
+   "file": "characters/people/female_tanktop.glb",
+   "source": "Female_TankTop.fbx",
+   "parts": [
+    {
+     "name": "Skin",
+     "slot": "skin",
+     "color": "#281a0e"
+    },
+    {
+     "name": "Eyes",
+     "slot": "eyes",
+     "color": "#060606"
+    },
+    {
+     "name": "Hair",
+     "slot": "hair",
+     "color": "#070604"
+    },
+    {
+     "name": "Shirt",
+     "slot": "shirt",
+     "color": "#2a373b"
+    },
+    {
+     "name": "Pants",
+     "slot": "trousers",
+     "color": "#0f0e0e"
+    },
+    {
+     "name": "Socks",
+     "slot": "socks",
+     "color": "#816f6f"
+    },
+    {
+     "name": "Shoes",
+     "slot": "shoes",
+     "color": "#060606"
+    },
+    {
+     "name": "HairBase",
+     "slot": "hair",
+     "color": "#161616"
+    }
+   ],
+   "nativeHeight": 465.48
+  },
+  "female_alternative": {
+   "file": "characters/people/female_alternative.glb",
+   "source": "Female_Alternative.fbx",
+   "parts": [
+    {
+     "name": "Skin",
+     "slot": "skin",
+     "color": "#7f512a"
+    },
+    {
+     "name": "Eyes",
+     "slot": "eyes",
+     "color": "#060606"
+    },
+    {
+     "name": "Eyebrows",
+     "slot": "hair",
+     "color": "#0c0c0c"
+    },
+    {
+     "name": "Shirt",
+     "slot": "shirt",
+     "color": "#070707"
+    },
+    {
+     "name": "Pants",
+     "slot": "trousers",
+     "color": "#090c17"
+    },
+    {
+     "name": "Socks",
+     "slot": "socks",
+     "color": "#816f6f"
+    },
+    {
+     "name": "Shoes",
+     "slot": "shoes",
+     "color": "#060606"
+    },
+    {
+     "name": "HairBase",
+     "slot": "hair",
+     "color": "#161616"
+    },
+    {
+     "name": "Jacket",
+     "slot": "shirt",
+     "color": "#2f0710"
+    },
+    {
+     "name": "LightJacket",
+     "slot": "shirt2",
+     "color": "#460e10"
+    },
+    {
+     "name": "Hair",
+     "slot": "hair",
+     "color": "#380a1f"
+    }
+   ],
+   "nativeHeight": 465.28
+  }
+ },
+ "extras": {
+  "bus": {
+   "file": "vehicles-extra/bus.glb",
+   "source": "Bus.fbx",
+   "bounds": {
+    "min": [
+     -27.81,
+     -112.15,
+     -87.23
+    ],
+    "max": [
+     380.83,
+     55.44,
+     87.23
+    ],
+    "size": [
+     408.64,
+     167.6,
+     174.46
+    ]
+   }
+  }
+ }
+}

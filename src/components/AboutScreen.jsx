@@ -14,7 +14,9 @@ export default function AboutScreen({ onBack }) {
           feel like the only way, and it lets you choose another way.
         </p>
         <h3>Credits</h3>
-        <p>3D models and characters: Kenney (kenney.nl), CC0.</p>
+        <p>City, vehicles and props: Kenney (kenney.nl), CC0.</p>
+        <p>People and the bus: Quaternius (quaternius.com), CC0.</p>
+        <p>Animations: Mixamo (Adobe).</p>
       </div>
       <button className="btn" onClick={onBack}>
         Back

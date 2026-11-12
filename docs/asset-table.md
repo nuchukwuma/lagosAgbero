@@ -25,6 +25,7 @@ Sizes in metres are after pack scaling (1 unit = 1 m).
 | `fireTruck` | `car-kit/firetruck.glb` | 227 KB | 2.4 × 2.7 × 5.4 | Market fire random event |
 | `demolitionShovel` | `car-kit/tractor-shovel.glb` | 217 KB | 2.7 × 2.4 × 4.0 | Stall demolition during Task Force raids |
 | `roadWorksTractor` | `car-kit/tractor.glb` | 172 KB | 2.1 × 2.6 × 3.5 | Road-works scene, traffic-jam event |
+| `molue` | `vehicles-extra/bus.glb` | 156 KB | 3.0 × 2.8 × 6.9 | Molue / big yellow bus (Quaternius; Kenney has no bus) |
 | `kekeChassis` | `car-kit/kart-oobi.glb` | 246 KB | 1.6 × 2.1 × 2.3 | Base for the keke: driver and front-left/right wheels hidden, one centre wheel and a primitive cabin added |
 
 ## prop
@@ -177,14 +178,15 @@ Sizes in metres are after pack scaling (1 unit = 1 m).
 
 | Game name | File | Download | Planned use |
 |---|---|---|---|
-| body | `characters/characterMedium.fbx` | 163 KB | The one body mesh for every person in the game |
-| anim: idle | `characters/anims/idle.fbx` | 594 KB | idle |
-| anim: run | `characters/anims/run.fbx` | 559 KB | Run; slowed down = walk |
-| anim: jump | `characters/anims/jump.fbx` | 550 KB | jump |
-| skin: male | `characters/skins/humanMaleA.png` | 35 KB | Base skin, re-toned and tinted per character |
-| skin: female | `characters/skins/humanFemaleA.png` | 33 KB | Base skin, re-toned and tinted per character |
-| skin: zombieMale | `characters/skins/zombieMaleA.png` | 39 KB | Collapse-dream joke only |
-| skin: zombieFemale | `characters/skins/zombieFemaleA.png` | 34 KB | Collapse-dream joke only |
+| body: male_casual | `characters/people/male_casual.glb` | 261 KB | Outfit body (Male_Casual.fbx); parts: Skin, Eyes, Hair, Shirt, Pants, Socks, Shoes |
+| body: male_shirt | `characters/people/male_shirt.glb` | 261 KB | Outfit body (Male_Shirt.fbx); parts: Skin, Eyes, Hair, Hair2, Shirt, Shirt2, Pants, Socks, Shoes |
+| body: male_longsleeve | `characters/people/male_longsleeve.glb` | 273 KB | Outfit body (Male_LongSleeve.fbx); parts: Skin, Eyes, Hair, Shirt, Pants, Socks, Shoes |
+| body: male_suit | `characters/people/male_suit.glb` | 318 KB | Outfit body (Male_Suit.fbx); parts: Skin, TieTexture, Eyes, Hair, Shirt, Pants, Details, Shoes |
+| body: female_casual | `characters/people/female_casual.glb` | 360 KB | Outfit body (Female_Casual.fbx); parts: Skin, Eyes, Hair, Shirt, Pants, Socks, Shoes, HairBase |
+| body: female_dress | `characters/people/female_dress.glb` | 254 KB | Outfit body (Female_Dress.fbx); parts: Skin, Eyes, Hair, Dress, Shoes |
+| body: female_tanktop | `characters/people/female_tanktop.glb` | 309 KB | Outfit body (Female_TankTop.fbx); parts: Skin, Eyes, Hair, Shirt, Pants, Socks, Shoes, HairBase |
+| body: female_alternative | `characters/people/female_alternative.glb` | 277 KB | Outfit body (Female_Alternative.fbx); parts: Skin, Eyes, Eyebrows, Shirt, Pants, Socks, Shoes, HairBase, Jacket, LightJacket, Hair |
+| extra: bus | `vehicles-extra/bus.glb` | 156 KB | Molue / BRT-style bus (Kenney has no bus) |
 
 ## Retargeted Mixamo animations
 
@@ -192,36 +194,36 @@ Sizes in metres are after pack scaling (1 unit = 1 m).
 
 | Clip | Source file | Length | Loop | Root motion | Download | Planned use |
 |---|---|---|---|---|---|---|
-| `breathingIdle` | Breathing Idle.fbx | 9.93 s | yes | 0 m/s | 140 KB | Default standing idle for everyone |
-| `walk` | Walking.fbx | 0.96 s | yes | 1.62 m/s | 23 KB | Normal walk |
-| `startWalk` | Start Walking.fbx | 2.92 s | no | 0.65 m/s | 67 KB | Spare: idle-to-walk start |
-| `drunkWalk` | Drunk Walk.fbx | 3.00 s | yes | 0.84 m/s | 69 KB | Low-energy stagger, red-eye side effects |
-| `run` | Running.fbx | 0.63 s | yes | 5.72 m/s | 16 KB | Run (street, chases) |
-| `goofyRun` | Goofy Running.fbx | 0.63 s | yes | 1.73 m/s | 15 KB | Comic panic run (fleeing defaulters, runner mode) |
-| `sneak` | Crouch Walk Forward.fbx | 1.13 s | yes | 1.71 m/s | 27 KB | Sneaking during raids |
-| `crouchWalk` | Crouched Walking.fbx | 1.04 s | yes | 1.37 m/s | 25 KB | Alternative sneak |
-| `crouchDown` | Crouching.fbx | 4.08 s | no | 0.02 m/s | 93 KB | Duck down to hide |
-| `crouchIdle` | Crouching Idle.fbx | 2.50 s | yes | 0 m/s | 57 KB | Hiding behind a dumpster |
-| `slide` | Running Slide.fbx | 1.54 s | no | 4.2 m/s | 36 KB | Runner-mode slide under obstacles |
-| `talk` | Talking.fbx | 3.92 s | yes | 0 m/s | 89 KB | Dialogue: speaker gesture |
-| `argue` | Standing Arguing.fbx | 6.33 s | yes | 0.01 m/s | 143 KB | Dialogue: angry driver, haggling |
-| `bumped` | Walking Hit Reaction.fbx | 1.38 s | no | 0.93 m/s | 32 KB | Bumped on the street |
-| `turnLeft` | Walking Left Turn.fbx | 1.21 s | no | 1.34 m/s | 28 KB | Spare: walking turn |
-| `fightIdle` | Boxing.fbx | 1.75 s | yes | 0 m/s | 41 KB | Fight stance |
-| `punch` | Punching.fbx | 1.25 s | no | 0 m/s | 30 KB | Fight: punch |
-| `jabCombo` | Jab To Elbow Punch.fbx | 3.25 s | no | 0 m/s | 74 KB | Fight: jab + elbow combo |
-| `uppercut` | Uppercut Jab.fbx | 3.58 s | no | 0 m/s | 82 KB | Fight: uppercut |
-| `kick` | Side Kick.fbx | 2.00 s | no | 0 m/s | 46 KB | Fight: kick |
-| `roundhouse` | Roundhouse Kick.fbx | 2.50 s | no | 0 m/s | 58 KB | Fight: special move ("Lagos Roundabout") |
-| `block` | Blocking.fbx | 1.21 s | no | 0 m/s | 28 KB | Fight: block |
-| `blockInward` | Inward Block.fbx | 1.46 s | no | 0 m/s | 34 KB | Fight: block variation |
-| `blockOutward` | Outward Block.fbx | 2.54 s | no | 0 m/s | 58 KB | Fight: parry / dodge |
-| `bodyBlock` | Body Block.fbx | 3.42 s | no | 0 m/s | 78 KB | Fight: body block |
-| `hit` | Hit Reaction.fbx | 2.75 s | no | 0 m/s | 63 KB | Fight: got hit |
-| `takePunch` | Taking Punch.fbx | 5.67 s | no | 0 m/s | 128 KB | Fight: taking a beating (cutscenes) |
-| `stunned` | Stunned.fbx | 2.13 s | no | 0.49 m/s | 49 KB | Fight: dizzy / stunned |
-| `knockedOut` | Dying.fbx | 4.42 s | no | 0.08 m/s | 101 KB | Cartoon knock-out and energy collapse (no gore) |
-| `fallFlail` | Falling.fbx | 4.50 s | yes | 0 m/s | 103 KB | Flailing in the air (runner fall, thrown out) |
+| `breathingIdle` | Breathing Idle.fbx | 9.93 s | yes | 0 m/s | 95 KB | Default standing idle for everyone |
+| `walk` | Walking.fbx | 0.96 s | yes | 1.62 m/s | 15 KB | Normal walk |
+| `startWalk` | Start Walking.fbx | 2.92 s | no | 0.65 m/s | 45 KB | Spare: idle-to-walk start |
+| `drunkWalk` | Drunk Walk.fbx | 3.00 s | yes | 0.84 m/s | 46 KB | Low-energy stagger, red-eye side effects |
+| `run` | Running.fbx | 0.63 s | yes | 5.72 m/s | 10 KB | Run (street, chases) |
+| `goofyRun` | Goofy Running.fbx | 0.63 s | yes | 1.73 m/s | 10 KB | Comic panic run (fleeing defaulters, runner mode) |
+| `sneak` | Crouch Walk Forward.fbx | 1.13 s | yes | 1.71 m/s | 18 KB | Sneaking during raids |
+| `crouchWalk` | Crouched Walking.fbx | 1.04 s | yes | 1.37 m/s | 17 KB | Alternative sneak |
+| `crouchDown` | Crouching.fbx | 4.08 s | no | 0.02 m/s | 62 KB | Duck down to hide |
+| `crouchIdle` | Crouching Idle.fbx | 2.50 s | yes | 0 m/s | 39 KB | Hiding behind a dumpster |
+| `slide` | Running Slide.fbx | 1.54 s | no | 4.2 m/s | 24 KB | Runner-mode slide under obstacles |
+| `talk` | Talking.fbx | 3.92 s | yes | 0 m/s | 60 KB | Dialogue: speaker gesture |
+| `argue` | Standing Arguing.fbx | 6.08 s | yes | 0.01 m/s | 93 KB | Dialogue: angry driver, haggling |
+| `bumped` | Walking Hit Reaction.fbx | 1.38 s | no | 0.93 m/s | 22 KB | Bumped on the street |
+| `turnLeft` | Walking Left Turn.fbx | 1.21 s | no | 1.34 m/s | 19 KB | Spare: walking turn |
+| `fightIdle` | Boxing.fbx | 1.75 s | yes | 0 m/s | 27 KB | Fight stance |
+| `punch` | Punching.fbx | 1.25 s | no | 0 m/s | 20 KB | Fight: punch |
+| `jabCombo` | Jab To Elbow Punch.fbx | 3.25 s | no | 0 m/s | 50 KB | Fight: jab + elbow combo |
+| `uppercut` | Uppercut Jab.fbx | 3.58 s | no | 0 m/s | 55 KB | Fight: uppercut |
+| `kick` | Side Kick.fbx | 2.00 s | no | 0 m/s | 31 KB | Fight: kick |
+| `roundhouse` | Roundhouse Kick.fbx | 2.50 s | no | 0 m/s | 38 KB | Fight: special move ("Lagos Roundabout") |
+| `block` | Blocking.fbx | 1.21 s | no | 0 m/s | 19 KB | Fight: block |
+| `blockInward` | Inward Block.fbx | 1.46 s | no | 0 m/s | 23 KB | Fight: block variation |
+| `blockOutward` | Outward Block.fbx | 2.54 s | no | 0 m/s | 39 KB | Fight: parry / dodge |
+| `bodyBlock` | Body Block.fbx | 3.42 s | no | 0 m/s | 52 KB | Fight: body block |
+| `hit` | Hit Reaction.fbx | 2.75 s | no | 0 m/s | 42 KB | Fight: got hit |
+| `takePunch` | Taking Punch.fbx | 5.67 s | no | 0 m/s | 86 KB | Fight: taking a beating (cutscenes) |
+| `stunned` | Stunned.fbx | 2.13 s | no | 0.49 m/s | 33 KB | Fight: dizzy / stunned |
+| `knockedOut` | Dying.fbx | 4.42 s | no | 0.08 m/s | 68 KB | Cartoon knock-out and energy collapse (no gore) |
+| `fallFlail` | Falling.fbx | 4.50 s | yes | 0 m/s | 69 KB | Flailing in the air (runner fall, thrown out) |
 
 ## Built in code (no model of their own)
 

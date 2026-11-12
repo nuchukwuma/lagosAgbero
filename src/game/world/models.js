@@ -130,6 +130,15 @@ function processModel(asset, scene) {
   const object = new THREE.Group()
   object.name = asset.name
   model.scale.multiplyScalar(asset.scale)
+  if (tweak.yaw) model.rotation.y += (tweak.yaw * Math.PI) / 180
+  if (tweak.recenter) {
+    object.add(model)
+    object.updateMatrixWorld(true)
+    const box = new THREE.Box3().setFromObject(model)
+    model.position.x -= (box.min.x + box.max.x) / 2
+    model.position.z -= (box.min.z + box.max.z) / 2
+    model.position.y -= box.min.y
+  }
   object.add(model)
   object.updateMatrixWorld(true)
 

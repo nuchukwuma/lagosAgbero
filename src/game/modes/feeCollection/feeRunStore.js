@@ -22,7 +22,8 @@ export const STOPS = {
 }
 
 const STOP_KINDS = [
-  ['danfo', 44],
+  ['danfo', 40],
+  ['molue', 5],
   ['keke', 18],
   ['okada', 14],
   ['taxi', 12],

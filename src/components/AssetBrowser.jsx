@@ -12,12 +12,7 @@ import characters from '../game/data/characters.json'
 // every story character's look side by side.
 
 const CATEGORIES = ['vehicle', 'prop', 'road', 'street', 'building', 'nature', 'cast']
-const ANIMS = [
-  { id: 'kenneyIdle', label: 'kenneyIdle (Kenney)' },
-  { id: 'kenneyRun', label: 'kenneyRun (Kenney)' },
-  { id: 'kenneyJump', label: 'kenneyJump (Kenney)' },
-  ...CLIP_NAMES.map((id) => ({ id, label: `${id} (Mixamo)` })),
-]
+const ANIMS = CLIP_NAMES.map((id) => ({ id, label: id }))
 const CAST = Object.entries(characters).filter(([, c]) => c.look)
 
 function FitCamera({ radius, height }) {
@@ -47,7 +42,7 @@ export default function AssetBrowser({ onBack }) {
   const [category, setCategory] = useState('vehicle')
   const names = useMemo(() => Object.keys(MODELS).filter((n) => MODELS[n].category === category), [category])
   const [selected, setSelected] = useState('danfo')
-  const [anim, setAnim] = useState(3 + CLIP_NAMES.indexOf('breathingIdle'))
+  const [anim, setAnim] = useState(Math.max(0, CLIP_NAMES.indexOf('breathingIdle')))
   const [person, setPerson] = useState('player')
   const cast = category === 'cast'
   const asset = getAsset(selected)

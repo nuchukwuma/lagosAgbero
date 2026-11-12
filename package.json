@@ -10,7 +10,8 @@
     "assets:check": "node scripts/check-assets.mjs",
     "assets:animations": "node scripts/import-animations.mjs",
     "story:check": "node scripts/check-story.mjs",
-    "test": "vitest run"
+    "test": "vitest run",
+    "assets:characters": "node scripts/import-characters.mjs"
   },
   "repository": {
     "type": "git",

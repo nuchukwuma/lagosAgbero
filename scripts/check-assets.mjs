@@ -57,9 +57,8 @@ async function main() {
       const p = path.join(PUBLIC_ASSETS, f)
       lines.push(`| ${label} | \`${f}\` | ${fs.existsSync(p) ? kb(fs.statSync(p).size) : 'MISSING'} | ${use} |`)
     }
-    charFile('body', m.CHARACTER.body, 'The one body mesh for every person in the game')
-    for (const [k, f] of Object.entries(m.CHARACTER.animations)) charFile(`anim: ${k}`, f, k === 'run' ? 'Run; slowed down = walk' : k)
-    for (const [k, f] of Object.entries(m.CHARACTER.skins)) charFile(`skin: ${k}`, f, k.startsWith('zombie') ? 'Collapse-dream joke only' : 'Base skin, re-toned and tinted per character')
+    for (const [k, b] of Object.entries(m.CHARACTER.bodies)) charFile(`body: ${k}`, b.file, `Outfit body (${b.source}); parts: ${b.parts.map((p) => p.name).join(', ')}`)
+    for (const [k, e] of Object.entries(m.EXTRA_MODELS)) charFile(`extra: ${k}`, e.file, k === 'bus' ? 'Molue / BRT-style bus (Kenney has no bus)' : '')
     lines.push('', '## Retargeted Mixamo animations', '', '`npm run assets:animations` builds these from your Mixamo FBX files.', '', '| Clip | Source file | Length | Loop | Root motion | Download | Planned use |', '|---|---|---|---|---|---|---|')
     for (const [k, c] of Object.entries(m.CHARACTER.clips)) {
       const p = path.join(PUBLIC_ASSETS, c.file)
