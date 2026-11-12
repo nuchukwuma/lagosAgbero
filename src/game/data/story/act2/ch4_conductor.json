@@ -387,7 +387,26 @@
       "beats": [
         {
           "type": "setFlag",
-          "flag": "conductorDone"
+          "flags": [
+            "conductorDone",
+            "canDrive"
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "biodun",
+          "text": "You get hand for bus. Any day you wan drive, come to the motor park. Take my danfo for one round. Bring back fuel money... and the bus.",
+          "if": "biodunAlly"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "pastorDriver",
+          "text": "You can drive? Any day, come to the motor park. Take my bus for a round. Pay for fuel, pay my share, and the Lord will pay you the rest.",
+          "if": {
+            "notFlags": [
+              "biodunAlly"
+            ]
+          }
         },
         {
           "type": "dialogue",

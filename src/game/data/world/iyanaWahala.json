@@ -1531,6 +1531,101 @@
         }
       },
       "icon": "people"
+    },
+    {
+      "id": "driveDanfo",
+      "label": "DRIVE DANFO",
+      "icon": "wheel",
+      "spot": "motorPark",
+      "if": {
+        "anyOf": [
+          "conductorDone",
+          "conductor_brawl",
+          "conductor_extorted",
+          "canDrive"
+        ]
+      },
+      "mode": "drive",
+      "minutes": 150,
+      "params": {
+        "length": 2400,
+        "stops": 5,
+        "fuel": 50,
+        "checkpoints": 1,
+        "slogan": "NO TELLING"
+      },
+      "where": "Motor park",
+      "results": {
+        "roadRage": {
+          "toast": "The other driver jumps out with his sleeves rolled up.",
+          "then": {
+            "mode": "fight",
+            "label": "ROAD RAGE",
+            "params": {
+              "opponent": "angryDriver",
+              "difficulty": 1
+            },
+            "results": {
+              "won": {
+                "changeStat": {
+                  "notoriety": 2
+                }
+              },
+              "lost": {
+                "changeStat": {
+                  "money": -2000,
+                  "energy": -10
+                }
+              }
+            }
+          }
+        },
+        "abandoned": {
+          "toast": "You leave the bus and RUN.",
+          "then": {
+            "mode": "runner",
+            "label": "RUN!",
+            "params": {
+              "chaser": "taskForce",
+              "goal": 240,
+              "difficulty": 1
+            },
+            "results": {
+              "escaped": {
+                "changeStat": {
+                  "policeHeat": 4
+                }
+              },
+              "caught": {
+                "changeStat": {
+                  "policeHeat": 8,
+                  "arrests": 1,
+                  "money": -5000
+                }
+              }
+            }
+          }
+        },
+        "caught": {
+          "changeStat": {
+            "policeHeat": 6,
+            "money": -3000
+          },
+          "toast": "The Task Force impound the bus for two hours. Bíọ́dún is NOT happy."
+        },
+        "wrecked": {
+          "changeStat": {
+            "money": -4000
+          },
+          "toast": "Mechanic village. ₦4,000 to put the bus back together."
+        },
+        "outOfFuel": {
+          "changeStat": {
+            "energy": -8
+          },
+          "toast": "You push the danfo to the next filling station. With your hands."
+        }
+      }
     }
   ],
   "rows": [

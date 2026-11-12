@@ -148,8 +148,13 @@ export const useGameStore = create((set, get) => {
       }
       const minutes = activity.minutes ?? 120
       const next = { ...r.state, time: Math.min((r.state.time ?? 0) + minutes, EVENING_AT - 1) }
-      const summary = result.moneyChange ? `+₦${result.moneyChange.toLocaleString('en-NG')}` : 'No money this time'
-      set((s) => ({ game: next, activity: null, toasts: [...s.toasts, { id: ++toastId, text: `${activity.label || 'Done'}: ${summary}` }, ...r.notices.map((t) => ({ id: ++toastId, text: t }))].slice(-4) }))
+      const m = result.moneyChange || 0
+      const summary = m > 0 ? `+₦${m.toLocaleString('en-NG')}` : m < 0 ? `−₦${(-m).toLocaleString('en-NG')}` : 'No money this time'
+      // one event can lead straight into another: a crash into a fight, a
+      // wrecked bus into a foot chase ("then": { "mode", "params", "label" })
+      const then = extra?.then
+      const chained = then ? { id: `${activity.id}-then`, label: then.label || 'WAHALA', mode: then.mode, params: then.params || {}, minutes: then.minutes ?? 20, results: then.results, key: `${activity.id}-then-${Date.now()}` } : null
+      set((s) => ({ game: next, activity: chained, toasts: [...s.toasts, { id: ++toastId, text: `${activity.label || 'Done'}: ${summary}` }, ...r.notices.map((t) => ({ id: ++toastId, text: t }))].slice(-4) }))
       saveGame('auto', next, summaryOf(next, get().view))
     },
 

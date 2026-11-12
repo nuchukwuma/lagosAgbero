@@ -122,5 +122,18 @@
     "speed": 1.25,
     "block": 0.3,
     "aggression": 0.75
+  },
+  "angryDriver": {
+    "name": "Vexed driver",
+    "seed": 177,
+    "lookOverride": {
+      "body": "male_longsleeve",
+      "shirt": "#5d4037"
+    },
+    "hp": 95,
+    "power": 1.05,
+    "speed": 1.0,
+    "block": 0.25,
+    "aggression": 0.7
   }
 }

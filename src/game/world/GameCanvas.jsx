@@ -22,6 +22,8 @@ import { useChase } from '../modes/chase/chaseStore.js'
 import FightDirector from '../modes/fight/FightDirector.jsx'
 import { useFight, opponentProfile } from '../modes/fight/fightStore.js'
 import RunnerScene from '../modes/runner/RunnerScene.jsx'
+import DriveScene from '../modes/drive/DriveScene.jsx'
+import { useDrive } from '../modes/drive/driveStore.js'
 import { useSettings, dprFor } from '../store/settings.js'
 import { withAllegiance } from '../characters/look.js'
 import { useRunner } from '../modes/runner/runnerStore.js'
@@ -84,6 +86,7 @@ export default function GameCanvas({ view, game, activity = null, paused = false
   const fightOn = useFight((s) => s.active)
   const runnerOn = useRunner((s) => s.active) && modeName === 'runner'
   const busOn = useBus((s) => s.active) && modeName === 'conductor'
+  const driveOn = useDrive((s) => s.active) && modeName === 'drive'
   const fightOpponent = useFight((s) => (s.active ? opponentProfile(s.params.opponent).character : null))
   const talking = DIALOGUE_VIEWS.has(view.type)
   const speaker = talking ? view.speaker : null
@@ -110,7 +113,11 @@ export default function GameCanvas({ view, game, activity = null, paused = false
       <Lighting time={view.time} raining={Boolean(game.flags.raining)} />
       <Sky />
       <BlobShadows />
-      {runnerOn ? (
+      {driveOn ? (
+        <Suspense fallback={null}>
+          <DriveScene />
+        </Suspense>
+      ) : runnerOn ? (
         <Suspense fallback={null}>
           <RunnerScene playerLook={look} />
         </Suspense>
@@ -132,7 +139,7 @@ export default function GameCanvas({ view, game, activity = null, paused = false
         </Suspense>
       )}
       {freeRoam && <GoalTracker key={view.key} goal={view.goal} layout={layout} onReached={onGoalReached} />}
-      <CameraRig mode={busOn ? 'vehicle' : runnerOn ? 'runner' : modeName === 'fight' && fightOn ? 'fight' : talking ? 'dialogue' : 'follow'} speaker={speaker} ceiling={runnerOn ? null : layout.raw.flyover} obstacles={runnerOn ? null : layout.shadows} />
+      <CameraRig mode={driveOn ? 'drive' : busOn ? 'vehicle' : runnerOn ? 'runner' : modeName === 'fight' && fightOn ? 'fight' : talking ? 'dialogue' : 'follow'} speaker={speaker} ceiling={runnerOn || driveOn ? null : layout.raw.flyover} obstacles={runnerOn || driveOn ? null : layout.shadows} />
     </Canvas>
   )
 }

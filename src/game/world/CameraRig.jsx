@@ -64,6 +64,18 @@ export default function CameraRig({ mode = 'follow', speaker = null, ceiling = n
       camera.lookAt(lookAt)
       return
     }
+    if (mode === 'drive' && playerState.driveView) {
+      // chase cam behind the bus; pulls back as the speed rises
+      const v = playerState.driveView
+      const back = (portrait ? 13 : 10.5) + (v.speed || 0) * 0.18
+      tmpLook.set(v.x * 0.85, 1.6, v.z - (portrait ? 16 : 14))
+      tmpPos.set(v.x * 0.8 + 0.6, portrait ? 6.4 : 5.0, v.z + back)
+      const t2 = 1 - Math.exp(-delta * 6)
+      camera.position.lerp(tmpPos, t2)
+      lookAt.lerp(tmpLook, t2)
+      camera.lookAt(lookAt)
+      return
+    }
     if (mode === 'vehicle' && playerState.vehicleView) {
       const v = playerState.vehicleView
       tmpLook.set(v.x + 1, 1.3, v.z)

@@ -486,6 +486,36 @@ Write dialogue variants with `"if": "style_flashy"` to make people react.
 Street names are earned by flags (`nicknames` in `wardrobe.json`) and show
 up wherever `{nickname}` is used.
 
+### Driving a danfo (`"mode": "drive"`)
+
+```json
+{ "type": "startMode", "mode": "drive",
+  "params": { "length": 2400, "stops": 5, "fuel": 50, "checkpoints": 1, "slogan": "NO TELLING" },
+  "results": { "done": {}, "caught": {}, "outOfFuel": {}, "wrecked": {}, "abandoned": {}, "roadRage": {} } }
+```
+
+An arcade driving mode on an endless Lagos expressway. Gas, brake, steering
+and a horn that makes cars move over. Pull onto the shoulder and stop at a bus
+stop to drop off and load passengers (driving past someone's stop costs half
+their fare). Fuel burns with distance and throttle; filling stations sell it.
+Crashes add damage (repairs come off the pay) and a hard crash can bring the
+other driver out (`roadRage`). At a Task Force checkpoint you settle, talk, or
+floor it, and driving through starts a **police chase**: escape by distance or
+get caught. Wrecking the bus mid-chase is `abandoned` (jump out and run).
+Rules: `src/game/modes/drive/driveLogic.js` (tested).
+
+### Chaining one event into another (activities)
+
+A world activity's per-outcome result can start another mode right away:
+
+```json
+"results": { "roadRage": { "then": { "mode": "fight", "label": "ROAD RAGE", "params": { "opponent": "angryDriver" },
+                                     "results": { "lost": { "changeStat": { "money": -2000 } } } } } }
+```
+
+DRIVE DANFO (motor park, after the conductor chapter) uses this: road rage
+leads into a fight, an abandoned bus into the escape runner.
+
 ### Task Force raids
 
 `story/common/raids.json` holds the raid scenes:

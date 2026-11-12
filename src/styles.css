@@ -1650,3 +1650,336 @@ body,
   flex-direction: column;
   gap: 8px;
 }
+
+/* ---------------- danfo driving ---------------- */
+.drive-hud {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  top: calc(env(safe-area-inset-top, 0px) + 64px);
+  z-index: 6;
+  width: min(560px, calc(100vw - 24px));
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 6px 12px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: rgba(20, 15, 6, 0.78);
+  border: 1px solid rgba(240, 196, 0, 0.6);
+  color: #fff;
+}
+
+.drive-speed {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 64px;
+}
+
+.drive-speed strong {
+  font-size: 30px;
+  line-height: 1;
+  color: #f0c400;
+  font-variant-numeric: tabular-nums;
+}
+
+.drive-speed small {
+  font-size: 10px;
+  opacity: 0.8;
+}
+
+.drive-meters {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.drive-meter {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.drive-meter .bar {
+  flex: 1;
+  height: 8px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.15);
+  overflow: hidden;
+}
+
+.drive-meter .bar div {
+  height: 100%;
+  background: #2ecc71;
+}
+
+.drive-meter.low .bar div {
+  background: #e2553a;
+  animation: pulse 0.8s infinite;
+}
+
+.drive-meter.damage .bar div {
+  background: #e67e22;
+}
+
+.drive-stats {
+  display: flex;
+  gap: 14px;
+  font-size: 13px;
+}
+
+.drive-stats span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.drive-route {
+  grid-column: 1 / -1;
+  position: relative;
+  height: 14px;
+  border-radius: 7px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.drive-route .fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  border-radius: 7px;
+  background: rgba(240, 196, 0, 0.5);
+}
+
+.drive-route .mark {
+  position: absolute;
+  top: -2px;
+  transform: translateX(-50%);
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: #f2c300;
+  color: #1a1408;
+}
+
+.drive-route .mark.fuel {
+  background: #2c5aa0;
+  color: #fff;
+}
+
+.drive-route .mark.checkpoint {
+  background: #1e8449;
+  color: #fff;
+}
+
+.drive-route .mark.done {
+  opacity: 0.35;
+}
+
+.drive-next {
+  grid-column: 1 / -1;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.drive-next em {
+  color: #f0c400;
+  font-style: normal;
+}
+
+.drive-chase,
+.drive-loading,
+.drive-toast {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 7;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  max-width: calc(100vw - 24px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.drive-chase {
+  top: calc(env(safe-area-inset-top, 0px) + 200px);
+  background: #c0392b;
+  color: #fff;
+  animation: pulse 0.6s infinite;
+}
+
+.drive-loading {
+  top: calc(env(safe-area-inset-top, 0px) + 240px);
+  background: rgba(240, 196, 0, 0.92);
+  color: #1a1408;
+}
+
+.drive-toast {
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 170px);
+  background: rgba(20, 15, 6, 0.9);
+  color: #fff;
+  white-space: normal;
+  text-align: center;
+}
+
+.drive-toast.warn {
+  border: 1px solid #e2553a;
+}
+
+.drive-toast.good {
+  border: 1px solid #2ecc71;
+}
+
+.drive-prompt {
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 150px);
+}
+
+.drive-controls {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 16px);
+  z-index: 6;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 0 14px;
+  pointer-events: none;
+}
+
+.drive-steer,
+.drive-pedals {
+  display: flex;
+  gap: 10px;
+}
+
+.drive-btn {
+  pointer-events: auto;
+  width: 74px;
+  height: 74px;
+  border-radius: 50%;
+  border: 3px solid #1a1408;
+  background: rgba(246, 236, 210, 0.88);
+  color: #1a1408;
+  touch-action: none;
+  user-select: none;
+  display: grid;
+  place-items: center;
+}
+
+.drive-btn:active {
+  transform: scale(0.94);
+}
+
+.drive-btn.gas {
+  background: #2ecc71;
+  height: 96px;
+  border-radius: 18px;
+}
+
+.drive-btn.brake {
+  background: #e2553a;
+  color: #fff;
+  border-radius: 18px;
+}
+
+.drive-btn.horn {
+  width: 60px;
+  height: 60px;
+  background: var(--danfo, #f2c300);
+  margin-bottom: 8px;
+}
+
+.drive-summary {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 4px 16px;
+  margin: 8px 0;
+}
+
+.drive-summary .good {
+  color: #2ecc71;
+}
+
+.drive-summary .warn {
+  color: #e2553a;
+}
+
+.btn-danger {
+  border-color: #e2553a !important;
+  color: #ffb3a6;
+}
+
+@media (orientation: landscape) and (max-height: 500px) {
+  .drive-hud {
+    top: 6px;
+    width: min(460px, 52vw);
+    padding: 6px 10px;
+  }
+
+  .drive-speed strong {
+    font-size: 22px;
+  }
+
+  .drive-chase {
+    top: 120px;
+  }
+
+  .drive-loading {
+    top: 150px;
+  }
+
+  .drive-prompt {
+    bottom: 10px;
+    max-width: 46vw;
+  }
+}
+
+.loading-pill {
+  position: fixed;
+  right: 12px;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 110px);
+  z-index: 30;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(20, 15, 6, 0.8);
+  color: #f0c400;
+  font-size: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  pointer-events: none;
+}
+
+.loading-pill .spinner {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid #f0c400;
+  border-right-color: transparent;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* drive prompts in landscape: sit between the steering and the pedals */
+@media (orientation: landscape) and (max-height: 500px) {
+  .drive-prompt {
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%);
+    width: min(420px, 50vw);
+  }
+}
