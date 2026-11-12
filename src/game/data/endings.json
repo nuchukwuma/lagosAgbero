@@ -587,5 +587,264 @@
       },
       "text": "The white chair: you ran from it. It is still waiting, they say, in a house with no number."
     }
+  ],
+  "u_firstClass": {
+    "title": "First Class, Fair and Square",
+    "campaign": "campus",
+    "epilogue": [
+      "Your name is read out with the words 'First Class Honours'. Mama screams so loudly that the VC stops and smiles.",
+      {
+        "if": "introducedMama",
+        "text": "Everybody knows whose son you are now. Her pap stand outside the gate has a queue of graduates."
+      },
+      {
+        "if": "tutor",
+        "text": "Half the students you tutored come to shake your hand. One of them cries."
+      },
+      "You did it without one bought mark. Royal Crest offers you a graduate assistant job. You take it, and you're strict about handouts."
+    ]
+  },
+  "u_graduate": {
+    "title": "Somtochukwu, Son of the Pap Seller",
+    "campaign": "campus",
+    "epilogue": [
+      "You walk across the stage. Mama is standing on a chair at the back, waving a pap ladle.",
+      {
+        "if": "tamaraMeetsMama",
+        "text": "Tamara sits next to her. They've already argued about how much sugar goes in pap. Mama won."
+      },
+      {
+        "if": "ronkeIntern",
+        "text": "On Monday you start at Hon. Ronke's office. She introduces you as 'the boy who told me the truth'."
+      },
+      {
+        "if": "soldAkara",
+        "text": "The cafeteria still sells your akara. They put your name on it. It's spelled wrong."
+      },
+      "It isn't a first class. It's a degree with your real name on it, and the right woman in the crowd."
+    ]
+  },
+  "u_goldenLie": {
+    "title": "The Golden Lie",
+    "campaign": "campus",
+    "epilogue": [
+      "You walk the stage as Somto of Bonny Deep Energy. The Ademola-Peters family claps politely.",
+      {
+        "if": "keptLying",
+        "text": "Tamara stopped asking questions. That's either love or tiredness. You don't ask which."
+      },
+      {
+        "if": {
+          "memory": {
+            "mamaEnd": "corner"
+          }
+        },
+        "text": "Mama watched from a quiet corner. You told her it was for her own good. She nodded. She always nods."
+      },
+      {
+        "if": "deniedAgain",
+        "text": "Mama went home on the first danfo. She didn't wait for the photos."
+      },
+      "Five years later you have a house in Lekki, a job you hate and a story you can never stop telling."
+    ]
+  },
+  "u_viral": {
+    "title": "The Story",
+    "campaign": "campus",
+    "epilogue": [
+      "The campus paper's headline is picked up by every newspaper in Lagos: 'SORTING RACKET AT ROYAL CREST'. Your name is next to Ife's.",
+      {
+        "if": "exposedSorting",
+        "text": "Dr. Fasanya's sacking letter is framed in the student union office."
+      },
+      {
+        "if": {
+          "notFlags": [
+            "expelled",
+            "feesUnpaid"
+          ]
+        },
+        "text": "You collect your certificate a week later, in an office, with no crowd. You don't mind."
+      },
+      "Three universities set up sexual-harassment panels that summer. A journalism school offers you a place. Ife takes the other one."
+    ]
+  },
+  "u_donsCapo": {
+    "title": "Capo",
+    "campaign": "campus",
+    "epilogue": [
+      "Convocation goes on without you. You're at the back gate, in red, giving orders.",
+      {
+        "if": "beatSpike",
+        "text": "Spike carries your bag now. He hates it. He does it."
+      },
+      "The money is good. The nights are long. Every new student who reaches the gate reminds you of yourself in first year. You stop looking at their faces."
+    ]
+  },
+  "u_bigMansBoy": {
+    "title": "The Honourable's Boy",
+    "campaign": "campus",
+    "epilogue": [
+      "Owó Ńlá's car is air-conditioned and smells of new leather. Your new job: 'special assistant on youth matters'.",
+      {
+        "if": "fepScholar",
+        "text": "The scholarship he gave you was never free. Now you know the price: everything you'll ever say."
+      },
+      "Tamara's mother loses the election by four thousand votes. You know which four thousand. You were there."
+    ]
+  },
+  "u_dubai": {
+    "title": "Cotonou",
+    "campaign": "campus",
+    "epilogue": [
+      "The night bus crosses the border at 4 a.m. You have five million naira and a SIM card in someone else's name.",
+      {
+        "if": {
+          "memory": {
+            "raid": "escaped"
+          }
+        },
+        "text": "The Task Force has your photo. Dubai is somewhere in Ghana. He doesn't answer your calls."
+      },
+      "You send Mama money every month through three different agents. She never asks where it comes from. She never spends it."
+    ]
+  },
+  "u_expelled": {
+    "title": "Expelled",
+    "campaign": "campus",
+    "epilogue": [
+      "You leave Royal Crest the way you came: through the main gate, with one bag.",
+      {
+        "if": "leakRing",
+        "text": "The leaked paper cost you four years. It was worth ₦20,000."
+      },
+      "Mama meets you at the bus stop. She doesn't ask. She hands you a cup of pap and a tray of akara. 'Help me sell,' she says. You do."
+    ]
+  },
+  "u_cell": {
+    "title": "Remand",
+    "campaign": "campus",
+    "epilogue": [
+      "Eleven months awaiting trial. Your lawyer is a law student from Royal Crest working for free. She's quite good.",
+      {
+        "if": "tobiCovered",
+        "text": "Tobi visits every month. He brings suya and the latest campus gossip. He never mentions Bonny Deep Energy."
+      },
+      "When you finally walk out, the danfo to Iyana-Wahala costs ₦300 more than it used to. Everything does."
+    ]
+  },
+  "u_home": {
+    "title": "Back to the Bus Stop",
+    "campaign": "campus",
+    "epilogue": [
+      "The danfo to Iyana-Wahala is full. You sit on the edge of a bench with your gown in a nylon bag.",
+      {
+        "if": "feesUnpaid",
+        "text": "No certificate until the fees are paid. Four years, waiting in a bursar's drawer."
+      },
+      {
+        "if": {
+          "memory": {
+            "tamaraEnd": "ended"
+          }
+        },
+        "text": "Tamara sent one message: 'Good luck, whoever you are.' You read it until the bus stop."
+      },
+      "Mama's stand is where it always was. The degree, or the lack of it, doesn't change the price of pap. You pick up a ladle."
+    ]
+  },
+  "_fates_campus": [
+    {
+      "if": "introducedMama",
+      "text": "Mama: told the whole convocation crowd about her son. Twice."
+    },
+    {
+      "if": "deniedAgain",
+      "text": "Mama: went home alone. She keeps your matriculation photo face-down."
+    },
+    {
+      "if": {
+        "memory": {
+          "mamaEnd": "corner"
+        }
+      },
+      "text": "Mama: proud, from a corner, as usual."
+    },
+    {
+      "if": "tamaraMeetsMama",
+      "text": "Tamara: learned to make pap. Badly. Mama approves anyway."
+    },
+    {
+      "if": "tamaraPaid",
+      "text": "Your school fees: paid by Tamara. You're paying her back, ₦20,000 a month. She frames every receipt."
+    },
+    {
+      "if": "warnedTamara",
+      "text": "Hon. Ronke: won her seat. She says a student warned her family once. She never says who."
+    },
+    {
+      "if": "spiedTamara",
+      "text": "Tamara: blocked your number. Her mother's lawyers have your name."
+    },
+    {
+      "if": {
+        "memory": {
+          "tamaraEnd": "herTable"
+        }
+      },
+      "text": "Tamara: still waiting for you to tell her the truth."
+    },
+    {
+      "if": "storyPublished",
+      "text": "Ife: now a reporter. Her first front page had your name on it."
+    },
+    {
+      "if": {
+        "memory": {
+          "ifeEnd": "out"
+        }
+      },
+      "text": "Ife: published anyway. Your name isn't in it. You're not sure if you're relieved."
+    },
+    {
+      "if": "namedSpike",
+      "text": "Spike: still at the back gate, still looking for the boy who named him."
+    },
+    {
+      "if": "reportedDons",
+      "text": "The Crimson Dons: still recruiting. The file you gave the VC is still 'missing'."
+    },
+    {
+      "if": {
+        "memory": {
+          "dubaiEnd": "refused"
+        }
+      },
+      "text": "Dubai: arrested in Ghana six months later. He told the police you were 'the only honest boy at Royal Crest'."
+    },
+    {
+      "if": "exposedSorting",
+      "text": "Dr. Fasanya: sacked. He teaches 'business ethics' online now."
+    },
+    {
+      "if": "akaraBrand",
+      "text": "'Somto's Akara': still sold at the cafeteria. Still badly."
+    },
+    {
+      "if": {
+        "stats": {
+          "cgpa": ">= 3.5"
+        }
+      },
+      "text": "Final CGPA: {stat:cgpa}. Good enough for anything you want to try."
+    },
+    {
+      "if": {
+        "stats": {
+          "cgpa": "< 2"
+        }
+      },
+      "text": "Final CGPA: {stat:cgpa}. Some employers will ask. Most won't care."
+    }
   ]
 }

@@ -1,0 +1,475 @@
+{
+  "id": "u3_sorting",
+  "campaign": "campus",
+  "world": "royalCrest",
+  "act": 1,
+  "number": 3,
+  "title": "Chapter 3 — Sorting",
+  "description": "Dr. Fasanya's handout, Ifeoluwa's grade, a ₦30,000 birthday, and GST 101.",
+  "startScene": "lecture",
+  "scenes": {
+    "lecture": {
+      "beats": [
+        {
+          "type": "cutscene",
+          "cards": [
+            {
+              "title": "GST 101",
+              "text": "Lecture Theatre 1. Three hundred students, one microphone that only works when it wants to, and Dr. Fasanya."
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "drSorting",
+          "text": "My handout is ₦8,000. It is not compulsory. (Pause.) Neither is passing."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Behind you, somebody whispers: 'Dr. Sorting. Everything is sortable.'"
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "(Half the class is already transferring money.)",
+          "options": [
+            {
+              "text": "Buy the handout.",
+              "effects": {
+                "setFlag": "boughtHandout"
+              },
+              "cost": 8000
+            },
+            {
+              "text": "Don't buy it. Read the textbook.",
+              "effects": {
+                "setFlag": "noHandout",
+                "changeStat": {
+                  "conscience": 3
+                }
+              }
+            },
+            {
+              "text": "Get the class rep and fifty coursemates to petition the department.",
+              "effects": {
+                "setFlag": [
+                  "noHandout",
+                  "organized"
+                ],
+                "changeStat": {
+                  "campusRep": 6,
+                  "conscience": 4
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "ife"
+        }
+      ],
+      "location": "lectureTheatre",
+      "time": "day",
+      "positions": {
+        "drSorting": [
+          18,
+          -18,
+          0
+        ]
+      }
+    },
+    "ife": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "ife",
+          "text": "(after class, very quietly) He told me to come to his office. Alone. In the evening. To 'discuss my grade'. I said no. He said my grade will remember that I said no."
+        },
+        {
+          "type": "choice",
+          "speaker": "ife",
+          "text": "\"I don't know why I'm telling you. You just look like someone who notices things.\"",
+          "options": [
+            {
+              "text": "\"Let's get proof. Record him. Then we take it higher.\"",
+              "effects": {
+                "setFlag": "helpingIfe",
+                "changeStat": {
+                  "conscience": 6
+                }
+              }
+            },
+            {
+              "text": "\"Just pay him off, Ife. It's easier.\"",
+              "effects": {
+                "remember": {
+                  "ifeAdvice": "pay"
+                },
+                "changeStat": {
+                  "conscience": -10
+                }
+              }
+            },
+            {
+              "text": "\"I'm sorry. I can't get involved.\"",
+              "effects": {
+                "remember": {
+                  "ifeAdvice": "stayedOut"
+                },
+                "changeStat": {
+                  "conscience": -4
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ife",
+          "text": "(She almost smiles.) Okay. Okay. Then we do it properly.",
+          "if": "helpingIfe"
+        },
+        {
+          "type": "goto",
+          "scene": "birthday"
+        }
+      ],
+      "location": "quad",
+      "time": "day",
+      "positions": {
+        "ife": [
+          4,
+          -12.5,
+          0
+        ]
+      }
+    },
+    "birthday": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "tobi",
+          "text": "My birthday's Saturday. Club in VI. Everybody's contributing ₦30,000 for the table. You're in, right?",
+          "variants": [
+            {
+              "if": "honestFromStart",
+              "text": "My birthday's Saturday, Iyana-Wahala! Club in VI. Don't worry about the table money. I've got you. Seriously."
+            },
+            {
+              "if": "ownedMama",
+              "text": "Akara! My birthday's Saturday. Club in VI. Bring your mum's akara and you don't owe a kobo."
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Tobi still isn't sure about you. ₦30,000 would settle it.",
+          "if": {
+            "anyOf": [
+              "halfIn",
+              "exposedEarly"
+            ]
+          }
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "(₦30,000. Mama makes that in two weeks.)",
+          "options": [
+            {
+              "text": "Borrow it from QuickCash, the loan app everyone uses.",
+              "effects": {
+                "setFlag": "usedLoanApp",
+                "changeStat": {
+                  "money": 30000,
+                  "loanDebt": 36000,
+                  "cover": 8
+                }
+              }
+            },
+            {
+              "text": "Do one 'client job' with Dubai.",
+              "effects": {
+                "setFlag": "yahooed",
+                "changeStat": {
+                  "money": 50000,
+                  "conscience": -15,
+                  "dubaiBond": 10,
+                  "cover": 6
+                }
+              }
+            },
+            {
+              "text": "Let Tobi cover you.",
+              "effects": {
+                "setFlag": "tobiCovered",
+                "changeStat": {
+                  "tamaraBond": 2
+                }
+              },
+              "requires": {
+                "anyOf": [
+                  "honestFromStart",
+                  "ownedMama"
+                ]
+              }
+            },
+            {
+              "text": "\"I can't make it, Tobi.\"",
+              "effects": {
+                "remember": {
+                  "birthday": "skipped"
+                },
+                "changeStat": {
+                  "cover": -12
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Dubai teaches you how to be 'Jennifer from Texas' for an hour. Somewhere in Texas, a real man loses his savings. You don't sleep that night.",
+          "if": "yahooed"
+        },
+        {
+          "type": "goto",
+          "scene": "donsAmbush",
+          "if": "reportedDons"
+        },
+        {
+          "type": "goto",
+          "scene": "donsJob",
+          "if": "donsMember"
+        },
+        {
+          "type": "goto",
+          "scene": "exam"
+        }
+      ],
+      "location": "carPark",
+      "time": "day",
+      "positions": {
+        "tobi": [
+          42.5,
+          10,
+          200
+        ]
+      }
+    },
+    "donsAmbush": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "spike",
+          "text": "(at the back gate, at night, with four boys) Security told us who reported us. Security likes money too, jambite."
+        },
+        {
+          "type": "startMode",
+          "mode": "runner",
+          "params": {
+            "chaser": "dons",
+            "goal": 220,
+            "difficulty": 1
+          },
+          "results": {
+            "escaped": {
+              "changeStat": {
+                "donsHeat": 5
+              },
+              "remember": {
+                "ambush": "escaped"
+              },
+              "goto": "exam"
+            },
+            "caught": {
+              "changeStat": {
+                "donsHeat": 5,
+                "cgpa": -0.2
+              },
+              "remember": {
+                "ambush": "beaten"
+              },
+              "goto": "exam"
+            }
+          }
+        }
+      ],
+      "location": "backGate",
+      "time": "night",
+      "positions": {
+        "spike": [
+          53,
+          -9,
+          0
+        ]
+      }
+    },
+    "donsJob": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "spike",
+          "text": "New boy. Your first job: tomorrow, during GST, sit beside the 'expo' boy and pass the answers to our people. Simple. Brothers help brothers."
+        },
+        {
+          "type": "choice",
+          "speaker": "spike",
+          "text": "\"Yes, Capo?\"",
+          "options": [
+            {
+              "text": "\"Yes, Capo.\"",
+              "effects": {
+                "setFlag": "passedExpo",
+                "changeStat": {
+                  "donsHeat": 10,
+                  "conscience": -8
+                }
+              }
+            },
+            {
+              "text": "\"I'll pass my own exam, Capo.\"",
+              "effects": {
+                "remember": {
+                  "donsJob": "refused"
+                },
+                "changeStat": {
+                  "donsHeat": -10,
+                  "campusRep": 2
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "exam"
+        }
+      ],
+      "location": "backGate",
+      "time": "night",
+      "positions": {
+        "spike": [
+          53,
+          -9,
+          0
+        ]
+      }
+    },
+    "exam": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "The exam hall. Fifty students. One invigilator. One fan. The handout you bought is in your head, mostly.",
+          "if": "boughtHandout"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "You read the textbook twice. You're nervous. Nervous is honest.",
+          "if": "noHandout"
+        },
+        {
+          "type": "startMode",
+          "mode": "exam",
+          "params": {
+            "bank": "gst101",
+            "count": 5,
+            "maxWrong": 2,
+            "seconds": 12
+          },
+          "results": {
+            "perfect": {
+              "changeStat": {
+                "cgpa": 0.5
+              },
+              "remember": {
+                "gst": "perfect"
+              },
+              "goto": "after"
+            },
+            "passed": {
+              "changeStat": {
+                "cgpa": 0.2
+              },
+              "remember": {
+                "gst": "passed"
+              },
+              "goto": "after"
+            },
+            "failed": {
+              "changeStat": {
+                "cgpa": -0.4
+              },
+              "remember": {
+                "gst": "failed"
+              },
+              "goto": "after"
+            }
+          }
+        }
+      ],
+      "location": "lectureTheatre",
+      "time": "day"
+    },
+    "after": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "drSorting",
+          "text": "(posting results on the notice board) Some scripts got lost. These things happen in a busy department.",
+          "if": {
+            "flags": [
+              "noHandout"
+            ],
+            "notFlags": [
+              "organized"
+            ]
+          },
+          "effects": {
+            "changeStat": {
+              "cgpa": -0.5
+            },
+            "setFlag": "scriptLost"
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "drSorting",
+          "text": "(posting results, very stiffly) After a... petition... all scripts have been marked by two examiners. Congratulations, everyone.",
+          "if": "organized"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Your name is on the list. Your grade is what you earned. That still feels like a miracle here.",
+          "if": {
+            "notFlags": [
+              "scriptLost"
+            ]
+          }
+        },
+        {
+          "type": "endChapter",
+          "title": "End of Chapter 3 — Sorting",
+          "summary": "CGPA {stat:cgpa}. Cover story {stat:cover}%. Money {money}. QuickCash loan {loanDebt}.",
+          "next": "u4_loanApp"
+        }
+      ],
+      "location": "quad",
+      "time": "day",
+      "positions": {
+        "drSorting": [
+          6,
+          -11,
+          180
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,523 @@
+{
+  "id": "u2_freshers",
+  "campaign": "campus",
+  "world": "royalCrest",
+  "act": 1,
+  "number": 2,
+  "title": "Chapter 2 — Freshers",
+  "description": "The gate, the roommate, the party where everybody checks everybody, and a red bandana at the back gate.",
+  "startScene": "gate",
+  "scenes": {
+    "gate": {
+      "beats": [
+        {
+          "type": "cutscene",
+          "cards": [
+            {
+              "title": "Royal Crest University",
+              "text": "A gate with a crest on it. A security post with air conditioning. A queue of cars that cost more than everybody you know put together."
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "mamaAtGate",
+          "if": {
+            "memory": {
+              "mamaPromise": "gate"
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "babaGate",
+          "text": "ID card. ...Scholar? (He looks at your box, then at you, and his voice gets kinder.) Welcome, my son. Walk on the left. The cars on the right don't brake for scholars."
+        },
+        {
+          "type": "goto",
+          "scene": "hostel"
+        }
+      ],
+      "location": "gate",
+      "time": "dawn",
+      "positions": {
+        "babaGate": [
+          -49,
+          -7,
+          90
+        ]
+      }
+    },
+    "mamaAtGate": {
+      "beats": [
+        {
+          "type": "setFlag",
+          "flags": [
+            "mamaSomtoAround"
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Mama came. She's holding a cooler of akara 'for your new friends'. Behind you, a silver jeep stops. Tobi Lawal-Coker climbs out with two phones and a laugh."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "tobi",
+          "text": "Bro! Is that... akara? (He takes three.) Mad. Who's this?"
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "(Mama is smiling at Tobi like he's her own son.)",
+          "options": [
+            {
+              "text": "\"This is my mother. She makes the best akara in Lagos.\"",
+              "effects": {
+                "setFlag": "ownedMama",
+                "changeStat": {
+                  "momBond": 15,
+                  "cover": -25,
+                  "campusRep": 4,
+                  "conscience": 6
+                }
+              }
+            },
+            {
+              "text": "\"She's... our cook. She insisted on coming.\"",
+              "effects": {
+                "setFlag": "deniedMama",
+                "changeStat": {
+                  "momBond": -25,
+                  "conscience": -15,
+                  "cover": 5
+                }
+              }
+            },
+            {
+              "text": "\"Mama, please. Go home. I'll call you.\"",
+              "effects": {
+                "setFlag": "sentMamaAway",
+                "changeStat": {
+                  "momBond": -10,
+                  "conscience": -4
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "mamaSomto",
+          "text": "(quietly, folding the cooler's cloth very neatly) Okay, my son. Okay. Eat well. (She walks to the bus stop without looking back. She doesn't need to. You'll see her walk away for years.)",
+          "if": "deniedMama"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "tobi",
+          "text": "Your mum's a legend. I'm coming for more akara. (He means it. He'll come every week.)",
+          "if": "ownedMama"
+        },
+        {
+          "type": "goto",
+          "scene": "hostel"
+        }
+      ],
+      "location": "gate",
+      "time": "dawn",
+      "positions": {
+        "mamaSomto": [
+          -46,
+          -5.5,
+          270
+        ],
+        "tobi": [
+          -44,
+          -5,
+          90
+        ],
+        "babaGate": [
+          -49,
+          -7,
+          90
+        ]
+      }
+    },
+    "hostel": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "dubai",
+          "text": "Roomie! Chukwudubem. Everybody calls me Dubai, because that's where I'll be in two years. (He has three laptops and a ring light.) What's your hustle?"
+        },
+        {
+          "type": "choice",
+          "speaker": "dubai",
+          "text": "\"I go teach you how to make money online. Small client work. Foreigners. Nobody gets hurt. Mostly.\"",
+          "options": [
+            {
+              "text": "\"Teach me. I'm listening.\"",
+              "effects": {
+                "remember": {
+                  "dubaiOffer": "curious"
+                },
+                "changeStat": {
+                  "dubaiBond": 10,
+                  "conscience": -3
+                }
+              }
+            },
+            {
+              "text": "\"That's fraud, Dubai.\"",
+              "effects": {
+                "remember": {
+                  "dubaiOffer": "refused"
+                },
+                "changeStat": {
+                  "dubaiBond": -6,
+                  "conscience": 3
+                }
+              }
+            },
+            {
+              "text": "Laugh. \"My hustle is passing GST 101.\"",
+              "effects": {
+                "remember": {
+                  "dubaiOffer": "laughed"
+                },
+                "changeStat": {
+                  "dubaiBond": 4
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "orientation"
+        }
+      ],
+      "location": "hostel",
+      "time": "day",
+      "positions": {
+        "dubai": [
+          -34,
+          31.5,
+          180
+        ]
+      }
+    },
+    "orientation": {
+      "beats": [
+        {
+          "type": "cutscene",
+          "cards": [
+            {
+              "title": "Freshers night",
+              "text": "The quad, strung with lights. A DJ. Phones out. Everybody is checking everybody: shoes, phones, accents, last names."
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Tobi's girlfriend touches your bag. 'Is this... Guci?' Nobody counts letters. You hope.",
+          "if": "fakeBag"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Someone looks at your nylon bag and decides you're 'quirky'. Quirky is safe. For now.",
+          "if": "nylonBag"
+        },
+        {
+          "type": "goto",
+          "scene": "akaraBoy",
+          "if": "ownedMama"
+        },
+        {
+          "type": "startMode",
+          "mode": "bluff",
+          "params": {
+            "scenario": "orientation"
+          },
+          "results": {
+            "convinced": {
+              "setFlag": "inCrowd",
+              "goto": "tamara"
+            },
+            "doubted": {
+              "setFlag": "halfIn",
+              "goto": "tamara"
+            },
+            "caught": {
+              "setFlag": "exposedEarly",
+              "changeStat": {
+                "campusRep": -6
+              },
+              "goto": "caught"
+            },
+            "confessed": {
+              "setFlag": "honestFromStart",
+              "changeStat": {
+                "campusRep": 3,
+                "conscience": 6
+              },
+              "goto": "honest"
+            }
+          }
+        }
+      ],
+      "location": "quad",
+      "time": "night",
+      "positions": {
+        "tobi": [
+          8,
+          -15,
+          180
+        ]
+      }
+    },
+    "akaraBoy": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "tobi",
+          "text": "Guys! This is Akara! His mum fries the akara of the gods! (Everybody laughs. Not at you. Mostly.)"
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "(The name is going to stick. You can feel it.)",
+          "options": [
+            {
+              "text": "\"Akara. Yes. Pre-orders open Monday.\"",
+              "effects": {
+                "setFlag": "akaraBrand",
+                "changeStat": {
+                  "campusRep": 8
+                }
+              }
+            },
+            {
+              "text": "\"My name is Somto.\"",
+              "effects": {
+                "remember": {
+                  "nickname": "refused"
+                },
+                "changeStat": {
+                  "campusRep": -2,
+                  "conscience": 2
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "tamara"
+        }
+      ],
+      "location": "quad",
+      "time": "night",
+      "positions": {
+        "tobi": [
+          8,
+          -15,
+          180
+        ]
+      }
+    },
+    "caught": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "tobi",
+          "text": "Bro. You said Lekki and then... I don't know, man. Something doesn't add up. (He shrugs. Rich people shrug at things that would ruin poor people.)"
+        },
+        {
+          "type": "goto",
+          "scene": "tamara"
+        }
+      ],
+      "location": "quad",
+      "time": "night",
+      "positions": {
+        "tobi": [
+          8,
+          -15,
+          180
+        ]
+      }
+    },
+    "honest": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "tobi",
+          "text": "Iyana-Wahala? By the bus stop? (A long pause.) That's actually sick. You're the first real person I've met here."
+        },
+        {
+          "type": "goto",
+          "scene": "tamara"
+        }
+      ],
+      "location": "quad",
+      "time": "night",
+      "positions": {
+        "tobi": [
+          8,
+          -15,
+          180
+        ]
+      }
+    },
+    "tamara": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "tamara",
+          "text": "You're the only person here who reads the prices on the drinks menu. (She hands you a bottle of water.) It's free. Everything here is free if you don't ask."
+        },
+        {
+          "type": "choice",
+          "speaker": "tamara",
+          "text": "\"Tamara. Ademola-Peters. Yes, that Ademola-Peters. Don't make it weird.\"",
+          "options": [
+            {
+              "text": "\"Somto. I read prices because I like knowing what things cost.\"",
+              "effects": {
+                "changeStat": {
+                  "tamaraBond": 10,
+                  "conscience": 2
+                },
+                "remember": {
+                  "tamaraFirst": "honest"
+                }
+              }
+            },
+            {
+              "text": "\"Somto. My dad knows your mum. Oil committees.\"",
+              "effects": {
+                "changeStat": {
+                  "tamaraBond": 3,
+                  "cover": 4
+                },
+                "remember": {
+                  "tamaraFirst": "lied"
+                }
+              }
+            },
+            {
+              "text": "\"Your mum is running against Owó Ńlá. My scholarship is from Owó Ńlá.\"",
+              "effects": {
+                "changeStat": {
+                  "tamaraBond": 6
+                },
+                "remember": {
+                  "tamaraFirst": "warned"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "tamara",
+          "text": "Oil committees. (She smiles in a way that means she'll check.) Okay.",
+          "if": {
+            "memory": {
+              "tamaraFirst": "lied"
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "tamara",
+          "text": "(She laughs, surprised.) An Owó Ńlá scholar telling me that at a party. You're either very honest or very bad at politics.",
+          "if": {
+            "memory": {
+              "tamaraFirst": "warned"
+            }
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "dons"
+        }
+      ],
+      "location": "carPark",
+      "time": "night",
+      "positions": {
+        "tamara": [
+          40,
+          10.5,
+          180
+        ]
+      }
+    },
+    "dons": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "spike",
+          "text": "Jambite. You. (He's at the back gate in a red bandana.) Crimson Dons are taking new boys. Protection. Respect. Exam help. Girls. Don't answer now. Answer by Friday."
+        },
+        {
+          "type": "choice",
+          "speaker": "spike",
+          "text": "\"Well? You look like somebody who needs protection.\"",
+          "options": [
+            {
+              "text": "\"I'm in.\"",
+              "effects": {
+                "setFlag": "donsMember",
+                "changeStat": {
+                  "donsHeat": 20,
+                  "campusRep": 4,
+                  "conscience": -8
+                }
+              }
+            },
+            {
+              "text": "\"No thanks, Capo. I'm a reader.\"",
+              "effects": {
+                "remember": {
+                  "dons": "refused"
+                },
+                "changeStat": {
+                  "donsHeat": 6
+                }
+              }
+            },
+            {
+              "text": "Report him to campus security tomorrow.",
+              "effects": {
+                "setFlag": "reportedDons",
+                "changeStat": {
+                  "donsHeat": 25,
+                  "conscience": 4
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "endChapter",
+          "title": "End of Chapter 2 — Freshers",
+          "summary": "Cover story {stat:cover}%. Campus reputation {stat:campusRep}. The Crimson Dons are interested in you: {stat:donsHeat}.",
+          "next": "u3_sorting"
+        }
+      ],
+      "location": "backGate",
+      "time": "night",
+      "positions": {
+        "spike": [
+          53,
+          -9,
+          0
+        ]
+      }
+    }
+  }
+}

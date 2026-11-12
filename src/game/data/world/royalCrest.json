@@ -971,6 +971,36 @@
       "facing": 0,
       "anim": "idle",
       "if": "mamaSomtoAround"
+    },
+    {
+      "id": "settlement",
+      "pos": [
+        60,
+        40
+      ],
+      "facing": 0,
+      "anim": "idle",
+      "if": "settlementAround"
+    },
+    {
+      "id": "owoNla",
+      "pos": [
+        60,
+        40
+      ],
+      "facing": 0,
+      "anim": "idle",
+      "if": "owoNlaAround"
+    },
+    {
+      "id": "ronke",
+      "pos": [
+        60,
+        40
+      ],
+      "facing": 0,
+      "anim": "idle",
+      "if": "ronkeAround"
     }
   ],
   "extras": [

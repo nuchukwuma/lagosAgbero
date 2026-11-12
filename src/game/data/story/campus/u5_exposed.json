@@ -1,0 +1,618 @@
+{
+  "id": "u5_exposed",
+  "campaign": "campus",
+  "world": "royalCrest",
+  "act": 1,
+  "number": 5,
+  "title": "Chapter 5 — Exposed",
+  "description": "A leaked exam, a politician's offer, Tamara's question, and a panel with a fan that doesn't work.",
+  "startScene": "econ",
+  "scenes": {
+    "econ": {
+      "beats": [
+        {
+          "type": "cutscene",
+          "cards": [
+            {
+              "title": "Second semester",
+              "text": "ECO 201. The exam everybody fears. The exam somebody has been selling at the back gate for ₦20,000."
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "econLeaked",
+          "if": "leakRing"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "You've tutored half the class. Explaining opportunity cost forty times does something to a brain.",
+          "if": "tutor"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "You fried akara from 5 a.m. and read from 10 p.m. Your eyes are red. Your notes are greasy. You're ready-ish.",
+          "if": "akaraBiz"
+        },
+        {
+          "type": "startMode",
+          "mode": "exam",
+          "params": {
+            "bank": "econ201",
+            "count": 5,
+            "maxWrong": 2,
+            "seconds": 12
+          },
+          "results": {
+            "perfect": {
+              "changeStat": {
+                "cgpa": 0.5
+              },
+              "remember": {
+                "eco": "perfect"
+              },
+              "goto": "scandal"
+            },
+            "passed": {
+              "changeStat": {
+                "cgpa": 0.2
+              },
+              "remember": {
+                "eco": "passed"
+              },
+              "goto": "scandal"
+            },
+            "failed": {
+              "changeStat": {
+                "cgpa": -0.4
+              },
+              "remember": {
+                "eco": "failed"
+              },
+              "goto": "scandal"
+            }
+          }
+        }
+      ],
+      "location": "lectureTheatre",
+      "time": "day"
+    },
+    "econLeaked": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "You already know every question. You write fast, then sit with your pen down, watching people who studied sweat. It feels like nothing. Then it feels like something."
+        },
+        {
+          "type": "changeStat",
+          "stats": {
+            "cgpa": 0.3,
+            "conscience": -5
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "scandal"
+        }
+      ],
+      "location": "lectureTheatre",
+      "time": "day"
+    },
+    "scandal": {
+      "beats": [
+        {
+          "type": "newsBroadcast",
+          "source": "Royal Crest Campus Radio",
+          "headline": "ECO 201 PAPER LEAKED",
+          "text": "Two hundred students had the questions the night before. The Vice-Chancellor has set up a panel. The panel has set up a sub-panel. The back gate is very quiet."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Spike is telling everyone the leak came from 'a scholarship boy'. He doesn't say which one. He doesn't need to.",
+          "if": "leakRing"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Your name isn't anywhere near the leak. That's the nice thing about tutoring: nobody suspects the person explaining things.",
+          "if": {
+            "notFlags": [
+              "leakRing"
+            ]
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "strings"
+        }
+      ],
+      "location": "quad",
+      "time": "day"
+    },
+    "strings": {
+      "beats": [
+        {
+          "type": "setFlag",
+          "flags": [
+            "settlementAround"
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "settlement",
+          "text": "Mr. Somtochukwu. The Honourable is pleased with his scholar. And curious. You dine with the Ademola-Peters family now, I hear.",
+          "variants": [
+            {
+              "if": {
+                "memory": {
+                  "settlement": "refused"
+                }
+              },
+              "text": "Mr. Somtochukwu. You told me you came to study, not to campaign. And yet you dine with the Honourable's opponent. Interesting."
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "settlement",
+          "text": "The Honourable would like to know what Hon. Mrs. Ronke's daughter says at home. Small things. Plans. Names. ₦100,000 a month, and the scholarship continues forever."
+        },
+        {
+          "type": "choice",
+          "speaker": "settlement",
+          "text": "\"Or the scholarship ends. Today. Tuition is ₦1.8 million. A year.\"",
+          "options": [
+            {
+              "text": "Agree. Report on Tamara.",
+              "effects": {
+                "setFlag": "spiedTamara",
+                "changeStat": {
+                  "money": 100000,
+                  "conscience": -20
+                }
+              }
+            },
+            {
+              "text": "Refuse. Lose the scholarship.",
+              "effects": {
+                "setFlag": "lostScholarship",
+                "changeStat": {
+                  "schoolFees": 1800000,
+                  "conscience": 8
+                }
+              }
+            },
+            {
+              "text": "Refuse, and tell Tamara what they asked.",
+              "effects": {
+                "setFlag": [
+                  "lostScholarship",
+                  "warnedTamara"
+                ],
+                "changeStat": {
+                  "schoolFees": 1800000,
+                  "tamaraBond": 15,
+                  "conscience": 10
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "settlement",
+          "text": "Of course you did. You were always a sensible boy.",
+          "if": {
+            "flags": [
+              "spiedTamara",
+              "fepScholar"
+            ]
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "truth"
+        }
+      ],
+      "location": "quad",
+      "time": "day",
+      "positions": {
+        "settlement": [
+          8,
+          -15,
+          200
+        ]
+      }
+    },
+    "truth": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "tamara",
+          "text": "(at the car park, not getting into her car) My mother checked. There's no Bonny Deep Energy. There's no house in Lekki. Who ARE you, Somto?",
+          "if": {
+            "anyOf": [
+              "dinnerCaught",
+              "dinnerDoubted",
+              "loanShamed",
+              "exposedEarly",
+              {
+                "stats": {
+                  "cover": "< 40"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "tamara",
+          "text": "(at the car park) You know you can tell me anything, right? I mean anything. I'm not my mother.",
+          "if": {
+            "notFlags": [
+              "dinnerCaught",
+              "dinnerDoubted",
+              "loanShamed",
+              "exposedEarly"
+            ],
+            "stats": {
+              "cover": ">= 40"
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "tamara",
+          "text": "Someone from Owó Ńlá's people asked my friend about my mother's plans. They mentioned a 'scholar'. Tell me it's not you.",
+          "if": "spiedTamara"
+        },
+        {
+          "type": "choice",
+          "speaker": "tamara",
+          "text": "(She waits. She's very good at waiting. Her mother taught her.)",
+          "options": [
+            {
+              "text": "Tell her everything. Iyana-Wahala. Mama. The pap. All of it.",
+              "effects": {
+                "setFlag": "toldTamara",
+                "changeStat": {
+                  "tamaraBond": 10,
+                  "cover": -40,
+                  "conscience": 8
+                }
+              }
+            },
+            {
+              "text": "Keep the story going.",
+              "effects": {
+                "setFlag": "keptLying",
+                "changeStat": {
+                  "tamaraBond": -15,
+                  "cover": 5
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "tamara",
+          "text": "(She's quiet for a long time.) Pap. Akara. A bus stop. (She laughs and wipes her eyes at the same time.) You lied to me for a year about being boring. You're the least boring person I know.",
+          "if": {
+            "flags": [
+              "toldTamara"
+            ],
+            "notFlags": [
+              "spiedTamara"
+            ]
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "tamara",
+          "text": "And the Owó Ńlá thing? (You tell her that too.) ...Get out of my car park.",
+          "if": {
+            "flags": [
+              "toldTamara",
+              "spiedTamara"
+            ]
+          },
+          "effects": {
+            "changeStat": {
+              "tamaraBond": -30
+            }
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "panel"
+        }
+      ],
+      "location": "carPark",
+      "time": "day",
+      "positions": {
+        "tamara": [
+          40,
+          10.5,
+          180
+        ]
+      }
+    },
+    "panel": {
+      "beats": [
+        {
+          "type": "setFlag",
+          "flags": [
+            "vcAround"
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "panelAccused",
+          "if": "leakRing"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "vc",
+          "text": "Mr. Somtochukwu. You're here as a witness. Do you know who leaked the ECO 201 paper?"
+        },
+        {
+          "type": "choice",
+          "speaker": "vc",
+          "text": "(Spike is sitting at the back. He's smiling at you.)",
+          "options": [
+            {
+              "text": "\"Spike. The Crimson Dons sold it at the back gate.\"",
+              "effects": {
+                "setFlag": "namedSpike",
+                "changeStat": {
+                  "donsHeat": 30,
+                  "campusRep": 6
+                }
+              }
+            },
+            {
+              "text": "\"I don't know anything, Ma.\"",
+              "effects": {
+                "remember": {
+                  "panel": "silent"
+                },
+                "changeStat": {
+                  "conscience": -3
+                }
+              }
+            },
+            {
+              "text": "\"I know about something worse, Ma. Dr. Fasanya.\" (Play the recording.)",
+              "effects": {
+                "setFlag": "exposedSorting",
+                "changeStat": {
+                  "campusRep": 15,
+                  "conscience": 8
+                }
+              },
+              "requires": "sortingEvidence",
+              "showLocked": true,
+              "lockedText": "You'd need evidence"
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "vc",
+          "text": "(after eleven minutes of recording, very quietly) Dr. Fasanya is suspended from today. The panel thanks you. The university... owes you.",
+          "if": "exposedSorting"
+        },
+        {
+          "type": "goto",
+          "scene": "dons"
+        }
+      ],
+      "location": "senate",
+      "time": "day",
+      "positions": {
+        "vc": [
+          0,
+          -31.5,
+          0
+        ],
+        "spike": [
+          3,
+          -29,
+          220
+        ]
+      }
+    },
+    "panelAccused": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "vc",
+          "text": "Mr. Somtochukwu. Several students say the ECO 201 questions came through you. Sit."
+        },
+        {
+          "type": "startMode",
+          "mode": "bluff",
+          "params": {
+            "scenario": "panel"
+          },
+          "results": {
+            "convinced": {
+              "setFlag": "escapedPanel",
+              "goto": "dons"
+            },
+            "doubted": {
+              "setFlag": "expelled",
+              "goto": "dons"
+            },
+            "caught": {
+              "setFlag": "expelled",
+              "goto": "dons"
+            },
+            "confessed": {
+              "setFlag": "suspended",
+              "changeStat": {
+                "cgpa": -0.5,
+                "conscience": 10
+              },
+              "goto": "dons"
+            }
+          }
+        }
+      ],
+      "location": "senate",
+      "time": "day",
+      "positions": {
+        "vc": [
+          0,
+          -31.5,
+          0
+        ]
+      }
+    },
+    "dons": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "spike",
+          "text": "(at the back gate) You named me. In front of the VC. (He cracks his knuckles, one by one.) Brave boy.",
+          "if": "namedSpike"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "spike",
+          "text": "You reported us in first year, and you're still walking. Let's fix that.",
+          "if": {
+            "flags": [
+              "reportedDons"
+            ],
+            "notFlags": [
+              "namedSpike"
+            ]
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "donsFight",
+          "if": {
+            "anyOf": [
+              "namedSpike",
+              "reportedDons"
+            ]
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "spike",
+          "text": "Capo needs a new right hand. Somebody who knows the senate. Somebody like you.",
+          "if": "donsMember"
+        },
+        {
+          "type": "choice",
+          "speaker": "spike",
+          "text": "(The Dons are watching you.)",
+          "options": [
+            {
+              "text": "\"I'm your right hand, Capo.\"",
+              "effects": {
+                "setFlag": "donsRightHand",
+                "changeStat": {
+                  "donsHeat": 20,
+                  "conscience": -10
+                }
+              },
+              "requires": "donsMember"
+            },
+            {
+              "text": "Walk away from the back gate. For good.",
+              "effects": {
+                "remember": {
+                  "backGate": "left"
+                },
+                "changeStat": {
+                  "donsHeat": -10,
+                  "conscience": 4
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "end"
+        }
+      ],
+      "location": "backGate",
+      "time": "night",
+      "positions": {
+        "spike": [
+          53,
+          -9,
+          0
+        ]
+      }
+    },
+    "donsFight": {
+      "beats": [
+        {
+          "type": "startMode",
+          "mode": "fight",
+          "params": {
+            "opponent": "spike",
+            "difficulty": 2
+          },
+          "results": {
+            "won": {
+              "setFlag": "beatSpike",
+              "changeStat": {
+                "campusRep": 10,
+                "donsHeat": 10
+              },
+              "goto": "end"
+            },
+            "lost": {
+              "changeStat": {
+                "cgpa": -0.3,
+                "donsHeat": 10
+              },
+              "remember": {
+                "spikeFight": "lost"
+              },
+              "goto": "end"
+            }
+          }
+        }
+      ],
+      "location": "backGate",
+      "time": "night",
+      "positions": {
+        "spike": [
+          53,
+          -9,
+          0
+        ]
+      }
+    },
+    "end": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Third year passes like a danfo at full speed: noisy, crowded, gone."
+        },
+        {
+          "type": "endChapter",
+          "title": "End of Chapter 5 — Exposed",
+          "summary": "CGPA {stat:cgpa}. Fees owed {schoolFees}. Campus reputation {stat:campusRep}. Convocation is coming.",
+          "next": "u6_convocation"
+        }
+      ],
+      "location": "quad",
+      "time": "dusk"
+    }
+  }
+}

@@ -1,0 +1,493 @@
+{
+  "id": "u4_loanApp",
+  "campaign": "campus",
+  "world": "royalCrest",
+  "act": 1,
+  "number": 4,
+  "title": "Chapter 4 — QuickCash",
+  "description": "A loan app with feelings, a hustle at the back gate, a roommate who knows, a recording, and dinner with a politician.",
+  "startScene": "loan",
+  "scenes": {
+    "loan": {
+      "beats": [
+        {
+          "type": "goto",
+          "scene": "loanThreat",
+          "if": "usedLoanApp"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Your phone buzzes with a QuickCash advert: 'Instant loans for students! No collateral! Just your contacts!' You delete it. It comes back.",
+          "if": {
+            "notFlags": [
+              "usedLoanApp"
+            ]
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Tobi never mentions the birthday money. That's the thing about rich friends: the favours are free and the debts are invisible.",
+          "if": "tobiCovered"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "You missed Tobi's birthday. The photos are everywhere. Everybody is laughing in all of them.",
+          "if": {
+            "memory": {
+              "birthday": "skipped"
+            }
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "hustle"
+        }
+      ],
+      "location": "hostel",
+      "time": "day"
+    },
+    "loanThreat": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "quickcash",
+          "text": "Dear valued customer, your ₦36,000 is overdue. If not paid within 24 hours, we will inform your contacts that you are a THIEF and a DISGRACE. Have a blessed day."
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "(Your contacts: Mama. Tamara. Tobi. The Dean.)",
+          "options": [
+            {
+              "text": "Pay it with whatever you have.",
+              "effects": {
+                "payDebt": {
+                  "from": "money",
+                  "to": "loanDebt"
+                },
+                "remember": {
+                  "loan": "paid"
+                }
+              }
+            },
+            {
+              "text": "Call Mama. Tell her the truth.",
+              "effects": {
+                "setFlag": "mamaSoldFreezer",
+                "changeStat": {
+                  "loanDebt": -36000,
+                  "momBond": 6,
+                  "conscience": 4
+                }
+              }
+            },
+            {
+              "text": "Ignore it. They're bluffing.",
+              "effects": {
+                "setFlag": "loanShamed",
+                "changeStat": {
+                  "cover": -30,
+                  "campusRep": -10
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "mamaSomto",
+          "text": "(on the phone, after a long silence) I'll sell the freezer. The akara can be fried fresh. People like fresh. ...Somto, don't borrow from phones again. Phones don't have mothers.",
+          "if": "mamaSoldFreezer"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "They weren't bluffing. Tamara gets the message at 6 a.m.: 'Your friend Somtochukwu is a THIEF.' Tobi screenshots it to the group chat with three crying-laughing emojis.",
+          "if": "loanShamed"
+        },
+        {
+          "type": "goto",
+          "scene": "hustle"
+        }
+      ],
+      "location": "hostel",
+      "time": "day"
+    },
+    "hustle": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "dubai",
+          "text": "Money doesn't come from reading, roomie. Every hustle on this campus passes through the back gate. Choose."
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "(Rent, data, food, keeping up. The scholarship doesn't cover any of it.)",
+          "options": [
+            {
+              "text": "Be the middleman for Spike's ECO 201 question leak.",
+              "effects": {
+                "setFlag": "leakRing",
+                "changeStat": {
+                  "money": 40000,
+                  "donsHeat": 10,
+                  "conscience": -12
+                }
+              }
+            },
+            {
+              "text": "Tutor coursemates. ₦2,000 an hour.",
+              "effects": {
+                "setFlag": "tutor",
+                "changeStat": {
+                  "money": 15000,
+                  "cgpa": 0.15,
+                  "campusRep": 3
+                }
+              }
+            },
+            {
+              "text": "Sell Mama's akara on campus.",
+              "effects": {
+                "setFlag": "akaraBiz",
+                "changeStat": {
+                  "money": 25000,
+                  "campusRep": 8,
+                  "momBond": 6
+                }
+              },
+              "requires": {
+                "anyOf": [
+                  "akaraBrand",
+                  {
+                    "memory": {
+                      "mamaPromise": "proud"
+                    }
+                  }
+                ]
+              },
+              "showLocked": true,
+              "lockedText": "You'd have to stop hiding where you come from"
+            },
+            {
+              "text": "Do 'client jobs' with Dubai full-time.",
+              "effects": {
+                "setFlag": "yahooFullTime",
+                "changeStat": {
+                  "money": 80000,
+                  "conscience": -20,
+                  "dubaiBond": 10
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "mamaSomto",
+          "text": "(on the phone) Two hundred akara a day? For Royal Crest children? (She laughs so loud the danfos stop.) My son is a businessman!",
+          "if": "akaraBiz"
+        },
+        {
+          "type": "goto",
+          "scene": "roommate"
+        }
+      ],
+      "location": "backGate",
+      "time": "day",
+      "positions": {
+        "dubai": [
+          51,
+          -8.5,
+          0
+        ]
+      }
+    },
+    "roommate": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Dubai doesn't need to interrogate you. He already knows. He just wants to hear you say it.",
+          "if": {
+            "anyOf": [
+              "yahooed",
+              "yahooFullTime"
+            ]
+          }
+        },
+        {
+          "type": "startMode",
+          "mode": "bluff",
+          "params": {
+            "scenario": "roommate"
+          },
+          "results": {
+            "convinced": {
+              "remember": {
+                "roommate": "fooled"
+              },
+              "goto": "ife"
+            },
+            "doubted": {
+              "remember": {
+                "roommate": "suspects"
+              },
+              "goto": "ife"
+            },
+            "caught": {
+              "setFlag": "dubaiKnows",
+              "goto": "ife"
+            },
+            "confessed": {
+              "setFlag": "dubaiKnows",
+              "changeStat": {
+                "dubaiBond": 12
+              },
+              "goto": "ife"
+            }
+          }
+        }
+      ],
+      "location": "hostel",
+      "time": "night",
+      "positions": {
+        "dubai": [
+          -34,
+          31.5,
+          180
+        ]
+      }
+    },
+    "ife": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "dubai",
+          "text": "(after a long time) Iyana-Wahala. My mum sells tomatoes in Mile 12. Why do you think I'm doing what I'm doing? (He laughs.) Your secret is safe. Mine too, abi?",
+          "if": "dubaiKnows"
+        },
+        {
+          "type": "goto",
+          "scene": "recording",
+          "if": "helpingIfe"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ife",
+          "text": "(passing you on the quad, not stopping) I paid him. Grade's fine now. Everything's fine. (It isn't.)",
+          "if": {
+            "memory": {
+              "ifeAdvice": "pay"
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Ifeoluwa has stopped coming to GST. Someone says she's transferring.",
+          "if": {
+            "memory": {
+              "ifeAdvice": "stayedOut"
+            }
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "dinner"
+        }
+      ],
+      "location": "quad",
+      "time": "day",
+      "positions": {
+        "ife": [
+          4,
+          -12.5,
+          0
+        ]
+      }
+    },
+    "recording": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "ife",
+          "text": "He said Thursday, 6 p.m., his office. I'm going. I need it on record. Somebody has to hold the phone."
+        },
+        {
+          "type": "choice",
+          "speaker": "ife",
+          "text": "\"How do we do it?\"",
+          "options": [
+            {
+              "text": "\"I'll hide in the office next door with the phone on speaker.\"",
+              "effects": {
+                "setFlag": [
+                  "sortingEvidence",
+                  "recordedSorting"
+                ],
+                "changeStat": {
+                  "conscience": 5
+                }
+              }
+            },
+            {
+              "text": "\"Take my phone. Hide it in your bag. I'll wait outside.\"",
+              "effects": {
+                "setFlag": [
+                  "sortingEvidence",
+                  "ifeRecorded"
+                ],
+                "changeStat": {
+                  "conscience": 3
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Thursday, 6:40 p.m. The recording is eleven minutes long. Ifeoluwa walks out of the office shaking and alive and furious. You have it. All of it."
+        },
+        {
+          "type": "goto",
+          "scene": "dinner"
+        }
+      ],
+      "location": "drOffice",
+      "time": "dusk",
+      "positions": {
+        "ife": [
+          -28,
+          -29,
+          180
+        ]
+      }
+    },
+    "dinner": {
+      "beats": [
+        {
+          "type": "setFlag",
+          "flags": [
+            "ronkeAround"
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "tamara",
+          "text": "My mother wants to meet you. Don't panic. She only eats people during campaign season. (Pause.) It's campaign season.",
+          "variants": [
+            {
+              "if": "loanShamed",
+              "text": "My mother saw the QuickCash message. She still wants to meet you. That should scare you more than it does."
+            }
+          ]
+        },
+        {
+          "type": "startMode",
+          "mode": "bluff",
+          "params": {
+            "scenario": "dinner"
+          },
+          "results": {
+            "convinced": {
+              "setFlag": "dinnerConvinced",
+              "changeStat": {
+                "tamaraBond": 6
+              },
+              "goto": "afterDinner"
+            },
+            "doubted": {
+              "setFlag": "dinnerDoubted",
+              "goto": "afterDinner"
+            },
+            "caught": {
+              "setFlag": "dinnerCaught",
+              "changeStat": {
+                "tamaraBond": -10
+              },
+              "goto": "afterDinner"
+            },
+            "confessed": {
+              "setFlag": "toldRonke",
+              "changeStat": {
+                "tamaraBond": 8,
+                "conscience": 6
+              },
+              "goto": "afterDinner"
+            }
+          }
+        }
+      ],
+      "location": "richStreet",
+      "time": "night",
+      "positions": {
+        "ronke": [
+          27,
+          21,
+          180
+        ],
+        "tamara": [
+          29.5,
+          21.5,
+          220
+        ]
+      },
+      "world": "iyanaWahala"
+    },
+    "afterDinner": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "ronke",
+          "text": "The truth, from an Owó Ńlá scholar, at my dinner table. (She puts down her fork.) I'm going to remember that, young man. If you ever need an internship that doesn't come with a rally attached, call my office.",
+          "if": "toldRonke"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ronke",
+          "text": "(as you leave, to Tamara, not quietly enough) Lekki Phase 1 my foot.",
+          "if": "dinnerCaught"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ronke",
+          "text": "Charming boy. Check his surname tomorrow.",
+          "if": "dinnerDoubted"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "tamara",
+          "text": "She likes you. That's never happened. I'm slightly scared.",
+          "if": "dinnerConvinced"
+        },
+        {
+          "type": "endChapter",
+          "title": "End of Chapter 4 — QuickCash",
+          "summary": "Cover story {stat:cover}%. CGPA {stat:cgpa}. Money {money}. Tamara {stat:tamaraBond}. Mama {stat:momBond}.",
+          "next": "u5_exposed"
+        }
+      ],
+      "location": "richStreet",
+      "time": "night",
+      "positions": {
+        "ronke": [
+          27,
+          21,
+          180
+        ],
+        "tamara": [
+          29.5,
+          21.5,
+          220
+        ]
+      },
+      "world": "iyanaWahala"
+    }
+  }
+}

@@ -1,0 +1,1303 @@
+{
+  "id": "u6_convocation",
+  "campaign": "campus",
+  "world": "royalCrest",
+  "act": 1,
+  "number": 6,
+  "title": "Chapter 6 — Convocation",
+  "description": "Final year. Fees, results, Dubai's last offer, Tamara's question, and a woman at the gate with a cooler of pap.",
+  "startScene": "final",
+  "scenes": {
+    "final": {
+      "beats": [
+        {
+          "type": "cutscene",
+          "cards": [
+            {
+              "title": "Final year",
+              "text": "Four years. One more semester. One more chance to become whoever you've been pretending to be — or to stop."
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "expelledLife",
+          "if": "expelled"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Suspended for a semester, you came back quieter. People still whisper. You let them.",
+          "if": "suspended"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "The panel never found anything. You still check the door every time someone knocks.",
+          "if": "escapedPanel"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Owó Ńlá's ₦100,000 arrives every month, on time, like guilt.",
+          "if": "spiedTamara"
+        },
+        {
+          "type": "goto",
+          "scene": "fees",
+          "if": "lostScholarship"
+        },
+        {
+          "type": "goto",
+          "scene": "results"
+        }
+      ],
+      "location": "hostel",
+      "time": "dawn"
+    },
+    "expelledLife": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Expelled. The letter was one paragraph long. You read it forty times anyway."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "You still hang around the back gate. Spike thinks that's funny. Dubai thinks it's an opportunity."
+        },
+        {
+          "type": "goto",
+          "scene": "dubai"
+        }
+      ],
+      "location": "backGate",
+      "time": "day"
+    },
+    "fees": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "babaGate",
+          "text": "(at the bursary window, reading a list) Somtochukwu Eze. Outstanding fees: {schoolFees}. No clearance, no gown. No gown, no convocation. Next!"
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "(The queue behind you is breathing on your neck.)",
+          "options": [
+            {
+              "text": "Pay it from your savings.",
+              "effects": {
+                "payDebt": {
+                  "from": "money",
+                  "to": "schoolFees"
+                },
+                "remember": {
+                  "fees": "paid"
+                }
+              },
+              "requires": {
+                "stats": {
+                  "money": ">= 1800000"
+                }
+              },
+              "showLocked": true,
+              "lockedText": "Needs {schoolFees}"
+            },
+            {
+              "text": "Call Hon. Ronke. She offered you an internship once — she meant it.",
+              "effects": {
+                "setFlag": "ronkeIntern",
+                "changeStat": {
+                  "schoolFees": -1800000
+                }
+              },
+              "requires": {
+                "flags": [
+                  "toldRonke"
+                ],
+                "notFlags": [
+                  "spiedTamara"
+                ]
+              },
+              "showLocked": true,
+              "lockedText": "Only if you told her mother the truth"
+            },
+            {
+              "text": "Let Tamara pay. She's been offering for a year.",
+              "effects": {
+                "setFlag": "tamaraPaid",
+                "changeStat": {
+                  "schoolFees": -1800000,
+                  "tamaraBond": -5
+                }
+              },
+              "requires": {
+                "stats": {
+                  "tamaraBond": ">= 60"
+                },
+                "notFlags": [
+                  "spiedTamara"
+                ]
+              },
+              "showLocked": true,
+              "lockedText": "Needs Tamara's trust (60)"
+            },
+            {
+              "text": "Sell the akara brand to the cafeteria. Every last recipe.",
+              "effects": {
+                "setFlag": "soldAkara",
+                "changeStat": {
+                  "schoolFees": -1800000
+                }
+              },
+              "requires": "akaraBiz",
+              "showLocked": true,
+              "lockedText": "You'd need a business to sell"
+            },
+            {
+              "text": "Take one big job from Dubai. Just one.",
+              "effects": {
+                "setFlag": "joinedDubai",
+                "changeStat": {
+                  "schoolFees": -1800000,
+                  "conscience": -15
+                }
+              }
+            },
+            {
+              "text": "Walk away from the window.",
+              "effects": {
+                "setFlag": "feesUnpaid"
+              }
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "results"
+        }
+      ],
+      "location": "senate",
+      "time": "day",
+      "positions": {
+        "babaGate": [
+          0,
+          -29,
+          180
+        ]
+      }
+    },
+    "results": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Final results are pasted on the notice board. Two hundred people push to read one sheet of paper."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Your CGPA: {stat:cgpa}."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "You know exactly which grades you earned and which ones you bought. The sheet doesn't.",
+          "if": {
+            "anyOf": [
+              "boughtHandout",
+              "leakRing"
+            ]
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Not one handout bought. Not one leaked question. Every point on that sheet is yours.",
+          "if": {
+            "flags": [
+              "noHandout"
+            ],
+            "notFlags": [
+              "leakRing"
+            ]
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "ECO 201 — you aced it fair and square. Dr. Fasanya's replacement wrote 'Excellent' in red.",
+          "if": {
+            "memory": {
+              "eco": "perfect"
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "That GST failure still sits there like a stain. You carried it through four years.",
+          "if": {
+            "memory": {
+              "gst": "failed"
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Your missing script from second year is still missing. Someone got your A.",
+          "if": "scriptLost"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Half the names on the list you tutored. Some of them wave at you.",
+          "if": "tutor"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "The class strike you organized got the exam rescheduled — the whole class remembers.",
+          "if": "organized"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Professor's Expo pass from first year: still the luckiest grade you ever got.",
+          "if": "passedExpo"
+        },
+        {
+          "type": "goto",
+          "scene": "tobi"
+        }
+      ],
+      "location": "quad",
+      "time": "day"
+    },
+    "tobi": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "tobi",
+          "text": "Somto! Or should I say 'Bonny Deep Energy'? (He laughs.) I never told anyone, you know. Four years.",
+          "if": {
+            "anyOf": [
+              "tobiCovered",
+              {
+                "memory": {
+                  "roommate": "suspects"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "tobi",
+          "text": "Somto. Final year. You know, you still haven't told me one true thing about your family.",
+          "if": {
+            "memory": {
+              "roommate": "fooled"
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "tobi",
+          "text": "Remember first week? You said 'I'm from Iyana-Wahala, my mum sells pap.' I thought you were joking. You were the only one not joking.",
+          "if": "honestFromStart"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "tobi",
+          "text": "Akara King! The cafeteria still uses your recipe. Badly.",
+          "if": "akaraBrand"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "tobi",
+          "text": "And you never let them call you 'Oil Money'. I respect that.",
+          "if": {
+            "memory": {
+              "nickname": "refused"
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "tobi",
+          "text": "They still talk about the night the Dons cornered you by the chapel.",
+          "if": {
+            "memory": {
+              "ambush": "beaten"
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "tobi",
+          "text": "They still talk about the night you outran the Dons by the chapel.",
+          "if": {
+            "memory": {
+              "ambush": "escaped"
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "tobi",
+          "text": "And you missed my birthday in second year. I've forgiven you. I've mentioned it 300 times, but I've forgiven you.",
+          "if": {
+            "memory": {
+              "birthday": "skipped"
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "tobi",
+          "text": "The in-crowd's throwing a final-year party at the Lekki house. You're invited — of course.",
+          "if": "inCrowd"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "tobi",
+          "text": "You were always half in, half out with those rich kids. Final year: pick a side.",
+          "if": "halfIn"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "tobi",
+          "text": "Since the first week, when everyone found out you were from the bus stop, you stopped pretending. Best thing that ever happened to you.",
+          "if": "exposedEarly"
+        },
+        {
+          "type": "goto",
+          "scene": "dubai"
+        }
+      ],
+      "location": "quad",
+      "time": "day",
+      "positions": {
+        "tobi": [
+          2,
+          -11,
+          200
+        ]
+      }
+    },
+    "dubai": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "dubai",
+          "text": "Somto. Last time I'll ask. One transfer. Five million. Then you never see me again.",
+          "variants": [
+            {
+              "if": {
+                "memory": {
+                  "dubaiOffer": "laughed"
+                }
+              },
+              "text": "You laughed at me in first year. Look at me now. Look at you. One transfer, five million. Laugh now."
+            },
+            {
+              "if": "yahooFullTime",
+              "text": "Partner. The Agency is sniffing round the hostel. One last big one, then we disappear."
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "dubai",
+          "text": "And don't forget: I know about the bus stop. One phone call to your fancy girlfriend's mother.",
+          "if": "dubaiKnows"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "dubai",
+          "text": "Your loan app's still chasing you, abi? Pay them with this.",
+          "if": {
+            "flags": [
+              "usedLoanApp"
+            ],
+            "notFlags": [
+              "loanShamed"
+            ]
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "dubai",
+          "text": "You've done small ones with me before. This is just bigger.",
+          "if": "yahooed"
+        },
+        {
+          "type": "goto",
+          "scene": "raid",
+          "if": {
+            "anyOf": [
+              "yahooFullTime",
+              "joinedDubai"
+            ]
+          }
+        },
+        {
+          "type": "choice",
+          "speaker": "dubai",
+          "text": "(He's holding out a phone with an account number already typed in.)",
+          "options": [
+            {
+              "text": "Take the job.",
+              "effects": {
+                "setFlag": "joinedDubai",
+                "changeStat": {
+                  "money": 500000,
+                  "conscience": -15
+                }
+              }
+            },
+            {
+              "text": "\"No. Never.\"",
+              "effects": {
+                "remember": {
+                  "dubaiEnd": "refused"
+                },
+                "changeStat": {
+                  "conscience": 6
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "raid",
+          "if": "joinedDubai"
+        },
+        {
+          "type": "goto",
+          "scene": "tamaraScene",
+          "if": {
+            "notFlags": [
+              "expelled"
+            ]
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "dons"
+        }
+      ],
+      "location": "hostel",
+      "time": "night",
+      "positions": {
+        "dubai": [
+          -38,
+          18,
+          90
+        ]
+      }
+    },
+    "raid": {
+      "beats": [
+        {
+          "type": "cutscene",
+          "cards": [
+            {
+              "title": "3:12 a.m.",
+              "text": "Boots in the corridor. Torchlight under the door. 'TASK FORCE! EVERYBODY OUT!'"
+            }
+          ]
+        },
+        {
+          "type": "startMode",
+          "mode": "runner",
+          "params": {
+            "chaser": "taskForce",
+            "goal": 260,
+            "difficulty": 2
+          },
+          "results": {
+            "escaped": {
+              "remember": {
+                "raid": "escaped"
+              },
+              "changeStat": {
+                "conscience": -5
+              },
+              "goto": "afterRaid"
+            },
+            "caught": {
+              "setFlag": "arrested",
+              "goto": "cell"
+            }
+          }
+        }
+      ],
+      "location": "hostel",
+      "time": "night"
+    },
+    "afterRaid": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "You stop running behind the chapel. Your lungs are on fire. Dubai's phone is in your pocket. Dubai is not."
+        },
+        {
+          "type": "goto",
+          "scene": "tamaraScene",
+          "if": {
+            "notFlags": [
+              "expelled"
+            ]
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "dons"
+        }
+      ],
+      "location": "chapel",
+      "time": "night"
+    },
+    "cell": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "A cell with thirty men and one window. Somebody's radio is playing the convocation livestream. You hear your classmates' names called, one by one."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Mama visits on Thursday. She sold the freezer to pay for your first year. She brings pap in a flask.",
+          "if": "mamaSoldFreezer"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Mama visits on Thursday. She brings pap in a flask. She doesn't say anything. She doesn't have to.",
+          "if": {
+            "notFlags": [
+              "mamaSoldFreezer"
+            ]
+          }
+        },
+        {
+          "type": "endChapter",
+          "title": "The End",
+          "summary": "The Task Force caught you.",
+          "ending": "u_cell"
+        }
+      ],
+      "location": "gate",
+      "time": "night"
+    },
+    "tamaraScene": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "tamara",
+          "text": "(at the car park) So. Convocation.",
+          "variants": [
+            {
+              "if": "warnedTamara",
+              "text": "(at the car park) You warned me about Owó Ńlá when it cost you everything. I haven't forgotten. Convocation, then."
+            },
+            {
+              "if": "spiedTamara",
+              "text": "(at the car park, not looking at you) My mother says your 'scholarship' sponsor knew things only I knew. Funny that."
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "tamara",
+          "text": "I liked you from the first day. Even though you lied about the oil thing.",
+          "if": {
+            "memory": {
+              "tamaraFirst": "lied"
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "tamara",
+          "text": "You told me the truth on the first day and I didn't believe you. That's on me.",
+          "if": {
+            "memory": {
+              "tamaraFirst": "honest"
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "tamara",
+          "text": "The first day, you warned me about the Dons. Nobody else did.",
+          "if": {
+            "memory": {
+              "tamaraFirst": "warned"
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "tamara",
+          "text": "My mother still talks about that dinner. 'The oil boy.' She liked you. She liked the you that doesn't exist.",
+          "if": {
+            "flags": [
+              "dinnerConvinced"
+            ],
+            "notFlags": [
+              "toldTamara"
+            ]
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "tamara",
+          "text": "My mother never trusted you after that dinner.",
+          "if": {
+            "anyOf": [
+              "dinnerDoubted",
+              "dinnerCaught"
+            ]
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "tamara",
+          "text": "You kept lying. Even when I gave you every chance.",
+          "if": "keptLying"
+        },
+        {
+          "type": "choice",
+          "speaker": "tamara",
+          "text": "(She's holding two invitations: one to her family's table at convocation, one blank.)",
+          "options": [
+            {
+              "text": "\"Sit with my mother at convocation. Meet the real me.\"",
+              "effects": {
+                "setFlag": "tamaraMeetsMama",
+                "changeStat": {
+                  "tamaraBond": 10
+                }
+              },
+              "requires": {
+                "flags": [
+                  "toldTamara"
+                ],
+                "notFlags": [
+                  "spiedTamara"
+                ]
+              },
+              "showLocked": true,
+              "lockedText": "She'd have to know the truth first"
+            },
+            {
+              "text": "\"Your family's table. Of course.\"",
+              "effects": {
+                "remember": {
+                  "tamaraEnd": "herTable"
+                },
+                "changeStat": {
+                  "cover": 10
+                }
+              }
+            },
+            {
+              "text": "\"I think we should stop.\"",
+              "effects": {
+                "remember": {
+                  "tamaraEnd": "ended"
+                },
+                "changeStat": {
+                  "tamaraBond": -20
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "ifeScene"
+        }
+      ],
+      "location": "carPark",
+      "time": "dusk",
+      "positions": {
+        "tamara": [
+          40,
+          10.5,
+          180
+        ]
+      }
+    },
+    "ifeScene": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "ife",
+          "text": "Dr. Fasanya's gone. Did you hear? Suspended, then sacked. Seven girls have come forward since.",
+          "if": "exposedSorting"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ife",
+          "text": "You still have that recording, don't you? He's still teaching. He's still 'sorting'.",
+          "if": {
+            "anyOf": [
+              "recordedSorting",
+              "sortingEvidence"
+            ],
+            "notFlags": [
+              "exposedSorting"
+            ]
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ife",
+          "text": "I recorded him myself in the end. Somebody had to.",
+          "if": {
+            "flags": [
+              "ifeRecorded"
+            ],
+            "notFlags": [
+              "exposedSorting"
+            ]
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ife",
+          "text": "You helped me when no one else would. I won't forget it.",
+          "if": "helpingIfe"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ife",
+          "text": "You told me to just pay him. I didn't. I'm graduating with a 2:2 and my dignity.",
+          "if": {
+            "memory": {
+              "ifeAdvice": "pay"
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ife",
+          "text": "You told me to stay out of it. I couldn't.",
+          "if": {
+            "memory": {
+              "ifeAdvice": "stayedOut"
+            }
+          }
+        },
+        {
+          "type": "choice",
+          "speaker": "ife",
+          "text": "\"The campus paper wants to run the full story. With your name next to mine. Will you?\"",
+          "options": [
+            {
+              "text": "\"Put my name on it.\"",
+              "effects": {
+                "setFlag": "storyPublished",
+                "changeStat": {
+                  "campusRep": 15,
+                  "donsHeat": 5
+                }
+              },
+              "requires": {
+                "anyOf": [
+                  "exposedSorting",
+                  "recordedSorting",
+                  "sortingEvidence",
+                  "ifeRecorded"
+                ]
+              },
+              "showLocked": true,
+              "lockedText": "Needs evidence"
+            },
+            {
+              "text": "\"Leave me out of it.\"",
+              "effects": {
+                "remember": {
+                  "ifeEnd": "out"
+                },
+                "changeStat": {
+                  "conscience": -3
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "dons"
+        }
+      ],
+      "location": "library",
+      "time": "day",
+      "positions": {
+        "ife": [
+          -20,
+          -20,
+          90
+        ]
+      }
+    },
+    "dons": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "spike",
+          "text": "Capo. (He's bowing. To you.) The boys await your instructions.",
+          "if": "donsRightHand"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "spike",
+          "text": "You beat me in front of the boys. Nobody's done that. I don't like you. But I respect you.",
+          "if": {
+            "flags": [
+              "beatSpike"
+            ],
+            "notFlags": [
+              "donsRightHand"
+            ]
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "spike",
+          "text": "Still limping from our little talk? Good.",
+          "if": {
+            "memory": {
+              "spikeFight": "lost"
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "spike",
+          "text": "You named me to the VC. I was suspended for a year. I'm back.",
+          "if": {
+            "flags": [
+              "namedSpike"
+            ],
+            "notFlags": [
+              "beatSpike"
+            ]
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "spike",
+          "text": "You reported us in first year. The VC lost the file. Funny how files go missing.",
+          "if": {
+            "flags": [
+              "reportedDons"
+            ],
+            "notFlags": [
+              "namedSpike"
+            ]
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "spike",
+          "text": "You turned us down twice. Once at the initiation, once for that job. Brave or stupid.",
+          "if": {
+            "memory": {
+              "dons": "refused",
+              "donsJob": "refused"
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "spike",
+          "text": "You walked away from the back gate. Everybody walks back eventually.",
+          "if": {
+            "memory": {
+              "backGate": "left"
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "spike",
+          "text": "Brother. Once a Don, always a Don.",
+          "if": {
+            "flags": [
+              "donsMember"
+            ],
+            "notFlags": [
+              "donsRightHand"
+            ]
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "mama"
+        }
+      ],
+      "location": "backGate",
+      "time": "night",
+      "positions": {
+        "spike": [
+          53,
+          -9,
+          0
+        ]
+      }
+    },
+    "mama": {
+      "beats": [
+        {
+          "type": "setFlag",
+          "flags": [
+            "mamaSomtoAround"
+          ]
+        },
+        {
+          "type": "cutscene",
+          "cards": [
+            {
+              "title": "Convocation day",
+              "text": "Gowns. Drums. Aunties in matching aso-ebi. Somewhere near the gate, a woman in her best wrapper is holding a cooler of pap like a trophy."
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "mamaSomto",
+          "text": "(at the gate, carrying a cooler) Somto! I came early! I brought pap for your friends!",
+          "variants": [
+            {
+              "if": "sentMamaAway",
+              "text": "(at the gate, smaller somehow) You told me not to come to your matriculation. I'm here now. I won't embarrass you. I'll stand at the back."
+            },
+            {
+              "if": "deniedMama",
+              "text": "(at the gate) The last time I came, you told your friends I was your 'house help'. I came anyway. A mother comes anyway."
+            },
+            {
+              "if": "ownedMama",
+              "text": "(at the gate, waving with both hands) My son! The graduate! Where are your friends? Bring them! I brought pap!"
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "mamaSomto",
+          "text": "I sold the freezer. I'd sell it again.",
+          "if": "mamaSoldFreezer"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "mamaSomto",
+          "text": "Quickcash people called my phone. They called me a debtor's mother. Somto, what did you do?",
+          "if": "loanShamed"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "mamaSomto",
+          "text": "And you paid back that loan. I'm proud of that too.",
+          "if": {
+            "memory": {
+              "loan": "paid"
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "mamaSomto",
+          "text": "You promised me you'd make me proud. You promised in front of the whole bus stop.",
+          "if": {
+            "memory": {
+              "mamaPromise": "proud"
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "mamaSomto",
+          "text": "You told me to wait at the gate on the first day. I'm still at the gate.",
+          "if": {
+            "memory": {
+              "mamaPromise": "gate"
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "mamaSomto",
+          "text": "You said you'd hide where you came from. Did you manage it?",
+          "if": {
+            "memory": {
+              "mamaPromise": "hide"
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "You're still carrying the designer bag. It's starting to peel.",
+          "if": "fakeBag"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "You're still carrying the nylon bag from home. You never got another one.",
+          "if": "nylonBag"
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "(Your classmates are walking past. Tamara's family is coming this way.)",
+          "options": [
+            {
+              "text": "Hug her. Introduce her to everyone. \"This is my mother. She sells pap.\"",
+              "effects": {
+                "setFlag": "introducedMama",
+                "changeStat": {
+                  "momBond": 20,
+                  "cover": -100,
+                  "conscience": 10
+                }
+              }
+            },
+            {
+              "text": "Take her to a quiet corner, away from everyone.",
+              "effects": {
+                "remember": {
+                  "mamaEnd": "corner"
+                },
+                "changeStat": {
+                  "momBond": -10
+                }
+              }
+            },
+            {
+              "text": "Pretend you don't know her.",
+              "effects": {
+                "setFlag": "deniedAgain",
+                "changeStat": {
+                  "momBond": -30,
+                  "conscience": -15
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ronke",
+          "text": "(arriving with Tamara) Somto! And... who is this?",
+          "if": {
+            "notFlags": [
+              "expelled"
+            ]
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "tamara",
+          "text": "(to Mama, holding out both hands) Ma, I've heard so much about your pap.",
+          "if": {
+            "flags": [
+              "tamaraMeetsMama",
+              "introducedMama"
+            ]
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ronke",
+          "text": "(not unkindly) Oh. So THIS is Bonny Deep Energy. (A long pause, then she laughs.) My father sold palm oil at Oyingbo. Welcome, Madam.",
+          "if": {
+            "flags": [
+              "introducedMama",
+              "dinnerConvinced"
+            ],
+            "notFlags": [
+              "expelled"
+            ]
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "stage"
+        }
+      ],
+      "location": "gate",
+      "time": "day",
+      "positions": {
+        "mamaSomto": [
+          0,
+          30,
+          180
+        ],
+        "ronke": [
+          3,
+          28,
+          200
+        ],
+        "tamara": [
+          4,
+          29,
+          200
+        ]
+      }
+    },
+    "stage": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "The VC is calling names. Yours is next — or it would be, if there was a name to call.",
+          "if": {
+            "anyOf": [
+              "expelled",
+              "feesUnpaid"
+            ]
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "The VC is calling names. Yours is next.",
+          "if": {
+            "notFlags": [
+              "expelled",
+              "feesUnpaid"
+            ]
+          }
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "(Everything you've done leads here.)",
+          "options": [
+            {
+              "text": "Collect the First Class certificate. Earned.",
+              "effects": {
+                "ending": "u_firstClass"
+              },
+              "requires": {
+                "stats": {
+                  "cgpa": ">= 4.5"
+                },
+                "notFlags": [
+                  "expelled",
+                  "feesUnpaid",
+                  "leakRing",
+                  "boughtHandout"
+                ]
+              },
+              "showLocked": true,
+              "lockedText": "Needs a clean 4.5 CGPA"
+            },
+            {
+              "text": "Walk the stage. Wave at Mama in the crowd.",
+              "effects": {
+                "ending": "u_graduate"
+              },
+              "requires": {
+                "flags": [
+                  "introducedMama"
+                ],
+                "notFlags": [
+                  "expelled",
+                  "feesUnpaid"
+                ]
+              },
+              "showLocked": true,
+              "lockedText": "Needs your degree and Mama beside you"
+            },
+            {
+              "text": "Walk the stage. Then the Lekki party. The lie is your life now.",
+              "effects": {
+                "ending": "u_goldenLie"
+              },
+              "requires": {
+                "notFlags": [
+                  "expelled",
+                  "feesUnpaid",
+                  "introducedMama",
+                  "toldTamara"
+                ]
+              },
+              "showLocked": true,
+              "lockedText": "Your cover is already blown"
+            },
+            {
+              "text": "Skip the stage. Stand with Ife and the press outside the senate.",
+              "effects": {
+                "ending": "u_viral"
+              },
+              "requires": "storyPublished",
+              "showLocked": true,
+              "lockedText": "Needs the story published"
+            },
+            {
+              "text": "Take the Capo's seat at the back gate.",
+              "effects": {
+                "ending": "u_donsCapo"
+              },
+              "requires": "donsRightHand",
+              "showLocked": true,
+              "lockedText": "Needs to be the Capo's right hand"
+            },
+            {
+              "text": "Get into Owó Ńlá's car. A job in politics is waiting.",
+              "effects": {
+                "ending": "u_bigMansBoy"
+              },
+              "requires": "spiedTamara",
+              "showLocked": true,
+              "lockedText": "Owó Ńlá doesn't know your name"
+            },
+            {
+              "text": "Get on the night bus to Cotonou with Dubai's money.",
+              "effects": {
+                "ending": "u_dubai"
+              },
+              "requires": "joinedDubai",
+              "showLocked": true,
+              "lockedText": "You'd need Dubai's money"
+            },
+            {
+              "text": "Leave the campus for good.",
+              "effects": {
+                "ending": "u_expelled"
+              },
+              "requires": "expelled"
+            },
+            {
+              "text": "Take the danfo back to Iyana-Wahala.",
+              "effects": {
+                "ending": "u_home"
+              },
+              "requires": {
+                "notFlags": [
+                  "expelled"
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "location": "field",
+      "time": "day"
+    }
+  }
+}

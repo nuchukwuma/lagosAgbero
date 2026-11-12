@@ -1,0 +1,241 @@
+{
+  "id": "u1_admission",
+  "campaign": "campus",
+  "world": "iyanaWahala",
+  "act": 1,
+  "number": 1,
+  "title": "Chapter 1 — Admission",
+  "description": "A scholarship letter on a pap table, a politician's strings, and a promise to Mama.",
+  "startScene": "home",
+  "scenes": {
+    "home": {
+      "beats": [
+        {
+          "type": "cutscene",
+          "cards": [
+            {
+              "title": "Fake It Till You Graduate",
+              "text": "Iyana-Wahala, 6 a.m. The akara oil is hot. The danfos are loud. And the envelope on the pap table has a gold crest on it."
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "mamaSomto",
+          "text": "Read it again. Slowly. Your mama wants to hear it in her bones."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "\"Dear Somtochukwu. The Forward Ever Scholars Foundation of Hon. Chief Bankọ́lé Ọ̀gúnṣẹ̀yẹ́ is pleased to award you a full tuition scholarship to Royal Crest University...\""
+        },
+        {
+          "type": "dialogue",
+          "speaker": "mamaSomto",
+          "text": "Royal Crest. Where the children of the people on the billboards go. (She wipes her hands on her wrapper three times, as if they could ever be clean enough.) Don't let them make you ashamed of where you come from."
+        },
+        {
+          "type": "choice",
+          "speaker": "mamaSomto",
+          "text": "\"Promise me.\"",
+          "options": [
+            {
+              "text": "\"I won't, Mama. I'll tell them about your akara.\"",
+              "effects": {
+                "remember": {
+                  "mamaPromise": "proud"
+                },
+                "changeStat": {
+                  "momBond": 5,
+                  "conscience": 3
+                }
+              }
+            },
+            {
+              "text": "\"Nobody there will ever know where I'm from. That's how I'll survive.\"",
+              "effects": {
+                "remember": {
+                  "mamaPromise": "hide"
+                },
+                "changeStat": {
+                  "momBond": -6
+                }
+              }
+            },
+            {
+              "text": "\"Come with me to the gate on the first day.\"",
+              "effects": {
+                "remember": {
+                  "mamaPromise": "gate"
+                },
+                "changeStat": {
+                  "momBond": 8
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "strings"
+        }
+      ],
+      "location": "teaTable",
+      "time": "dawn",
+      "positions": {
+        "mamaSomto": [
+          -11.5,
+          -10,
+          180
+        ]
+      }
+    },
+    "strings": {
+      "beats": [
+        {
+          "type": "setFlag",
+          "flags": [
+            "settlementAround"
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "settlement",
+          "text": "Mr. Somtochukwu. Barrister Àjàyí, for the Foundation. Congratulations. (He hands you an envelope.) ₦20,000 for your first month. And a small reminder: the Honourable likes his scholars to be... visible. At rallies. In photos. Grateful."
+        },
+        {
+          "type": "choice",
+          "speaker": "settlement",
+          "text": "\"You understand, of course.\"",
+          "options": [
+            {
+              "text": "\"I understand, sir. Thank the Honourable for me.\"",
+              "effects": {
+                "setFlag": "fepScholar",
+                "changeStat": {
+                  "money": 20000
+                }
+              }
+            },
+            {
+              "text": "\"I came to study, sir. Not to campaign.\"",
+              "effects": {
+                "remember": {
+                  "settlement": "refused"
+                },
+                "changeStat": {
+                  "money": 20000,
+                  "conscience": 4
+                }
+              }
+            },
+            {
+              "text": "\"How visible? Exactly?\"",
+              "effects": {
+                "remember": {
+                  "settlement": "asked"
+                },
+                "changeStat": {
+                  "money": 20000
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "settlement",
+          "text": "Very visible. Front row. Smiling. And should you hear anything interesting about the Honourable's opponents... interesting things are rewarded.",
+          "if": {
+            "memory": {
+              "settlement": "asked"
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "settlement",
+          "text": "(He smiles without his eyes.) Everybody studies, Mr. Somtochukwu. The question is what they study.",
+          "if": {
+            "memory": {
+              "settlement": "refused"
+            }
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "packing"
+        }
+      ],
+      "location": "teaTable",
+      "time": "day",
+      "positions": {
+        "mamaSomto": [
+          -11.5,
+          -10,
+          180
+        ],
+        "settlement": [
+          -9.5,
+          -9.4,
+          220
+        ]
+      }
+    },
+    "packing": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "ada",
+          "text": "You're going to Royal Crest? With THAT bag? (She holds up a nylon bag with a supermarket logo.) Nobody there carries nylon. I have a 'Guci'. One c. Nobody counts letters."
+        },
+        {
+          "type": "choice",
+          "speaker": "ada",
+          "text": "\"₦3,000. Final. I'm giving you scholar discount.\"",
+          "options": [
+            {
+              "text": "Buy the 'Guci' bag.",
+              "effects": {
+                "setFlag": "fakeBag",
+                "changeStat": {
+                  "cover": 5
+                }
+              },
+              "cost": 3000
+            },
+            {
+              "text": "\"Nylon is honest. I'll go with nylon.\"",
+              "effects": {
+                "setFlag": "nylonBag",
+                "changeStat": {
+                  "conscience": 2
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "That night, Mama packs your box: two shirts, a Bible, a tin of groundnuts, and a photo of Papa you didn't know she still had."
+        },
+        {
+          "type": "endChapter",
+          "title": "End of Chapter 1 — Admission",
+          "summary": "Money {money}. Tomorrow: Royal Crest University. Your cover story: {stat:cover}%.",
+          "next": "u2_freshers"
+        }
+      ],
+      "location": "adaShop",
+      "time": "dusk",
+      "positions": {
+        "ada": [
+          22,
+          -10.5,
+          180
+        ]
+      }
+    }
+  }
+}
