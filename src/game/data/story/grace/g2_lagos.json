@@ -1,0 +1,801 @@
+{
+  "id": "g2_lagos",
+  "campaign": "grace",
+  "world": "iyanaWahala",
+  "act": 1,
+  "number": 2,
+  "title": "Chapter 2 — The Night Bus",
+  "description": "Lagos at 5:40 a.m. Ike's spare-parts 'business'. The first phone call from home. Chief Ọ̀dụ̀'s party, where nobody laughs.",
+  "startScene": "arrival",
+  "scenes": {
+    "arrival": {
+      "beats": [
+        {
+          "type": "setFlag",
+          "flags": [
+            "ikeAround"
+          ]
+        },
+        {
+          "type": "cutscene",
+          "cards": [
+            {
+              "title": "Lagos",
+              "text": "5:40 a.m. Iyana-Wahala bus stop. The bus doors open and the city hits you in the face like a wet towel full of noise."
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "fakeConductor",
+          "text": "Welcome to Lagos! Loading fee! Everybody wey enter Lagos pays ₦500 loading fee! Government law!"
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "(He has a receipt book. The receipts are blank.)",
+          "options": [
+            {
+              "text": "Pay him. You don't want trouble on your first day.",
+              "effects": {
+                "changeStat": {
+                  "money": -500
+                },
+                "remember": {
+                  "lagosLesson": "scammed"
+                }
+              }
+            },
+            {
+              "text": "\"I came from the village, not from yesterday.\"",
+              "effects": {
+                "remember": {
+                  "lagosLesson": "sharp"
+                },
+                "changeStat": {
+                  "conscience": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "professor",
+          "text": "(an old agbero with three fingers, watching) Hm. JJC. Rule number one: in Lagos, nobody gives you a receipt for nothing. Where you dey go?",
+          "variants": [
+            {
+              "if": {
+                "memory": {
+                  "lagosLesson": "sharp"
+                }
+              },
+              "text": "(an old agbero with three fingers, laughing) Ehen! This JJC get sense. Rule number one, and you knew it before I taught you. Where you dey go?"
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "player",
+          "text": "Ike Okafor's shop. Spare parts. Ọjà market."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "professor",
+          "text": "Ike Money? (His face changes.) Hm. Go well, my son. And... if he takes you to a party where everybody wears white, come and find me first."
+        },
+        {
+          "type": "freeRoam",
+          "objective": "Find Ike's spare-parts shop in the market.",
+          "goal": {
+            "talkTo": "ike"
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "shop"
+        }
+      ],
+      "location": "arrival",
+      "time": "dawn",
+      "positions": {
+        "professor": [
+          -12,
+          -6,
+          200
+        ],
+        "fakeConductor": [
+          -15,
+          -6.2,
+          180
+        ]
+      }
+    },
+    "shop": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "ike",
+          "text": "You came! (He looks at your bag, then at your face.) The fee. Let me see it.",
+          "variants": [
+            {
+              "if": {
+                "memory": {
+                  "ikeAsk": "accused"
+                }
+              },
+              "text": "Mr Yahoo-detector! You came. Let me see the fee before you investigate my business again."
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ike",
+          "text": "(He grabs your hand and turns it over.) Quarry hands. Lagos doesn't respect quarry hands. We'll fix that.",
+          "if": "quarryWork"
+        },
+        {
+          "type": "goto",
+          "scene": "paid",
+          "if": {
+            "stats": {
+              "money": ">= 150000"
+            }
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "short"
+        }
+      ],
+      "location": "market",
+      "time": "day",
+      "positions": {
+        "ike": [
+          24,
+          -11,
+          180
+        ]
+      }
+    },
+    "paid": {
+      "beats": [
+        {
+          "type": "changeStat",
+          "stats": {
+            "money": -150000,
+            "ikeTrust": 10
+          }
+        },
+        {
+          "type": "setFlag",
+          "flags": [
+            "paidFee"
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ike",
+          "text": "Correct! Now you're inside. Spare parts by day. Other things by night. Don't ask which is which."
+        },
+        {
+          "type": "goto",
+          "scene": "work"
+        }
+      ],
+      "location": "market",
+      "positions": {
+        "ike": [
+          24,
+          -11,
+          180
+        ]
+      }
+    },
+    "short": {
+      "beats": [
+        {
+          "type": "changeStat",
+          "stats": {
+            "ikeTrust": -5,
+            "money": -20000
+          }
+        },
+        {
+          "type": "setFlag",
+          "flags": [
+            "apprentice"
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ike",
+          "text": "Short. You brought short money to Lagos. (He takes what you have anyway, and gives back ₦2,000.) Then you start as a boy. No salary. You sleep in the shop with the rats. The rats pay rent. You don't."
+        },
+        {
+          "type": "goto",
+          "scene": "work"
+        }
+      ],
+      "location": "market",
+      "positions": {
+        "ike": [
+          24,
+          -11,
+          180
+        ]
+      }
+    },
+    "work": {
+      "beats": [
+        {
+          "type": "cutscene",
+          "cards": [
+            {
+              "title": "Ọjà market",
+              "text": "Weeks. Brake pads, fan belts, \"original\" Toyota parts made in a factory that has never heard of Toyota. Ike is gone most nights."
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ike",
+          "text": "Tonight I have something for you. Choose. I don't have all day, my driver is idling."
+        },
+        {
+          "type": "choice",
+          "speaker": "ike",
+          "text": "\"What will it be?\"",
+          "options": [
+            {
+              "text": "Drive a package across Lagos in the shop's bus. Don't open it.",
+              "effects": {
+                "goto": "package"
+              }
+            },
+            {
+              "text": "Sell the 'original' parts to the drivers. They're fake.",
+              "effects": {
+                "changeStat": {
+                  "money": 15000,
+                  "conscience": -8,
+                  "ikeTrust": 5
+                },
+                "setFlag": "soldFakeParts",
+                "goto": "phone"
+              }
+            },
+            {
+              "text": "\"I'll sweep the shop and learn the real trade.\"",
+              "effects": {
+                "changeStat": {
+                  "conscience": 5,
+                  "ikeTrust": -3
+                },
+                "setFlag": "learnedTrade",
+                "goto": "learn"
+              }
+            }
+          ]
+        }
+      ],
+      "location": "market",
+      "time": "dusk",
+      "positions": {
+        "ike": [
+          24,
+          -11,
+          180
+        ]
+      }
+    },
+    "package": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "A taped box, heavier than it looks. Ike says it's 'documents'. Documents don't usually tick. (It doesn't tick. You just keep listening for it.)"
+        },
+        {
+          "type": "startMode",
+          "mode": "drive",
+          "params": {
+            "length": 1400,
+            "stops": 1,
+            "fuel": 60,
+            "checkpoints": 1,
+            "fare": 0,
+            "slogan": "NO TELLING",
+            "seed": 31
+          },
+          "results": {
+            "done": {
+              "changeStat": {
+                "money": 20000,
+                "ikeTrust": 8,
+                "conscience": -4
+              },
+              "setFlag": "deliveredPackage",
+              "goto": "phone"
+            },
+            "caught": {
+              "changeStat": {
+                "policeHeat": 15,
+                "ikeTrust": -5
+              },
+              "setFlag": "packageCaught",
+              "goto": "caught"
+            },
+            "default": {
+              "changeStat": {
+                "ikeTrust": -10
+              },
+              "setFlag": "packageLost",
+              "goto": "lost"
+            }
+          }
+        }
+      ],
+      "location": "market",
+      "time": "night"
+    },
+    "caught": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "bassey",
+          "text": "(opening the box with a pen) Hm. Fake customs papers. Who sent you? ...Don't answer. I can see from your face you don't know. I am writing your face in my book."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ike",
+          "text": "(an hour later, after a phone call and an envelope) You got caught. Me, I never get caught. Learn."
+        },
+        {
+          "type": "goto",
+          "scene": "phone"
+        }
+      ],
+      "location": "market",
+      "time": "night",
+      "positions": {
+        "bassey": [
+          20,
+          -9,
+          90
+        ],
+        "ike": [
+          24,
+          -11,
+          180
+        ]
+      }
+    },
+    "lost": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "ike",
+          "text": "The package is where? (He breathes very slowly.) Somebody is going to ask me that question. And I am going to give them your name."
+        },
+        {
+          "type": "goto",
+          "scene": "phone"
+        }
+      ],
+      "location": "market",
+      "time": "night",
+      "positions": {
+        "ike": [
+          24,
+          -11,
+          180
+        ]
+      }
+    },
+    "learn": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "ike",
+          "text": "Sweep. Okay. Sweep, Mr Conscience. (But the next morning he shows you how to read a part number. And how to spot a fake. He doesn't say why.)"
+        },
+        {
+          "type": "goto",
+          "scene": "phone"
+        }
+      ],
+      "location": "market",
+      "time": "night",
+      "positions": {
+        "ike": [
+          24,
+          -11,
+          180
+        ]
+      }
+    },
+    "phone": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Midnight. Your phone rings. NNE."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "nneEmeka",
+          "text": "{name}. You don't call. I sold my good wrapper to pay the oil women. (She doesn't say it to hurt you. That's why it hurts.)",
+          "if": "tookNneMoney"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "nneEmeka",
+          "text": "{name}. I found the ₦5,000 under my pillow. You think I didn't know? Foolish boy. My foolish boy.",
+          "if": {
+            "memory": {
+              "nneMoney": "refused"
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "nneEmeka",
+          "text": "You told me you would find work here, at home. And then you left. I'm not angry. I'm just... the house is quiet.",
+          "if": {
+            "memory": {
+              "emekaDream": "stay"
+            }
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "nneLand",
+          "if": "soldLand"
+        },
+        {
+          "type": "goto",
+          "scene": "nneHarvest",
+          "if": {
+            "anyOf": [
+              "tookHarvest",
+              "harvestCaught",
+              "harvestLoan"
+            ]
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "chinweCall"
+        }
+      ],
+      "location": "backSide",
+      "time": "night"
+    },
+    "nneLand": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "nneEmeka",
+          "text": "Somebody has fenced Papa's land. Dozie says... Dozie says you sold it. Tell me it's a lie. Tell me and I will believe you."
+        },
+        {
+          "type": "choice",
+          "speaker": "nneEmeka",
+          "text": "(She will believe you. That's the worst part.)",
+          "options": [
+            {
+              "text": "\"It's a lie, Nne. Dozie is lying.\"",
+              "effects": {
+                "remember": {
+                  "landLie": "lied"
+                },
+                "changeStat": {
+                  "conscience": -10
+                }
+              }
+            },
+            {
+              "text": "\"I sold it. I'm sorry. I'll buy it back.\"",
+              "effects": {
+                "remember": {
+                  "landLie": "confessed"
+                },
+                "changeStat": {
+                  "motherBond": -12,
+                  "conscience": 6
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "nneEmeka",
+          "text": "(a long silence) Okay. Okay. Eat well, my son.",
+          "if": {
+            "memory": {
+              "landLie": "confessed"
+            }
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "nneHarvest",
+          "if": {
+            "anyOf": [
+              "tookHarvest",
+              "harvestCaught",
+              "harvestLoan"
+            ]
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "chinweCall"
+        }
+      ],
+      "location": "backSide",
+      "time": "night"
+    },
+    "nneHarvest": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "nneEmeka",
+          "text": "And Ọnyịsị came. He asks when Mega Fortune will pay the harvest money back. He is smiling, but his smile is tired.",
+          "if": "tookHarvest"
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "(The school roof is still leaking.)",
+          "options": [
+            {
+              "text": "\"Soon, Nne. Tell him soon.\"",
+              "effects": {
+                "remember": {
+                  "harvestPromise": "soon"
+                },
+                "changeStat": {
+                  "conscience": -6
+                }
+              }
+            },
+            {
+              "text": "\"There is no Mega Fortune. Tell him I will pay it back myself.\"",
+              "effects": {
+                "remember": {
+                  "harvestPromise": "confessed"
+                },
+                "changeStat": {
+                  "villageStanding": -10,
+                  "conscience": 8
+                }
+              }
+            }
+          ],
+          "if": "tookHarvest"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "nneEmeka",
+          "text": "They are saying you tried to steal the harvest money. In front of the elders. My son... I don't go to the market any more.",
+          "if": "harvestCaught",
+          "effects": {
+            "changeStat": {
+              "motherBond": -8
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "nneEmeka",
+          "text": "They say you ran. Through the stream. With the whole village behind you. Even the goats are talking.",
+          "if": {
+            "memory": {
+              "harvestRun": "escaped"
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "nneEmeka",
+          "text": "Ọnyịsị says you owe the village ₦20,000, and that he respects you. Strange man. Strange thing.",
+          "if": "harvestLoan"
+        },
+        {
+          "type": "goto",
+          "scene": "chinweCall"
+        }
+      ],
+      "location": "backSide",
+      "time": "night"
+    },
+    "chinweCall": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "chinwe",
+          "text": "(a message, then a call) Have you found a room? You said a year. I'm counting. I'm good at counting.",
+          "if": {
+            "memory": {
+              "chinweLoan": "promised"
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "chinwe",
+          "text": "You said double. I'm not asking for double. I'm asking how you are.",
+          "if": {
+            "memory": {
+              "chinweLoan": "double"
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "chinwe",
+          "text": "You didn't take my money. I keep thinking about that. Most men would have.",
+          "if": {
+            "memory": {
+              "chinweLoan": "refused"
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "chinwe",
+          "text": "You told me not to wait. So I'm not waiting. I'm just... calling. That's different.",
+          "if": {
+            "memory": {
+              "chinwePromise": "dontWait"
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Ike's voice from the shop door: \"Wear your best shirt tomorrow. We're going to a party. Chief Ọ̀dụ̀'s party.\""
+        },
+        {
+          "type": "goto",
+          "scene": "party"
+        }
+      ],
+      "location": "backSide",
+      "time": "night"
+    },
+    "party": {
+      "beats": [
+        {
+          "type": "setFlag",
+          "flags": [
+            "chiefOduAround",
+            "usherAround"
+          ]
+        },
+        {
+          "type": "cutscene",
+          "cards": [
+            {
+              "title": "Zone 5",
+              "text": "A gate that opens by itself. A garden with lights in the trees. Men and women in white, drinking from gold-rimmed glasses. Everybody is smiling."
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Nobody is laughing. You notice it the way you notice a clock that has stopped.",
+          "if": {
+            "memory": {
+              "dibia": "listened"
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "The music is loud. The smiles are louder. It takes you a while to realise what's missing: laughter.",
+          "if": {
+            "memory": {
+              "dibia": [
+                "mocked",
+                "paid"
+              ]
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "chiefOdu",
+          "text": "Ike's boy. (He looks at you the way a tailor looks at cloth.) Hungry eyes. I like hungry eyes. They see further."
+        },
+        {
+          "type": "choice",
+          "speaker": "chiefOdu",
+          "text": "\"What do you want in Lagos, young man?\"",
+          "options": [
+            {
+              "text": "\"Everything, Chief. Teach me.\"",
+              "effects": {
+                "changeStat": {
+                  "chiefFavour": 10,
+                  "hold": 5
+                },
+                "remember": {
+                  "chiefFirst": "hungry"
+                }
+              }
+            },
+            {
+              "text": "\"I'm just Ike's boy, sir.\"",
+              "effects": {
+                "changeStat": {
+                  "chiefFavour": 2
+                },
+                "remember": {
+                  "chiefFirst": "humble"
+                }
+              }
+            },
+            {
+              "text": "\"Why is nobody laughing, Chief?\"",
+              "effects": {
+                "changeStat": {
+                  "chiefFavour": -5,
+                  "conscience": 3
+                },
+                "remember": {
+                  "chiefFirst": "noticed"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "chiefOdu",
+          "text": "(He smiles without moving any other part of his face.) We will see each other again. Everybody does.",
+          "variants": [
+            {
+              "if": {
+                "memory": {
+                  "chiefFirst": "noticed"
+                }
+              },
+              "text": "(For a moment the whole garden goes quiet.) Laughing is for people who can afford to waste breath. We will see each other again, young man."
+            }
+          ]
+        },
+        {
+          "type": "endChapter",
+          "title": "End of Chapter 2 — The Night Bus",
+          "summary": "Lagos has your name now. Money {money}. Conscience {stat:conscience}. Ike's trust {stat:ikeTrust}. Chief Ọ̀dụ̀ has noticed you.",
+          "next": "g3_bigBoys"
+        }
+      ],
+      "location": "richStreet",
+      "time": "night",
+      "positions": {
+        "chiefOdu": [
+          27,
+          21,
+          180
+        ],
+        "ike": [
+          29.5,
+          21.5,
+          220
+        ],
+        "usher": [
+          25,
+          19,
+          120
+        ]
+      }
+    }
+  }
+}

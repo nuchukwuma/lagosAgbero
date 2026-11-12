@@ -267,5 +267,325 @@
       },
       "text": "Mama's debt: {debt} still owing. The voice notes continue."
     }
+  ],
+  "grace_grace": {
+    "title": "Grass to Grace",
+    "campaign": "grace",
+    "epilogue": [
+      "A year later. A spare-parts shop in Nkwọ-Agụụ junction, the first one between here and the city. Honest parts. The sign says EMEKA & SONS, though there are no sons yet.",
+      {
+        "if": "chinweChoseYou",
+        "text": "There are no sons yet. Chinwe says to be patient. Chinwe says a lot of things. You listen to all of them."
+      },
+      {
+        "if": "confessedVillage",
+        "text": "On market days, Ọnyịsị buys his bicycle chain from you and tells the story of the thief who confessed under the tree. He improves it every time."
+      },
+      {
+        "if": "toldNne",
+        "text": "Nne sits outside the shop in the afternoons and tells customers what you did in Lagos. All of it. She is proud of the coming back, not the going."
+      },
+      "It is not much money. It is yours.",
+      "Grace, it turns out, is not the opposite of grass. It's what grows on it when you stop burning the field."
+    ]
+  },
+  "grace_unbound": {
+    "title": "Unbound",
+    "campaign": "grace",
+    "epilogue": [
+      "The page burns blue, then white, then nothing. Thirty miles away in Zone 5, a white book closes by itself.",
+      "Chief Ọ̀dụ̀ stands very still in the firelight. For the first time anybody can remember, he looks old.",
+      {
+        "if": "trickedBook",
+        "text": "Papa's name rises out of the fire as smoke. The old men say they saw his face in it. The old men say a lot of things on festival nights."
+      },
+      {
+        "if": {
+          "memory": {
+            "lie_loved": "mother"
+          }
+        },
+        "text": "The next morning Nne calls you from the kitchen. By your name. Twice. Just to hear it."
+      },
+      {
+        "if": "chinweForgot",
+        "text": "Chinwe looks at you at the festival and frowns, as if remembering a dream. A week later she knocks on your door. 'I think I know you,' she says. 'Tell me how.'"
+      },
+      "The money goes with the page. All of it. The Benz won't start. The house in Zone 5 belongs to someone else's cousin now.",
+      "You are poor, and free, and the drums are very loud."
+    ]
+  },
+  "grace_witness": {
+    "title": "The Witness",
+    "campaign": "grace",
+    "epilogue": [
+      "Federal High Court, Lagos. Day forty of the trial. You are in the witness box for the ninth time.",
+      "Chief Ọ̀dụ̀ sits in the dock in a grey suit. He looks smaller without the white.",
+      {
+        "if": "pact",
+        "text": "You go to prison too: eighteen months, reduced for cooperation. Commander Bassey visits on Sundays and brings akara. He says it's for the case. It's not for the case."
+      },
+      {
+        "if": {
+          "notFlags": [
+            "pact"
+          ]
+        },
+        "text": "You walk out of court each evening a free man with a police escort and a very long memory."
+      },
+      "The white book is Exhibit 14. It sits in a glass case. Nobody in the courtroom will look at it for long.",
+      {
+        "if": "savedIke",
+        "text": "Ike testifies by video from a country with good weather. At the end, for the first time in years, he laughs. The judge has to call for order."
+      }
+    ]
+  },
+  "grace_goldenCage": {
+    "title": "Golden Cage",
+    "campaign": "grace",
+    "epilogue": [
+      "Zone 5. A gate that opens by itself. A garden with lights in the trees. A house too big to have a sound in it.",
+      "You have everything. You count it every night. It doesn't like to be counted. You count it anyway.",
+      {
+        "if": {
+          "memory": {
+            "lie_loved": "mother"
+          }
+        },
+        "text": "Nne calls on Sundays. She says 'my son' and 'my child' and 'you'. She never says your name. You never ask her to."
+      },
+      {
+        "if": "reflectionLate",
+        "text": "You have covered every mirror in the house with white cloth. It seemed like the right colour."
+      },
+      {
+        "if": "ikeLost",
+        "text": "Sometimes you think you see Ike at the gate. It's always the gardener."
+      },
+      "Outside, Lagos laughs at something. The sound doesn't reach the house."
+    ]
+  },
+  "grace_whiteCloth": {
+    "title": "The White Cloth",
+    "campaign": "grace",
+    "epilogue": [
+      "The cloth is soft. Softer than anything you have ever worn. It fits as if it was cut for you years ago.",
+      "You ride back to Lagos in the third white car. Behind you, the festival fire gets smaller, then it's a star, then it's gone.",
+      "A year later you sit in the white room. A boy from a village you've never heard of sits in the white chair. His eyes are hungry.",
+      "You ask him who he loves most in the world.",
+      "You don't laugh. You can't remember when you stopped."
+    ]
+  },
+  "grace_prodigal": {
+    "title": "The Prodigal",
+    "campaign": "grace",
+    "epilogue": [
+      "You stay. You have nothing. You have the morning.",
+      {
+        "if": {
+          "stats": {
+            "motherBond": ">= 40"
+          }
+        },
+        "text": "Nne makes you pepper soup and doesn't ask any questions. She doesn't need to. She watches you eat like you are still nine years old."
+      },
+      {
+        "if": {
+          "stats": {
+            "motherBond": "< 40"
+          }
+        },
+        "text": "Nne lets you sleep in the parlour. She is polite to you, which is the worst thing a mother can be."
+      },
+      {
+        "if": {
+          "stats": {
+            "villageDebt": "> 0"
+          }
+        },
+        "text": "You owe the village {villageDebt}. You go back to the quarry. Every stone is a naira. It will take years. You start anyway."
+      },
+      {
+        "if": {
+          "memory": {
+            "chinweEnd": "blessed"
+          }
+        },
+        "text": "At Chinwe's wedding you dance at the back, badly, and nobody minds."
+      },
+      "On the third morning, Dibia Ọ̀kwụ̀ walks past your door and nods. Not approval. Recognition. That's enough to start with."
+    ]
+  },
+  "_fates_grace": [
+    {
+      "if": {
+        "anyOf": [
+          "boughtLandBack",
+          {
+            "notFlags": [
+              "soldLand"
+            ]
+          }
+        ]
+      },
+      "text": "Papa's land: still the family's. Yams grow there. Papa would have complained about how they're planted."
+    },
+    {
+      "if": {
+        "flags": [
+          "soldLand"
+        ],
+        "notFlags": [
+          "boughtLandBack"
+        ]
+      },
+      "text": "Papa's land: fenced, sold, someone else's. Nne walks the long way round it to the stream."
+    },
+    {
+      "if": "repaidVillage",
+      "text": "The school roof: finished. The children don't know whose money it was. That's how it should be."
+    },
+    {
+      "if": {
+        "flags": [
+          "tookHarvest"
+        ],
+        "notFlags": [
+          "repaidVillage"
+        ]
+      },
+      "text": "The school roof: still leaking. When it rains, the children move their benches and keep reading."
+    },
+    {
+      "if": "savedIke",
+      "text": "Ike: far away, still running, almost laughing."
+    },
+    {
+      "if": "betrayedIke",
+      "text": "Ike: nobody knows. You know. You don't say."
+    },
+    {
+      "if": {
+        "flags": [
+          "ikeLost"
+        ],
+        "notFlags": [
+          "betrayedIke"
+        ]
+      },
+      "text": "Ike: taken by the white cars. His mother still sets a plate for him on Sundays."
+    },
+    {
+      "if": "married",
+      "text": "Chinwe: your wife. She keeps the accounts and your secrets, in that order."
+    },
+    {
+      "if": {
+        "flags": [
+          "chinweChoseYou"
+        ],
+        "notFlags": [
+          "married"
+        ]
+      },
+      "text": "Chinwe: she chose you, in front of her whole family. Her father hasn't forgiven either of you. He's coming round."
+    },
+    {
+      "if": {
+        "memory": {
+          "fakeParts": "denied"
+        }
+      },
+      "text": "The driver with the failed brakes: he still tells passengers about the JJC who sold him fake parts. He doesn't know your name. He describes your face very accurately."
+    },
+    {
+      "if": {
+        "memory": {
+          "fakeParts": "paid"
+        }
+      },
+      "text": "The driver with the failed brakes: you paid for his repairs. He brings you his customers now."
+    },
+    {
+      "if": "blamedIke",
+      "text": "The village: it believed you about Ike, mostly. Some of the elders still look at you a second too long."
+    },
+    {
+      "if": {
+        "memory": {
+          "book": "left"
+        }
+      },
+      "text": "The white book: you never read it. Some nights you wonder what your page said."
+    },
+    {
+      "if": {
+        "memory": {
+          "invite": "calledNne"
+        }
+      },
+      "text": "Nne: she still says 'ask yourself if you'll tell me at Christmas'. You still do."
+    },
+    {
+      "if": {
+        "memory": {
+          "fleeing": [
+            "escaped",
+            "caught"
+          ]
+        }
+      },
+      "text": "The gate in Zone 5: you never went near it again. You still run, in dreams."
+    },
+    {
+      "if": {
+        "memory": {
+          "basseyTalk": "answered"
+        }
+      },
+      "text": "Commander Bassey: he kept your file. He keeps everybody's file. Yours has a note in the margin: 'village boy. watch.'"
+    },
+    {
+      "if": {
+        "memory": {
+          "gave": "some"
+        }
+      },
+      "text": "The money: you gave some of it away. It's the only part you remember spending."
+    },
+    {
+      "if": {
+        "memory": {
+          "dibiaEnd": [
+            "refused",
+            "prayed"
+          ]
+        }
+      },
+      "text": "Dibia Ọ̀kwụ̀: still peeling oranges by the stream. Still right about most things."
+    },
+    {
+      "if": {
+        "memory": {
+          "nneTold": "fine"
+        }
+      },
+      "text": "Nne: you told her everything was fine. She let you believe she believed it."
+    },
+    {
+      "if": "refusedFellowship",
+      "text": "The white envelope: you burned it. Some nights you still smell gold ink."
+    },
+    {
+      "if": {
+        "flags": [
+          "fledFellowship"
+        ],
+        "notFlags": [
+          "refusedFellowship"
+        ]
+      },
+      "text": "The white chair: you ran from it. It is still waiting, they say, in a house with no number."
+    }
   ]
 }

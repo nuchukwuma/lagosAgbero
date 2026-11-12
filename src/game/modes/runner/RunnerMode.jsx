@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useRunner, runnerInput } from './runnerStore.js'
 import { useDevice } from '../../../components/hud/useDevice.js'
 import Icon from '../../../components/Icon.jsx'
+import { CHASERS } from './RunnerScene.jsx'
 
 // Escape run overlay: distance, stumbles, pursuers; swipe (or arrow keys /
 // WASD / Space) to change lane, jump and slide.
@@ -39,7 +40,7 @@ export default function RunnerMode({ params, onFinish }) {
     return (
       <div className="fee-intro">
         <h2>RUN!</h2>
-        <p>{params.chaser === 'hyenas' ? 'The Hyenas dey behind you.' : 'Task Force dey behind you!'} Reach {params.goal ?? 320} m to escape. Grab naira notes on the way.</p>
+        <p>{(CHASERS[params.chaser] || CHASERS.taskForce).text} Reach {params.goal ?? 320} m to escape. Grab naira notes on the way.</p>
         <p className="muted">{touch ? 'Swipe, or tap the arrows: left/right change lane, up jumps cartons, down slides under banners.' : '←/→ or A/D change lane · ↑/W/Space jump · ↓/S slide'}</p>
         <button className="btn btn-primary" onClick={runner.begin}>
           Go!

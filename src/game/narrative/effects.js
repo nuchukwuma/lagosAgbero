@@ -51,12 +51,13 @@ export function applyEffects(state, effects) {
   // "payDebt": "hustleMoney"  pays Mama's debt from a pocket, as much as it can
   // (or { "from": "money", "max": 50000 })
   if (effects.payDebt) {
-    const { from = 'money', max = Infinity } = typeof effects.payDebt === 'string' ? { from: effects.payDebt } : effects.payDebt
+    // { "from": "money", "to": "villageDebt", "max": 50000 } — "to" defaults to Mama's debt
+    const { from = 'money', to = 'debt', max = Infinity } = typeof effects.payDebt === 'string' ? { from: effects.payDebt } : effects.payDebt
     stats = stats === state.stats ? { ...stats } : stats
-    const amount = Math.max(0, Math.min(stats[from] ?? 0, stats.debt ?? 0, max))
+    const amount = Math.max(0, Math.min(stats[from] ?? 0, stats[to] ?? 0, max))
     stats[from] -= amount
-    stats.debt -= amount
-    if (amount > 0) notices.push(`Sent ${formatNaira(amount)} home. Mama's debt: ${formatNaira(stats.debt)}.`)
+    stats[to] -= amount
+    if (amount > 0) notices.push(to === 'debt' ? `Sent ${formatNaira(amount)} home. Mama's debt: ${formatNaira(stats.debt)}.` : `Paid back ${formatNaira(amount)}. Still owing: ${formatNaira(stats[to])}.`)
   }
 
   if (effects.remember) memory = { ...memory, ...effects.remember }

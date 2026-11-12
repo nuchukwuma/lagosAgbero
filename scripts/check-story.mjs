@@ -105,7 +105,61 @@ if (!errors.length) {
   }
 }
 
-const total = errors.length + parseErrors + playErrors
+// Whole campaigns: play from the first chapter to an ending many times, with
+// random choices, and report endings nobody ever reaches.
+let campaignErrors = 0
+if (!errors.length) {
+  const endingsByCampaign = {}
+  for (const [id, e] of Object.entries(ctx.endings)) if (!id.startsWith('_')) (endingsByCampaign[e.campaign || 'areaBoy'] ||= new Set()).add(id)
+  for (const c of campaigns) {
+    if (!chapters[c.firstChapter]) {
+      console.error(`✗ campaign "${c.id}": firstChapter "${c.firstChapter}" does not exist`)
+      campaignErrors++
+      continue
+    }
+    const reached = new Map()
+    const runs = 400
+    for (let run = 0; run < runs; run++) {
+      let state = engine.newGameState({ name: 'Tester', campaign: c.id, stats: c.startStats || {} })
+      // random money, so choices that cost money get explored too
+      state = { ...state, stats: { ...state.stats, money: [0, 2000, 60000, 400000, 2000000][run % 5] } }
+      state = engine.startChapter(ctx, state, c.firstChapter).state
+      try {
+        for (let step = 0; step < 5000; step++) {
+          const view = engine.renderView(ctx, state)
+          if (view.type === 'ending') {
+            reached.set(view.id, (reached.get(view.id) || 0) + 1)
+            break
+          }
+          if (view.type === 'finished') break
+          if (view.type === 'choice') {
+            const open = view.options.filter((o) => !o.locked)
+            if (!open.length) throw new Error(`every option locked at ${view.key}`)
+            state = engine.choose(ctx, state, open[Math.floor(Math.random() * open.length)].index).state
+          } else if (view.type === 'mode') {
+            const outcomes = view.outcomes.length ? view.outcomes : ['won', 'lost']
+            const outcome = outcomes[Math.floor(Math.random() * outcomes.length)]
+            // bluff results carry remembered claims, as the real mode does
+            const remember = view.mode === 'bluff' ? { lie_loved: ['mother', 'chinwe', 'nobody'][Math.floor(Math.random() * 3)] } : undefined
+            state = engine.receiveModeResult(ctx, state, { outcome, remember }).state
+          } else state = engine.advance(ctx, state).state
+          if (step === 4999) throw new Error('campaign never reached an ending')
+        }
+      } catch (e) {
+        campaignErrors++
+        console.error(`✗ campaign "${c.id}": ${e.message}`)
+        break
+      }
+    }
+    const own = [...(endingsByCampaign[c.id] || [])]
+    const missing = own.filter((id) => !reached.has(id))
+    const summary = [...reached.entries()].map(([id, n]) => `${id} ${Math.round((n / runs) * 100)}%`).join(', ')
+    console.log(`campaign ${c.id}: ${summary || 'no endings reached'}`)
+    if (missing.length) console.warn(`! campaign ${c.id}: endings never reached in ${runs} random play-throughs: ${missing.join(', ')}`)
+  }
+}
+
+const total = errors.length + parseErrors + playErrors + campaignErrors
 console.log(`\n${Object.keys(chapters).length} chapter(s), ${errors.length + parseErrors} error(s), ${warnings.length} warning(s), ${playErrors} play-through failure(s)`)
 if (total) process.exit(1)
 console.log('Story OK ✓')

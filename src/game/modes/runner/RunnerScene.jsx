@@ -16,6 +16,16 @@ import { sfx } from '../../audio/audio.js'
 // The player runs towards -Z; lanes are 2.6 m apart.
 
 const LANE_W = 2.6
+
+// Who is behind you (params.chaser)
+export const CHASERS = {
+  taskForce: { look: 'bassey', vehicle: 'taskForceVan', text: 'Task Force dey behind you!' },
+  hyenas: { look: { shirt: '#8e44ad', trousers: '#ffffff' }, vehicle: 'bigManSuv', text: 'The Hyenas dey behind you.' },
+  fellowship: { look: { body: 'male_longsleeve', shirt: '#fbfbfb', trousers: '#fbfbfb' }, seed: 151, vehicle: 'bigManSuv', text: 'Men in white are running after you. They are not shouting. That is worse.' },
+  dons: { look: { shirt: '#c0392b', trousers: '#1a1a1a', accessories: [{ type: 'bandana', color: '#c0392b' }] }, seed: 171, vehicle: null, text: 'Crimson Dons behind you. Run!' },
+  villagers: { look: { shirt: '#7b241c' }, seed: 191, vehicle: null, text: 'Half the village is chasing you. With brooms.' },
+  mob: { look: { shirt: '#5d4037' }, seed: 211, vehicle: null, text: 'An angry crowd dey behind you!' },
+}
 const Y = 0.02
 const BUILDINGS = ['shopHouseA', 'tenementA', 'tenementB', 'storeyHouseA', 'shopRow', 'warehouseA', 'bungalowWide', 'storeyHouseC']
 const bannerMat = new THREE.MeshLambertMaterial({ color: '#c0392b' })
@@ -116,7 +126,8 @@ export default function RunnerScene({ playerLook }) {
   const [anim, setAnim] = useState('run')
   const hudTimer = useRef(0)
   const ended = useRef(false)
-  const chaserLook = useMemo(() => (params.chaser === 'hyenas' ? { ...randomLook(131, 'male'), shirt: '#8e44ad' } : characters.bassey.look), [params.chaser])
+  const chaser = CHASERS[params.chaser] || CHASERS.taskForce
+  const chaserLook = useMemo(() => (chaser.look === 'bassey' ? characters.bassey.look : { ...randomLook(chaser.seed || 131, 'male'), ...chaser.look }), [chaser])
 
   useFrame((_, raw) => {
     const dt = Math.min(raw, 0.05)
@@ -156,7 +167,7 @@ export default function RunnerScene({ playerLook }) {
       <Suspense fallback={null}>
         <Character ref={player} look={playerLook} animation={anim} speed={anim === 'run' ? 1.2 : 1.4} />
         <group ref={chasers}>
-          <Model name={params.chaser === 'hyenas' ? 'bigManSuv' : 'taskForceVan'} position={[2.6, 0, 5]} rotation-y={Math.PI} />
+          {chaser.vehicle && <Model name={chaser.vehicle} position={[2.6, 0, 5]} rotation-y={Math.PI} />}
           <Character look={chaserLook} animation="run" speed={1.2} position={[-1.2, 0, 0]} rotation-y={Math.PI} />
           <Character look={{ ...chaserLook, skin: '#4e2f1d' }} animation="run" speed={1.15} position={[1.0, 0, 1.4]} rotation-y={Math.PI} />
         </group>

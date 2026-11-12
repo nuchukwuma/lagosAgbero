@@ -1,0 +1,687 @@
+{
+  "id": "g5_abundance",
+  "campaign": "grace",
+  "world": "iyanaWahala",
+  "act": 1,
+  "number": 5,
+  "title": "Chapter 5 — Abundance",
+  "description": "What the money buys, what the price takes, and who Emeka becomes when Ike comes knocking at 3 a.m.",
+  "startScene": "start",
+  "scenes": {
+    "start": {
+      "beats": [
+        {
+          "type": "setFlag",
+          "flags": [
+            "ikeAround"
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "rich",
+          "if": {
+            "anyOf": [
+              "pact",
+              "trickedBook"
+            ]
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "hard"
+        }
+      ],
+      "location": "backSide",
+      "time": "dawn"
+    },
+    "rich": {
+      "beats": [
+        {
+          "type": "cutscene",
+          "cards": [
+            {
+              "title": "Abundance",
+              "text": "Contracts arrive that you never bid for. A Benz arrives that you never ordered. A house in Zone 5 opens its gate for you as if it knew you were coming."
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "nneEmeka",
+          "text": "(on the phone) My... my... (She stops. Starts again.) My son. I keep trying to say your name. It won't come. Is something wrong with me?",
+          "if": {
+            "flags": [
+              "pact"
+            ],
+            "memory": {
+              "lie_loved": "mother"
+            }
+          },
+          "effects": {
+            "changeStat": {
+              "motherBond": -10,
+              "conscience": -6
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "nneEmeka",
+          "text": "(on the phone) E... Emeka. (She says it slowly, like a word in a foreign language.) Strange. Your name feels heavy today.",
+          "if": {
+            "flags": [
+              "trickedBook"
+            ],
+            "memory": {
+              "lie_loved": "mother"
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "chinwe",
+          "text": "(on a video call, polite and puzzled) Good evening. Who is this, please?",
+          "if": {
+            "flags": [
+              "pact"
+            ],
+            "memory": {
+              "lie_loved": "chinwe"
+            }
+          },
+          "effects": {
+            "changeStat": {
+              "chinweBond": -20
+            },
+            "setFlag": "chinweForgot"
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "chinwe",
+          "text": "(on a video call) Emeka? Your face looks... blurry on my screen. Bad network?",
+          "if": {
+            "flags": [
+              "trickedBook"
+            ],
+            "memory": {
+              "lie_loved": "chinwe"
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "In the mirror of your new bathroom, your reflection moves half a second after you. You stop using mirrors.",
+          "if": {
+            "flags": [
+              "pact"
+            ],
+            "memory": {
+              "lie_loved": "nobody"
+            }
+          },
+          "effects": {
+            "setFlag": "reflectionLate",
+            "changeStat": {
+              "conscience": -8
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Some nights you can't remember Papa's face. Only his name, which you gave away.",
+          "if": {
+            "flags": [
+              "trickedBook"
+            ],
+            "memory": {
+              "lie_loved": "nobody"
+            }
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "spend"
+        }
+      ],
+      "location": "richStreet",
+      "time": "day"
+    },
+    "spend": {
+      "beats": [
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "(You have {money}. It doesn't feel like yours. Maybe it isn't.)",
+          "options": [
+            {
+              "text": "Build Nne a proper house in Nkwọ-Agụụ.",
+              "effects": {
+                "setFlag": "builtHouse",
+                "changeStat": {
+                  "motherBond": 10,
+                  "hold": 3
+                },
+                "goto": "spend"
+              },
+              "cost": 300000,
+              "requires": {
+                "notFlags": [
+                  "builtHouse"
+                ]
+              }
+            },
+            {
+              "text": "Pay back the harvest money, every naira.",
+              "effects": {
+                "setFlag": "repaidVillage",
+                "payDebt": {
+                  "from": "money",
+                  "to": "villageDebt"
+                },
+                "changeStat": {
+                  "villageStanding": 15,
+                  "conscience": 6
+                },
+                "goto": "spend"
+              },
+              "requires": {
+                "flags": [
+                  "tookHarvest"
+                ],
+                "notFlags": [
+                  "repaidVillage"
+                ]
+              }
+            },
+            {
+              "text": "Buy back Papa's land.",
+              "effects": {
+                "setFlag": "boughtLandBack",
+                "changeStat": {
+                  "conscience": 6,
+                  "motherBond": 6
+                },
+                "goto": "spend"
+              },
+              "cost": 250000,
+              "requires": {
+                "flags": [
+                  "soldLand"
+                ],
+                "notFlags": [
+                  "boughtLandBack"
+                ]
+              }
+            },
+            {
+              "text": "Send Chinwe her savings back, with interest.",
+              "effects": {
+                "setFlag": "repaidChinwe",
+                "changeStat": {
+                  "chinweBond": 10
+                },
+                "goto": "spend"
+              },
+              "cost": 160000,
+              "requires": {
+                "flags": [
+                  "tookChinweSavings"
+                ],
+                "notFlags": [
+                  "repaidChinwe"
+                ]
+              }
+            },
+            {
+              "text": "Keep it. Lagos first.",
+              "effects": {
+                "setFlag": "hoarded",
+                "changeStat": {
+                  "hold": 10
+                },
+                "goto": "bassey"
+              }
+            },
+            {
+              "text": "That's enough giving.",
+              "effects": {
+                "remember": {
+                  "gave": "some"
+                },
+                "goto": "bassey"
+              }
+            }
+          ]
+        }
+      ],
+      "location": "richStreet"
+    },
+    "hard": {
+      "beats": [
+        {
+          "type": "cutscene",
+          "cards": [
+            {
+              "title": "The hard road",
+              "text": "The Fellowship doesn't burn you. It just... closes doors. Customers vanish. Landlords remember they have nephews. Your name stops working in shops where it worked last week."
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "You were beaten at that gate. Your ribs still tell the weather.",
+          "if": "beatenByUshers"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "biodun",
+          "text": "You need work? My danfo needs a second driver. 'God's Time Is The Best.' Fuel money is yours, the bus is mine, the passengers are God's."
+        },
+        {
+          "type": "startMode",
+          "mode": "drive",
+          "params": {
+            "length": 2000,
+            "stops": 4,
+            "fuel": 55,
+            "checkpoints": 1,
+            "slogan": "GOD'S TIME IS THE BEST",
+            "seed": 57
+          },
+          "results": {
+            "done": {
+              "changeStat": {
+                "conscience": 4
+              },
+              "remember": {
+                "grind": "drove"
+              },
+              "goto": "chinwe"
+            },
+            "default": {
+              "changeStat": {
+                "energy": -10
+              },
+              "remember": {
+                "grind": "struggled"
+              },
+              "goto": "chinwe"
+            }
+          }
+        }
+      ],
+      "location": "frontStop",
+      "time": "day",
+      "positions": {
+        "biodun": [
+          -24.5,
+          -4.6,
+          0
+        ]
+      }
+    },
+    "chinwe": {
+      "beats": [
+        {
+          "type": "goto",
+          "scene": "chinweComes",
+          "if": {
+            "memory": {
+              "chinwePromise": "sendFor"
+            },
+            "stats": {
+              "chinweBond": ">= 50"
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Chinwe's last message was a week ago. You keep reading it. 'I'm still counting.'",
+          "if": {
+            "memory": {
+              "chinwePromise": "oneYear"
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "You told Chinwe not to wait. Some nights you wish she hadn't listened.",
+          "if": {
+            "memory": {
+              "chinwePromise": "dontWait"
+            }
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "bassey"
+        }
+      ],
+      "location": "backSide",
+      "time": "dusk"
+    },
+    "chinweComes": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "chinwe",
+          "text": "(at the Back Side, holding one bag) You said you would send for me. You didn't. So I sent for myself."
+        },
+        {
+          "type": "choice",
+          "speaker": "chinwe",
+          "text": "\"Well? Say something before I change my mind.\"",
+          "options": [
+            {
+              "text": "\"Marry me. Here. With nothing.\"",
+              "effects": {
+                "setFlag": [
+                  "chinweInLagos",
+                  "married"
+                ],
+                "changeStat": {
+                  "chinweBond": 15,
+                  "conscience": 6
+                }
+              }
+            },
+            {
+              "text": "\"Stay. But not yet. Let me fix things first.\"",
+              "effects": {
+                "setFlag": "chinweInLagos",
+                "changeStat": {
+                  "chinweBond": 4
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "bassey"
+        }
+      ],
+      "location": "backSide",
+      "time": "dusk",
+      "positions": {
+        "chinwe": [
+          6,
+          -5,
+          200
+        ]
+      }
+    },
+    "bassey": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "bassey",
+          "text": "{name}. Sit. I remember your face from that box of fake customs papers. You've come up in the world.",
+          "if": "packageCaught"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "bassey",
+          "text": "{name}. Sit. Your name keeps appearing near another name. Chief Ọ̀dụ̀. I have been following that name for six years."
+        },
+        {
+          "type": "choice",
+          "speaker": "bassey",
+          "text": "(He waits. He is very good at waiting.)",
+          "options": [
+            {
+              "text": "Show him the photos of the white book.",
+              "effects": {
+                "setFlag": "toldBassey",
+                "changeStat": {
+                  "hold": -10,
+                  "policeHeat": -10
+                },
+                "goto": "basseyDeal"
+              },
+              "requires": "bookPhoto",
+              "showLocked": true,
+              "lockedText": "You'd need evidence"
+            },
+            {
+              "text": "Answer his questions. Carefully.",
+              "effects": {
+                "remember": {
+                  "basseyTalk": "answered"
+                },
+                "goto": "basseyQuestions"
+              }
+            }
+          ]
+        }
+      ],
+      "location": "frontStop",
+      "time": "day",
+      "positions": {
+        "bassey": [
+          -12,
+          -6,
+          180
+        ]
+      }
+    },
+    "basseyQuestions": {
+      "beats": [
+        {
+          "type": "startMode",
+          "mode": "bluff",
+          "params": {
+            "scenario": "policeLagos"
+          },
+          "results": {
+            "confessed": {
+              "setFlag": "toldBassey",
+              "goto": "basseyDeal"
+            },
+            "caught": {
+              "setFlag": "basseyOnto",
+              "changeStat": {
+                "policeHeat": 20
+              },
+              "goto": "ikeCrisis"
+            },
+            "default": {
+              "changeStat": {
+                "policeHeat": -5
+              },
+              "goto": "ikeCrisis"
+            }
+          }
+        }
+      ],
+      "location": "frontStop",
+      "positions": {
+        "bassey": [
+          -12,
+          -6,
+          180
+        ]
+      }
+    },
+    "basseyDeal": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "bassey",
+          "text": "(He looks at the evidence for a long time.) Six years. Six years and a village boy brings it to me. When I move, I will need you to stand up in court. Can you stand?"
+        },
+        {
+          "type": "goto",
+          "scene": "ikeCrisis"
+        }
+      ],
+      "location": "frontStop",
+      "positions": {
+        "bassey": [
+          -12,
+          -6,
+          180
+        ]
+      }
+    },
+    "ikeCrisis": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "ike",
+          "text": "(at your door, 3 a.m., shaking) They want a second price. My mother. Not her life, they said. Her mind. I said no. Emeka, I said no. They are coming."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ike",
+          "text": "You told me to leave them. I'm leaving. Help me.",
+          "if": {
+            "memory": {
+              "ikeSecret": "warned"
+            }
+          }
+        },
+        {
+          "type": "choice",
+          "speaker": "ike",
+          "text": "(Headlights at the end of the street. White cars.)",
+          "options": [
+            {
+              "text": "\"Get behind me.\" Fight whoever comes.",
+              "effects": {
+                "goto": "ikeFight"
+              }
+            },
+            {
+              "text": "Call the Chief. Tell him where Ike is.",
+              "effects": {
+                "setFlag": [
+                  "betrayedIke",
+                  "ikeLost"
+                ],
+                "changeStat": {
+                  "hold": 15,
+                  "chiefFavour": 15,
+                  "conscience": -20,
+                  "ikeTrust": -50
+                },
+                "goto": "summons"
+              },
+              "requires": {
+                "anyOf": [
+                  "pact",
+                  "trickedBook"
+                ]
+              }
+            },
+            {
+              "text": "\"I can't help you, Ike. I'm sorry.\"",
+              "effects": {
+                "setFlag": "ikeLost",
+                "changeStat": {
+                  "conscience": -6,
+                  "ikeTrust": -20
+                },
+                "goto": "summons"
+              }
+            }
+          ]
+        }
+      ],
+      "location": "backSide",
+      "time": "night",
+      "positions": {
+        "ike": [
+          7,
+          -6,
+          200
+        ]
+      }
+    },
+    "ikeFight": {
+      "beats": [
+        {
+          "type": "startMode",
+          "mode": "fight",
+          "params": {
+            "opponent": "usher",
+            "difficulty": 2
+          },
+          "results": {
+            "won": {
+              "setFlag": "savedIke",
+              "changeStat": {
+                "ikeTrust": 30,
+                "conscience": 8,
+                "hold": -5
+              },
+              "goto": "ikeSaved"
+            },
+            "lost": {
+              "setFlag": "ikeLost",
+              "changeStat": {
+                "energy": -25
+              },
+              "goto": "ikeTaken"
+            }
+          }
+        }
+      ],
+      "location": "backSide",
+      "time": "night"
+    },
+    "ikeSaved": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "ike",
+          "text": "(on the back of an okada, Formula One driving like the devil owes him money) I don't know where I'm going. But I'm going. Thank you, Emeka. (And for one second, almost, he laughs.)"
+        },
+        {
+          "type": "goto",
+          "scene": "summons"
+        }
+      ],
+      "location": "backSide",
+      "time": "night"
+    },
+    "ikeTaken": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "They take Ike gently, like porters lifting a box. He doesn't fight. He looks at you once. It isn't blame. That's worse."
+        },
+        {
+          "type": "goto",
+          "scene": "summons"
+        }
+      ],
+      "location": "backSide",
+      "time": "night"
+    },
+    "summons": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "onyisi",
+          "text": "(a call from the village) {name}. The New Yam festival is in three days. Your mother is not well. And the village has questions. Come home and answer them like a man."
+        },
+        {
+          "type": "endChapter",
+          "title": "End of Chapter 5 — Abundance",
+          "summary": "Money {money}. Conscience {stat:conscience}. The Fellowship's hold {stat:hold}. Nkwọ-Agụụ is calling you home.",
+          "next": "g6_grace"
+        }
+      ],
+      "location": "backSide",
+      "time": "dawn"
+    }
+  }
+}

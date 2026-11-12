@@ -1,0 +1,508 @@
+{
+  "id": "g3_bigBoys",
+  "campaign": "grace",
+  "world": "iyanaWahala",
+  "act": 1,
+  "number": 3,
+  "title": "Chapter 3 — Big Boys",
+  "description": "Chief Ọ̀dụ̀ wants an assistant. The fake parts come back with a driver. Ike can't laugh any more, and he knows why.",
+  "startScene": "morning",
+  "scenes": {
+    "morning": {
+      "beats": [
+        {
+          "type": "setFlag",
+          "flags": [
+            "ikeAround"
+          ],
+          "clear": [
+            "chiefOduAround",
+            "usherAround"
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ike",
+          "text": "Boy! Sweep the front. Customers judge a shop by its floor.",
+          "variants": [
+            {
+              "if": "paidFee",
+              "text": "Partner! (He has started calling you partner since the fee. He says it like a joke he doesn't find funny.)"
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Three months of sleeping on cartons. The rats have stopped running when you come in. They consider you staff.",
+          "if": "apprentice"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "A black car stops outside the shop. Chief Ọ̀dụ̀'s driver gets out and asks for you by name."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "usher",
+          "text": "The Chief needs an assistant. He asked for 'the hungry one'.",
+          "variants": [
+            {
+              "if": {
+                "memory": {
+                  "chiefFirst": "noticed"
+                }
+              },
+              "text": "The Chief wants to see the boy who notices things. He doesn't usually want to see those."
+            },
+            {
+              "if": {
+                "memory": {
+                  "chiefFirst": "humble"
+                }
+              },
+              "text": "The Chief needs someone quiet. He says you are quiet. He means it as a compliment."
+            }
+          ]
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "(Ike is watching you from behind a pile of tyres.)",
+          "options": [
+            {
+              "text": "Go and work for Chief Ọ̀dụ̀.",
+              "effects": {
+                "setFlag": "chiefPA",
+                "changeStat": {
+                  "chiefFavour": 10,
+                  "hold": 5,
+                  "ikeTrust": -4
+                }
+              }
+            },
+            {
+              "text": "Stay with Ike. He brought you to Lagos.",
+              "effects": {
+                "setFlag": "stayedIke",
+                "changeStat": {
+                  "ikeTrust": 8
+                }
+              }
+            },
+            {
+              "text": "Open your own small stall. Honest parts.",
+              "effects": {
+                "setFlag": "ownStall",
+                "changeStat": {
+                  "conscience": 4,
+                  "money": -10000,
+                  "ikeTrust": -2
+                }
+              },
+              "requires": {
+                "anyOf": [
+                  "learnedTrade",
+                  {
+                    "stats": {
+                      "money": ">= 30000"
+                    }
+                  }
+                ]
+              },
+              "showLocked": true,
+              "lockedText": "Needs the real trade (Chapter 2) or ₦30,000"
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "fallout",
+          "if": "soldFakeParts"
+        },
+        {
+          "type": "goto",
+          "scene": "packageNews"
+        }
+      ],
+      "location": "market",
+      "time": "day",
+      "positions": {
+        "ike": [
+          24,
+          -11,
+          180
+        ],
+        "usher": [
+          21,
+          -8,
+          0
+        ]
+      }
+    },
+    "fallout": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "passenger",
+          "text": "YOU! You sold me 'original' brake pads! They failed on the bridge! My children were in the car!",
+          "mood": "angry"
+        },
+        {
+          "type": "startMode",
+          "mode": "fight",
+          "params": {
+            "opponent": "angryDriver",
+            "difficulty": 1
+          },
+          "results": {
+            "won": {
+              "goto": "falloutAfter"
+            },
+            "lost": {
+              "changeStat": {
+                "energy": -15
+              },
+              "goto": "falloutAfter"
+            }
+          }
+        }
+      ],
+      "location": "market",
+      "time": "day"
+    },
+    "falloutAfter": {
+      "beats": [
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "(The driver is sitting on the kerb, breathing hard. His children are fine. He isn't.)",
+          "options": [
+            {
+              "text": "Pay for his repairs. All of them.",
+              "effects": {
+                "changeStat": {
+                  "conscience": 8
+                },
+                "remember": {
+                  "fakeParts": "paid"
+                }
+              },
+              "cost": 10000
+            },
+            {
+              "text": "\"Lagos. Buyer beware.\"",
+              "effects": {
+                "changeStat": {
+                  "conscience": -6
+                },
+                "remember": {
+                  "fakeParts": "denied"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "packageNews"
+        }
+      ],
+      "location": "market"
+    },
+    "packageNews": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "usher",
+          "text": "The box you lost belonged to the Fellowship. The Fellowship does not lose things. It collects them. You owe us.",
+          "if": "packageLost",
+          "effects": {
+            "changeStat": {
+              "hold": 15
+            },
+            "setFlag": "owesFellowship"
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "usher",
+          "text": "The box arrived. The Fellowship notices reliable hands.",
+          "if": "deliveredPackage",
+          "effects": {
+            "changeStat": {
+              "chiefFavour": 5
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ike",
+          "text": "Commander Bassey asked about you. Your face is in his little book. Keep it out of trouble.",
+          "if": "packageCaught"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "uncleDozie",
+          "text": "(a voice note from the village) The buyer came back. Your mother refused to sign. Your mother has more liver than you. I hope you are proud.",
+          "if": "landFailed"
+        },
+        {
+          "type": "goto",
+          "scene": "ikeNight"
+        }
+      ],
+      "location": "market",
+      "positions": {
+        "ike": [
+          24,
+          -11,
+          180
+        ],
+        "usher": [
+          21,
+          -8,
+          0
+        ]
+      }
+    },
+    "ikeNight": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Night. Ike buys two bottles and sits with you on the kerb at the Back Side. He tells a joke about a goat and a customs officer. You laugh until you cry."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Ike doesn't laugh. He watches you laughing like a man watching a film of a country he used to live in."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ike",
+          "text": "Everything has a price, Emeka. I paid mine. Since that night... I can't laugh. Even when it's funny. Especially when it's funny."
+        },
+        {
+          "type": "choice",
+          "speaker": "ike",
+          "text": "(He's drunk enough to tell you the truth. Not drunk enough to forget he told it.)",
+          "options": [
+            {
+              "text": "\"What night, Ike? What did you pay?\"",
+              "effects": {
+                "remember": {
+                  "ikeSecret": "asked"
+                },
+                "changeStat": {
+                  "hold": 5
+                }
+              }
+            },
+            {
+              "text": "\"Leave them, Ike. Whoever they are.\"",
+              "effects": {
+                "remember": {
+                  "ikeSecret": "warned"
+                },
+                "changeStat": {
+                  "ikeTrust": 10,
+                  "conscience": 3
+                }
+              }
+            },
+            {
+              "text": "\"So? You have a Benz. Who needs to laugh?\"",
+              "effects": {
+                "remember": {
+                  "ikeSecret": "mocked"
+                },
+                "changeStat": {
+                  "conscience": -5,
+                  "ikeTrust": -4
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ike",
+          "text": "The Fellowship of Endless Abundance. You put your name in the white book, they put money in your hand. And they take something you didn't know you had.",
+          "if": {
+            "memory": {
+              "ikeSecret": "asked"
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ike",
+          "text": "(He looks at you for a long time.) Leave them? You don't leave them, Emeka. They leave you. Empty.",
+          "if": {
+            "memory": {
+              "ikeSecret": "warned"
+            }
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "chiefWork",
+          "if": "chiefPA"
+        },
+        {
+          "type": "goto",
+          "scene": "stallLife"
+        }
+      ],
+      "location": "backSide",
+      "time": "night",
+      "positions": {
+        "ike": [
+          7,
+          -6,
+          200
+        ]
+      }
+    },
+    "chiefWork": {
+      "beats": [
+        {
+          "type": "setFlag",
+          "flags": [
+            "chiefOduAround"
+          ]
+        },
+        {
+          "type": "cutscene",
+          "cards": [
+            {
+              "title": "The Chief's house",
+              "text": "You carry files. You fetch cars. You learn which senator likes which wine. One night the Chief leaves his study open. On the desk: a white book with a red ribbon."
+            }
+          ]
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "(Nobody is in the corridor.)",
+          "options": [
+            {
+              "text": "Open it and read.",
+              "effects": {
+                "setFlag": "sawBook",
+                "remember": {
+                  "book": "read"
+                },
+                "changeStat": {
+                  "hold": 5
+                }
+              }
+            },
+            {
+              "text": "Take photos of every page with your phone.",
+              "effects": {
+                "setFlag": [
+                  "sawBook",
+                  "bookPhoto"
+                ],
+                "remember": {
+                  "book": "photo"
+                }
+              }
+            },
+            {
+              "text": "Leave it. Some books read you back.",
+              "effects": {
+                "remember": {
+                  "book": "left"
+                },
+                "changeStat": {
+                  "conscience": 2
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Names. Hundreds. Senators, pastors, a footballer you love. Ike Okafor, written two years ago. And on the last page, in fresh red ink: your name. Already written. Waiting.",
+          "if": "sawBook"
+        },
+        {
+          "type": "goto",
+          "scene": "invitation"
+        }
+      ],
+      "location": "richStreet",
+      "time": "night"
+    },
+    "stallLife": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Your own corner of the market. Honest parts, honest prices, honest losses. Your customers come back. Some of them even pay.",
+          "if": "ownStall",
+          "effects": {
+            "changeStat": {
+              "money": 25000,
+              "conscience": 4
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Ike works you hard and pays you less. But some nights he leaves food by your mat without saying anything.",
+          "if": "stayedIke",
+          "effects": {
+            "changeStat": {
+              "money": 15000,
+              "ikeTrust": 4
+            }
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "invitation"
+        }
+      ],
+      "location": "market",
+      "time": "day"
+    },
+    "invitation": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "The next morning there's an envelope on your mat. White. Heavy. Your name in gold."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "\"The Fellowship of Endless Abundance invites you to its Night of Increase. White attire. Come alone. Come hungry.\"",
+          "variants": [
+            {
+              "if": "chiefPA",
+              "text": "\"The Fellowship of Endless Abundance invites our Chief's assistant to its Night of Increase. White attire. Come alone. Come hungry.\""
+            },
+            {
+              "if": "owesFellowship",
+              "text": "\"The Fellowship of Endless Abundance invites you to settle your account at its Night of Increase. White attire. Come alone.\""
+            }
+          ]
+        },
+        {
+          "type": "endChapter",
+          "title": "End of Chapter 3 — Big Boys",
+          "summary": "The white envelope is on your mat. Money {money}. Conscience {stat:conscience}. The Fellowship's hold {stat:hold}.",
+          "next": "g4_fellowship"
+        }
+      ],
+      "location": "backSide",
+      "time": "dawn"
+    }
+  }
+}

@@ -1,0 +1,592 @@
+{
+  "id": "g4_fellowship",
+  "campaign": "grace",
+  "world": "iyanaWahala",
+  "act": 1,
+  "number": 4,
+  "title": "Chapter 4 — The White Room",
+  "description": "The Fellowship of Endless Abundance asks who you love. Then it names the price.",
+  "startScene": "decide",
+  "scenes": {
+    "decide": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "You hold the envelope over the kerosene lamp. Not close enough to burn. Not far enough to be safe."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "White cloth. A white book that writes in red. The old man by the stream saw this coming before you did.",
+          "if": {
+            "memory": {
+              "dibia": "listened"
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Ike's voice in your head: \"They take something you didn't know you had.\"",
+          "if": {
+            "memory": {
+              "ikeSecret": [
+                "asked",
+                "warned"
+              ]
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Your name, already written in red, on the last page of the Chief's book.",
+          "if": "sawBook"
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "(Night of Increase. Tonight.)",
+          "options": [
+            {
+              "text": "Go to the Night of Increase.",
+              "effects": {
+                "remember": {
+                  "invite": "went"
+                },
+                "goto": "night"
+              }
+            },
+            {
+              "text": "Burn the invitation.",
+              "effects": {
+                "setFlag": "refusedFellowship",
+                "remember": {
+                  "invite": "burned"
+                },
+                "changeStat": {
+                  "conscience": 8
+                },
+                "goto": "refused"
+              }
+            },
+            {
+              "text": "Call Nne first.",
+              "effects": {
+                "remember": {
+                  "invite": "calledNne"
+                },
+                "goto": "callNne"
+              }
+            }
+          ]
+        }
+      ],
+      "location": "backSide",
+      "time": "night"
+    },
+    "callNne": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "nneEmeka",
+          "text": "{name}? It's late. Is it money? Is it a woman? Is it trouble? (She knows your voice better than you do.)"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "nneEmeka",
+          "text": "Dozie keeps saying you sold the land. I keep not believing him. Don't make me a fool, my son.",
+          "if": {
+            "memory": {
+              "landLie": "lied"
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "nneEmeka",
+          "text": "Whatever you are about to do, ask yourself: will you tell me about it at Christmas? If not, don't do it.",
+          "effects": {
+            "changeStat": {
+              "motherBond": 4
+            }
+          }
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "(The envelope is still in your hand.)",
+          "options": [
+            {
+              "text": "Go to the Night of Increase.",
+              "effects": {
+                "remember": {
+                  "invite": "went"
+                },
+                "goto": "night"
+              }
+            },
+            {
+              "text": "Burn the invitation.",
+              "effects": {
+                "setFlag": "refusedFellowship",
+                "remember": {
+                  "invite": "burned"
+                },
+                "changeStat": {
+                  "conscience": 8
+                },
+                "goto": "refused"
+              }
+            }
+          ]
+        }
+      ],
+      "location": "backSide",
+      "time": "night"
+    },
+    "night": {
+      "beats": [
+        {
+          "type": "setFlag",
+          "flags": [
+            "chiefOduAround",
+            "usherAround"
+          ]
+        },
+        {
+          "type": "cutscene",
+          "cards": [
+            {
+              "title": "The Night of Increase",
+              "text": "A house in Zone 5 with no number. A corridor of white curtains. Thirty people in white, smiling. A white chair in the middle of the room, for you."
+            }
+          ]
+        },
+        {
+          "type": "startMode",
+          "mode": "bluff",
+          "params": {
+            "scenario": "vetting"
+          },
+          "results": {
+            "caught": {
+              "setFlag": "vettingCaught",
+              "changeStat": {
+                "hold": 10
+              },
+              "goto": "price"
+            },
+            "default": {
+              "goto": "price"
+            }
+          }
+        }
+      ],
+      "location": "richStreet",
+      "time": "night",
+      "positions": {
+        "chiefOdu": [
+          27,
+          21,
+          180
+        ],
+        "usher": [
+          25,
+          19,
+          120
+        ]
+      }
+    },
+    "price": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "chiefOdu",
+          "text": "Abundance needs balance. We are not animals. We don't take lives. We take... meaning."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "chiefOdu",
+          "text": "You love your mother. Then this is the price: she will never again say your name. She will love you. She will feed you. She will not be able to call you.",
+          "if": {
+            "memory": {
+              "lie_loved": "mother"
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "chiefOdu",
+          "text": "You love Chinwe. Then this is the price: she will forget your face. Not you. Just your face. Every morning, a stranger.",
+          "if": {
+            "memory": {
+              "lie_loved": "chinwe"
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "chiefOdu",
+          "text": "Nobody? (He smiles.) Then the book will choose for you. It chooses very well.",
+          "if": {
+            "memory": {
+              "lie_loved": "nobody"
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "chiefOdu",
+          "text": "You lied in my white chair. The book doesn't like liars. It will charge you extra.",
+          "if": "vettingCaught"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "You lied about love, the way the old man told you to. The book can only take what you name.",
+          "if": {
+            "memory": {
+              "dibia": "listened",
+              "lie_loved": [
+                "chinwe",
+                "nobody"
+              ]
+            }
+          }
+        },
+        {
+          "type": "choice",
+          "speaker": "chiefOdu",
+          "text": "\"The pen, Emeka. Red ink. Sign.\"",
+          "options": [
+            {
+              "text": "Sign the white book.",
+              "effects": {
+                "setFlag": "pact",
+                "changeStat": {
+                  "hold": 40,
+                  "chiefFavour": 20,
+                  "money": 500000,
+                  "conscience": -15
+                },
+                "goto": "signed"
+              }
+            },
+            {
+              "text": "Sign with Papa's name instead of yours.",
+              "effects": {
+                "setFlag": "trickedBook",
+                "changeStat": {
+                  "hold": 15,
+                  "money": 200000,
+                  "conscience": -5
+                },
+                "goto": "tricked"
+              },
+              "requires": {
+                "anyOf": [
+                  {
+                    "memory": {
+                      "dibia": "listened"
+                    }
+                  },
+                  "sawBook",
+                  "dibiaCharm"
+                ]
+              },
+              "showLocked": true,
+              "lockedText": "You'd need to know how the book works"
+            },
+            {
+              "text": "Drop the pen and RUN.",
+              "effects": {
+                "setFlag": "fledFellowship",
+                "goto": "flee"
+              }
+            }
+          ]
+        }
+      ],
+      "location": "richStreet",
+      "time": "night",
+      "positions": {
+        "chiefOdu": [
+          27,
+          21,
+          180
+        ],
+        "usher": [
+          25,
+          19,
+          120
+        ]
+      }
+    },
+    "signed": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "The ink is warm. It shouldn't be warm. Thirty people in white applaud without making a sound."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "chiefOdu",
+          "text": "Welcome, brother. Abundance starts tomorrow. Don't count it in front of anybody. It doesn't like to be counted."
+        },
+        {
+          "type": "goto",
+          "scene": "end"
+        }
+      ],
+      "location": "richStreet",
+      "time": "night",
+      "positions": {
+        "chiefOdu": [
+          27,
+          21,
+          180
+        ]
+      }
+    },
+    "tricked": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "You write Papa's name. Nwankwo, son of Okoro. The red ink sits on the page for a long time, as if it's reading."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Then it sinks in. Slowly. Unhappily. The red thread on your wrist is warm.",
+          "if": "dibiaCharm"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "chiefOdu",
+          "text": "(He doesn't look at the page. He's already looking at the next guest.) Welcome. Abundance starts tomorrow."
+        },
+        {
+          "type": "goto",
+          "scene": "end"
+        }
+      ],
+      "location": "richStreet",
+      "time": "night",
+      "positions": {
+        "chiefOdu": [
+          27,
+          21,
+          180
+        ]
+      }
+    },
+    "flee": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "chiefOdu",
+          "text": "(very calm) Nobody leaves the white chair, Emeka. Ushers."
+        },
+        {
+          "type": "startMode",
+          "mode": "runner",
+          "params": {
+            "chaser": "fellowship",
+            "goal": 260,
+            "difficulty": 2
+          },
+          "results": {
+            "escaped": {
+              "changeStat": {
+                "conscience": 6
+              },
+              "remember": {
+                "fleeing": "escaped"
+              },
+              "goto": "fled"
+            },
+            "caught": {
+              "remember": {
+                "fleeing": "caught"
+              },
+              "goto": "fightUshers"
+            }
+          }
+        }
+      ],
+      "location": "richStreet",
+      "time": "night",
+      "positions": {
+        "chiefOdu": [
+          27,
+          21,
+          180
+        ],
+        "usher": [
+          25,
+          19,
+          120
+        ]
+      }
+    },
+    "fightUshers": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Two of them catch you at the gate. They don't shout. They just hold. You pull."
+        },
+        {
+          "type": "startMode",
+          "mode": "fight",
+          "params": {
+            "opponent": "usher",
+            "difficulty": 2
+          },
+          "results": {
+            "won": {
+              "changeStat": {
+                "conscience": 4
+              },
+              "goto": "fled"
+            },
+            "lost": {
+              "setFlag": "beatenByUshers",
+              "changeStat": {
+                "hold": 10,
+                "energy": -25
+              },
+              "goto": "fled"
+            }
+          }
+        }
+      ],
+      "location": "richStreet",
+      "time": "night",
+      "positions": {
+        "usher": [
+          25,
+          19,
+          120
+        ]
+      }
+    },
+    "fled": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "You run until Zone 5 becomes a road, the road becomes a bus stop, the bus stop becomes the Back Side at 2 a.m."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "professor",
+          "text": "(an old man with three fingers, sitting on a bench as if he expected you) White party? I told you to come and find me first. Sit. Breathe. Rule number two: they always come back for the ones who run.",
+          "if": {
+            "notFlags": [
+              "beatenByUshers"
+            ]
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "professor",
+          "text": "(He wipes your lip with his handkerchief.) White party. I told you. Sit. They will come back for you. We'll be ready.",
+          "if": "beatenByUshers"
+        },
+        {
+          "type": "setFlag",
+          "flags": [
+            "fellowshipEnemy"
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "end"
+        }
+      ],
+      "location": "backSide",
+      "time": "night",
+      "positions": {
+        "professor": [
+          8,
+          -6.2,
+          200
+        ]
+      }
+    },
+    "refused": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "The envelope curls in the lamp flame. The gold letters go last."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Two days later, Ike's shop is burnt. Nobody saw anything. Everybody knows.",
+          "if": "stayedIke"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Two days later, your stall is smashed in the night. The honest parts are scattered across the road like teeth.",
+          "if": "ownStall"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Two days later, the Chief's driver returns your things in a nylon bag. You don't work there any more. You never did, says the driver.",
+          "if": "chiefPA"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "usher",
+          "text": "(at the Back Side, smiling) No problem. Everything has a price. Even 'no'."
+        },
+        {
+          "type": "changeStat",
+          "stats": {
+            "money": -20000
+          }
+        },
+        {
+          "type": "setFlag",
+          "flags": [
+            "fellowshipEnemy"
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "end"
+        }
+      ],
+      "location": "backSide",
+      "time": "day",
+      "positions": {
+        "usher": [
+          9,
+          -7,
+          200
+        ]
+      }
+    },
+    "end": {
+      "beats": [
+        {
+          "type": "endChapter",
+          "title": "End of Chapter 4 — The White Room",
+          "summary": "Money {money}. The Fellowship's hold {stat:hold}. Conscience {stat:conscience}.",
+          "next": "g5_abundance"
+        }
+      ],
+      "location": "backSide",
+      "time": "dawn"
+    }
+  }
+}

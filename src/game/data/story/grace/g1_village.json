@@ -1,0 +1,950 @@
+{
+  "id": "g1_village",
+  "campaign": "grace",
+  "world": "nkwoAgu",
+  "act": 1,
+  "number": 1,
+  "title": "Chapter 1 — The Market of Hunger",
+  "description": "Nkwọ-Agụụ. Ike Money comes home with a Benz. Emeka needs ₦150,000 to follow him to Lagos, and every way to get it costs someone.",
+  "startScene": "dawn",
+  "scenes": {
+    "dawn": {
+      "beats": [
+        {
+          "type": "setFlag",
+          "flags": [
+            "ikeAround"
+          ]
+        },
+        {
+          "type": "cutscene",
+          "cards": [
+            {
+              "title": "Grass to Grace",
+              "text": "Nkwọ-Agụụ. The market of hunger. The name was a joke once. Nobody laughs at it any more."
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Dawn. The cock crows twice and gives up. Nne is already awake, counting palm-oil money that does not add up."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "nneEmeka",
+          "text": "{name}. Papa's creditors came again yesterday. I told them my son is a graduate. They laughed. Graduates don't pay debts, they said."
+        },
+        {
+          "type": "choice",
+          "speaker": "nneEmeka",
+          "text": "What will you do, my son?",
+          "options": [
+            {
+              "text": "\"Lagos, Nne. That's where money lives.\"",
+              "effects": {
+                "remember": {
+                  "emekaDream": "lagos"
+                },
+                "changeStat": {
+                  "motherBond": -2
+                }
+              }
+            },
+            {
+              "text": "\"I'll find work here. Somehow.\"",
+              "effects": {
+                "remember": {
+                  "emekaDream": "stay"
+                },
+                "changeStat": {
+                  "motherBond": 3
+                }
+              }
+            },
+            {
+              "text": "\"Papa's debts are eating us. I will do something.\"",
+              "effects": {
+                "remember": {
+                  "emekaDream": "debts"
+                },
+                "changeStat": {
+                  "conscience": -2
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Then: horns. Three cars, one of them a white Benz with tinted glass, crawl up the village road. Children run after them. Ike Money is home."
+        },
+        {
+          "type": "freeRoam",
+          "objective": "Ike Money is back from Lagos. Everybody is going to his villa. Go and see him.",
+          "goal": {
+            "talkTo": "ike"
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "ikeVilla"
+        }
+      ],
+      "location": "emekaHome",
+      "time": "dawn"
+    },
+    "ikeVilla": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "ike",
+          "text": "Emeka! My guy! Look at you. Still in Nkwọ-Agụụ. Still wearing the shirt from our final-year dinner."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ike",
+          "text": "Me? Lagos. Business. Import, export, connection. Look at this watch. It tells time in three countries."
+        },
+        {
+          "type": "choice",
+          "speaker": "ike",
+          "text": "(He sprays naira notes on the children. They scream his name.)",
+          "options": [
+            {
+              "text": "\"Carry me go Lagos with you, Ike.\"",
+              "effects": {
+                "remember": {
+                  "ikeAsk": "begged"
+                },
+                "changeStat": {
+                  "ikeTrust": 3
+                }
+              }
+            },
+            {
+              "text": "\"How did you make this money, Ike? Tell me true.\"",
+              "effects": {
+                "remember": {
+                  "ikeAsk": "how"
+                }
+              }
+            },
+            {
+              "text": "\"Na yahoo you dey do, abi?\"",
+              "effects": {
+                "remember": {
+                  "ikeAsk": "accused"
+                },
+                "changeStat": {
+                  "ikeTrust": -6
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ike",
+          "text": "Lagos is for people with liver, Emeka. And money. To enter my business, you pay connection fee. ₦150,000. Nkwọ day, the 9 p.m. bus. If you're not there, I don't know you.",
+          "variants": [
+            {
+              "if": {
+                "memory": {
+                  "ikeAsk": "accused"
+                }
+              },
+              "text": "Yahoo? (He laughs, but not with his eyes.) Lagos is for people with liver. Connection fee: ₦150,000. Nkwọ day, 9 p.m. bus. Come with the money and keep your mouth for eating."
+            },
+            {
+              "if": {
+                "memory": {
+                  "ikeAsk": "how"
+                }
+              },
+              "text": "How? Hard work. And... connections. (He looks away.) You want in? Connection fee, ₦150,000. Nkwọ day, 9 p.m. bus."
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "plan"
+        }
+      ],
+      "location": "ikeHouse",
+      "time": "day",
+      "positions": {
+        "ike": [
+          28,
+          -22,
+          0
+        ]
+      }
+    },
+    "plan": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "papaNgwo",
+          "text": "You get that face. The face of a man about to do something stupid. Drink. Stupidity is better planned with palm wine."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "₦150,000. You have ₦1,200 and a graduate certificate with a coffee stain on it."
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "(Where will the money come from?)",
+          "options": [
+            {
+              "text": "The harvest money. The council keeps it in a box under the big tree.",
+              "effects": {
+                "setFlag": "harvestTried",
+                "goto": "harvest"
+              },
+              "requires": {
+                "notFlags": [
+                  "harvestTried"
+                ]
+              }
+            },
+            {
+              "text": "Papa's land. Uncle Dozie says he knows a buyer.",
+              "effects": {
+                "setFlag": "landTried",
+                "goto": "land"
+              },
+              "requires": {
+                "notFlags": [
+                  "landTried"
+                ]
+              }
+            },
+            {
+              "text": "Chinwe's shop savings. She trusts you.",
+              "effects": {
+                "setFlag": "chinweTried",
+                "goto": "chinweSavings"
+              },
+              "requires": {
+                "notFlags": [
+                  "chinweTried"
+                ]
+              }
+            },
+            {
+              "text": "Work at the quarry. Honest money, slow money.",
+              "effects": {
+                "setFlag": "quarryTried",
+                "goto": "quarry"
+              },
+              "requires": {
+                "notFlags": [
+                  "quarryTried"
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "location": "palmwine",
+      "time": "day"
+    },
+    "enough": {
+      "beats": [
+        {
+          "type": "goto",
+          "scene": "dibia",
+          "if": {
+            "stats": {
+              "money": ">= 150000"
+            }
+          }
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "(You have {money}. Ike wants ₦150,000.)",
+          "options": [
+            {
+              "text": "The harvest money.",
+              "effects": {
+                "setFlag": "harvestTried",
+                "goto": "harvest"
+              },
+              "requires": {
+                "notFlags": [
+                  "harvestTried"
+                ]
+              }
+            },
+            {
+              "text": "Papa's land.",
+              "effects": {
+                "setFlag": "landTried",
+                "goto": "land"
+              },
+              "requires": {
+                "notFlags": [
+                  "landTried"
+                ]
+              }
+            },
+            {
+              "text": "Chinwe's savings.",
+              "effects": {
+                "setFlag": "chinweTried",
+                "goto": "chinweSavings"
+              },
+              "requires": {
+                "notFlags": [
+                  "chinweTried"
+                ]
+              }
+            },
+            {
+              "text": "The quarry.",
+              "effects": {
+                "setFlag": "quarryTried",
+                "goto": "quarry"
+              },
+              "requires": {
+                "notFlags": [
+                  "quarryTried"
+                ]
+              }
+            },
+            {
+              "text": "Go with what I have. Ike will understand. (He won't.)",
+              "effects": {
+                "setFlag": "shortOfFee",
+                "goto": "dibia"
+              }
+            }
+          ]
+        }
+      ],
+      "location": "palmwine"
+    },
+    "harvest": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "The council sits under the big tree. Ọnyịsị Ọha. Three elders. A box with this year's harvest thanksgiving money: for the new school roof."
+        },
+        {
+          "type": "startMode",
+          "mode": "bluff",
+          "params": {
+            "scenario": "harvestCon"
+          },
+          "results": {
+            "convinced": {
+              "changeStat": {
+                "money": 120000,
+                "villageDebt": 120000,
+                "conscience": -12
+              },
+              "setFlag": "tookHarvest",
+              "goto": "harvestDone"
+            },
+            "doubted": {
+              "changeStat": {
+                "money": 60000,
+                "villageDebt": 60000,
+                "conscience": -10
+              },
+              "setFlag": [
+                "tookHarvest",
+                "harvestDoubted"
+              ],
+              "goto": "harvestDone"
+            },
+            "caught": {
+              "changeStat": {
+                "villageStanding": -25,
+                "conscience": -6
+              },
+              "setFlag": "harvestCaught",
+              "goto": "harvestChased"
+            },
+            "confessed": {
+              "changeStat": {
+                "money": 20000,
+                "villageDebt": 20000,
+                "villageStanding": 6,
+                "conscience": 6
+              },
+              "setFlag": "harvestLoan",
+              "goto": "harvestLoan"
+            }
+          }
+        }
+      ],
+      "location": "square",
+      "time": "day",
+      "positions": {
+        "onyisi": [
+          10,
+          23,
+          0
+        ]
+      }
+    },
+    "harvestDone": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "onyisi",
+          "text": "Take it. Nkwọ-Agụụ trusts its sons. (He says it like a man reading his own will.)",
+          "variants": [
+            {
+              "if": "harvestDoubted",
+              "text": "We will give half. The other half we keep until we see this... Mega Fortune. (He counts the money twice.)"
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "The children who will sit under that school roof wave at you on your way out. You wave back. It costs nothing. It costs everything."
+        },
+        {
+          "type": "goto",
+          "scene": "enough"
+        }
+      ],
+      "location": "square",
+      "positions": {
+        "onyisi": [
+          10,
+          23,
+          0
+        ]
+      }
+    },
+    "harvestChased": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "onyisi",
+          "text": "Thief! In front of the elders! Under the tree of our fathers!"
+        },
+        {
+          "type": "startMode",
+          "mode": "runner",
+          "params": {
+            "chaser": "villagers",
+            "goal": 200,
+            "difficulty": 1
+          },
+          "results": {
+            "escaped": {
+              "remember": {
+                "harvestRun": "escaped"
+              },
+              "goto": "enough"
+            },
+            "caught": {
+              "changeStat": {
+                "villageStanding": -5,
+                "energy": -15
+              },
+              "remember": {
+                "harvestRun": "caught"
+              },
+              "goto": "harvestBeaten"
+            }
+          }
+        }
+      ],
+      "location": "square"
+    },
+    "harvestBeaten": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "They catch you by the stream. Nobody hits hard. They're too disappointed to hit hard. Somehow that's worse."
+        },
+        {
+          "type": "goto",
+          "scene": "enough"
+        }
+      ],
+      "location": "square"
+    },
+    "harvestLoan": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "onyisi",
+          "text": "(after a long silence) You came to steal and you told the truth instead. That is rare enough to be worth something. Take ₦20,000. A loan. From the village. We will remember."
+        },
+        {
+          "type": "goto",
+          "scene": "enough"
+        }
+      ],
+      "location": "square",
+      "positions": {
+        "onyisi": [
+          10,
+          23,
+          0
+        ]
+      }
+    },
+    "land": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "uncleDozie",
+          "text": "Your father's land is just sitting there, doing nothing. Land that does nothing is an insult to land. The buyer is here. Speak well. I take twenty percent, for my wisdom."
+        },
+        {
+          "type": "startMode",
+          "mode": "bluff",
+          "params": {
+            "scenario": "landSale"
+          },
+          "results": {
+            "convinced": {
+              "changeStat": {
+                "money": 180000,
+                "conscience": -15
+              },
+              "setFlag": "soldLand",
+              "remember": {
+                "landSale": "clean"
+              },
+              "goto": "landDone"
+            },
+            "doubted": {
+              "changeStat": {
+                "money": 120000,
+                "conscience": -12
+              },
+              "setFlag": "soldLand",
+              "remember": {
+                "landSale": "cheap"
+              },
+              "goto": "landDone"
+            },
+            "caught": {
+              "changeStat": {
+                "conscience": -3
+              },
+              "setFlag": "landFailed",
+              "remember": {
+                "landSale": "caught"
+              },
+              "goto": "landNo"
+            },
+            "confessed": {
+              "changeStat": {
+                "conscience": 5
+              },
+              "setFlag": "landFailed",
+              "remember": {
+                "landSale": "refused"
+              },
+              "goto": "landNo"
+            }
+          }
+        }
+      ],
+      "location": "farm",
+      "time": "day",
+      "positions": {
+        "uncleDozie": [
+          4,
+          -24,
+          180
+        ]
+      }
+    },
+    "landDone": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "The buyer counts out the money on the bonnet of his car. Uncle Dozie counts it again, then counts his twenty percent twice."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Nne doesn't know. Not yet. The land where Papa is buried is three plots to the left. You don't look left."
+        },
+        {
+          "type": "goto",
+          "scene": "enough"
+        }
+      ],
+      "location": "farm"
+    },
+    "landNo": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "uncleDozie",
+          "text": "(as the buyer drives away) You see your mouth? You see it? I will remember this, {name}. Your father was the same. Too much conscience, too little money.",
+          "variants": [
+            {
+              "if": {
+                "memory": {
+                  "landSale": "caught"
+                }
+              },
+              "text": "(as the buyer drives away) You can't even lie properly! Your father could at least lie properly!"
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "enough"
+        }
+      ],
+      "location": "farm",
+      "positions": {
+        "uncleDozie": [
+          4,
+          -24,
+          180
+        ]
+      }
+    },
+    "chinweSavings": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "chinwe",
+          "text": "Emeka. You're here in the afternoon. You only come in the afternoon when you want something. (She smiles. It's not an accusation. It's knowledge.)"
+        },
+        {
+          "type": "choice",
+          "speaker": "chinwe",
+          "text": "\"Talk. What do you need?\"",
+          "options": [
+            {
+              "text": "\"Lend me your shop savings. I'll send for you within a year.\"",
+              "effects": {
+                "changeStat": {
+                  "money": 80000,
+                  "chinweBond": 4,
+                  "conscience": -6
+                },
+                "setFlag": "tookChinweSavings",
+                "remember": {
+                  "chinweLoan": "promised"
+                }
+              }
+            },
+            {
+              "text": "\"Lend me. I'll pay it back double.\"",
+              "effects": {
+                "changeStat": {
+                  "money": 80000,
+                  "conscience": -10
+                },
+                "setFlag": "tookChinweSavings",
+                "remember": {
+                  "chinweLoan": "double"
+                }
+              }
+            },
+            {
+              "text": "\"Nothing. I came to see you. Forget it.\"",
+              "effects": {
+                "changeStat": {
+                  "chinweBond": 8,
+                  "conscience": 5
+                },
+                "remember": {
+                  "chinweLoan": "refused"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "chinwe",
+          "text": "(She brings the money in a Bournvita tin.) Every naira here is a wrapper I sold in the sun. Don't make me regret the sun.",
+          "if": "tookChinweSavings"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "chinwe",
+          "text": "(She looks at you for a long time.) Whatever it is, Emeka... don't do something you can't undo.",
+          "if": "!tookChinweSavings"
+        },
+        {
+          "type": "goto",
+          "scene": "enough"
+        }
+      ],
+      "location": "chinweHouse",
+      "time": "day"
+    },
+    "quarry": {
+      "beats": [
+        {
+          "type": "cutscene",
+          "cards": [
+            {
+              "title": "Two weeks",
+              "text": "The quarry. Six a.m. to six p.m. Breaking stones for a road the government will never finish. Your hands crack. Your back cracks. Your pride... holds."
+            }
+          ]
+        },
+        {
+          "type": "changeStat",
+          "stats": {
+            "money": 35000,
+            "conscience": 10,
+            "energy": -20,
+            "motherBond": 5
+          }
+        },
+        {
+          "type": "setFlag",
+          "flags": [
+            "quarryWork"
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "₦35,000. It feels heavier than the other kind of money. Maybe because it is."
+        },
+        {
+          "type": "goto",
+          "scene": "enough"
+        }
+      ],
+      "location": "farm"
+    },
+    "dibia": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "On the way home you pass the stream path. Dibia Ọ̀kwụ̀ is sitting outside his shrine, peeling an orange with a knife older than the village."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "dibia",
+          "text": "Nwa Nwankwo. Come. I see white cloth on your road. A white book that writes in red. A room where everybody smiles and nobody laughs."
+        },
+        {
+          "type": "choice",
+          "speaker": "dibia",
+          "text": "\"Will you listen to an old man?\"",
+          "options": [
+            {
+              "text": "\"What does it mean?\"",
+              "effects": {
+                "remember": {
+                  "dibia": "listened"
+                },
+                "changeStat": {
+                  "conscience": 3
+                }
+              }
+            },
+            {
+              "text": "\"Old man, your eyes are tired.\"",
+              "effects": {
+                "remember": {
+                  "dibia": "mocked"
+                },
+                "changeStat": {
+                  "conscience": -2
+                }
+              }
+            },
+            {
+              "text": "Give him ₦1,000 for a blessing.",
+              "effects": {
+                "setFlag": "dibiaCharm",
+                "remember": {
+                  "dibia": "paid"
+                }
+              },
+              "cost": 1000
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "dibia",
+          "text": "When they ask what you love, lie. When they ask what you fear, tell the truth. When they offer you a white cloth, remember the name of your mother.",
+          "if": {
+            "memory": {
+              "dibia": "listened"
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "dibia",
+          "text": "(He ties a small red thread on your wrist.) Keep it. Thread is cheap. What it remembers is not.",
+          "if": "dibiaCharm"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "dibia",
+          "text": "(He laughs. It's a kind laugh, which is worse.) Go, then. The road will teach you what I couldn't.",
+          "if": {
+            "memory": {
+              "dibia": "mocked"
+            }
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "farewell"
+        }
+      ],
+      "location": "shrine",
+      "time": "dusk"
+    },
+    "farewell": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Nkwọ day. 9 p.m. The Lagos bus coughs at the junction like an old man about to give a speech."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "nneEmeka",
+          "text": "My son. (She presses a folded ₦5,000 into your palm.) It's the last of the palm-oil money. Take it. Lagos is not kind to empty pockets."
+        },
+        {
+          "type": "choice",
+          "speaker": "nneEmeka",
+          "text": "(Her hand is shaking.)",
+          "options": [
+            {
+              "text": "Take it. You'll need it.",
+              "effects": {
+                "changeStat": {
+                  "money": 5000,
+                  "motherBond": -3
+                },
+                "setFlag": "tookNneMoney"
+              }
+            },
+            {
+              "text": "Close her hand around it. \"Keep it, Nne. I'll send more than this.\"",
+              "effects": {
+                "changeStat": {
+                  "motherBond": 6,
+                  "conscience": 3
+                },
+                "remember": {
+                  "nneMoney": "refused"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "She doesn't know about the land. When she finds out, she will remember this night. So will you.",
+          "if": "soldLand"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Behind the bus, the big tree. Under it, an empty box. Somebody will open it tomorrow.",
+          "if": "tookHarvest"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "chinwe",
+          "text": "So. Lagos. (She's holding her wrapper very tightly.) What should I do while you're gone?",
+          "if": {
+            "notFlags": [
+              "chinweGone"
+            ]
+          }
+        },
+        {
+          "type": "choice",
+          "speaker": "chinwe",
+          "text": "\"Tell me the truth.\"",
+          "options": [
+            {
+              "text": "\"Wait for me. I will send for you.\"",
+              "effects": {
+                "remember": {
+                  "chinwePromise": "sendFor"
+                },
+                "changeStat": {
+                  "chinweBond": 5
+                }
+              }
+            },
+            {
+              "text": "\"Wait one year. If I don't come back, marry another man.\"",
+              "effects": {
+                "remember": {
+                  "chinwePromise": "oneYear"
+                },
+                "changeStat": {
+                  "chinweBond": 2
+                }
+              }
+            },
+            {
+              "text": "\"Don't wait for me, Chinwe.\"",
+              "effects": {
+                "remember": {
+                  "chinwePromise": "dontWait"
+                },
+                "changeStat": {
+                  "chinweBond": -10,
+                  "conscience": 4
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "You have {money}. Not ₦150,000. Ike will see it in your face before you open your mouth.",
+          "if": "shortOfFee"
+        },
+        {
+          "type": "endChapter",
+          "title": "End of Chapter 1 — Nkwọ-Agụụ",
+          "summary": "You leave with {money}. Conscience {stat:conscience}. What you owe the village: {villageDebt}.",
+          "next": "g2_lagos"
+        }
+      ],
+      "location": "junction",
+      "time": "night",
+      "positions": {
+        "nneEmeka": [
+          -18,
+          -6.5,
+          270
+        ],
+        "chinwe": [
+          -17,
+          -4.5,
+          250
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,758 @@
+{
+  "id": "g6_grace",
+  "campaign": "grace",
+  "world": "nkwoAgu",
+  "act": 1,
+  "number": 6,
+  "title": "Chapter 6 — Grace",
+  "description": "Home for the New Yam festival. The village has questions. Nne is sick. Chinwe has an answer. And three white cars are coming up the village road.",
+  "startScene": "homecoming",
+  "scenes": {
+    "homecoming": {
+      "beats": [
+        {
+          "type": "setFlag",
+          "flags": [],
+          "clear": [
+            "ikeAround"
+          ]
+        },
+        {
+          "type": "cutscene",
+          "cards": [
+            {
+              "title": "New Yam",
+              "text": "Nkwọ-Agụụ, three days before the New Yam festival. The road is the same. The potholes have had children."
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "You arrive in the white Benz. Children run after it, the way you once ran after Ike's.",
+          "if": {
+            "anyOf": [
+              "pact",
+              "trickedBook"
+            ]
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "You arrive on the 9 p.m. bus, the same one you left on. The driver remembers you. He doesn't charge you. You don't know why.",
+          "if": {
+            "notFlags": [
+              "pact",
+              "trickedBook"
+            ]
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "chinwe",
+          "text": "(beside you, holding your hand like a fence) Whatever they say, we face it together.",
+          "if": "married"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "A message from a number you don't know: \"Somewhere far. Still running. Still breathing. Almost laughing. —I.\"",
+          "if": "savedIke"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Nobody has seen Ike since that night. His villa's gate is chained. Somebody has written THIEF on it, then crossed it out, then written it again.",
+          "if": "ikeLost"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "You're still a little proud of the danfo route. Bíọ́dún says you drive like a man with nothing left to lose. It was meant as praise.",
+          "if": {
+            "memory": {
+              "grind": "drove"
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Lagos chewed you on the hard road and spat you out here. You're thinner. Quieter.",
+          "if": {
+            "memory": {
+              "grind": "struggled"
+            }
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "council"
+        }
+      ],
+      "location": "junction",
+      "time": "dawn",
+      "positions": {
+        "chinwe": [
+          -17,
+          -4.5,
+          250
+        ]
+      }
+    },
+    "council": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "onyisi",
+          "text": "The harvest money. Mega Fortune Holdings. We wrote to Lagos. Lagos says there is no such company. Lagos laughed at us.",
+          "if": "tookHarvest"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "onyisi",
+          "text": "You told your mother it would come 'soon'. Soon has come and gone twice.",
+          "if": {
+            "memory": {
+              "harvestPromise": "soon"
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "onyisi",
+          "text": "Your mother told us what you said: that there was no company, and you would pay it back yourself. A thief who confesses is still a thief. But he is a thief we can talk to.",
+          "if": {
+            "memory": {
+              "harvestPromise": "confessed"
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "onyisi",
+          "text": "The money came back. Every naira, by bank transfer, with no message. The school has a roof. The children sing under it. (He doesn't smile. But he nods.)",
+          "if": "repaidVillage"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "onyisi",
+          "text": "The boy who ran through the stream. (The elders laugh. It's not cruel. It's a story the village tells now.)",
+          "if": "harvestCaught"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "onyisi",
+          "text": "You owe us ₦20,000, from the day you told the truth under this tree. We have not forgotten. Neither, I see, have you.",
+          "if": "harvestLoan"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "onyisi",
+          "text": "Half the money, we gave you, because half of us believed you. Those half are the ones who look most hurt.",
+          "if": "harvestDoubted"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "onyisi",
+          "text": "You took nothing from this village but its best son. Welcome home.",
+          "if": {
+            "notFlags": [
+              "tookHarvest",
+              "harvestCaught",
+              "harvestLoan"
+            ]
+          }
+        },
+        {
+          "type": "choice",
+          "speaker": "onyisi",
+          "text": "\"What do you say to Nkwọ-Agụụ?\"",
+          "options": [
+            {
+              "text": "Pay back everything you can, right now.",
+              "effects": {
+                "payDebt": {
+                  "from": "money",
+                  "to": "villageDebt"
+                },
+                "changeStat": {
+                  "villageStanding": 10,
+                  "conscience": 6
+                },
+                "remember": {
+                  "council": "paid"
+                }
+              }
+            },
+            {
+              "text": "Kneel and tell the elders everything. All of it.",
+              "effects": {
+                "setFlag": "confessedVillage",
+                "changeStat": {
+                  "villageStanding": 8,
+                  "conscience": 10
+                },
+                "remember": {
+                  "council": "confessed"
+                }
+              }
+            },
+            {
+              "text": "\"It was Ike. Ike deceived me too.\"",
+              "effects": {
+                "setFlag": "blamedIke",
+                "changeStat": {
+                  "villageStanding": -10,
+                  "conscience": -10
+                },
+                "remember": {
+                  "council": "blamed"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "mother"
+        }
+      ],
+      "location": "square",
+      "time": "day",
+      "positions": {
+        "onyisi": [
+          10,
+          23,
+          0
+        ]
+      }
+    },
+    "mother": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "nneEmeka",
+          "text": "(in bed, thin, smiling anyway) My... my... (She can't say it. She cries instead. You hold her hand. It's enough. It has to be.)",
+          "if": {
+            "flags": [
+              "pact"
+            ],
+            "memory": {
+              "lie_loved": "mother"
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "nneEmeka",
+          "text": "The new house is too big. I sleep in the kitchen of it. The kitchen is the only room that remembers how to be a home.",
+          "if": "builtHouse"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "nneEmeka",
+          "text": "Papa's land came back to us. A man with a lawyer came and gave me the papers. You think I didn't know who sent him?",
+          "if": "boughtLandBack"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "nneEmeka",
+          "text": "You lied to me about the land. On the phone. I believed you because you're my son. (She turns her face to the wall.)",
+          "if": {
+            "flags": [
+              "soldLand"
+            ],
+            "notFlags": [
+              "boughtLandBack"
+            ],
+            "memory": {
+              "landLie": "lied"
+            }
+          },
+          "effects": {
+            "changeStat": {
+              "motherBond": -10
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "nneEmeka",
+          "text": "You told me the truth about the land. It broke my heart. It also kept it.",
+          "if": {
+            "memory": {
+              "landLie": "confessed"
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "nneEmeka",
+          "text": "You left my ₦5,000 under the pillow. I still have it. I was keeping it for your wedding.",
+          "if": {
+            "memory": {
+              "nneMoney": "refused"
+            }
+          }
+        },
+        {
+          "type": "choice",
+          "speaker": "nneEmeka",
+          "text": "\"Tell me what happened in Lagos, my son. All of it.\"",
+          "options": [
+            {
+              "text": "Tell her everything. The money, the white book, all of it.",
+              "effects": {
+                "setFlag": "toldNne",
+                "changeStat": {
+                  "motherBond": 10,
+                  "conscience": 8
+                }
+              }
+            },
+            {
+              "text": "\"Everything is fine, Nne. Rest.\"",
+              "effects": {
+                "remember": {
+                  "nneTold": "fine"
+                },
+                "changeStat": {
+                  "conscience": -5
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "nneEmeka",
+          "text": "(after a long time) Whatever you did, you came back. A man who comes back is not finished.",
+          "if": "toldNne"
+        },
+        {
+          "type": "goto",
+          "scene": "chinweScene",
+          "if": {
+            "notFlags": [
+              "chinweInLagos"
+            ]
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "dibiaScene"
+        }
+      ],
+      "location": "emekaHome",
+      "time": "day",
+      "positions": {
+        "nneEmeka": [
+          41,
+          31.2,
+          180
+        ]
+      }
+    },
+    "chinweScene": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "chinwe",
+          "text": "(at her door, politely) Good afternoon. Can I help you? (She has no idea who you are. She is kind to you anyway, the way she is kind to everyone.)",
+          "if": "chinweForgot"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "chinwe",
+          "text": "A year. I counted. (She shows you a ring. The schoolteacher's.) You can be happy for me, or you can be quiet.",
+          "if": {
+            "notFlags": [
+              "chinweForgot"
+            ],
+            "memory": {
+              "chinwePromise": "oneYear"
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "chinwe",
+          "text": "You told me not to wait. I listened. (She is carrying a baby. She looks tired and happy.) It was good advice. I hated it.",
+          "if": {
+            "notFlags": [
+              "chinweForgot"
+            ],
+            "memory": {
+              "chinwePromise": "dontWait"
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "chinwe",
+          "text": "You said you'd send for me. You didn't. I waited anyway. I'm not sure if I'm stupid or loyal. Maybe they're the same thing.",
+          "if": {
+            "notFlags": [
+              "chinweForgot"
+            ],
+            "memory": {
+              "chinwePromise": "sendFor"
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "chinwe",
+          "text": "And thank you for the money. With interest, even. You're a strange thief.",
+          "if": "repaidChinwe"
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "(She's waiting for you to say something.)",
+          "options": [
+            {
+              "text": "\"Choose me, Chinwe. Now. Here.\"",
+              "effects": {
+                "setFlag": "chinweChoseYou",
+                "changeStat": {
+                  "chinweBond": 10
+                }
+              },
+              "requires": {
+                "stats": {
+                  "chinweBond": ">= 55"
+                },
+                "notFlags": [
+                  "chinweForgot"
+                ]
+              },
+              "showLocked": true,
+              "lockedText": "Needs a strong bond with Chinwe (55)"
+            },
+            {
+              "text": "\"Be happy, Chinwe. You deserve it.\"",
+              "effects": {
+                "remember": {
+                  "chinweEnd": "blessed"
+                },
+                "changeStat": {
+                  "conscience": 4
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "dibiaScene"
+        }
+      ],
+      "location": "chinweHouse",
+      "time": "day"
+    },
+    "dibiaScene": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "dibia",
+          "text": "Nwa Nwankwo. White cloth on your shoulders. I can see it from here.",
+          "if": "pact"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "dibia",
+          "text": "You gave them your father's name. Your father was the most stubborn man in this village. His name is stuck in their throat like a fishbone.",
+          "if": "trickedBook"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "dibia",
+          "text": "You saw your page in their book. Good. A man who has seen his chains can count the links.",
+          "if": "sawBook"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "dibia",
+          "text": "The thread. You kept it. (He touches your wrist.) Good.",
+          "if": "dibiaCharm"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "dibia",
+          "text": "You laughed at me once. Sit. Laugh again if you like. Then listen.",
+          "if": {
+            "memory": {
+              "dibia": "mocked"
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "dibia",
+          "text": "You didn't sign. Good. They will still come. They like to collect what refused them.",
+          "if": {
+            "notFlags": [
+              "pact",
+              "trickedBook"
+            ]
+          }
+        },
+        {
+          "type": "choice",
+          "speaker": "dibia",
+          "text": "\"Will you ask me how to break it?\"",
+          "options": [
+            {
+              "text": "\"Tell me how to break their hold.\"",
+              "effects": {
+                "setFlag": "knowsHowToBreak",
+                "changeStat": {
+                  "conscience": 4
+                }
+              },
+              "requires": {
+                "anyOf": [
+                  "trickedBook",
+                  "sawBook",
+                  "dibiaCharm"
+                ]
+              },
+              "showLocked": true,
+              "lockedText": "He can't help someone who never saw the book or kept his thread"
+            },
+            {
+              "text": "\"I don't need you, old man.\"",
+              "effects": {
+                "remember": {
+                  "dibiaEnd": "refused"
+                },
+                "changeStat": {
+                  "hold": 5
+                }
+              }
+            },
+            {
+              "text": "\"Just pray for my mother.\"",
+              "effects": {
+                "remember": {
+                  "dibiaEnd": "prayed"
+                },
+                "changeStat": {
+                  "motherBond": 3
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "dibia",
+          "text": "Your name is written in red. Red ink burns. Bring the page to the fire at the New Yam festival, in front of the whole village. A secret dies in front of witnesses.",
+          "if": "knowsHowToBreak"
+        },
+        {
+          "type": "goto",
+          "scene": "collect"
+        }
+      ],
+      "location": "shrine",
+      "time": "dusk",
+      "positions": {
+        "dibia": [
+          52,
+          -30.4,
+          0
+        ]
+      }
+    },
+    "collect": {
+      "beats": [
+        {
+          "type": "setFlag",
+          "flags": [
+            "chiefOduAround",
+            "usherAround"
+          ]
+        },
+        {
+          "type": "cutscene",
+          "cards": [
+            {
+              "title": "The festival",
+              "text": "Drums. Fire. The whole village in the square. Then headlights on the village road: three white cars. Chief Ọ̀dụ̀ steps out in white, smiling at the yams."
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "chiefOdu",
+          "text": "Brother. You left Lagos without telling us. Abundance doesn't like to be left.",
+          "if": {
+            "anyOf": [
+              "pact",
+              "trickedBook"
+            ]
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "chiefOdu",
+          "text": "The one who refused. I came to see what 'no' looks like in a village. It looks hungry.",
+          "if": {
+            "notFlags": [
+              "pact",
+              "trickedBook"
+            ]
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "chiefOdu",
+          "text": "You ran from my white chair, and you made me look slow in front of my guests. I don't forget slowness.",
+          "if": "fellowshipEnemy"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "onyisi",
+          "text": "(stepping between you and the Chief, very old, very slow) In Nkwọ-Agụụ, the festival fire answers to the village. Not to white cars.",
+          "if": {
+            "stats": {
+              "villageStanding": ">= 45"
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "bassey",
+          "text": "(stepping out of the second car, which is not the Chief's) Good evening, Chief. I followed you from Lagos. Six years I have been following you.",
+          "if": "toldBassey"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "bassey",
+          "text": "(to you, quietly) And don't think I forgot your little story in my office. One thing at a time.",
+          "if": "basseyOnto"
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "(The fire is high. Everybody is watching you.)",
+          "options": [
+            {
+              "text": "Pull the red page from the Chief's book and throw it in the festival fire.",
+              "effects": {
+                "ending": "grace_unbound"
+              },
+              "requires": {
+                "flags": [
+                  "knowsHowToBreak"
+                ],
+                "anyOf": [
+                  "pact",
+                  "trickedBook"
+                ]
+              },
+              "showLocked": true,
+              "lockedText": "You'd need to know how to break the book's hold"
+            },
+            {
+              "text": "Point at the Chief. \"Commander, he's all yours. And so am I.\"",
+              "effects": {
+                "ending": "grace_witness"
+              },
+              "requires": "toldBassey",
+              "showLocked": true,
+              "lockedText": "You never gave Bassey the truth"
+            },
+            {
+              "text": "Kneel before the village. Start again with clean hands.",
+              "effects": {
+                "ending": "grace_grace"
+              },
+              "requires": {
+                "notFlags": [
+                  "pact",
+                  "hoarded"
+                ],
+                "stats": {
+                  "conscience": ">= 55",
+                  "villageDebt": "<= 0",
+                  "motherBond": ">= 40"
+                }
+              },
+              "showLocked": true,
+              "lockedText": "Needs a clean conscience (55), no debt to the village, and Nne's trust (40)"
+            },
+            {
+              "text": "Get in the Benz. Drive back to Lagos. Lock the gate.",
+              "effects": {
+                "ending": "grace_goldenCage"
+              },
+              "requires": {
+                "stats": {
+                  "money": ">= 300000"
+                }
+              },
+              "showLocked": true,
+              "lockedText": "Needs ₦300,000"
+            },
+            {
+              "text": "Take the white cloth from the Chief's hands.",
+              "effects": {
+                "ending": "grace_whiteCloth"
+              },
+              "requires": {
+                "anyOf": [
+                  "pact",
+                  {
+                    "stats": {
+                      "hold": ">= 60"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "text": "Stay in Nkwọ-Agụụ, with nothing, and face the morning.",
+              "effects": {
+                "ending": "grace_prodigal"
+              },
+              "requires": {
+                "notFlags": [
+                  "pact"
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "location": "square",
+      "time": "night",
+      "positions": {
+        "chiefOdu": [
+          12,
+          31,
+          0
+        ],
+        "usher": [
+          14,
+          32,
+          330
+        ],
+        "onyisi": [
+          10,
+          23,
+          0
+        ],
+        "bassey": [
+          16,
+          30,
+          300
+        ]
+      }
+    }
+  }
+}

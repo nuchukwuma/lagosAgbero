@@ -26,7 +26,7 @@ function blockedHeight(p, cam, obstacles, samples = [0.45, 0.7, 1]) {
     const x = p.x + (cam.x - p.x) * t
     const z = p.z + (cam.z - p.z) * t
     for (const o of obstacles) {
-      if (o.h < 2.6) continue
+      if (o.h < 2.6 || (o.hw < 1 && o.hd < 1)) continue // low things and thin things (palm trees, poles) never block the view
       const dx = x - o.x
       const dz = z - o.z
       const c = Math.cos(o.angle)

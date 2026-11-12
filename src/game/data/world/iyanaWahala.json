@@ -1404,6 +1404,16 @@
       "facing": 0,
       "anim": "idle",
       "if": "tamaraAround"
+    },
+    {
+      "id": "chinwe",
+      "pos": [
+        60,
+        20
+      ],
+      "facing": 0,
+      "anim": "idle",
+      "if": "chinweAround"
     }
   ],
   "extras": [

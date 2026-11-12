@@ -127,20 +127,20 @@ export default function GameCanvas({ view, game, activity = null, paused = false
         </Suspense>
       ) : (
       <Suspense fallback={null}>
-          <StreetScene key={layout.id} layout={layout} />
+          <StreetScene key={`scene-${layout.id}`} layout={layout} />
           <group userData={{ tag: 'npcs' }}>
           <NPCs layout={layout} flags={game.flags} positions={view.positions} speaker={speaker} mood={view.mood} hidden={fightOpponent ? [fightOpponent] : []} />
           </group>
           {!(fightOn && modeName === 'fight') && !busOn && <PlayerController layout={layout} look={look} enabled={(freeRoam || feeRunActive || chaseActive) && !paused} eyeRed={eyeRed} tired={game.stats.energy < LOW_ENERGY} />}
           {freeRoam && <VendorTracker />}
           {freeRoam && <ActivityTracker layout={layout} game={game} />}
-          {freeRoam && <QuestTracker key={layout.id} game={game} />}
+          {freeRoam && <QuestTracker key={`quests-${layout.id}`} game={game} />}
           <group userData={{ tag: 'traffic' }}>
-            {layout.raw.traffic !== false && <Traffic key={layout.id} density={layout.raw.traffic?.density ?? 3} paused={paused} raining={Boolean(game.flags.raining)} />}
+            {layout.raw.traffic !== false && <Traffic key={`traffic-${layout.id}`} density={layout.raw.traffic?.density ?? 3} paused={paused} raining={Boolean(game.flags.raining)} />}
           </group>
           <Suspense fallback={null}>
             <group userData={{ tag: 'crowd' }}>
-              <Crowd key={layout.id} layout={layout} quality={quality} paused={paused} />
+              <Crowd key={`crowd-${layout.id}`} layout={layout} quality={quality} paused={paused} />
             </group>
           </Suspense>
           {worldMode && modeName === 'feeCollection' && <FeeRunDirector />}

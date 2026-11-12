@@ -144,5 +144,59 @@
     "speed": 0.85,
     "block": 0.55,
     "aggression": 0.4
+  },
+  "usher": {
+    "name": "Fellowship usher",
+    "character": "usher",
+    "hp": 110,
+    "power": 1.1,
+    "speed": 1.0,
+    "block": 0.5,
+    "aggression": 0.55
+  },
+  "donBoy": {
+    "name": "Crimson Don",
+    "seed": 233,
+    "lookOverride": {
+      "shirt": "#c0392b",
+      "accessories": [
+        {
+          "type": "bandana",
+          "color": "#c0392b"
+        }
+      ]
+    },
+    "hp": 95,
+    "power": 1.05,
+    "speed": 1.1,
+    "block": 0.3,
+    "aggression": 0.7
+  },
+  "spike": {
+    "name": "Spike",
+    "character": "spike",
+    "hp": 125,
+    "power": 1.15,
+    "speed": 1.15,
+    "block": 0.4,
+    "aggression": 0.65
+  },
+  "ikeFight": {
+    "name": "Ike",
+    "character": "ike",
+    "hp": 100,
+    "power": 1.0,
+    "speed": 1.05,
+    "block": 0.35,
+    "aggression": 0.5
+  },
+  "dubaiFight": {
+    "name": "Dubai",
+    "character": "dubai",
+    "hp": 90,
+    "power": 0.95,
+    "speed": 1.1,
+    "block": 0.3,
+    "aggression": 0.55
   }
 }
