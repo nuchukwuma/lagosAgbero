@@ -20,9 +20,9 @@ const lookAt = new THREE.Vector3()
 
 // `ceiling` (optional): { x, width, deckY, fromZ, toZ } — the flyover. Under it
 // the camera drops below the deck instead of filming concrete.
-function blockedHeight(p, cam, obstacles) {
+function blockedHeight(p, cam, obstacles, samples = [0.45, 0.7, 1]) {
   let need = 0
-  for (const t of [0.45, 0.7, 1]) {
+  for (const t of samples) {
     const x = p.x + (cam.x - p.x) * t
     const z = p.z + (cam.z - p.z) * t
     for (const o of obstacles) {
@@ -116,34 +116,47 @@ export default function CameraRig({ mode = 'follow', speaker = null, ceiling = n
       const side = p.z > 4 ? -1 : 1
       tmpPos.set(p.x + 2, portrait ? 4.8 : 4, p.z + side * (portrait ? 7.5 : 6.5))
     } else {
-      // Three ways to film the player, tried in order:
+      // Ways to film the player, tried in order:
       //   south  the normal view: camera south of the player, looking north
-      //   north  when houses block that view (south side of the street)
-      //   over   looking almost straight down, between two rows of houses
+      //   high   the same, raised just enough to clear the roofs in the way
+      //   north  when houses block the south side badly
+      //   over   looking almost straight down (last resort)
       const k = portrait ? 1.3 : 1
+      const back = FOLLOW_OFFSET.z * (portrait ? 1.1 : 1)
       const now = performance.now()
       const view = follow.current
-      const southNeed = obstacles ? blockedHeight(p, tmpPos.set(p.x, FOLLOW_OFFSET.y * k, p.z + FOLLOW_OFFSET.z * k), obstacles) : 0
-      const northNeed = obstacles ? blockedHeight(p, tmpPos.set(p.x, FOLLOW_OFFSET.y * k, p.z - FOLLOW_OFFSET.z * k), obstacles) : 0
-      let want = southNeed === 0 ? 'south' : northNeed === 0 && p.z > 2 ? 'north' : 'over'
-      // don't flip back and forth: leave the current view only when it is
+      const southNeed = obstacles ? blockedHeight(p, tmpPos.set(p.x, FOLLOW_OFFSET.y * k, p.z + back), obstacles) : 0
+      // is the blockage right next to the player (raising won't help) or only where the camera stands?
+      const southNear = obstacles && southNeed ? blockedHeight(p, tmpPos.set(p.x, FOLLOW_OFFSET.y * k, p.z + back), obstacles, [0.3, 0.55]) : 0
+      const northNeed = obstacles ? blockedHeight(p, tmpPos.set(p.x, FOLLOW_OFFSET.y * k, p.z - back), obstacles) : 0
+      let want = southNeed === 0 ? 'south' : southNear === 0 && southNeed < 13 ? 'high' : northNeed === 0 && p.z > 2 ? 'north' : 'over'
+      // don't flip back and forth: switch sides only when the current view is
       // blocked, or once the normal view has been clear for a moment
-      if (want !== view.kind) {
-        const currentBlocked = view.kind === 'south' ? southNeed > 0 : view.kind === 'north' ? northNeed > 0 : false
-        if (!currentBlocked && !(want === 'south' && now - view.clearSince > 700)) want = view.kind
+      const sideOf = (kind) => (kind === 'north' ? 'north' : kind === 'over' ? 'over' : 'south')
+      if (sideOf(want) !== sideOf(view.kind) && view.kind !== 'over') {
+        // leave the current side only if it is blocked; come back to the
+        // normal (south) side once it has been clear for a moment
+        const currentBlocked = view.kind === 'north' ? northNeed > 0 : southNear > 0 || southNeed >= 13
+        const settled = sideOf(want) === 'south' && now - view.clearSince > 700
+        if (!currentBlocked && !settled) want = view.kind
       }
-      if (southNeed > 0) view.clearSince = now
+      if (southNear > 0 || southNeed >= 13) view.clearSince = now
       view.kind = want
       playerState.viewFlipped = want === 'north'
       if (want === 'north') {
         tmpLook.set(p.x, 1.5, p.z + 3)
-        tmpPos.set(p.x, FOLLOW_OFFSET.y * k, p.z - FOLLOW_OFFSET.z * k)
+        tmpPos.set(p.x, FOLLOW_OFFSET.y * k, p.z - back)
       } else if (want === 'over') {
-        tmpLook.set(p.x, 1.0, p.z - 0.5)
-        tmpPos.set(p.x, 15 * k, p.z + 4.5)
+        // from above, leaning out over the open street (not over the roofs)
+        const side = p.z > 2 ? -1 : 1
+        tmpLook.set(p.x, 1.0, p.z + side * 0.5)
+        tmpPos.set(p.x, 13 * k, p.z + side * 5)
+      } else if (want === 'high') {
+        tmpLook.set(p.x, 1.2, p.z - 2)
+        tmpPos.set(p.x + FOLLOW_OFFSET.x, Math.max(FOLLOW_OFFSET.y * k, southNeed), p.z + back * 0.8)
       } else {
         tmpLook.set(p.x, 1.5, p.z - 3)
-        tmpPos.set(p.x + FOLLOW_OFFSET.x, FOLLOW_OFFSET.y * k, p.z + FOLLOW_OFFSET.z * k)
+        tmpPos.set(p.x + FOLLOW_OFFSET.x, FOLLOW_OFFSET.y * k, p.z + back)
       }
     }
     if (mode !== 'follow') playerState.viewFlipped = false

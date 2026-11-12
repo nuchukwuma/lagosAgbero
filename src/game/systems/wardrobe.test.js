@@ -8,6 +8,11 @@ describe('wardrobe', () => {
     expect(feeBonus('flashy')).toBeGreaterThan(feeBonus('sharp'))
   })
 
+  it('a missing look is plain, not a crash', () => {
+    expect(styleOf(null)).toBe('plain')
+    expect(styleOf(undefined)).toBe('plain')
+  })
+
   it('you only pay for new things', () => {
     const before = { body: 'male_casual', accessories: [{ type: 'cap' }] }
     expect(costOf(before, { body: 'male_suit', accessories: [{ type: 'cap' }] })).toBe(15000)

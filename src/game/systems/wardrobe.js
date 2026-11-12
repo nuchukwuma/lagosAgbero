@@ -9,7 +9,8 @@ import { checkCondition } from '../narrative/conditions.js'
 export const WARDROBE = data
 const STYLE_RANK = { plain: 0, sharp: 1, flashy: 2 }
 
-export function styleOf(look = {}) {
+export function styleOf(look) {
+  look = look || {}
   let best = data.outfits.find((o) => o.id === look.body)?.style || 'plain'
   for (const a of look.accessories || []) {
     const s = data.accessories.find((x) => x.type === a.type && (!x.id || x.id === a.id))?.style || 'plain'
@@ -24,7 +25,9 @@ export function feeBonus(style) {
 }
 
 /** The bill for going from `before` to `after` (only new things cost money). */
-export function costOf(before = {}, after = {}, owned = []) {
+export function costOf(before, after, owned = []) {
+  before = before || {}
+  after = after || {}
   let cost = 0
   if (after.body !== before.body && !owned.includes(`outfit:${after.body}`)) cost += data.outfits.find((o) => o.id === after.body)?.price || 0
   for (const a of after.accessories || []) {
