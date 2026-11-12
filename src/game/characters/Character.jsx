@@ -18,6 +18,10 @@ import { smoothNormals } from './smoothNormals.js'
 // The outer group is forwarded as ref so controllers can move/turn it.
 
 const ALIASES = { idle: 'breathingIdle' }
+const tmpPos = new THREE.Vector3()
+const tmpMat = new THREE.Matrix4()
+const tmpFrustum = new THREE.Frustum()
+const tmpSphere = new THREE.Sphere(new THREE.Vector3(), 1.2)
 
 // One material for every person: colours come from vertex colours.
 const PERSON_MATERIAL = new THREE.MeshLambertMaterial({ vertexColors: true })
@@ -56,6 +60,8 @@ const Character = forwardRef(function Character({ look: lookInput, animation = '
   useMemo(() => mesh && paintGeometry(mesh.geometry, look), [mesh, paintKey]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const mixer = useMemo(() => new THREE.AnimationMixer(object), [object])
+  const inner = useRef()
+  useBlobShadow(inner, { radius: 0.42 })
   const current = useRef(null)
   const [clip, setClip] = useState(idleClip)
   const endRef = useRef(onClipEnd)
@@ -104,10 +110,27 @@ const Character = forwardRef(function Character({ look: lookInput, animation = '
     }
   }, [mixer])
 
-  useFrame((_, delta) => mixer.update(Math.min(delta, 0.1)))
-
-  const inner = useRef()
-  useBlobShadow(inner, { radius: 0.42 })
+  // Animation LOD: people far away or off screen update less often (the
+  // skeleton maths is the most expensive thing a crowd does on a phone).
+  const lod = useRef({ acc: 0, n: Math.floor(Math.random() * 4) })
+  useFrame(({ camera }, delta) => {
+    const l = lod.current
+    l.acc += Math.min(delta, 0.1)
+    l.n++
+    const g = inner.current
+    let every = 1
+    if (g) {
+      g.getWorldPosition(tmpPos)
+      const d = tmpPos.distanceTo(camera.position)
+      tmpSphere.center.copy(tmpPos)
+      tmpFrustum.setFromProjectionMatrix(tmpMat.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse))
+      const onScreen = tmpFrustum.intersectsSphere(tmpSphere)
+      every = !onScreen ? 8 : d > 40 ? 4 : d > 22 ? 2 : 1
+    }
+    if (l.n % every !== 0) return
+    mixer.update(Math.min(l.acc, 0.25))
+    l.acc = 0
+  })
 
   return (
     <group ref={ref} {...groupProps}>

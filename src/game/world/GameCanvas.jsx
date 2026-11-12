@@ -1,5 +1,6 @@
 import { Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import { Canvas } from '@react-three/fiber'
+import * as THREE from 'three'
 import { PerformanceMonitor } from '@react-three/drei'
 import Lighting from './Lighting.jsx'
 import Sky from './Sky.jsx'
@@ -24,7 +25,7 @@ import { useFight, opponentProfile } from '../modes/fight/fightStore.js'
 import RunnerScene from '../modes/runner/RunnerScene.jsx'
 import DriveScene from '../modes/drive/DriveScene.jsx'
 import { useDrive } from '../modes/drive/driveStore.js'
-import { useSettings, dprFor } from '../store/settings.js'
+import { useSettings, renderProfile } from '../store/settings.js'
 import { withAllegiance } from '../characters/look.js'
 import { useRunner } from '../modes/runner/runnerStore.js'
 import ConductorDirector from '../modes/conductor/ConductorDirector.jsx'
@@ -102,19 +103,22 @@ export default function GameCanvas({ view, game, activity = null, paused = false
   const look = useMemo(() => withAllegiance(game.player.look || {}, game.flags), [game.player.look, game.flags.tortoise, game.flags.leftTortoises, game.flags.hidesColours]) // eslint-disable-line react-hooks/exhaustive-deps
   // Drop the render resolution on slow phones, raise it again if there's room.
   // Settings: auto lets PerformanceMonitor pick; low / high fix the resolution.
-  const quality = useSettings((s) => s.quality)
-  const range = dprFor(quality)
+  const chosen = useSettings((s) => s.quality)
+  const profile = renderProfile(chosen)
+  const quality = profile.quality // 'auto' on a budget phone becomes 'low'
+  const range = profile.dpr
   const [dpr, setDpr] = useState(range.max)
   useEffect(() => setDpr(range.max), [quality]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <Canvas
+      key={profile.antialias ? 'aa' : 'no-aa'} // antialiasing can only be chosen when the canvas is created
       className="game-canvas"
       dpr={dpr}
-      gl={{ antialias: true, powerPreference: 'high-performance', stencil: true }}
-      camera={{ fov: 50, near: 0.3, far: 220, position: [0, 8, 12] }}
-      onCreated={({ gl }) => {
-        if (import.meta.env.DEV) window.__gl = gl // dev: draw-call / triangle counts for the perf checks
+      gl={{ antialias: profile.antialias, powerPreference: 'high-performance', stencil: true }}
+      camera={{ fov: 50, near: 0.3, far: profile.far, position: [0, 8, 12] }}
+      onCreated={({ gl, scene, camera }) => {
+        if (import.meta.env.DEV) Object.assign(window, { __gl: gl, __scene: scene, __cam: camera, __THREE: THREE }) // dev: perf checks
       }}
     >
       <PerformanceMonitor onDecline={() => setDpr(range.min)} onIncline={() => setDpr(range.max)} flipflops={3} onFallback={() => setDpr(range.min)} />
@@ -132,14 +136,20 @@ export default function GameCanvas({ view, game, activity = null, paused = false
       ) : (
       <Suspense fallback={null}>
           <StreetScene layout={layout} />
+          <group userData={{ tag: 'npcs' }}>
           <NPCs layout={layout} flags={game.flags} positions={view.positions} speaker={speaker} mood={view.mood} hidden={fightOpponent ? [fightOpponent] : []} />
+          </group>
           {!(fightOn && modeName === 'fight') && !busOn && <PlayerController layout={layout} look={look} enabled={(freeRoam || feeRunActive || chaseActive) && !paused} eyeRed={eyeRed} tired={game.stats.energy < LOW_ENERGY} />}
           {freeRoam && <VendorTracker />}
           {freeRoam && <ActivityTracker layout={layout} game={game} />}
           {freeRoam && <QuestTracker game={game} />}
-          <Traffic paused={paused} raining={Boolean(game.flags.raining)} />
+          <group userData={{ tag: 'traffic' }}>
+            <Traffic paused={paused} raining={Boolean(game.flags.raining)} />
+          </group>
           <Suspense fallback={null}>
-            <Crowd layout={layout} quality={quality} paused={paused} />
+            <group userData={{ tag: 'crowd' }}>
+              <Crowd layout={layout} quality={quality} paused={paused} />
+            </group>
           </Suspense>
           {worldMode && modeName === 'feeCollection' && <FeeRunDirector />}
           {worldMode && modeName === 'chase' && <ChaseDirector />}

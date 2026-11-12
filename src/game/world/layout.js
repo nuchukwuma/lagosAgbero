@@ -8,6 +8,7 @@
 
 import { getAsset } from '../../assets/assetManifest.js'
 import { generateFill } from './cityFill.js'
+import { buildStalls } from './stalls.js'
 
 // Kenney road tiles have their asphalt at y = 0 (only kerbs rise to 0.16 m),
 // so people, buildings and pavements stand just above zero.
@@ -104,6 +105,10 @@ export function parseLayout(json, { reserved = [] } = {}) {
   ]
   const fill = generateFill(json, colliders, marks)
   groups.push(...fill.groups)
+  // market stalls: containers join the batched models, the rest the props
+  const stalls = buildStalls(json.stalls)
+  groups.push(...stalls.groups)
+  fill.prims.push(...stalls.prims)
   colliders.push(...fill.colliders)
   shadows.push(...fill.shadows)
 

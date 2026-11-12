@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useSettings, fullscreenSupported, toggleFullscreen } from '../../game/store/settings.js'
+import { useSettings, fullscreenSupported, toggleFullscreen, deviceTier } from '../../game/store/settings.js'
 import { useDevice } from '../hud/useDevice.js'
 import Icon from '../Icon.jsx'
 
@@ -39,6 +39,7 @@ export default function SettingsPanel() {
           <Icon name={sound ? 'sound' : 'mute'} size={16} /> Sound
         </button>
       </div>
+      {quality === 'auto' && <p className="footnote">Auto: {deviceTier() === 'low' ? 'this device gets the battery-saver look.' : 'resolution adapts to how fast this device runs.'}</p>}
       {fullscreenSupported() ? (
         <button className="btn" onClick={toggleFullscreen}>
           {full ? 'Exit full screen' : 'Full screen'}

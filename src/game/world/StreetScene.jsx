@@ -28,19 +28,25 @@ export default function StreetScene({ layout }) {
       <Ground bounds={layout.bounds} />
       <Pavements list={raw.pavements || []} />
       <GroundDetail layout={layout} />
-      <StaticWorld groups={layout.groups} />
+      <group userData={{ tag: 'static' }}>
+        <StaticWorld groups={layout.groups} />
+      </group>
       <Props prims={layout.fill.prims} />
       <Skyline blocks={layout.fill.blocks} />
       <FakeShadows boxes={layout.shadows} />
       <NightGlows lights={glows} />
       {raw.flyover && <Flyover f={raw.flyover} />}
       <Wires poleGroups={poleGroups} />
-      {(raw.stalls || []).map((s, i) => (
-        <MarketStall key={s.id} stall={s} index={i} />
-      ))}
-      {(raw.signs || []).map((s, i) => (
-        <Sign key={i} {...s} />
-      ))}
+      <group userData={{ tag: 'stalls' }}>
+        {(raw.stalls || []).map((s, i) => (
+          <MarketStall key={s.id} stall={s} index={i} />
+        ))}
+      </group>
+      <group userData={{ tag: 'signs' }}>
+        {(raw.signs || []).map((s, i) => (
+          <Sign key={i} {...s} />
+        ))}
+      </group>
       {(raw.shelters || []).map((s, i) => (
         <BusShelter key={i} at={s.at} />
       ))}
