@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useGameStore } from '../../game/store/gameStore.js'
 import GameCanvas from '../../game/world/GameCanvas.jsx'
 import HUD from '../hud/HUD.jsx'
@@ -20,6 +20,7 @@ import StatusPanel from './StatusPanel.jsx'
 import GameMenu from './GameMenu.jsx'
 import Toasts from './Toasts.jsx'
 import ModeHost from './ModeHost.jsx'
+import FavourButton from '../hud/FavourButton.jsx'
 
 // The story screen: the 3D street + HUD + whatever the engine says to show.
 // During a freeRoam beat the player walks; otherwise the story has the floor.
@@ -38,6 +39,17 @@ export default function StoryScreen() {
   const feeRunOn = useFeeRun((s) => s.active && s.started && !s.ended)
   const chaseOn = useChase((s) => s.active && s.started && !s.ended)
   const streetMode = feeRunOn || chaseOn
+
+  // Phones kill background tabs: save quietly whenever the game is hidden.
+  useEffect(() => {
+    const onHide = () => document.visibilityState === 'hidden' && useGameStore.getState().autosave()
+    document.addEventListener('visibilitychange', onHide)
+    window.addEventListener('pagehide', onHide)
+    return () => {
+      document.removeEventListener('visibilitychange', onHide)
+      window.removeEventListener('pagehide', onHide)
+    }
+  }, [])
 
   if (!game || !view) return null
 
@@ -105,6 +117,7 @@ export default function StoryScreen() {
       )}
       {activity && <ActivityHost activity={activity} onFinish={finishActivity} />}
       <EnergyTicker active={(view.type === 'freeRoam' || streetMode) && !overlay} />
+      <FavourButton view={view} activity={activity} overlay={overlay} />
       <div className="story-content">{content}</div>
       {error && (
         <div className="story-error">
@@ -126,6 +139,7 @@ export default function StoryScreen() {
             setOverlay(null)
           }}
           onQuit={quitToTitle}
+          canDress={view.type === 'freeRoam' && !activity}
         />
       )}
     </div>

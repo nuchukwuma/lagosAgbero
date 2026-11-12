@@ -470,6 +470,22 @@ Random events in `events.json` include news that changes the economy: fuel
 hikes (`fairFee` and `quota` rise), a new sanitation levy (pay or argue),
 cash scarcity (`fairFee` falls) and price jokes from Baba Radio.
 
+### Looks and reactions (wardrobe)
+
+The wardrobe (`src/game/data/wardrobe.json`) sells outfits and accessories
+for pocket money. The flashiest piece sets a style flag the story and modes
+can read:
+
+| Flag | Effect |
+|---|---|
+| `style_plain` | nothing special |
+| `style_sharp` | drivers accept ₦25 more as a fair fee |
+| `style_flashy` | drivers accept ₦75 more; the Zone 5 gate gives half; Bassey comments in raids |
+
+Write dialogue variants with `"if": "style_flashy"` to make people react.
+Street names are earned by flags (`nicknames` in `wardrobe.json`) and show
+up wherever `{nickname}` is used.
+
 ### Task Force raids
 
 `story/common/raids.json` holds the raid scenes:

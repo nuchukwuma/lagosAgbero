@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useFeeRun } from './feeRunStore.js'
 import { traffic, releaseVehicle } from '../../systems/traffic.js'
 import { feeFor } from '../../systems/fees.js'
+import { styleOf, feeBonus } from '../../systems/wardrobe.js'
 import { useGameStore } from '../../store/gameStore.js'
 import MoveControls from '../../../components/hud/MoveControls.jsx'
 import { input } from '../../player/input.js'
@@ -49,10 +50,11 @@ function Summary({ store, result, onDone }) {
 export default function FeeCollectionMode({ params, onFinish }) {
   const store = useFeeRun()
   const stats = useGameStore((s) => s.game?.stats)
+  const look = useGameStore((s) => s.game?.player?.look)
   const [result, setResult] = useState(null)
 
   useEffect(() => {
-    useFeeRun.getState().start(params, stats || {})
+    useFeeRun.getState().start({ ...params, fairFeeBonus: feeBonus(styleOf(look)) }, stats || {})
     return () => {
       input.runButton = false
       useFeeRun.getState().reset()

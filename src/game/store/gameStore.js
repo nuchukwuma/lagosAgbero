@@ -15,6 +15,7 @@ import { pickEvent, ROLL_EVERY } from '../systems/events.js'
 import { applyEffects, resultToEffects } from '../narrative/effects.js'
 import { checkCondition } from '../narrative/conditions.js'
 import { useWorldStore } from '../world/worldState.js'
+import { styleOf, styleFlags, costOf, ownedAfter } from '../systems/wardrobe.js'
 
 let toastId = 0
 
@@ -165,6 +166,45 @@ export const useGameStore = create((set, get) => {
       set((s) => ({ game: next, toasts: [...s.toasts, { id: ++toastId, text: r.message }].slice(-4) }))
       saveGame('auto', next, summaryOf(next, get().view))
       return null
+    },
+
+    /** Wardrobe: pay for new things, change the look, nickname and style flags. */
+    dress: ({ look, nickname }) => {
+      const { game } = get()
+      if (!game) return 'No game'
+      const owned = game.owned || []
+      const cost = costOf(game.player.look || {}, look, owned)
+      if ((game.stats.money ?? 0) < cost) return `You need ₦${cost.toLocaleString('en-NG')}`
+      const style = styleOf(look)
+      const next = {
+        ...game,
+        player: { ...game.player, look, nickname: nickname || game.player.nickname },
+        owned: ownedAfter(look, owned),
+        stats: { ...game.stats, money: game.stats.money - cost },
+        flags: { ...game.flags, ...styleFlags(style) },
+      }
+      set((s) => ({ game: next, toasts: [...s.toasts, { id: ++toastId, text: cost ? `New look: -₦${cost.toLocaleString('en-NG')}` : 'Looking sharp.' }].slice(-4) }))
+      saveGame('auto', next, summaryOf(next, get().view))
+      return null
+    },
+
+    /** Rewarded favour (mock ad) finished: give the reward, count it for today. */
+    grantFavour: (reward) => {
+      const { game } = get()
+      if (!game) return
+      const day = game.stats.day
+      const ads = game.ads?.day === day ? game.ads : { day, count: 0 }
+      const stats = { ...game.stats }
+      for (const [k, d] of Object.entries(reward)) stats[k] = clampStat(k, (stats[k] ?? 0) + d)
+      const next = { ...game, stats, ads: { day, count: ads.count + 1 } }
+      set((s) => ({ game: next, toasts: [...s.toasts, { id: ++toastId, text: 'Favour done. The street remembers small kindness.' }].slice(-4) }))
+      saveGame('auto', next, summaryOf(next, get().view))
+    },
+
+    /** Quiet autosave (tab hidden, app backgrounded). */
+    autosave: () => {
+      const { game, view } = get()
+      if (game) saveGame('auto', game, summaryOf(game, view))
     },
 
     save: (slot) => {

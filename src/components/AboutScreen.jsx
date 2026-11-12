@@ -1,3 +1,5 @@
+import { SupportBlock } from './menu/MockCheckout.jsx'
+
 export default function AboutScreen({ onBack }) {
   return (
     <div className="screen about-screen">
@@ -18,6 +20,7 @@ export default function AboutScreen({ onBack }) {
         <p>People and the bus: Quaternius (quaternius.com), CC0.</p>
         <p>Animations: Mixamo (Adobe).</p>
       </div>
+      <SupportBlock />
       <button className="btn" onClick={onBack}>
         Back
       </button>

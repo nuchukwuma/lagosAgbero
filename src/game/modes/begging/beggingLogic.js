@@ -15,7 +15,7 @@ function rngFrom(seed) {
   return () => ((s = (s * 9301 + 49297) % 233280) / 233280)
 }
 
-export function createBegRun({ seed = 1, count = 6, wrongPerson = null, wrongAt = 3, goodwill = 10 } = {}) {
+export function createBegRun({ seed = 1, count = 6, wrongPerson = null, wrongAt = 3, goodwill = 10, flashy = false } = {}) {
   const rng = rngFrom(seed)
   const targets = []
   for (let i = 0; i < count; i++) {
@@ -28,7 +28,7 @@ export function createBegRun({ seed = 1, count = 6, wrongPerson = null, wrongAt 
     const t = BEG.targets[kind]
     targets.push({ kind, name: t.name, hint: t.hints[Math.floor(rng() * t.hints.length)] })
   }
-  return { rng, targets, index: 0, collected: 0, anger: 0, aggressive: 0, goodwill, log: [], over: null }
+  return { rng, targets, index: 0, collected: 0, anger: 0, aggressive: 0, goodwill, flashy, log: [], over: null }
 }
 
 export const currentTarget = (r) => r.targets[r.index]
@@ -52,7 +52,8 @@ export function approach(r, how) {
     const mult = def.pay[how] ?? 0
     // goodwill makes people more generous, a little
     const luck = 0.7 + r.rng() * 0.6 + Math.min(0.3, r.goodwill / 200)
-    gain = Math.round((def.base * mult * luck) / 50) * 50
+    // nobody gives to a beggar wearing a gold chain
+    gain = Math.round((def.base * mult * luck * (r.flashy ? 0.5 : 1)) / 50) * 50
     r.anger = Math.min(100, r.anger + (def.anger[how] || 0))
     if (how === 'block') r.aggressive++
     outcome = how === 'skip' ? 'skipped' : gain > 0 ? (mult >= 1.2 ? 'great' : 'some') : 'nothing'

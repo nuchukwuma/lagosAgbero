@@ -18,6 +18,7 @@ import { useChase } from '../modes/chase/chaseStore.js'
 import FightDirector from '../modes/fight/FightDirector.jsx'
 import { useFight, opponentProfile } from '../modes/fight/fightStore.js'
 import RunnerScene from '../modes/runner/RunnerScene.jsx'
+import { useSettings, dprFor } from '../store/settings.js'
 import { withAllegiance } from '../characters/look.js'
 import { useRunner } from '../modes/runner/runnerStore.js'
 import ConductorDirector from '../modes/conductor/ConductorDirector.jsx'
@@ -77,7 +78,11 @@ export default function GameCanvas({ view, game, activity = null, paused = false
   const eyeRed = Math.min(1, Math.max(0, game.stats.energy / 100))
   const look = useMemo(() => withAllegiance(game.player.look || {}, game.flags), [game.player.look, game.flags.tortoise, game.flags.leftTortoises, game.flags.hidesColours]) // eslint-disable-line react-hooks/exhaustive-deps
   // Drop the render resolution on slow phones, raise it again if there's room.
-  const [dpr, setDpr] = useState(1.5)
+  // Settings: auto lets PerformanceMonitor pick; low / high fix the resolution.
+  const quality = useSettings((s) => s.quality)
+  const range = dprFor(quality)
+  const [dpr, setDpr] = useState(range.max)
+  useEffect(() => setDpr(range.max), [quality]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <Canvas
@@ -86,7 +91,7 @@ export default function GameCanvas({ view, game, activity = null, paused = false
       gl={{ antialias: true, powerPreference: 'high-performance' }}
       camera={{ fov: 50, near: 0.3, far: 180, position: [0, 8, 12] }}
     >
-      <PerformanceMonitor onDecline={() => setDpr(1)} onIncline={() => setDpr(1.5)} flipflops={3} onFallback={() => setDpr(1)} />
+      <PerformanceMonitor onDecline={() => setDpr(range.min)} onIncline={() => setDpr(range.max)} flipflops={3} onFallback={() => setDpr(range.min)} />
       <Lighting time={view.time} raining={Boolean(game.flags.raining)} />
       {runnerOn ? (
         <Suspense fallback={null}>

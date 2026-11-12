@@ -135,7 +135,8 @@ export const useFeeRun = create((set, get) => {
         collected: 0,
         quota: stats.quota ?? 15000,
         stopFee: stats.stopFee ?? 500,
-        fairFee: params.fairFee ?? stats.fairFee ?? BASE_FAIR_FEE,
+        // fairFeeBonus: flashy / sharp clothes make drivers accept a bit more (wardrobe.js)
+        fairFee: (params.fairFee ?? stats.fairFee ?? BASE_FAIR_FEE) + (params.fairFeeBonus || 0),
         notoriety: stats.notoriety ?? 0,
         near: null,
         popup: null,

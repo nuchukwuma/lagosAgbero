@@ -49,12 +49,14 @@ export default function TitleScreen({ onNavigate, onContinue }) {
         <button className="btn" onClick={() => onNavigate('about')}>
           About
         </button>
-        <button className="btn btn-small" onClick={() => onNavigate('assets')}>
-          Asset Check (dev)
-        </button>
+        {import.meta.env.DEV && (
+          <button className="btn btn-small" onClick={() => onNavigate('assets')}>
+            Asset Check (dev)
+          </button>
+        )}
         {import.meta.env.DEV && <DevChapterPicker />}
       </div>
-      <p className="footnote">Build: Phases 1–5</p>
+      <p className="footnote">v{__APP_VERSION__} · satire, not a guide</p>
     </div>
   )
 }

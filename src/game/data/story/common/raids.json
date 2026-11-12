@@ -39,6 +39,10 @@
               "if": "basseyRespect",
               "text": "(quietly) Listen, my people dey come this side in ten minutes. If I be you, I go dey for another place. I no tell you anything.",
               "mood": "nervous"
+            },
+            {
+              "if": "style_flashy",
+              "text": "Fine chain. Fine shades. Agbero with gold? Where you see money buy am? Come here, Mr Owambe!"
             }
           ]
         },

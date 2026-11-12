@@ -1,0 +1,42 @@
+{
+  "outfits": [
+    { "id": "male_casual", "label": "T-shirt", "price": 0, "style": "plain" },
+    { "id": "male_shirt", "label": "Shirt", "price": 0, "style": "plain" },
+    { "id": "male_longsleeve", "label": "Long sleeve", "price": 2000, "style": "sharp" },
+    { "id": "male_suit", "label": "Owambe suit", "price": 15000, "style": "flashy" },
+    { "id": "female_casual", "label": "Tee (women's)", "price": 0, "style": "plain" },
+    { "id": "female_tanktop", "label": "Tank top", "price": 0, "style": "plain" },
+    { "id": "female_dress", "label": "Ankara dress", "price": 3000, "style": "sharp" },
+    { "id": "female_alternative", "label": "Jacket", "price": 8000, "style": "flashy" }
+  ],
+  "colours": ["#d8d2c4", "#c0392b", "#2c5aa0", "#2f8f5b", "#e0b400", "#1a1a1a", "#e67e22", "#8e44ad", "#ffffff", "#5d4037"],
+  "accessories": [
+    { "type": "cap", "label": "Cap", "price": 500, "style": "plain" },
+    { "type": "fila", "label": "Fila", "price": 800, "style": "sharp" },
+    { "type": "beanie", "label": "Beanie", "price": 600, "style": "plain" },
+    { "type": "bandana", "label": "Bandana", "price": 300, "style": "plain", "note": "Purple + white makes people think Hyena." },
+    { "type": "glasses", "label": "Shades", "price": 2500, "style": "flashy" },
+    { "type": "chain", "label": "Gold chain", "price": 6000, "style": "flashy" },
+    { "type": "wristband", "label": "Wristband", "price": 400, "style": "plain" },
+    { "type": "gele", "label": "Gele", "price": 2000, "style": "sharp" },
+    { "type": "chain", "id": "supporterChain", "label": "Supporter chain", "price": 0, "style": "flashy", "entitlement": "supporterPack", "color": "#f5d76e" }
+  ],
+  "styles": {
+    "plain": "People ignore you. Beggars, drivers and police see one more agbero.",
+    "sharp": "Drivers take you a bit more seriously. Fees go down easier.",
+    "flashy": "Drivers think you have backing and pay more. Rich people at the gate give less (you look like you don't need it), and Bassey notices you."
+  },
+  "nicknames": [
+    { "name": "JJC", "if": null },
+    { "name": "Conductor", "if": "conductorDone" },
+    { "name": "Odogwu", "if": "beatScatter" },
+    { "name": "Bridge Collector", "if": "scatterEnemy" },
+    { "name": "Under-Bridge Peacemaker", "if": "scatterAlly" },
+    { "name": "Rally Boy", "if": "rally_paid" },
+    { "name": "Shell", "if": "tortoise" },
+    { "name": "Co-op Chairman", "if": "coopFounded" },
+    { "name": "Laffy Breaker", "if": "beatLordLaffy" },
+    { "name": "Hyena Slayer", "if": "hyenasDefeated" },
+    { "name": "Supporter", "entitlement": "supporterPack" }
+  ]
+}

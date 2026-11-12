@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { createBegRun, approach, currentTarget, begResult, BEG } from './beggingLogic.js'
 import { formatNaira } from '../../narrative/stats.js'
+import { useGameStore } from '../../store/gameStore.js'
 
 // Aggressive begging at the Zone 5 Estate gate. Story params:
 //   count        how many people pass (default 6)
@@ -19,7 +20,7 @@ const REACTIONS = {
 const pick = (a) => a[Math.floor(Math.random() * a.length)]
 
 export default function BeggingMode({ params, onFinish }) {
-  const run = useMemo(() => createBegRun({ seed: params.seed ?? Math.floor(Math.random() * 999), count: params.count ?? 6, wrongPerson: params.wrongPerson ?? null, wrongAt: params.wrongAt ?? 3, goodwill: params.goodwill ?? 10 }), []) // eslint-disable-line react-hooks/exhaustive-deps
+  const run = useMemo(() => createBegRun({ seed: params.seed ?? Math.floor(Math.random() * 999), count: params.count ?? 6, wrongPerson: params.wrongPerson ?? null, wrongAt: params.wrongAt ?? 3, goodwill: params.goodwill ?? useGameStore.getState().game?.stats.communityGoodwill ?? 10, flashy: Boolean(useGameStore.getState().game?.flags.style_flashy) }), []) // eslint-disable-line react-hooks/exhaustive-deps
   const [started, setStarted] = useState(false)
   const [note, setNote] = useState(null)
   const [, force] = useState(0)
@@ -34,6 +35,7 @@ export default function BeggingMode({ params, onFinish }) {
           <li>Ogas love praise. Madams and pastors love a sad story. Big boys love a show.</li>
           <li>Standing in front of cars pays sometimes, but the estate will remember.</li>
           <li>Some people you should never beg. Read the signs.</li>
+          {run.flashy && <li className="warn">You are dressed flashy. Rich people give less to a beggar with shades.</li>}
         </ul>
         <button className="btn btn-primary" onClick={() => setStarted(true)}>
           Oya, start

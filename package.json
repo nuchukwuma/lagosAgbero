@@ -1,6 +1,6 @@
 {
   "name": "area-boy",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Area Boy: a story-driven 3D agbero game",
   "scripts": {
     "dev": "vite --host",
@@ -11,7 +11,8 @@
     "assets:animations": "node scripts/import-animations.mjs",
     "story:check": "node scripts/check-story.mjs",
     "test": "vitest run",
-    "assets:characters": "node scripts/import-characters.mjs"
+    "assets:characters": "node scripts/import-characters.mjs",
+    "assets:clean": "node scripts/clean-assets.mjs"
   },
   "repository": {
     "type": "git",
