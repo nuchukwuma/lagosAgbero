@@ -109,6 +109,59 @@
         ]
       },
       "scene": "raids:raid"
+    },
+    {
+      "id": "fuelHike2",
+      "weight": 1,
+      "once": true,
+      "if": {
+        "stats": {
+          "day": ">= 3"
+        }
+      },
+      "scene": "events:fuelHike"
+    },
+    {
+      "id": "levy",
+      "weight": 1,
+      "once": true,
+      "if": {
+        "stats": {
+          "day": ">= 4"
+        }
+      },
+      "scene": "events:levy"
+    },
+    {
+      "id": "cashCrunch",
+      "weight": 1,
+      "once": true,
+      "if": {
+        "stats": {
+          "day": ">= 5"
+        }
+      },
+      "effects": {
+        "changeStat": {
+          "fairFee": -50
+        },
+        "toast": "Baba Radio: \"Naira notes don scarce!\" Drivers want to pay by transfer. Your POS is a cardboard box."
+      }
+    },
+    {
+      "id": "tomatoCrisis",
+      "weight": 1,
+      "once": true,
+      "effects": {
+        "toast": "Baba Radio: \"Tomato now ₦1,000 per one.\" Mama Put's stew is now mostly pepper and prayers."
+      }
+    },
+    {
+      "id": "radioDollar",
+      "weight": 1,
+      "effects": {
+        "toast": "Baba Radio: \"The dollar has gone to the gym. The naira has gone to the hospital.\""
+      }
     }
   ]
 }

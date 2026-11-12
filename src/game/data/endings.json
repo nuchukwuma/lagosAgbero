@@ -1,20 +1,271 @@
 {
-  "street_king": { "title": "Street King", "draft": true, "epilogue": ["Epilogue written in Phase 12."] },
-  "cult_boss": { "title": "Cult Boss", "draft": true, "epilogue": ["Epilogue written in Phase 12."] },
-  "wanted": { "title": "Wanted", "draft": true, "epilogue": ["Epilogue written in Phase 12."] },
-  "legit_businessman": { "title": "Legit Businessman", "draft": true, "epilogue": ["Epilogue written in Phase 12."] },
-  "informant": { "title": "The Informant", "draft": true, "epilogue": ["Epilogue written in Phase 12."] },
-  "rock_bottom": {
-    "title": "Rock Bottom",
-    "draft": true,
+  "street_king": {
+    "title": "Street King",
     "epilogue": [
-      "You wake up in a ward at General Hospital Iyana-Wahala. Nurse Rónkẹ́ dey count drip like say na money.",
-      "Your phone ring. Na Mama. You no get strength to lie again.",
-      "\"{name}, come home. We go find the money together.\"",
-      "(Test ending. The real Rock Bottom epilogue comes in Phase 12.)"
+      "A year later. You sit in the plastic chair at the motor park office. It still has Baba Ticket's shape in it.",
+      {
+        "if": "overthrewBabaTicket",
+        "text": "Baba Ticket now sells suya two streets away. He gives you extra pepper. You are never sure it is a kindness."
+      },
+      {
+        "if": {
+          "notFlags": [
+            "overthrewBabaTicket"
+          ]
+        },
+        "text": "Baba Ticket retired to his third wife's house in Ìkòròdú. He calls every Friday to quote a proverb wrong."
+      },
+      "Every morning the drivers line up and pay. Some pay because they respect you. Some pay because they remember Scatter's glasses in the puddle.",
+      {
+        "if": "coopFounded",
+        "text": "The co-op board still stands beside Ada's Corner. Three o's. You never let anybody fix it."
+      },
+      "At 5:40 a.m. a boy steps off the night bus with a phone on 3% battery. Somebody who is definitely not a conductor walks towards him.",
+      "You stand up. \"Oya. Come here, JJC.\""
     ]
   },
-  "jailed": { "title": "Jailed", "draft": true, "epilogue": ["Epilogue written in Phase 12."] },
-  "go_home": { "title": "Go Home", "secret": true, "draft": true, "epilogue": ["Epilogue written in Phase 12."] },
-  "the_honourable": { "title": "The Honourable", "secret": true, "draft": true, "epilogue": ["Epilogue written in Phase 12."] }
+  "cult_boss": {
+    "title": "Cult Boss",
+    "epilogue": [
+      "The curtain at the Shell House opens for the first time in twenty years.",
+      "Behind it: a desk, a stamp, a very old man in a brown cardigan, and nine thousand files.",
+      "\"Number One Shell,\" he says, and slides the stamp across the desk. \"You cannot refuse. Nobody ever could. That is why nobody asks.\"",
+      {
+        "if": "ada_romance",
+        "text": "Ada does not come to the ceremony. She sends a note: \"Ask for the receipt.\""
+      },
+      {
+        "if": "gaveUpSunday",
+        "text": "Somewhere in the files there is one with Sunday's name on it. You never open it. You never throw it away either."
+      },
+      "You sit. The chair is warm. Outside, the Hyenas are quiet, and the junction pays its dues on time.",
+      "Your first official act is to sign Form T-12 for a nervous boy with a phone on 3% battery. Nine pages. In triplicate."
+    ]
+  },
+  "wanted": {
+    "title": "Wanted",
+    "epilogue": [
+      "Night. The back of Formula One's okada. No helmet, no plan, one bag.",
+      "\"Where we dey go?\" he shouts over the engine.",
+      "\"Anywhere wey road go.\"",
+      "Behind you, Iyana-Wahala's lights shrink to one orange dot under the flyover. A green van sits at the junction with its siren off.",
+      {
+        "if": "basseyRespect",
+        "text": "Bassey is in the van. He watches you go. He does not radio anybody. Not tonight."
+      },
+      {
+        "if": {
+          "stats": {
+            "debt": "> 0"
+          }
+        },
+        "text": "Your phone buzzes. Iya Bọ́sẹ̀. You let it ring all the way to Ogun State."
+      },
+      "Formula One laughs into the wind. For the first time since you arrived, so do you."
+    ]
+  },
+  "legit_businessman": {
+    "title": "Legit Businessman",
+    "epilogue": [
+      {
+        "if": {
+          "notFlags": [
+            "ada_romance"
+          ]
+        },
+        "text": "Iyana-Wahala Transport Ltd. Three yellow danfos. A real office with a real receipt book."
+      },
+      {
+        "if": "ada_romance",
+        "text": "Iyana-Wahala Transport Ltd, owned by the Okafor family. Three yellow danfos. Ada does the accounts. Nobody argues with the accounts."
+      },
+      {
+        "if": "ada_friend",
+        "text": "Ada is your business partner. Her first rule: no fee without receipt. Her second rule: no receipt without fee."
+      },
+      "The first danfo is called \"Rule Number One\". Bíọ́dún drives it, singing.",
+      {
+        "if": "sundayFree",
+        "text": "Sunday is the conductor. He dances at every stop. Passengers tip him to stop dancing. He takes the money and dances more."
+      },
+      "Your drivers pay one fair fee to one co-operative and nobody else.",
+      "Some mornings you still wake up at 5:40, ready to run."
+    ]
+  },
+  "informant": {
+    "title": "The Informant",
+    "epilogue": [
+      "Abuja. A two-bedroom flat with air conditioning, a guard, and nothing to do.",
+      "Your new name is Emmanuel. You keep forgetting it.",
+      {
+        "if": "evidenceSettlement",
+        "text": "On TV, Barrister Settlement leaves a courthouse with his face covered by a very expensive file folder."
+      },
+      {
+        "if": {
+          "flags": [
+            "informant"
+          ],
+          "notFlags": [
+            "evidenceSettlement"
+          ]
+        },
+        "text": "On TV, the Shell House is sealed with yellow tape. Somebody has stamped the tape. Twice."
+      },
+      "The food here is fine. It is just... fine. You would sell your new name for one plate of Mama Put's ewa agoyin.",
+      "At night you call out bus stops in your sleep. The guard has started answering."
+    ]
+  },
+  "rock_bottom": {
+    "title": "Rock Bottom",
+    "epilogue": [
+      {
+        "if": {
+          "notFlags": [
+            "endedBroke"
+          ]
+        },
+        "text": "You wake up in a ward at General Hospital Iyana-Wahala. Nurse Rónkẹ́ is counting drips like money."
+      },
+      {
+        "if": "endedBroke",
+        "text": "The election ends. The posters peel. You are standing at the Back Side with nothing: no crew, no co-op, no shell, no savings."
+      },
+      "\"You again,\" says Nurse Rónkẹ́, and then, softer: \"Eat something.\"",
+      "Your phone rings. It's Mama. You don't have the strength to lie any more.",
+      "\"{name}, come home. We go find the money together. Market women no dey kill person. Dem just dey talk until you wish dem kill you.\"",
+      "You laugh. It hurts. You laugh anyway."
+    ]
+  },
+  "jailed": {
+    "title": "Jailed",
+    "epilogue": [
+      "Awaiting Trial. Cell 4. Forty men, one window, one bucket.",
+      {
+        "if": "professor_jailed",
+        "text": "A man in the corner holds up a hand with three fingers. \"Ah,\" says Professor. \"Rule number thirteen: never get caught. I forgot to teach you that one.\""
+      },
+      {
+        "if": {
+          "notFlags": [
+            "professor_jailed"
+          ]
+        },
+        "text": "An old man in the corner squints at you. \"Iyana-Wahala? Jimoh Professor's boy? Sit down. I was his cellmate in '98. Let me teach you the rules of the cell.\""
+      },
+      {
+        "if": "ada_romance",
+        "text": "Every Sunday, Ada brings moi-moi and the accounts. Every Sunday she says, \"Next month.\""
+      },
+      "Your case file is on a desk somewhere, under nine other case files.",
+      "Outside, somebody else is calling your stop."
+    ]
+  },
+  "go_home": {
+    "title": "Go Home",
+    "secret": true,
+    "epilogue": [
+      "The last alert goes through at 9:14 a.m. ₦0 owing.",
+      "In Ìlú-Àlàáfíà, Iya Bọ́sẹ̀ reads the message twice, puts down her phone, and declares a market holiday nobody asked for.",
+      "You go home in Bíọ́dún's danfo. \"God's Time Is The Best\" is full of gifts: rice, a generator, a framed photo of the Iyana-Wahala co-op board, three o's.",
+      "Mama is standing at the junction when you arrive. She looks at you for a long time. Then she slaps your arm, hard, and doesn't let go of it.",
+      {
+        "if": "ada_romance",
+        "text": "Ada comes too. Mama inspects her like a goat at market, then gives her the best chair."
+      },
+      {
+        "if": {
+          "anyOf": [
+            "professor_village",
+            "professor_buka"
+          ]
+        },
+        "text": "Professor sends a voice note: \"Rule number one hundred: go home while home is still there. Well done, my son.\""
+      },
+      "That night the whole town eats. Nobody mentions Double-Double. Everybody mentions it the next morning."
+    ]
+  },
+  "the_honourable": {
+    "title": "The Honourable",
+    "secret": true,
+    "epilogue": [
+      "Councillor {name}, Iyana-Wahala Ward. Independent. Elected by a margin nobody could rig because everybody was watching.",
+      "Hon. Mrs. Ronke Ademola-Peters sends flowers. Hon. Owó Ńlá sends a lawyer. Barrister Settlement sends his congratulations, and his card, in case.",
+      "Your first act in office is a community feeding programme.",
+      "The rice bags arrive on Monday. Your face is printed on every one of them.",
+      "You stare at the bags for a long time.",
+      "Then you sign for them.",
+      "The cycle continues."
+    ]
+  },
+  "_fates": [
+    {
+      "if": "professor_dead",
+      "text": "Professor: buried under the flyover's shadow. On his grave someone painted Rule Number One."
+    },
+    {
+      "if": "professor_jailed",
+      "text": "Professor: serving the time that should have been yours. He runs the prison canteen. Badly."
+    },
+    {
+      "if": "professor_buka",
+      "text": "Professor: Professor's Kitchen, beside Mama Put. The rules are on the wall. Rule number one is still spelled wrong."
+    },
+    {
+      "if": "professor_village",
+      "text": "Professor: teaching goats the rules of the road in his sister's village."
+    },
+    {
+      "if": "professor_stays",
+      "text": "Professor: same corner, same chair, watching the Back Side."
+    },
+    {
+      "if": "ada_romance",
+      "text": "Ada: together with you, when you're honest. Saving for university. Still laughing at your lies."
+    },
+    {
+      "if": "ada_friend",
+      "text": "Ada: your best friend. Her shop has a second container now."
+    },
+    {
+      "if": "ada_estranged",
+      "text": "Ada: she got into university. She didn't tell you. You heard from Mallam Garba."
+    },
+    {
+      "if": "sundayFree",
+      "text": "Sunday: out of the Hyenas. Still dancing at every stop."
+    },
+    {
+      "if": "sundayInformant",
+      "text": "Sunday: still a Hyena on paper. Still your friend in secret."
+    },
+    {
+      "if": "lostSunday",
+      "text": "Sunday: gone. Some nights you hear a conductor laugh and you turn around."
+    },
+    {
+      "if": "scatterAlly",
+      "text": "Scatter: runs Under-Bridge \"with your permission\". He is still 5'4\". He still asks you not to mention it."
+    },
+    {
+      "if": "scatterEnemy",
+      "text": "Scatter: still waiting for his turn. Lagos is round."
+    },
+    {
+      "if": {
+        "stats": {
+          "debt": "<= 0"
+        }
+      },
+      "text": "Mama's debt: paid in full. Iya Bọ́sẹ̀ has found someone new to send voice notes to."
+    },
+    {
+      "if": {
+        "stats": {
+          "debt": "> 0"
+        }
+      },
+      "text": "Mama's debt: {debt} still owing. The voice notes continue."
+    }
+  ]
 }

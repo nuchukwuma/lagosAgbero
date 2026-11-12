@@ -33,7 +33,7 @@ export default function ShopPanel({ vendor, onClose }) {
                   <strong>{it.name}</strong>
                   <small>{it.blurb}</small>
                   <span className="shop-stats">
-                    +{it.energy} energy{it.crash ? ` · crash −${it.crash} after ${Math.round(it.duration / 60)} min` : ''}
+                    {it.kind === 'transfer' ? (it.stats?.debt ? 'Pays Mama\'s debt' : 'Hustle savings') : `+${it.energy} energy${it.crash ? ` · crash −${it.crash} after ${Math.round(it.duration / 60)} min` : ''}`}
                   </span>
                 </div>
                 <button className="btn btn-small btn-primary" disabled={money < it.price} onClick={() => setError(buy(id))}>

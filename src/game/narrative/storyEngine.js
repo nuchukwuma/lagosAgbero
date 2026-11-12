@@ -291,7 +291,9 @@ export function renderView(ctx, state) {
   const { story } = state
   if (story.ending) {
     const ending = ctx.endings?.[story.ending] || { title: story.ending, epilogue: [] }
-    return { type: 'ending', id: story.ending, title: ending.title, epilogue: (ending.epilogue || []).map((t) => interpolate(t, state)) }
+    // epilogue lines and the shared "fates" can be { "if": <condition>, "text": "..." }
+    const lines = (list) => (list || []).filter((l) => typeof l === 'string' || checkCondition(l.if, state)).map((l) => interpolate(typeof l === 'string' ? l : l.text, state))
+    return { type: 'ending', id: story.ending, title: ending.title, secret: Boolean(ending.secret), epilogue: lines(ending.epilogue), fates: lines(ctx.endings?._fates) }
   }
   if (story.finished || !story.chapterId) return { type: 'finished' }
 

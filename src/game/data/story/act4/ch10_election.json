@@ -1,0 +1,479 @@
+{
+  "id": "ch10_election",
+  "act": 4,
+  "number": 10,
+  "title": "Chapter 10 — Election Season",
+  "description": "Iya Bọ́sẹ̀'s deadline, Baba Ticket's succession, Settlement's final offer, the biggest rally.",
+  "startScene": "start",
+  "scenes": {
+    "start": {
+      "location": "frontStop",
+      "time": "dawn",
+      "beats": [
+        {
+          "type": "setFlag",
+          "flags": [
+            "dayLoop",
+            "canCollectFees"
+          ],
+          "clear": [
+            "raining"
+          ]
+        },
+        {
+          "type": "cutscene",
+          "cards": [
+            {
+              "title": "Act 4 — The Reckoning",
+              "text": "Day {stat:day}. Three days to the election. Every wall in Iyana-Wahala has two faces on it, and both are smiling at you."
+            }
+          ]
+        },
+        {
+          "type": "newsBroadcast",
+          "source": "Baba Radio's stall — Wahala FM 99.9",
+          "headline": "THREE DAYS TO GO",
+          "text": "Hon. Owó Ńlá promises \"stomach infrastructure\". Hon. Mrs. Ronke Ademola-Peters promises \"jollof with dignity\". The Independent Ballot Commission promises to \"try\"."
+        },
+        {
+          "type": "goto",
+          "scene": "debtGood",
+          "if": {
+            "stats": {
+              "debt": "<= 750000"
+            }
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "debtBad"
+        }
+      ]
+    },
+    "debtGood": {
+      "location": "frontStop",
+      "time": "dawn",
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "iyaBose",
+          "text": "(voice note) {name}. This is Iya Bọ́sẹ̀. The women have seen your alerts. We are not happy. But we are... less unhappy. Continue.",
+          "effects": {
+            "setFlag": "deadlineMet",
+            "changeStat": {
+              "mentorBond": 2
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "mama",
+          "text": "{name}, Iya Bọ́sẹ̀ greet me for market today. GREET ME. I almost fainted."
+        },
+        {
+          "type": "goto",
+          "scene": "babaTicket"
+        }
+      ]
+    },
+    "debtBad": {
+      "location": "frontStop",
+      "time": "dawn",
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "iyaBose",
+          "text": "(voice note) {name}. Community meeting is on Saturday. Your mother will stand in front of everybody. Unless you have something to say with numbers.",
+          "effects": {
+            "setFlag": "deadlineMissed"
+          }
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "(Mama's debt: {debt}. Hustle savings: {hustleMoney}.)",
+          "options": [
+            {
+              "text": "Send all your hustle savings home now.",
+              "requires": {
+                "stats": {
+                  "hustleMoney": ">= 1000"
+                }
+              },
+              "lockedText": "No hustle savings to send",
+              "effects": {
+                "payDebt": "hustleMoney",
+                "changeStat": {
+                  "mentorBond": 3
+                },
+                "goto": "babaTicket"
+              }
+            },
+            {
+              "text": "Send everything in your pocket.",
+              "requires": {
+                "stats": {
+                  "money": ">= 1000"
+                }
+              },
+              "lockedText": "Your pocket is empty",
+              "effects": {
+                "payDebt": "money",
+                "goto": "babaTicket"
+              }
+            },
+            {
+              "text": "Promise. Again.",
+              "effects": {
+                "remember": {
+                  "mamaPromise": "again"
+                },
+                "changeStat": {
+                  "communityGoodwill": -1
+                },
+                "goto": "babaTicket"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "babaTicket": {
+      "location": "babaTicketOffice",
+      "time": "day",
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "babaTicket",
+          "text": "(eating, slower than before) I don old. After election, I go announce who go sit for this chair. The monkey wey no get tail... no. The chair wey no get monkey... Hm. You understand me."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "babaTicket",
+          "text": "Scatter want am. Some people say you want am. Talk true."
+        },
+        {
+          "type": "choice",
+          "speaker": "babaTicket",
+          "text": "Who go sit for this chair after me?",
+          "options": [
+            {
+              "text": "\"Me. I don learn this park.\"",
+              "effects": {
+                "setFlag": "wantsChair",
+                "changeStat": {
+                  "chairmanTrust": 4,
+                  "notoriety": 3
+                },
+                "goto": "settlement"
+              }
+            },
+            {
+              "text": "\"Make the co-op run the park. Fair fee, receipts.\"",
+              "requires": "coopFounded",
+              "effects": {
+                "setFlag": "coopProposal",
+                "changeStat": {
+                  "chairmanTrust": -6,
+                  "communityGoodwill": 6
+                },
+                "goto": "settlement"
+              }
+            },
+            {
+              "text": "\"Give am Scatter. I no want wahala.\"",
+              "effects": {
+                "setFlag": "scatterHeir",
+                "changeStat": {
+                  "chairmanTrust": -2
+                },
+                "goto": "settlement"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "settlement": {
+      "location": "frontStop",
+      "time": "day",
+      "positions": {
+        "settlement": [
+          -13,
+          -7,
+          200
+        ]
+      },
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "settlement",
+          "text": "My friend. Final offer of the season. Election day, the Iyana-Wahala polling unit. A ballot box will need... protection. Somebody to carry it somewhere safe. Very safe. Where nobody can count it."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "settlement",
+          "text": "Three hundred thousand naira. Half before, half after. No problem that money cannot settle."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "settlement",
+          "text": "I know you played games with me before. I am offering anyway. I believe in second chances. And in leverage.",
+          "if": "settlementSuspicious"
+        },
+        {
+          "type": "choice",
+          "speaker": "settlement",
+          "text": "Your answer?",
+          "options": [
+            {
+              "text": "\"Deal.\"",
+              "effects": {
+                "setFlag": "bigJob",
+                "changeStat": {
+                  "money": 150000,
+                  "settlementTrust": 10
+                },
+                "goto": "ada"
+              }
+            },
+            {
+              "text": "\"Deal.\" (Record him on your phone.)",
+              "requires": {
+                "anyOf": [
+                  "ronkeOwes",
+                  "basseyRespect",
+                  "ada_knowsDebt"
+                ]
+              },
+              "showLocked": true,
+              "lockedText": "You need someone you trust to give the recording to",
+              "effects": {
+                "setFlag": [
+                  "bigJob",
+                  "evidenceSettlement"
+                ],
+                "changeStat": {
+                  "money": 150000
+                },
+                "remember": {
+                  "settlementTape": "recorded"
+                },
+                "goto": "ada"
+              }
+            },
+            {
+              "text": "\"No. Find another boy.\"",
+              "effects": {
+                "setFlag": "refusedBigJob",
+                "changeStat": {
+                  "settlementTrust": -10,
+                  "mentorBond": 3
+                },
+                "goto": "ada"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "ada": {
+      "location": "adaShop",
+      "time": "day",
+      "positions": {
+        "ada": [
+          22,
+          -10.5,
+          180
+        ]
+      },
+      "beats": [
+        {
+          "type": "goto",
+          "scene": "adaLast",
+          "if": "ada_estranged"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ada",
+          "text": "Election wahala don start. Go and send money to your mama before somebody steals it. My POS dey here.",
+          "if": {
+            "notFlags": [
+              "ada_estranged"
+            ]
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ada",
+          "text": "And {name}... whatever Settlement gave you, I can smell it from here. Be careful.",
+          "if": "bigJob"
+        },
+        {
+          "type": "goto",
+          "scene": "day"
+        }
+      ]
+    },
+    "adaLast": {
+      "location": "adaShop",
+      "time": "day",
+      "positions": {
+        "ada": [
+          22,
+          -10.5,
+          180
+        ]
+      },
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "ada",
+          "text": "(she doesn't look up from her counting) We're closed. For you, we're closed."
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "(This is probably the last time she'll listen.)",
+          "options": [
+            {
+              "text": "\"Ada. I was wrong. I'm sorry. Properly sorry.\"",
+              "effects": {
+                "clearFlag": "ada_estranged",
+                "setFlag": [
+                  "ada_friend",
+                  "ada_reconciled"
+                ],
+                "changeStat": {
+                  "friendBond": 20
+                },
+                "goto": "adaBack"
+              }
+            },
+            {
+              "text": "Walk away.",
+              "effects": {
+                "goto": "day"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "adaBack": {
+      "location": "adaShop",
+      "time": "day",
+      "positions": {
+        "ada": [
+          22,
+          -10.5,
+          180
+        ]
+      },
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "ada",
+          "text": "...Properly sorry. (She almost smiles.) Okay. Buy something. Sorry no dey pay rent."
+        },
+        {
+          "type": "goto",
+          "scene": "day"
+        }
+      ]
+    },
+    "day": {
+      "location": "frontStop",
+      "beats": [
+        {
+          "type": "freeRoam",
+          "objective": "Last hustle before the election. (Ada's Corner can send money home.) The FEP mega-rally starts at 4 p.m. on the Roundabout road.",
+          "goal": {
+            "atTime": "15:30"
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "rally"
+        }
+      ]
+    },
+    "rally": {
+      "location": "southStreet",
+      "time": "day",
+      "positions": {
+        "owoNla": [
+          -18,
+          9,
+          180
+        ]
+      },
+      "beats": [
+        {
+          "type": "cutscene",
+          "cards": [
+            {
+              "title": "The Mega-Rally",
+              "text": "Twenty buses of supporters. A stage. Rice bags with Owó Ńlá's face on them, stacked like a pyramid of himself."
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "owoNla",
+          "text": "IYANA-WAHALA! Forward ever! (Crowd: BACKWARD SOMETIMES!) Vote for me and every one of you go chop! Some of you more than others! HA HA!"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Your phone is still recording. On stage, Owó Ńlá thanks \"Barrister Settlement and the boys who will protect our ballot boxes on Saturday\". By name.",
+          "effects": {
+            "setFlag": "evidenceOwoNla"
+          },
+          "if": "evidenceSettlement"
+        },
+        {
+          "type": "startMode",
+          "mode": "rally",
+          "params": {
+            "job": "crowd",
+            "seed": 101
+          },
+          "results": {
+            "default": {
+              "goto": "night"
+            },
+            "arrested": {
+              "changeStat": {
+                "policeHeat": 10
+              },
+              "goto": "night"
+            }
+          },
+          "if": "bigJob"
+        },
+        {
+          "type": "goto",
+          "scene": "night"
+        }
+      ]
+    },
+    "night": {
+      "location": "backSide",
+      "time": "night",
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "garba",
+          "text": "(at the tea table) Tomorrow, Operation Clean Sweep. Task Force from three local governments. Bassey get new boss. Everybody dey hide something tonight."
+        },
+        {
+          "type": "endChapter",
+          "title": "End of Chapter 10 — Election Season",
+          "summary": "Mama's debt {debt}. Money {money}. Tomorrow the sweep begins.",
+          "next": "ch11_cleanSweep"
+        }
+      ]
+    }
+  }
+}

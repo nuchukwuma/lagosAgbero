@@ -1,0 +1,503 @@
+{
+  "id": "ch12_final",
+  "act": 4,
+  "number": 12,
+  "title": "Chapter 12 — Final Choice",
+  "description": "Election day, the ballot box, the chair, and the ending.",
+  "startScene": "start",
+  "scenes": {
+    "start": {
+      "location": "southStreet",
+      "time": "dawn",
+      "beats": [
+        {
+          "type": "setFlag",
+          "flags": [
+            "electionDay"
+          ],
+          "clear": [
+            "dayLoop"
+          ]
+        },
+        {
+          "type": "cutscene",
+          "cards": [
+            {
+              "title": "Election Day",
+              "text": "No danfos. No okadas. Just queues, and a polling unit under a mango tree with two officials, one table and a ballot box that everybody keeps looking at."
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "box",
+          "if": "bigJob"
+        },
+        {
+          "type": "goto",
+          "scene": "witness"
+        }
+      ]
+    },
+    "box": {
+      "location": "southStreet",
+      "time": "day",
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "At 2 p.m., Settlement's signal arrives: a missed call. The ballot box is ten steps away. Nobody is watching it except everybody."
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "(The box.)",
+          "timeout": 12,
+          "timeoutOption": 2,
+          "options": [
+            {
+              "text": "Carry the box \"to safety\".",
+              "effects": {
+                "setFlag": "riggedElection",
+                "changeStat": {
+                  "money": 150000,
+                  "communityGoodwill": -15,
+                  "notoriety": 10,
+                  "settlementTrust": 10
+                },
+                "goto": "results"
+              }
+            },
+            {
+              "text": "Stand on the table and play the recording to the queue.",
+              "requires": "evidenceSettlement",
+              "showLocked": true,
+              "lockedText": "You have no recording",
+              "effects": {
+                "setFlag": "exposedOwoNla",
+                "changeStat": {
+                  "communityGoodwill": 20,
+                  "notoriety": 12,
+                  "settlementTrust": -60
+                },
+                "goto": "exposed"
+              }
+            },
+            {
+              "text": "Do nothing. Keep the money. Let the box be.",
+              "effects": {
+                "setFlag": "keptQuiet",
+                "changeStat": {
+                  "settlementTrust": -20
+                },
+                "goto": "results"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "witness": {
+      "location": "southStreet",
+      "time": "day",
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "At 2 p.m., three boys in FEP caps walk towards the ballot box with the confidence of men who have been paid in advance."
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "(Do you do something?)",
+          "timeout": 12,
+          "timeoutOption": 1,
+          "options": [
+            {
+              "text": "Block them. \"Nobody touch this box.\"",
+              "effects": {
+                "startMode": "fight",
+                "params": {
+                  "opponent": "thug",
+                  "difficulty": 2
+                },
+                "results": {
+                  "won": {
+                    "setFlag": "protectedBox",
+                    "changeStat": {
+                      "communityGoodwill": 12,
+                      "notoriety": 8
+                    },
+                    "goto": "results"
+                  },
+                  "lost": {
+                    "changeStat": {
+                      "energy": -20,
+                      "communityGoodwill": 5
+                    },
+                    "goto": "results"
+                  }
+                }
+              }
+            },
+            {
+              "text": "Look away. Not your wahala.",
+              "effects": {
+                "setFlag": "riggedElection",
+                "changeStat": {
+                  "communityGoodwill": -5
+                },
+                "goto": "results"
+              }
+            },
+            {
+              "text": "Record them and send it to Hon. Ronke's people.",
+              "requires": "ronkeOwes",
+              "showLocked": true,
+              "lockedText": "You don't know anyone on the other side",
+              "effects": {
+                "setFlag": [
+                  "exposedOwoNla",
+                  "evidenceSettlement"
+                ],
+                "changeStat": {
+                  "communityGoodwill": 15,
+                  "notoriety": 6
+                },
+                "goto": "exposed"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "exposed": {
+      "location": "southStreet",
+      "time": "day",
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "The queue goes silent. Then four hundred phones come out at once. By evening the video has a remix."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ronke",
+          "text": "(on the radio) I want to thank a young man from Iyana-Wahala. He knows who he is. Everybody now knows who he is.",
+          "if": "ronkeOwes"
+        },
+        {
+          "type": "goto",
+          "scene": "results"
+        }
+      ]
+    },
+    "results": {
+      "location": "frontStop",
+      "time": "dusk",
+      "beats": [
+        {
+          "type": "newsBroadcast",
+          "source": "Baba Radio's stall — Wahala FM 99.9",
+          "headline": "RESULTS DON COME",
+          "text": "Iyana-Wahala Ward results announced at 11:58 p.m. by a very tired official."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "babaRadio",
+          "text": "Ronke Ademola-Peters WINS! Owó Ńlá's people say na \"technical\". Settlement don travel \"for medical\".",
+          "if": "exposedOwoNla"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "babaRadio",
+          "text": "Owó Ńlá WINS by a margin of... more votes than voters. Celebration rice is being distributed. Rice not yet seen.",
+          "if": {
+            "flags": [
+              "riggedElection"
+            ],
+            "notFlags": [
+              "exposedOwoNla"
+            ]
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "babaRadio",
+          "text": "Too close to call! Tribunal! Lawyers everywhere! Settlement dey smile!",
+          "if": {
+            "notFlags": [
+              "exposedOwoNla",
+              "riggedElection"
+            ]
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "chair"
+        }
+      ]
+    },
+    "chair": {
+      "location": "babaTicketOffice",
+      "time": "night",
+      "beats": [
+        {
+          "type": "goto",
+          "scene": "chairDecision",
+          "if": "wantsChair"
+        },
+        {
+          "type": "goto",
+          "scene": "final"
+        }
+      ]
+    },
+    "chairDecision": {
+      "location": "babaTicketOffice",
+      "time": "night",
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "babaTicket",
+          "text": "(he puts down the suya) So. You want the chair."
+        },
+        {
+          "type": "goto",
+          "scene": "chairGiven",
+          "if": {
+            "stats": {
+              "chairmanTrust": ">= 45"
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "babaTicket",
+          "text": "You never bring enough to this park. I go give am Scatter.",
+          "mood": "angry"
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "(Baba Ticket won't give it to you.)",
+          "options": [
+            {
+              "text": "Take it. Challenge his guard in front of the whole park.",
+              "effects": {
+                "startMode": "fight",
+                "params": {
+                  "opponent": "thug",
+                  "difficulty": 3
+                },
+                "results": {
+                  "won": {
+                    "setFlag": "overthrewBabaTicket",
+                    "changeStat": {
+                      "notoriety": 10,
+                      "chairmanTrust": -30
+                    },
+                    "goto": "final"
+                  },
+                  "lost": {
+                    "changeStat": {
+                      "energy": -25
+                    },
+                    "goto": "final"
+                  }
+                }
+              }
+            },
+            {
+              "text": "Accept it.",
+              "effects": {
+                "goto": "final"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "chairGiven": {
+      "location": "babaTicketOffice",
+      "time": "night",
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "babaTicket",
+          "text": "...Take am. The chair dey hot. Na from my bottom. (He laughs until he coughs.) The child wey say mama no go sleep, im too no go sleep. That one I get am correct!",
+          "effects": {
+            "setFlag": "namedChairman"
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "final"
+        }
+      ]
+    },
+    "final": {
+      "location": "backSide",
+      "time": "night",
+      "positions": {
+        "professor": [
+          8,
+          -6.2,
+          200
+        ]
+      },
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Midnight at the Back Side. Where you started, under the flyover, with a phone on far more than 3% battery."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Everything you did is still here: the debt ({debt}), the money ({money}), the people who remember you and the people who would rather not."
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "What happens to you now?",
+          "options": [
+            {
+              "text": "Go home to Mama. For good.",
+              "requires": {
+                "stats": {
+                  "debt": "<= 0",
+                  "notoriety": "< 60",
+                  "mentorBond": ">= 40",
+                  "friendBond": ">= 40"
+                },
+                "notFlags": [
+                  "tortoise"
+                ]
+              },
+              "effects": {
+                "ending": "go_home"
+              }
+            },
+            {
+              "text": "Run for councillor. The ward knows your face.",
+              "requires": {
+                "flags": [
+                  "exposedOwoNla",
+                  "ronkeOwes"
+                ],
+                "stats": {
+                  "communityGoodwill": ">= 70"
+                }
+              },
+              "effects": {
+                "ending": "the_honourable"
+              }
+            },
+            {
+              "text": "Knock twice. Take the Shell.",
+              "requires": {
+                "flags": [
+                  "tortoise",
+                  "hyenasDefeated"
+                ],
+                "notFlags": [
+                  "leftTortoises"
+                ],
+                "stats": {
+                  "cultRank": ">= 4"
+                }
+              },
+              "showLocked": true,
+              "lockedText": "Needs the Shell, the Hyenas defeated and the rank of Hard Shell",
+              "effects": {
+                "ending": "cult_boss"
+              }
+            },
+            {
+              "text": "Sit in the chair.",
+              "requires": {
+                "anyOf": [
+                  "namedChairman",
+                  "overthrewBabaTicket"
+                ],
+                "stats": {
+                  "notoriety": ">= 40",
+                  "policeHeat": "< 60"
+                }
+              },
+              "showLocked": true,
+              "lockedText": "Needs Baba Ticket's chair, notoriety 40 and police heat under 60",
+              "effects": {
+                "ending": "street_king"
+              }
+            },
+            {
+              "text": "Open a transport company.",
+              "requires": {
+                "stats": {
+                  "hustleMoney": ">= 60000",
+                  "cultLoyalty": "< 20"
+                },
+                "anyOf": [
+                  {
+                    "stats": {
+                      "communityGoodwill": ">= 50"
+                    }
+                  },
+                  {
+                    "stats": {
+                      "friendBond": ">= 50"
+                    }
+                  }
+                ]
+              },
+              "showLocked": true,
+              "lockedText": "Needs ₦60,000 hustle savings, goodwill or Ada's bond 50, and no cult ties",
+              "effects": {
+                "ending": "legit_businessman"
+              }
+            },
+            {
+              "text": "Take Bassey's deal. Testify.",
+              "requires": "informant",
+              "showLocked": true,
+              "lockedText": "Needs to have given Bassey evidence",
+              "effects": {
+                "ending": "informant"
+              }
+            },
+            {
+              "text": "Get on Formula One's okada and go.",
+              "requires": {
+                "stats": {
+                  "policeHeat": ">= 60"
+                },
+                "anyOf": [
+                  "onTheRun",
+                  {
+                    "stats": {
+                      "rivalCultHatred": ">= 40"
+                    }
+                  }
+                ]
+              },
+              "showLocked": true,
+              "lockedText": "Needs very high police heat, and to be on the run or hunted by the Hyenas",
+              "effects": {
+                "ending": "wanted"
+              }
+            },
+            {
+              "text": "Walk back to the Back Side with nothing.",
+              "effects": {
+                "setFlag": "endedBroke",
+                "ending": "rock_bottom"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

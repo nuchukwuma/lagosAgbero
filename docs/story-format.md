@@ -422,6 +422,54 @@ A world activity can add effects per outcome on top of the mode's result:
   "results": { "won": { "changeStat": { "cultMoney": 3000 } }, "default": { } } }
 ```
 
+### Mama's debt
+
+The stat `debt` starts at ₦850,000. Players pay it at **Ada's Corner** (POS
+items `sendHome5k`, `sendHome20k`, `sendHome100k` in `items.json`; transfer
+items can change any stat with `"stats": { "debt": -5000 }`). Story effects
+can pay from a pocket:
+
+```json
+{ "payDebt": "hustleMoney" }            // as much as that pocket allows
+{ "payDebt": { "from": "money", "max": 50000 } }
+```
+
+Chapter 10 checks Iya Bọ́sẹ̀'s deadline (`deadlineMet` / `deadlineMissed`).
+The secret **Go Home** ending needs the debt at ₦0.
+
+### Endings and epilogues
+
+`endings.json` holds every ending. Epilogue lines can be plain strings or
+`{ "if": <condition>, "text": "..." }`, so the same ending reads differently
+for an Ada romance, a dead Professor or an unpaid debt. `"secret": true`
+shows **SECRET ENDING**. The special key `_fates` lists "What became of
+them" lines shown under every ending (Professor, Ada, Sunday, Scatter, the
+debt). Endings the player has seen are counted on the title screen.
+
+The final choice (Chapter 12, scene `final`) is an ordinary choice: each
+option `requires` the ending's conditions and ends with `"ending": "<id>"`.
+Secret endings have no `showLocked`, so they appear only when earned. The
+last option ("Walk back to the Back Side with nothing", Rock Bottom) is always
+open. Jailed can also happen earlier (raids, Operation Clean Sweep).
+
+| Ending | Needs |
+|---|---|
+| Go Home (secret) | debt ₦0, notoriety < 60, Professor and Ada bonds ≥ 40, never a Tortoise |
+| The Honourable (secret) | exposed Owó Ńlá, Ronke owes you, goodwill ≥ 70 |
+| Cult Boss | Tortoise, Hyenas defeated, rank ≥ 4, not thrown out |
+| Street King | Baba Ticket's chair (given or taken), notoriety ≥ 40, heat < 60 |
+| Legit Businessman | hustle savings ≥ ₦60,000, cult loyalty < 20, goodwill or Ada ≥ 50 |
+| The Informant | gave Bassey evidence (flag `informant`) |
+| Wanted | heat ≥ 60, and on the run or hunted by the Hyenas |
+| Jailed | caught with heat ≥ 60 (raids, Clean Sweep) |
+| Rock Bottom | collapse while broke, or nothing else earned |
+
+### Economy news
+
+Random events in `events.json` include news that changes the economy: fuel
+hikes (`fairFee` and `quota` rise), a new sanitation levy (pay or argue),
+cash scarcity (`fairFee` falls) and price jokes from Baba Radio.
+
 ### Task Force raids
 
 `story/common/raids.json` holds the raid scenes:

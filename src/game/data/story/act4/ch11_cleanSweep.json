@@ -1,0 +1,652 @@
+{
+  "id": "ch11_cleanSweep",
+  "act": 4,
+  "number": 11,
+  "title": "Chapter 11 — Operation Clean Sweep",
+  "description": "The Task Force crackdown, Bassey's endgame, and the betrayal.",
+  "startScene": "start",
+  "scenes": {
+    "start": {
+      "location": "frontStop",
+      "time": "dawn",
+      "beats": [
+        {
+          "type": "setFlag",
+          "flags": [
+            "dayLoop"
+          ],
+          "clear": [
+            "canCollectFees"
+          ]
+        },
+        {
+          "type": "newsBroadcast",
+          "source": "Baba Radio's stall — Wahala FM 99.9",
+          "headline": "OPERATION CLEAN SWEEP",
+          "text": "The State announces a 24-hour sweep of \"all illegal collection, loitering, laughing in groups and wearing of suspicious colours\". Commander Bassey's new supervisor is described as \"very motivated\"."
+        },
+        {
+          "type": "goto",
+          "scene": "basseyAlly",
+          "if": {
+            "flags": [
+              "basseyRespect"
+            ],
+            "notFlags": [
+              "basseyDisappointed",
+              "basseyRefuses",
+              "foughtTaskForce"
+            ]
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "basseyNemesis",
+          "if": {
+            "anyOf": [
+              "basseyRefuses",
+              "foughtTaskForce"
+            ]
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "basseyOfficer"
+        }
+      ]
+    },
+    "basseyAlly": {
+      "location": "frontStop",
+      "time": "dawn",
+      "positions": {
+        "bassey": [
+          -12,
+          -6,
+          180
+        ]
+      },
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "bassey",
+          "text": "(in plain clothes, very early) They don give me list. Your name dey number nine. I fit lose the list... if you give me bigger names. Settlement. The Shell. Owó Ńlá's ballot plan. Anything."
+        },
+        {
+          "type": "choice",
+          "speaker": "bassey",
+          "text": "Testify, and I go protect you. Refuse, and I no fit help you again.",
+          "options": [
+            {
+              "text": "Give him the Settlement recording.",
+              "requires": "evidenceSettlement",
+              "showLocked": true,
+              "lockedText": "You have no evidence on Settlement",
+              "effects": {
+                "setFlag": [
+                  "informant",
+                  "basseyAlly"
+                ],
+                "changeStat": {
+                  "policeHeat": -30
+                },
+                "goto": "betrayal"
+              }
+            },
+            {
+              "text": "Give him the Shell House files.",
+              "requires": {
+                "flags": [
+                  "tortoise"
+                ],
+                "stats": {
+                  "cultRank": ">= 2"
+                }
+              },
+              "showLocked": true,
+              "lockedText": "You don't know enough about the Shell",
+              "effects": {
+                "setFlag": [
+                  "informant",
+                  "basseyAlly",
+                  "betrayedShell"
+                ],
+                "changeStat": {
+                  "policeHeat": -30,
+                  "cultLoyalty": -40
+                },
+                "goto": "betrayal"
+              }
+            },
+            {
+              "text": "\"I no be snitch. But I go stay out of your way.\"",
+              "effects": {
+                "setFlag": "basseyAlly",
+                "changeStat": {
+                  "policeHeat": -10
+                },
+                "goto": "betrayal"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "basseyNemesis": {
+      "location": "frontStop",
+      "time": "day",
+      "positions": {
+        "bassey": [
+          -12,
+          -6,
+          180
+        ]
+      },
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "bassey",
+          "text": "You. I been dey wait for today. No bribe. No story. No lawyer with files.",
+          "mood": "angry"
+        },
+        {
+          "type": "startMode",
+          "mode": "runner",
+          "params": {
+            "chaser": "taskForce",
+            "goal": 360,
+            "difficulty": 3,
+            "seed": 111
+          },
+          "results": {
+            "escaped": {
+              "setFlag": "onTheRun",
+              "changeStat": {
+                "policeHeat": 15
+              },
+              "goto": "betrayal"
+            },
+            "caught": {
+              "changeStat": {
+                "arrests": 1
+              },
+              "goto": "arrested"
+            }
+          }
+        }
+      ]
+    },
+    "basseyOfficer": {
+      "location": "frontStop",
+      "time": "day",
+      "positions": {
+        "bassey": [
+          -12,
+          -6,
+          180
+        ]
+      },
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "bassey",
+          "text": "Everybody wey dey collect money for this junction, line up! Na today we go count una!"
+        },
+        {
+          "type": "choice",
+          "speaker": "bassey",
+          "text": "(The van is filling up.)",
+          "timeout": 8,
+          "timeoutOption": 0,
+          "options": [
+            {
+              "text": "RUN!",
+              "effects": {
+                "startMode": "runner",
+                "params": {
+                  "chaser": "taskForce",
+                  "goal": 320,
+                  "difficulty": 2,
+                  "seed": 112
+                },
+                "results": {
+                  "escaped": {
+                    "changeStat": {
+                      "policeHeat": 10
+                    },
+                    "goto": "betrayal"
+                  },
+                  "caught": {
+                    "changeStat": {
+                      "arrests": 1
+                    },
+                    "goto": "arrested"
+                  }
+                }
+              }
+            },
+            {
+              "text": "Line up and talk your way out.",
+              "requires": {
+                "stats": {
+                  "policeHeat": "< 40"
+                }
+              },
+              "lockedText": "Your heat is too high to talk",
+              "effects": {
+                "changeStat": {
+                  "money": -5000
+                },
+                "toast": "Five thousand naira and two hours of standing in the sun later, you are \"cleared\".",
+                "goto": "betrayal"
+              }
+            },
+            {
+              "text": "Call the Shell lawyer.",
+              "requires": {
+                "flags": [
+                  "tortoise"
+                ],
+                "notFlags": [
+                  "leftTortoises"
+                ],
+                "stats": {
+                  "cultMoney": ">= 5000"
+                }
+              },
+              "lockedText": "Needs the Shell and ₦5,000 cult funds",
+              "effects": {
+                "changeStat": {
+                  "cultMoney": -5000,
+                  "policeHeat": -10
+                },
+                "toast": "Barrister Shell arrives with seven files. The van leaves without you.",
+                "goto": "betrayal"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "arrested": {
+      "location": "frontStop",
+      "time": "dusk",
+      "beats": [
+        {
+          "type": "goto",
+          "scene": "jailed",
+          "if": {
+            "stats": {
+              "policeHeat": ">= 60"
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "A night in the cell. In the morning, a desk sergeant releases you because the cell is needed for \"more important arrests\". You are almost offended.",
+          "effects": {
+            "changeStat": {
+              "money": -3000,
+              "policeHeat": 5
+            }
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "betrayal"
+        }
+      ]
+    },
+    "jailed": {
+      "location": "frontStop",
+      "time": "night",
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "bassey",
+          "text": "(writing) Heat too high. Too many files. Nobody fit settle this one. Not even Settlement."
+        },
+        {
+          "type": "endChapter",
+          "title": "Caught in the Sweep",
+          "summary": "Operation Clean Sweep catches you with nobody left to settle it.",
+          "ending": "jailed"
+        }
+      ]
+    },
+    "betrayal": {
+      "location": "backSide",
+      "time": "dusk",
+      "beats": [
+        {
+          "type": "cutscene",
+          "cards": [
+            {
+              "title": "Dusk",
+              "text": "The sweep moves on to the next junction. You go back to the Back Side to breathe. Somebody is already waiting for you there."
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "betrayScatter",
+          "if": "scatterEnemy"
+        },
+        {
+          "type": "goto",
+          "scene": "betrayChuks",
+          "if": {
+            "flags": [
+              "cultPath"
+            ],
+            "anyOf": [
+              "chuksSuspicious",
+              "warnedSunday",
+              "sparedSunday",
+              "betrayedShell"
+            ]
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "betraySettlement"
+        }
+      ]
+    },
+    "betrayScatter": {
+      "location": "backSide",
+      "time": "dusk",
+      "positions": {
+        "scatter": [
+          8,
+          -6,
+          200
+        ]
+      },
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "scatter",
+          "text": "Lagos na round. I tell you. Na me give Bassey your name. And now, na me go collect the rest. Boys!"
+        },
+        {
+          "type": "startMode",
+          "mode": "fight",
+          "params": {
+            "opponent": "scatter",
+            "difficulty": 3
+          },
+          "results": {
+            "won": {
+              "setFlag": "survivedBetrayal",
+              "changeStat": {
+                "notoriety": 8
+              },
+              "goto": "climax"
+            },
+            "lost": {
+              "changeStat": {
+                "money": -10000
+              },
+              "goto": "beaten"
+            }
+          }
+        }
+      ]
+    },
+    "betrayChuks": {
+      "location": "backSide",
+      "time": "dusk",
+      "positions": {
+        "chuks": [
+          8,
+          -6,
+          200
+        ]
+      },
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "chuks",
+          "text": "Brother. I have a file here called 'Strange'. It got very thick. The Shell has decided you are... surplus to requirements. Nothing personal. Everything procedural."
+        },
+        {
+          "type": "startMode",
+          "mode": "fight",
+          "params": {
+            "opponent": "tortoiseBoy",
+            "difficulty": 3
+          },
+          "results": {
+            "won": {
+              "setFlag": [
+                "survivedBetrayal",
+                "leftTortoises"
+              ],
+              "changeStat": {
+                "cultLoyalty": -30,
+                "notoriety": 6
+              },
+              "goto": "climax"
+            },
+            "lost": {
+              "setFlag": "leftTortoises",
+              "changeStat": {
+                "cultLoyalty": -30,
+                "cultMoney": -99999
+              },
+              "goto": "beaten"
+            }
+          }
+        }
+      ]
+    },
+    "betraySettlement": {
+      "location": "backSide",
+      "time": "dusk",
+      "positions": {
+        "settlement": [
+          8,
+          -6,
+          200
+        ]
+      },
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "settlement",
+          "text": "Ah. You're alive. That is... inconvenient. I told the Task Force about your savings. Nothing personal. You were becoming a problem that money could not settle."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ada",
+          "text": "(arriving, out of breath) Relax. Your savings dey my safe. Task Force no fit open my safe. Even me, I struggle.",
+          "effects": {
+            "setFlag": "savingsSafe"
+          },
+          "if": "adaKeepsSavings"
+        },
+        {
+          "type": "changeStat",
+          "stats": {
+            "hustleMoney": -50000
+          },
+          "if": {
+            "notFlags": [
+              "adaKeepsSavings"
+            ]
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "settlement",
+          "text": "And these gentlemen are here to make sure you are... quiet on Saturday."
+        },
+        {
+          "type": "startMode",
+          "mode": "fight",
+          "params": {
+            "opponent": "thug",
+            "difficulty": 3
+          },
+          "results": {
+            "won": {
+              "setFlag": "survivedBetrayal",
+              "changeStat": {
+                "notoriety": 6,
+                "settlementTrust": -50
+              },
+              "goto": "climax"
+            },
+            "lost": {
+              "changeStat": {
+                "energy": -25,
+                "settlementTrust": -50
+              },
+              "goto": "beaten"
+            }
+          }
+        }
+      ]
+    },
+    "beaten": {
+      "location": "frontStop",
+      "time": "night",
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "nurse",
+          "text": "You. Again. I have started a file for you. Do you know how thick it is? Thicker than the Tortoises'. Sit."
+        },
+        {
+          "type": "goto",
+          "scene": "climax"
+        }
+      ]
+    },
+    "climax": {
+      "location": "underBridge",
+      "time": "night",
+      "beats": [
+        {
+          "type": "goto",
+          "scene": "hyenaFinal",
+          "if": {
+            "flags": [
+              "tortoise"
+            ],
+            "notFlags": [
+              "leftTortoises"
+            ]
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "quietNight"
+        }
+      ]
+    },
+    "hyenaFinal": {
+      "location": "underBridge",
+      "time": "night",
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "chuks",
+          "text": "(on the phone) Number One Shell says: tonight, Under-Bridge. Lord Laffy. End the laughing. Bring the Shell home."
+        },
+        {
+          "type": "startMode",
+          "mode": "fight",
+          "params": {
+            "opponent": "lordLaffy",
+            "difficulty": 3
+          },
+          "results": {
+            "won": {
+              "setFlag": "hyenasDefeated",
+              "changeStat": {
+                "cultRank": 1,
+                "cultLoyalty": 10,
+                "notoriety": 10
+              },
+              "goto": "warWon"
+            },
+            "lost": {
+              "changeStat": {
+                "rivalCultHatred": 10,
+                "energy": -20
+              },
+              "goto": "warLost"
+            }
+          }
+        }
+      ]
+    },
+    "warWon": {
+      "location": "underBridge",
+      "time": "night",
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Lord Laffy sits in a puddle and, for the first time in his life, does not laugh. Under-Bridge goes very quiet. Then somebody somewhere knocks twice."
+        },
+        {
+          "type": "goto",
+          "scene": "quietNight"
+        }
+      ]
+    },
+    "warLost": {
+      "location": "underBridge",
+      "time": "night",
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "The Hyenas laugh you all the way back to the Shell House. The committee stamps your file \"Pending\"."
+        },
+        {
+          "type": "goto",
+          "scene": "quietNight"
+        }
+      ]
+    },
+    "quietNight": {
+      "location": "backSide",
+      "time": "night",
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "sunday",
+          "text": "(if he's around, he sits next to you without a word, then does one small dance step)",
+          "if": {
+            "anyOf": [
+              "sundayFree",
+              "sundayInformant",
+              "warnedSunday"
+            ]
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "professor",
+          "text": "Tomorrow, election. Whatever you do tomorrow, na you go carry am. Rule number... I don lose count. Sleep.",
+          "if": {
+            "anyOf": [
+              "professor_stays",
+              "professor_buka"
+            ]
+          }
+        },
+        {
+          "type": "endChapter",
+          "title": "End of Chapter 11 — Operation Clean Sweep",
+          "summary": "Police heat {stat:policeHeat}. Notoriety {stat:notoriety}. Tomorrow, the election.",
+          "next": "ch12_final"
+        }
+      ]
+    }
+  }
+}

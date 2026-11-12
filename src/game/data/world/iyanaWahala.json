@@ -1298,6 +1298,36 @@
       "facing": 0,
       "anim": "idle",
       "if": "iyaKekeAround"
+    },
+    {
+      "id": "owoNla",
+      "pos": [
+        60,
+        20
+      ],
+      "facing": 0,
+      "anim": "idle",
+      "if": "owoNlaAround"
+    },
+    {
+      "id": "formulaOne",
+      "pos": [
+        60,
+        20
+      ],
+      "facing": 0,
+      "anim": "idle",
+      "if": "formulaOneAround"
+    },
+    {
+      "id": "iyaBose",
+      "pos": [
+        60,
+        20
+      ],
+      "facing": 0,
+      "anim": "idle",
+      "if": "iyaBoseAround"
     }
   ],
   "extras": [

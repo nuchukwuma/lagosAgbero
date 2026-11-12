@@ -59,56 +59,52 @@ game happens around it:
 - **Kelvin "Crypto"** sells "forex signals". He's a mirror of the player's own Double-Double past.
 - **Nurse Rónkẹ́** at **General Hospital Iyana-Wahala** appears in every collapse or defeat scene and remembers you.
 
-## Acts and chapters
+## Acts and chapters (as built)
 
-### Act 1: "The Spot" (tutorial through story)
+Every chapter is a JSON file in `src/game/data/story/`. Paths branch inside
+chapters with conditional `goto` beats.
 
-1. **Ch1 "JJC".** You arrive at 5:40 a.m. A fake conductor scams you, and
-   Professor saves you. Baba Ticket gives you the Back Side on trial, with a
-   quota of ₦15,000 a day. First fee collection. Driver Bíọ́dún runs, so you
-   chase him. First energy crash, and Professor buys you your first
-   "Agbára Bitters".
-2. **Ch2 "Rules of the Road".** Professor's rules. You meet Ada and Sunday.
-   Scatter's boys "test" you. Mama's first phone call and the first repayment
-   deadline. This is the first full free-roam day.
-3. **Ch3 "Fuel Don Cost".** Baba Radio announces a fuel price hike. The drivers
-   protest and Baba Ticket raises your quota. **First big choice:** raise fees
-   (drivers get angry, the Chairman is happy) or absorb the loss (goodwill goes
-   up and your debt hurts more).
+### Act 1: "The Spot"
+
+1. **Ch1 "JJC".** You arrive at 5:40 a.m., get scammed, meet Professor and
+   Baba Ticket, get the Back Side on trial, chase Bíọ́dún, crash, and hear
+   about the fuel price hike.
 
 ### Act 2: "Rising"
 
-4. **Ch4 "Conductor".** Sunday gets arrested, so you conduct Bíọ́dún's danfo
-   for a day with named passengers. Scatter extorts the bus at Under-Bridge,
-   which leads to a fight.
-5. **Ch5 "Rain and Raid".** The first rain. The LETS Task Force raids the stop:
-   hide, run, fight or bribe. Commander Bassey's story starts.
-6. **Ch6 "Settlement".** The fixer offers the first rally job. You can do it,
-   fake it, or warn the other side. Notoriety rises.
-7. **Ch7 "Shell Knock".** Chuks recruits you. A begging run goes wrong when you
-   beg from the wrong person (Owó Ńlá's nephew or Bassey off duty). The Hyenas
-   beat Professor. **Choice:** join the Tortoises for protection, or stay
-   independent.
+2. **Ch2 "Rules of the Road".** Professor's rules, Ada and Sunday, Scatter's
+   test fight, Mama's call and the first deadline.
+3. **Ch3 "Rain and Raid".** The first rain, the first Task Force raid,
+   Commander Bassey and the first bribe.
+4. **Ch4 "Hang For Door".** A day as a conductor (Bíọ́dún's bus if he is an
+   ally). Scatter's boys at Under-Bridge: spare him (ally) or shame him (enemy).
+5. **Ch5 "Settlement".** Election season. Settlement's rally job: do it,
+   bargain, refuse, do it with Scatter, or warn the PJP.
+6. **Ch6 "Shell Knock".** Chuks recruits; begging the wrong person (Owó Ńlá's
+   nephew or Bassey off duty); the Hyenas beat Professor; tell Ada the truth
+   or lie; **join the Tortoises or stay independent.**
 
-### Act 3: "The Brotherhood" (two versions)
+### Act 3: "The Brotherhood"
 
-- **Cult path.** 8. Initiation with coded questions; wrong answers get you
-  attacked. 9. Climb the ranks through fights or money, and get cult help in
-  raids and collections. 10. War with the Hyenas, runner escapes, and the
-  loyalty test: Sunday is a Hyena. Do you warn him, spare him or give him up?
-- **Independent path.** 8. "Ọmọ Onílẹ̀". You set up a drivers' cooperative with
-  Ada, Bíọ́dún and Iya Keke. 9. Both cults lean on you, and raids get harder
-  with no protection. 10. Sunday asks for help getting out of the Hyenas.
-- Both paths end with **Professor's fate**.
+7. **Ch7.** Cult: study, coded initiation, the first Shell job. Independent:
+   the Ọmọ Onílẹ̀ drivers' co-op with Ada, Bíọ́dún and Iya Keke.
+8. **Ch8 "Purple Rain".** The Hyena war; promotion by fight or fee; raids with
+   the Shell lawyer or with no protection; Ada's question (romance, friend,
+   walk away; lying about the cult).
+9. **Ch9 "The Laugh".** Sunday is a Hyena: warn, spare or give him up (cult),
+   or buy/fight him out (independent). Professor's son Giggles. **Professor's
+   fate:** dies, jailed, buka, village or stays.
 
 ### Act 4: "The Reckoning"
 
-11. **Ch11 "Election Season".** The biggest rally at the Roundabout. Settlement
-    makes his final big offer.
-12. **Ch12 "Operation Clean Sweep".** The Task Force crackdown and Bassey's
-    endgame. Someone betrays you: Scatter, Settlement or Chuks, depending on
-    your flags.
-13. **Ch13 "Final Choice".** The ending is decided, then the epilogue plays.
+10. **Ch10 "Election Season".** Iya Bọ́sẹ̀'s deadline, Baba Ticket's
+    succession, Settlement's ₦300,000 ballot-box offer (record him?), Ada's
+    last reconciliation scene, the mega-rally.
+11. **Ch11 "Operation Clean Sweep".** Bassey's endgame (ally, nemesis or
+    arresting officer), the betrayal (Scatter, Chuks or Settlement), the war
+    with Lord Laffy.
+12. **Ch12 "Final Choice".** Election day, the ballot box, the chair, and the
+    final choice that picks the ending.
 
 ## Endings
 

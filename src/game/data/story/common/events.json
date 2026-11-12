@@ -261,6 +261,77 @@
           "scene": "@resume"
         }
       ]
+    },
+    "fuelHike": {
+      "beats": [
+        {
+          "type": "newsBroadcast",
+          "source": "Baba Radio's stall — Wahala FM 99.9",
+          "headline": "FUEL DON GO UP AGAIN",
+          "text": "The Minister of Petroleum Matters explains that the new price is \"a temporary permanent adjustment\". Baba Ticket raises everybody's daily share \"in solidarity\".",
+          "effects": {
+            "changeStat": {
+              "fairFee": 100,
+              "quota": 1000
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "biodun",
+          "text": "Fuel go up, fee go up, quota go up. Only my salary dey do humble.",
+          "if": {
+            "notFlags": [
+              "biodunEnemy"
+            ]
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "@resume"
+        }
+      ]
+    },
+    "levy": {
+      "beats": [
+        {
+          "type": "newsBroadcast",
+          "source": "Baba Radio's stall — Wahala FM 99.9",
+          "headline": "NEW SANITATION LEVY",
+          "text": "Local government introduces a \"Sanitation, Beautification and Miscellaneous Levy\" for all street workers. Collectors will wear vests. The vests will also be levied."
+        },
+        {
+          "type": "choice",
+          "speaker": "narrator",
+          "text": "A man in a brand-new vest holds out a receipt book.",
+          "options": [
+            {
+              "text": "Pay the levy",
+              "cost": 2000,
+              "effects": {
+                "setFlag": "paidLevy",
+                "changeStat": {
+                  "policeHeat": -3
+                }
+              }
+            },
+            {
+              "text": "\"Which law? Show me the gazette!\"",
+              "effects": {
+                "changeStat": {
+                  "policeHeat": 4,
+                  "notoriety": 2,
+                  "communityGoodwill": 2
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "@resume"
+        }
+      ]
     }
   }
 }

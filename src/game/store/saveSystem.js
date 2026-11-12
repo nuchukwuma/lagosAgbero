@@ -74,3 +74,24 @@ export function latestSave() {
     .filter((s) => !s.empty)
     .sort((a, b) => (a.savedAt < b.savedAt ? 1 : -1))[0] || null
 }
+
+// Endings the player has seen, kept across save slots ("Endings found 3/9").
+const ENDINGS_KEY = 'areaBoy.endingsFound'
+
+export function endingsFound() {
+  try {
+    return JSON.parse(storage()?.getItem(ENDINGS_KEY) || '[]')
+  } catch {
+    return []
+  }
+}
+
+export function recordEnding(id) {
+  try {
+    const found = new Set(endingsFound())
+    found.add(id)
+    storage()?.setItem(ENDINGS_KEY, JSON.stringify([...found]))
+  } catch {
+    // storage blocked: nothing to remember
+  }
+}

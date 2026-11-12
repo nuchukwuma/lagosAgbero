@@ -30,10 +30,15 @@ export function useItem(itemId, game, clock) {
   const item = ITEMS[itemId]
   if (!item) return { error: 'Unknown item' }
   if ((game.stats.money ?? 0) < item.price) return { error: `You need ₦${item.price.toLocaleString('en-NG')}` }
-  const stats = { money: -item.price, energy: item.energy }
+  const stats = { money: -item.price }
+  if (item.energy) stats.energy = item.energy
   if (item.habit) stats.habit = item.habit
+  // transfers (kind "transfer") change other stats: { "debt": -5000 }
+  for (const [k, d] of Object.entries(item.stats || {})) stats[k] = (stats[k] || 0) + d
+  if (item.stats?.debt && (game.stats.debt ?? 0) <= 0) return { error: 'Mama\'s debt is already paid!' }
   const effects = item.crash ? [{ item: itemId, until: clock + item.duration, crash: item.crash }] : []
-  return { stats, effects, message: `${item.name}: +${item.energy} energy` }
+  const message = item.kind === 'transfer' ? `${item.name}: done.${item.stats?.debt ? ' Mama will hear the alert.' : ''}` : `${item.name}: +${item.energy} energy`
+  return { stats, effects, message }
 }
 
 /** Effects whose time is up: returns { due, remaining, crash } */

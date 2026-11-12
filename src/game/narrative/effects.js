@@ -12,12 +12,13 @@
 //     "startMode": "chase", "params": { ... }, "results": { "won": {...}, "lost": {...} },
 //     "ending": "rock_bottom",
 //     "setTime": "06:00"                  (or "dawn" / "day" / "dusk" / "night")
+//     "payDebt": "hustleMoney"            pays Mama's debt from a pocket
 //   }
 //
 // applyEffects only changes numbers, flags and memory. Flow keys (goto,
 // startMode, ending) are handled by the story engine.
 
-import { clampStat, STAT_DEFS } from './stats.js'
+import { formatNaira, clampStat, STAT_DEFS } from './stats.js'
 import { parseTime } from '../systems/clock.js'
 
 const asList = (v) => (v === undefined ? [] : Array.isArray(v) ? v : [v])
@@ -45,6 +46,17 @@ export function applyEffects(state, effects) {
     }
     // Feelable consequences without spelling out the numbers.
     if (!effects.noticedBy) for (const w of who) notices.push(`${w} will remember that.`)
+  }
+
+  // "payDebt": "hustleMoney"  pays Mama's debt from a pocket, as much as it can
+  // (or { "from": "money", "max": 50000 })
+  if (effects.payDebt) {
+    const { from = 'money', max = Infinity } = typeof effects.payDebt === 'string' ? { from: effects.payDebt } : effects.payDebt
+    stats = stats === state.stats ? { ...stats } : stats
+    const amount = Math.max(0, Math.min(stats[from] ?? 0, stats.debt ?? 0, max))
+    stats[from] -= amount
+    stats.debt -= amount
+    if (amount > 0) notices.push(`Sent ${formatNaira(amount)} home. Mama's debt: ${formatNaira(stats.debt)}.`)
   }
 
   if (effects.remember) memory = { ...memory, ...effects.remember }

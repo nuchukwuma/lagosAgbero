@@ -501,7 +501,8 @@
         {
           "type": "endChapter",
           "title": "End of Act 3 — The Laugh",
-          "summary": "Professor is gone. Some rules die with the man who made them."
+          "summary": "Professor is gone. Some rules die with the man who made them.",
+          "next": "ch10_election"
         }
       ]
     },
@@ -552,7 +553,8 @@
         {
           "type": "endChapter",
           "title": "End of Act 3 — The Laugh",
-          "summary": "Professor took your fall. Police heat {stat:policeHeat}."
+          "summary": "Professor took your fall. Police heat {stat:policeHeat}.",
+          "next": "ch10_election"
         }
       ]
     },
@@ -596,7 +598,8 @@
         {
           "type": "endChapter",
           "title": "End of Act 3 — The Laugh",
-          "summary": "Professor's Kitchen is open. Bond with Professor {stat:mentorBond}."
+          "summary": "Professor's Kitchen is open. Bond with Professor {stat:mentorBond}.",
+          "next": "ch10_election"
         }
       ]
     },
@@ -636,7 +639,8 @@
         {
           "type": "endChapter",
           "title": "End of Act 3 — The Laugh",
-          "summary": "Professor went home. You still can't."
+          "summary": "Professor went home. You still can't.",
+          "next": "ch10_election"
         }
       ]
     },
@@ -665,7 +669,8 @@
         {
           "type": "endChapter",
           "title": "End of Act 3 — The Laugh",
-          "summary": "Professor stays on the street. Bond with Professor {stat:mentorBond}."
+          "summary": "Professor stays on the street. Bond with Professor {stat:mentorBond}.",
+          "next": "ch10_election"
         }
       ]
     }
