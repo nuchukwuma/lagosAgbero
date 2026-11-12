@@ -452,7 +452,8 @@
         {
           "type": "endChapter",
           "title": "End of Chapter 2 — Rules of the Road",
-          "summary": "Notoriety {stat:notoriety}. Ada bond {stat:friendBond}. Baba Ticket trust {stat:chairmanTrust}. Scatter now knows your name."
+          "summary": "Notoriety {stat:notoriety}. Ada bond {stat:friendBond}. Baba Ticket trust {stat:chairmanTrust}. Scatter now knows your name.",
+          "next": "ch3_rainRaid"
         }
       ]
     }

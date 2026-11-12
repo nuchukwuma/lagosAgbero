@@ -1,0 +1,384 @@
+{
+  "id": "ch3_rainRaid",
+  "act": 2,
+  "number": 3,
+  "title": "Chapter 3 — Rain and Raid",
+  "description": "The first big rain, the first Task Force raid, Commander Bassey, and the first bribe.",
+  "startScene": "rain",
+  "scenes": {
+    "rain": {
+      "location": "backSide",
+      "time": "dawn",
+      "positions": {
+        "professor": [
+          8,
+          -6.2,
+          200
+        ],
+        "sunday": [
+          4.5,
+          -5.2,
+          160
+        ]
+      },
+      "beats": [
+        {
+          "type": "setFlag",
+          "flags": [
+            "raining",
+            "dayLoop",
+            "canCollectFees"
+          ]
+        },
+        {
+          "type": "cutscene",
+          "cards": [
+            {
+              "title": "Day {stat:day}",
+              "text": "The sky over Iyana-Wahala turns the colour of an old pot. Then it falls."
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "sunday",
+          "text": "Rain! Shoki in the rain! Passengers dey pay double for umbrella and complain triple! Na blessing!"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "professor",
+          "text": "Rain na agbero's enemy. Drivers no dey stop, passengers no dey wait, and your energy go drain like gutter. Rule number eight: in rain, collect fast and chop early."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ada",
+          "text": "(She runs past with a nylon over her head and drops a second one on you.) Cover your head. If you catch cold, who go owe me money?",
+          "if": {
+            "stats": {
+              "friendBond": ">= 10"
+            }
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "street"
+        }
+      ]
+    },
+    "street": {
+      "location": "backSide",
+      "positions": {
+        "professor": [
+          8,
+          -6.2,
+          200
+        ],
+        "sunday": [
+          4.5,
+          -5.2,
+          160
+        ]
+      },
+      "beats": [
+        {
+          "type": "freeRoam",
+          "objective": "Rainy day hustle. FEE RUN at the Back Side, stay dry, keep your energy up. (Something is coming at midday.)",
+          "goal": {
+            "atTime": "12:30"
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "firstRaid"
+        }
+      ]
+    },
+    "firstRaid": {
+      "location": "backSide",
+      "time": "day",
+      "positions": {
+        "professor": [
+          8,
+          -6.2,
+          200
+        ],
+        "bassey": [
+          2,
+          -5,
+          90
+        ]
+      },
+      "beats": [
+        {
+          "type": "setFlag",
+          "flag": "basseyAround"
+        },
+        {
+          "type": "cutscene",
+          "cards": [
+            {
+              "title": "\"LETS CLEAN UP!\"",
+              "text": "A green van slides through the puddles. Out steps a man with a stomach like a promise and a baton like a threat."
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "bassey",
+          "text": "Good afternoon, Iyana-Wahala! I am Commander Hezekiah Bassey of the Lagos Environmental and Traffic Sanitation Task Force. LETS! Clean! Up!"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "bassey",
+          "text": "This Back Side is an illegal collection point. You. New face. You know the penalty for illegal collection, obstruction and loitering with intent to loiter?"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "professor",
+          "text": "(whispering) Him no want arrest you. Him want breakfast. The question na: which breakfast you fit afford?"
+        },
+        {
+          "type": "choice",
+          "speaker": "bassey",
+          "text": "Talk now. My van get space.",
+          "timeout": 12,
+          "timeoutOption": 1,
+          "options": [
+            {
+              "text": "\"Oga Commander, make we settle am.\" (₦2,000)",
+              "cost": 2000,
+              "effects": {
+                "changeStat": {
+                  "policeHeat": -3,
+                  "bribesPaid": 1
+                },
+                "setFlag": "firstBribe",
+                "remember": {
+                  "first_raid": "bribed"
+                }
+              }
+            },
+            {
+              "text": "Run for it!",
+              "effects": {
+                "startMode": "runner",
+                "params": {
+                  "chaser": "taskForce",
+                  "goal": 260,
+                  "difficulty": 1,
+                  "seed": 11
+                },
+                "results": {
+                  "escaped": {
+                    "changeStat": {
+                      "policeHeat": 8
+                    },
+                    "remember": {
+                      "first_raid": "escaped"
+                    },
+                    "goto": "afterRaid"
+                  },
+                  "caught": {
+                    "remember": {
+                      "first_raid": "caught"
+                    },
+                    "changeStat": {
+                      "policeHeat": 5
+                    },
+                    "goto": "cell"
+                  }
+                }
+              }
+            },
+            {
+              "text": "\"I no do anything. Arrest me if you wan.\"",
+              "effects": {
+                "changeStat": {
+                  "policeHeat": 5
+                },
+                "remember": {
+                  "first_raid": "defiant"
+                },
+                "goto": "cell"
+              }
+            },
+            {
+              "text": "Let Professor talk",
+              "requires": {
+                "stats": {
+                  "mentorBond": ">= 20"
+                }
+              },
+              "showLocked": true,
+              "lockedText": "Professor no go stick neck out for you yet",
+              "effects": {
+                "changeStat": {
+                  "mentorBond": 2
+                },
+                "remember": {
+                  "first_raid": "professor"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "bassey",
+          "text": "Good. Very good. You see how environmental sanitation dey work? Everybody clean. Especially my pocket.",
+          "variants": [
+            {
+              "if": {
+                "memory": {
+                  "first_raid": "professor"
+                }
+              },
+              "text": "Professor... you and your boys. Okay. Today I no see anybody. But next time, the new boy go pay his own sanitation."
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "afterRaid"
+        }
+      ]
+    },
+    "cell": {
+      "time": "night",
+      "positions": {
+        "bassey": [
+          -3,
+          -15,
+          180
+        ]
+      },
+      "beats": [
+        {
+          "type": "cutscene",
+          "cards": [
+            {
+              "title": "Task Force Station",
+              "text": "Your first night in a cell. It smells of rain, pepper and somebody's very old sardine."
+            }
+          ]
+        },
+        {
+          "type": "changeStat",
+          "stats": {
+            "arrests": 1,
+            "money": -2000
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "bassey",
+          "text": "You think say I like this work? I get daughter for JSS2. Her school fees dey wait for me like this cell dey wait for you. Everybody for this Lagos dey pay somebody."
+        },
+        {
+          "type": "setFlag",
+          "flag": "basseyDaughter"
+        },
+        {
+          "type": "choice",
+          "speaker": "bassey",
+          "text": "So?",
+          "options": [
+            {
+              "text": "\"Your daughter go make you proud one day, sir.\"",
+              "effects": {
+                "setFlag": "basseyRespect",
+                "changeStat": {
+                  "policeHeat": -5
+                }
+              }
+            },
+            {
+              "text": "Say nothing",
+              "effects": {}
+            },
+            {
+              "text": "\"Na why una dey rob us?\"",
+              "effects": {
+                "setFlag": "basseyRefuses",
+                "changeStat": {
+                  "policeHeat": 10
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "In the morning, they let you go with ₦2,000 less and one new enemy... or one strange new friend."
+        },
+        {
+          "type": "goto",
+          "scene": "afterRaid"
+        }
+      ]
+    },
+    "afterRaid": {
+      "location": "backSide",
+      "time": "dusk",
+      "positions": {
+        "professor": [
+          8,
+          -6.2,
+          200
+        ],
+        "sunday": [
+          4.5,
+          -5.2,
+          160
+        ]
+      },
+      "beats": [
+        {
+          "type": "setFlag",
+          "flags": [
+            "basseyMet"
+          ],
+          "clear": [
+            "raining",
+            "basseyAround"
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "sunday",
+          "text": "You don see Bassey! The man stomach na Task Force headquarters. Everything wey dem seize dey go inside."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "professor",
+          "text": "Bassey na person too. Corrupt person, but person. Remember am. One day, the person go matter more than the corruption.",
+          "variants": [
+            {
+              "if": "basseyRefuses",
+              "text": "You talk rubbish give Bassey? Ehn. That one go follow you like shadow. Shadow no dey forget, and shadow no dey collect bribe."
+            },
+            {
+              "if": {
+                "memory": {
+                  "first_raid": "escaped"
+                }
+              },
+              "text": "You run from Task Force on your second week? Hmm. The street go respect you. Bassey go remember you. Both are dangerous."
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "sunday",
+          "text": "Ehen, before I forget. Bíọ́dún say him conductor don waka. Him need somebody for tomorrow. Somebody with mouth and leg. I tell am say I know one JJC..."
+        },
+        {
+          "type": "endChapter",
+          "title": "End of Chapter 3 — Rain and Raid",
+          "summary": "Task Force heat {stat:policeHeat}. Bribes paid {stat:bribesPaid}. Arrests {stat:arrests}. Tomorrow: conductor work."
+        }
+      ]
+    }
+  }
+}

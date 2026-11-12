@@ -326,6 +326,33 @@ A side-on fight in the street where the player stands.
   - `won`: energy cost, notoriety +2, flag `wonFight`
   - `lost`: a bigger energy cost, flag `lostFight`
 
+### Escape runner (`"mode": "runner"`)
+
+An endless-runner escape along a Lagos road.
+
+- **Params:** `goal` (metres, default 320), `difficulty` (1–3), `chaser`
+  (`taskForce` or `hyenas`), and `seed` for the course layout.
+- **Outcomes:**
+  - `escaped`: ₦100 per note picked up, flag `escapedRun`
+  - `caught`: flag `caughtRun`
+- Three stumbles, or letting the pursuers catch up, gets you caught. With
+  low energy you get only two stumbles.
+
+### Task Force raids
+
+`story/common/raids.json` holds the raid scenes:
+
+- **`raid`** offers hide, run, fight or bribe. The bribe tiers depend on
+  `policeHeat`, and Bassey refuses bribes once the flag `basseyRefuses` is
+  set.
+- **`caught`** means a fine, a night in the cell, or the Jailed ending after
+  three arrests with high heat.
+
+A raid is a random event once `policeHeat` is at least 20 or `notoriety` is
+at least 30. Bassey's arc is tracked with the flags `basseyMet`,
+`basseyDaughter`, `basseyRespect` and `basseyRefuses`, and the hidden stats
+`bribesPaid` and `arrests`.
+
 ### Gameplay modes
 
 `startMode` (as a beat, or inside effects) launches a mode with `params`.

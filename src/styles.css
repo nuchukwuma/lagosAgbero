@@ -1450,3 +1450,10 @@ body,
 .fight-move .fight-btn {
   font-size: 22px;
 }
+
+.swipe-zone {
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+  touch-action: none;
+}

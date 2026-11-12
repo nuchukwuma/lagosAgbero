@@ -15,6 +15,7 @@ export const playerState = {
   canRun: true, // e.g. out of stamina in a chase
   stunUntil: 0, // performance.now() ms; the player stumbles until then
   fightView: null, // { x, z } centre of a fight in progress (camera)
+  runnerView: null, // { x, z } runner position during an escape run (camera)
 }
 
 /** id -> { position: Vector3 } for every NPC currently in the world */

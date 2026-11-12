@@ -31,6 +31,15 @@ export default function CameraRig({ mode = 'follow', speaker = null, ceiling = n
       camera.lookAt(0, 0, 0)
       return
     }
+    if (mode === 'runner' && playerState.runnerView) {
+      const r = playerState.runnerView
+      tmpLook.set(r.x * 0.7, 1.1, r.z - 7)
+      tmpPos.set(r.x * 0.6, portrait ? 4.4 : 3.6, r.z + (portrait ? 7.5 : 6.5))
+      camera.position.copy(tmpPos) // follow tightly: the run is fast
+      lookAt.copy(tmpLook)
+      camera.lookAt(lookAt)
+      return
+    }
     if (mode === 'fight' && playerState.fightView) {
       // side-on, fighting-game style
       const c = playerState.fightView

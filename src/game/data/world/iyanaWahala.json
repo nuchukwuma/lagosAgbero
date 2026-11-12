@@ -1200,6 +1200,16 @@
       "facing": 270,
       "anim": "idle",
       "if": "scatterAround"
+    },
+    {
+      "id": "bassey",
+      "pos": [
+        52,
+        6.5
+      ],
+      "facing": 270,
+      "anim": "idle",
+      "if": "basseyAround"
     }
   ],
   "extras": [

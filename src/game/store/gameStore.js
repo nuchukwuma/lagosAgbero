@@ -85,7 +85,8 @@ export const useGameStore = create((set, get) => {
      */
     tick: (dt, { running = false } = {}) => {
       const { game, view, activity } = get()
-      if (!game || game.story.ending || game.story.chapterId === 'common') return
+      // no clock, drain or events inside interruptions (collapse, raids, evenings...)
+      if (!game || game.story.ending || storyCtx.chapters[game.story.chapterId]?.common) return
       const clock = (game.clock || 0) + dt
       const raining = Boolean(game.flags.raining)
       let energy = game.stats.energy - drainRate({ running, raining }) * dt

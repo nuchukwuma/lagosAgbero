@@ -17,6 +17,8 @@ export const STAT_DEFS = {
   collapses: { label: 'Times collapsed', group: 'hidden', start: 0, min: 0, max: 99 },
   fairFee: { label: 'What drivers call fair', group: 'hidden', start: 500, min: 100, max: 5000 },
   day: { label: 'Day', group: 'hidden', start: 1, min: 1, max: 999 },
+  arrests: { label: 'Times arrested', group: 'hidden', start: 0, min: 0, max: 99 },
+  bribesPaid: { label: 'Bribes paid to Bassey', group: 'hidden', start: 0, min: 0, max: 99 },
 
   // relationships (0–100)
   chairmanTrust: { label: 'Baba Ticket trusts you', group: 'relationship', start: 10, min: 0, max: 100, who: 'Baba Ticket' },

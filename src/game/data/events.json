@@ -1,17 +1,114 @@
 {
   "rollEveryMinutes": 40,
   "events": [
-    { "id": "rainStart", "weight": 3, "if": "!raining", "effects": { "setFlag": "raining", "toast": "Rain don start! Everybody dey run under the bridge." } },
-    { "id": "rainStop", "weight": 5, "if": "raining", "effects": { "clearFlag": "raining", "toast": "Rain don stop. Steam dey rise from the road like pepper soup." } },
-    { "id": "goSlow", "weight": 2, "jam": 30, "effects": { "toast": "Go-slow! Traffic no dey move. Even okada dey wait." } },
-    { "id": "nepa", "weight": 2, "effects": { "toast": "NEPA take light. Two hundred generators start at once. Your ears go red too." } },
-    { "id": "falseAlarm", "weight": 2, "effects": { "toast": "\"Task Force dey come!\" Hawkers scatter... na false alarm. Somebody just wear green shirt." } },
-    { "id": "radioPrices", "weight": 1, "effects": { "toast": "Baba Radio: \"Price of tomato don pass price of gold. Tomato don become jewellery.\"" } },
-    { "id": "radioPolitics", "weight": 1, "effects": { "toast": "Baba Radio: \"Hon. Owó Ńlá promises free rice. Rice not yet seen. Promise is being distributed.\"" } },
-    { "id": "prophecy", "weight": 1, "effects": { "toast": "Prophet Fire-Fire points at you: \"I see a danfo in your future!\" There are 400 danfos in your present." } },
-    { "id": "sickChild", "weight": 2, "once": true, "scene": "events:sickChild" },
-    { "id": "stranded", "weight": 2, "once": true, "scene": "events:stranded" },
-    { "id": "streetFight", "weight": 2, "once": true, "minNotoriety": 5, "scene": "events:streetFight" },
-    { "id": "wrongBigMan", "weight": 1, "once": true, "minNotoriety": 15, "scene": "events:bigManConvoy" }
+    {
+      "id": "rainStart",
+      "weight": 3,
+      "if": "!raining",
+      "effects": {
+        "setFlag": "raining",
+        "toast": "Rain don start! Everybody dey run under the bridge."
+      }
+    },
+    {
+      "id": "rainStop",
+      "weight": 5,
+      "if": "raining",
+      "effects": {
+        "clearFlag": "raining",
+        "toast": "Rain don stop. Steam dey rise from the road like pepper soup."
+      }
+    },
+    {
+      "id": "goSlow",
+      "weight": 2,
+      "jam": 30,
+      "effects": {
+        "toast": "Go-slow! Traffic no dey move. Even okada dey wait."
+      }
+    },
+    {
+      "id": "nepa",
+      "weight": 2,
+      "effects": {
+        "toast": "NEPA take light. Two hundred generators start at once. Your ears go red too."
+      }
+    },
+    {
+      "id": "falseAlarm",
+      "weight": 2,
+      "effects": {
+        "toast": "\"Task Force dey come!\" Hawkers scatter... na false alarm. Somebody just wear green shirt."
+      }
+    },
+    {
+      "id": "radioPrices",
+      "weight": 1,
+      "effects": {
+        "toast": "Baba Radio: \"Price of tomato don pass price of gold. Tomato don become jewellery.\""
+      }
+    },
+    {
+      "id": "radioPolitics",
+      "weight": 1,
+      "effects": {
+        "toast": "Baba Radio: \"Hon. Owó Ńlá promises free rice. Rice not yet seen. Promise is being distributed.\""
+      }
+    },
+    {
+      "id": "prophecy",
+      "weight": 1,
+      "effects": {
+        "toast": "Prophet Fire-Fire points at you: \"I see a danfo in your future!\" There are 400 danfos in your present."
+      }
+    },
+    {
+      "id": "sickChild",
+      "weight": 2,
+      "once": true,
+      "scene": "events:sickChild"
+    },
+    {
+      "id": "stranded",
+      "weight": 2,
+      "once": true,
+      "scene": "events:stranded"
+    },
+    {
+      "id": "streetFight",
+      "weight": 2,
+      "once": true,
+      "minNotoriety": 5,
+      "scene": "events:streetFight"
+    },
+    {
+      "id": "wrongBigMan",
+      "weight": 1,
+      "once": true,
+      "minNotoriety": 15,
+      "scene": "events:bigManConvoy"
+    },
+    {
+      "id": "raid",
+      "weight": 3,
+      "if": {
+        "anyOf": [
+          {
+            "stats": {
+              "policeHeat": ">= 20"
+            }
+          },
+          {
+            "stats": {
+              "notoriety": ">= 30"
+            }
+          }
+        ],
+        "notFlags": [
+          "noRaids"
+        ]
+      },
+      "scene": "raids:raid"
+    }
   ]
 }

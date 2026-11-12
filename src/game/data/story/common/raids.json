@@ -1,0 +1,384 @@
+{
+  "id": "raids",
+  "act": 0,
+  "common": true,
+  "title": "Task Force!",
+  "description": "Raids by the LETS Task Force. Random events or chapters cut here; each ends with @resume.",
+  "startScene": "raid",
+  "scenes": {
+    "raid": {
+      "beats": [
+        {
+          "type": "cutscene",
+          "cards": [
+            {
+              "title": "TASK FORCE!",
+              "text": "\"LETS CLEAN UP!\" A green van screeches into the junction. Hawkers vanish like magic. Somebody's tray of oranges rolls into the gutter."
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "bassey",
+          "text": "Everybody stand there! Illegal collection, obstruction, loitering with intent to loiter! You! Agbero! Come here!",
+          "variants": [
+            {
+              "if": {
+                "stats": {
+                  "bribesPaid": ">= 2"
+                }
+              },
+              "text": "You again. My regular customer. Monthly target dey on my neck, you understand? Don't make this difficult."
+            },
+            {
+              "if": "basseyRefuses",
+              "text": "YOU. The one wey get mouth. Today, no story. Today I go do my work with joy.",
+              "mood": "angry"
+            },
+            {
+              "if": "basseyRespect",
+              "text": "(quietly) Listen, my people dey come this side in ten minutes. If I be you, I go dey for another place. I no tell you anything.",
+              "mood": "nervous"
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "if": "basseyRespect",
+          "scene": "tipped"
+        },
+        {
+          "type": "choice",
+          "speaker": "bassey",
+          "text": "So? How we wan do this?",
+          "timeout": 9,
+          "timeoutOption": 0,
+          "options": [
+            {
+              "text": "Hide behind the dumpster",
+              "effects": {
+                "setFlag": "triedHiding"
+              }
+            },
+            {
+              "text": "RUN!",
+              "effects": {
+                "startMode": "runner",
+                "params": {
+                  "chaser": "taskForce",
+                  "goal": 280,
+                  "difficulty": 1
+                },
+                "results": {
+                  "escaped": {
+                    "changeStat": {
+                      "policeHeat": 5
+                    },
+                    "toast": "You lose them behind the motor park. Your heart dey beat like talking drum."
+                  },
+                  "caught": {
+                    "goto": "raids:caught"
+                  }
+                }
+              }
+            },
+            {
+              "text": "Fight the officer",
+              "effects": {
+                "startMode": "fight",
+                "params": {
+                  "opponent": "taskForce",
+                  "difficulty": 2
+                },
+                "results": {
+                  "won": {
+                    "changeStat": {
+                      "policeHeat": 15,
+                      "notoriety": 5
+                    },
+                    "setFlag": "foughtTaskForce",
+                    "toast": "You knock down a Task Force officer. The whole junction saw. So did Bassey."
+                  },
+                  "lost": {
+                    "goto": "raids:caught"
+                  }
+                }
+              }
+            },
+            {
+              "text": "\"Oga Commander, make we talk am.\" (₦2,000)",
+              "cost": 2000,
+              "requires": {
+                "notFlags": [
+                  "basseyRefuses"
+                ],
+                "stats": {
+                  "policeHeat": "< 30"
+                }
+              },
+              "effects": {
+                "changeStat": {
+                  "policeHeat": -5,
+                  "bribesPaid": 1
+                },
+                "remember": {
+                  "bassey_raid": "bribed"
+                }
+              }
+            },
+            {
+              "text": "\"Oga Commander, make we talk am.\" (₦5,000)",
+              "cost": 5000,
+              "requires": {
+                "notFlags": [
+                  "basseyRefuses"
+                ],
+                "stats": {
+                  "policeHeat": ">= 30"
+                }
+              },
+              "effects": {
+                "changeStat": {
+                  "policeHeat": -5,
+                  "bribesPaid": 1
+                },
+                "remember": {
+                  "bassey_raid": "bribed"
+                }
+              }
+            },
+            {
+              "text": "Try to bribe Bassey",
+              "requires": "basseyRefuses",
+              "showLocked": true,
+              "lockedText": "Bassey no dey collect from you again"
+            }
+          ]
+        },
+        {
+          "type": "randomEvent",
+          "if": "triedHiding",
+          "outcomes": [
+            {
+              "weight": 3,
+              "if": {
+                "stats": {
+                  "notoriety": "< 25"
+                }
+              },
+              "effects": {
+                "clearFlag": "triedHiding",
+                "toast": "You squeeze behind the dumpster. A rat looks at you. You look at the rat. Nobody finds either of you."
+              }
+            },
+            {
+              "weight": 2,
+              "effects": {
+                "clearFlag": "triedHiding",
+                "goto": "raids:caught"
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "bassey",
+          "text": "Ehen. You see? We are all friends. Next time, make the friendship come early.",
+          "if": {
+            "memory": {
+              "bassey_raid": "bribed"
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "bassey",
+          "text": "You know why I dey collect? My daughter dey JSS2. School fees, books, sandals. The government pay me in March for January. Don't look at me like that.",
+          "if": {
+            "stats": {
+              "bribesPaid": ">= 2"
+            },
+            "notFlags": [
+              "basseyDaughter"
+            ]
+          }
+        },
+        {
+          "type": "setFlag",
+          "flag": "basseyDaughter",
+          "if": {
+            "stats": {
+              "bribesPaid": ">= 2"
+            }
+          }
+        },
+        {
+          "type": "setFlag",
+          "flag": "basseyMet",
+          "clear": [
+            "triedHiding"
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "@resume"
+        }
+      ]
+    },
+    "tipped": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "You walk away slowly, like a man who has remembered he left his stove on. Behind you, the raid begins without you."
+        },
+        {
+          "type": "changeStat",
+          "stats": {
+            "policeHeat": -3
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "@resume"
+        }
+      ]
+    },
+    "caught": {
+      "time": "night",
+      "beats": [
+        {
+          "type": "changeStat",
+          "stats": {
+            "arrests": 1,
+            "policeHeat": 8
+          }
+        },
+        {
+          "type": "cutscene",
+          "cards": [
+            {
+              "title": "Task Force Station",
+              "text": "A cell the size of a danfo, with more passengers. Somebody is snoring in three languages."
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "if": {
+            "stats": {
+              "arrests": ">= 3",
+              "policeHeat": ">= 60"
+            }
+          },
+          "scene": "jailed"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "bassey",
+          "text": "Fine na ₦5,000. Or you sleep here until your people come. Your people dey come?"
+        },
+        {
+          "type": "choice",
+          "speaker": "bassey",
+          "text": "Pay or sleep.",
+          "options": [
+            {
+              "text": "Pay the fine (₦5,000)",
+              "cost": 5000,
+              "effects": {
+                "remember": {
+                  "bassey_caught": "paid"
+                }
+              }
+            },
+            {
+              "text": "Sleep in the cell (lose a day and your pocket money)",
+              "effects": {
+                "changeStat": {
+                  "money": -999999,
+                  "day": 1,
+                  "energy": -10
+                },
+                "setTime": "06:00",
+                "remember": {
+                  "bassey_caught": "slept"
+                }
+              }
+            },
+            {
+              "text": "\"Commander, how your daughter school?\"",
+              "requires": "basseyDaughter",
+              "effects": {
+                "setFlag": "basseyRespect",
+                "changeStat": {
+                  "policeHeat": -10
+                },
+                "remember": {
+                  "bassey_caught": "daughter"
+                }
+              }
+            },
+            {
+              "text": "\"Corrupt man! Una go pay for this!\"",
+              "effects": {
+                "setFlag": "basseyRefuses",
+                "changeStat": {
+                  "policeHeat": 15,
+                  "notoriety": 3,
+                  "money": -999999
+                },
+                "setTime": "06:00",
+                "remember": {
+                  "bassey_caught": "insulted"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "bassey",
+          "text": "Go. And tell your Chairman say Task Force no be ATM. Even ATM dey charge.",
+          "variants": [
+            {
+              "if": {
+                "memory": {
+                  "bassey_caught": "daughter"
+                }
+              },
+              "text": "... She came first in her class. Mathematics. (He looks away.) Go. Before I remember say I be Task Force."
+            },
+            {
+              "if": {
+                "memory": {
+                  "bassey_caught": "insulted"
+                }
+              },
+              "text": "Corrupt? Me? Ehen. From today, I go do my work by the book. Every page. Especially for you.",
+              "mood": "angry"
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "@resume"
+        }
+      ]
+    },
+    "jailed": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "bassey",
+          "text": "Third time. Your file don thick like Bible. This one no be Task Force matter again. Na court."
+        },
+        {
+          "type": "endChapter",
+          "title": "Jailed",
+          "ending": "jailed"
+        }
+      ]
+    }
+  }
+}
