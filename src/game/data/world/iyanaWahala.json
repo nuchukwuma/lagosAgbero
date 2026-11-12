@@ -1210,6 +1210,56 @@
       "facing": 270,
       "anim": "idle",
       "if": "basseyAround"
+    },
+    {
+      "id": "settlement",
+      "pos": [
+        60,
+        20
+      ],
+      "facing": 0,
+      "anim": "idle",
+      "if": "settlementAround"
+    },
+    {
+      "id": "chuks",
+      "pos": [
+        60,
+        20
+      ],
+      "facing": 0,
+      "anim": "idle",
+      "if": "chuksAround"
+    },
+    {
+      "id": "ronke",
+      "pos": [
+        60,
+        20
+      ],
+      "facing": 0,
+      "anim": "idle",
+      "if": "ronkeAround"
+    },
+    {
+      "id": "nephew",
+      "pos": [
+        60,
+        20
+      ],
+      "facing": 0,
+      "anim": "idle",
+      "if": "nephewAround"
+    },
+    {
+      "id": "pastorDriver",
+      "pos": [
+        60,
+        20
+      ],
+      "facing": 0,
+      "anim": "idle",
+      "if": "pastorDriverAround"
     }
   ],
   "extras": [
@@ -1319,6 +1369,37 @@
         "vehicles": 13
       },
       "where": "Front Stop"
+    },
+    {
+      "id": "begZone5",
+      "label": "BEG AT THE GATE",
+      "spot": "richStreet",
+      "if": "canBeg",
+      "mode": "begging",
+      "minutes": 90,
+      "params": {
+        "count": 6
+      },
+      "where": "Zone 5 gate"
+    },
+    {
+      "id": "rallyJob",
+      "label": "RALLY JOB",
+      "spot": "southStreet",
+      "if": {
+        "flags": [
+          "settlementJobs"
+        ],
+        "notFlags": [
+          "refusedSettlement"
+        ]
+      },
+      "mode": "rally",
+      "minutes": 180,
+      "params": {
+        "job": "crowd"
+      },
+      "where": "The Roundabout road"
     }
   ]
 }

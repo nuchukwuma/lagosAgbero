@@ -9,7 +9,8 @@ import { GROUND_Y } from './layout.js'
 import characters from '../data/characters.json'
 
 // Story characters and background extras standing around the street.
-// - An NPC appears only if its "if" condition (story flags) is true.
+// - An NPC appears if its "if" condition (story flags) is true, or if the
+//   current scene places it with "positions" (story-only characters).
 // - A scene can move NPCs with "positions": { "professor": [x, z, facing] }.
 // - Whoever is speaking plays "talk" (or "argue" when angry) and turns to the player.
 
@@ -49,7 +50,7 @@ function NPC({ id, look, pos, facing, anim, speaking, mood }) {
 
 export default function NPCs({ layout, flags, positions = {}, speaker, mood, hidden = [] }) {
   const state = { flags, stats: {}, memory: {} }
-  const npcs = (layout.raw.npcs || []).filter((n) => checkCondition(n.if, state) && !hidden.includes(n.id))
+  const npcs = (layout.raw.npcs || []).filter((n) => (positions[n.id] || checkCondition(n.if, state)) && !hidden.includes(n.id))
   return (
     <>
       {npcs.map((n) => {

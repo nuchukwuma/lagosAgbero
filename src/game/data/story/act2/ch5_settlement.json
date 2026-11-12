@@ -1,0 +1,592 @@
+{
+  "id": "ch5_settlement",
+  "act": 2,
+  "number": 5,
+  "title": "Chapter 5 — Settlement",
+  "description": "Election season. Barrister Settlement offers the first rally job: do it, fake it, or warn the other side.",
+  "startScene": "morning",
+  "scenes": {
+    "morning": {
+      "location": "frontStop",
+      "time": "dawn",
+      "positions": {
+        "settlement": [
+          -13,
+          -7,
+          200
+        ],
+        "professor": [
+          -18,
+          -6,
+          160
+        ]
+      },
+      "beats": [
+        {
+          "type": "setFlag",
+          "flags": [
+            "dayLoop",
+            "canCollectFees"
+          ],
+          "clear": [
+            "raining"
+          ]
+        },
+        {
+          "type": "cutscene",
+          "cards": [
+            {
+              "title": "Day {stat:day}",
+              "text": "Posters appear overnight on every wall: a smiling man holding a bag of rice that has his own face on it."
+            }
+          ]
+        },
+        {
+          "type": "newsBroadcast",
+          "source": "Baba Radio's stall — Wahala FM 99.9",
+          "headline": "ELECTION SEASON DON START",
+          "text": "The Forward Ever Party (\"Forward Ever, Backward Sometimes\") and the Party of Jollof and Progress hold rallies this week. The Independent Ballot Commission begs everybody to \"vote, not fight, or at least fight quietly\".",
+          "effects": {
+            "setFlag": "electionSeason"
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "A black jeep with no plate number parks at the Front Stop. The window comes down slowly, like a curtain at a play."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "settlement",
+          "text": "Good morning. I am Barrister Wálé Àjàyí. People call me Settlement, because there is no problem that money cannot settle. You are the young man who calls the Oshodi route like a gospel singer?",
+          "variants": [
+            {
+              "if": "beatScatter",
+              "text": "Good morning. I am Barrister Wálé Àjàyí. People call me Settlement. You are the young man who scattered Scatter at Under-Bridge? The whole of Iyana-Wahala has watched that video. Twice."
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "settlement",
+          "text": "My principal, Honourable Owó Ńlá, has a small... logistics problem. The PJP will hold a rally at the Roundabout this afternoon. We would like that rally to feel... unwell."
+        },
+        {
+          "type": "choice",
+          "speaker": "settlement",
+          "text": "Fifteen thousand naira. Cash. For three hours of enthusiasm.",
+          "options": [
+            {
+              "text": "\"I dey in.\"",
+              "effects": {
+                "changeStat": {
+                  "settlementTrust": 5
+                },
+                "setFlag": "tookRallyJob",
+                "goto": "beforeRally"
+              }
+            },
+            {
+              "text": "\"Fifteen? For my life? Make am twenty-five.\"",
+              "requires": {
+                "stats": {
+                  "notoriety": ">= 10"
+                }
+              },
+              "lockedText": "Needs notoriety 10 to bargain with him",
+              "effects": {
+                "changeStat": {
+                  "settlementTrust": -2
+                },
+                "setFlag": [
+                  "tookRallyJob",
+                  "bargainedSettlement"
+                ],
+                "remember": {
+                  "settlementDeal": "bargained"
+                },
+                "goto": "bargain"
+              }
+            },
+            {
+              "text": "\"I no dey do politics.\"",
+              "effects": {
+                "setFlag": "refusedSettlement",
+                "changeStat": {
+                  "mentorBond": 3
+                },
+                "goto": "refused"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "bargain": {
+      "location": "frontStop",
+      "positions": {
+        "settlement": [
+          -13,
+          -7,
+          200
+        ]
+      },
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "settlement",
+          "text": "(smiles without his eyes) Twenty. And I will remember that you know your value. That is a compliment. Mostly."
+        },
+        {
+          "type": "goto",
+          "scene": "beforeRally"
+        }
+      ]
+    },
+    "refused": {
+      "location": "frontStop",
+      "positions": {
+        "settlement": [
+          -13,
+          -7,
+          200
+        ],
+        "professor": [
+          -18,
+          -6,
+          160
+        ]
+      },
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "settlement",
+          "text": "No problem. Everything has a price. Even 'no'. I will come back when yours is ready."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "professor",
+          "text": "Rule number ten: politician money na loan. Interest na your life. You do well, my son."
+        },
+        {
+          "type": "freeRoam",
+          "objective": "A normal hustle day. The Roundabout is loud with rallies you are not part of.",
+          "goal": {
+            "atTime": "17:00"
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "babaRadio",
+          "text": "Breaking! PJP rally scattered by \"unknown enthusiasts\". Settlement found somebody else. Somebody always dey."
+        },
+        {
+          "type": "goto",
+          "scene": "evening"
+        }
+      ]
+    },
+    "beforeRally": {
+      "location": "frontStop",
+      "positions": {
+        "professor": [
+          -18,
+          -6,
+          160
+        ]
+      },
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "settlement",
+          "text": "The rally starts at four. Until then, do your normal work. Nobody must say you came from my car."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "professor",
+          "text": "(after the jeep leaves) Politician money. Rule number ten: e sweet for mouth, e dey bite for belle. Be careful.",
+          "effects": {
+            "changeStat": {
+              "mentorBond": -2
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ada",
+          "text": "Mama Put say you enter Settlement jeep. You wan carry rice for politician? Na your conscience. Me, I go vote PJP just to vex you.",
+          "if": {
+            "stats": {
+              "friendBond": ">= 10"
+            }
+          }
+        },
+        {
+          "type": "freeRoam",
+          "objective": "Hustle until the rally at 4 p.m. (Then go to the Roundabout road.)",
+          "goal": {
+            "atTime": "15:30"
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "rally"
+        }
+      ]
+    },
+    "rally": {
+      "location": "southStreet",
+      "time": "day",
+      "beats": [
+        {
+          "type": "cutscene",
+          "cards": [
+            {
+              "title": "The Roundabout",
+              "text": "Green PJP flags. A sound system the size of a danfo. Hon. Mrs. Ronke Ademola-Peters is promising free jollof on Sundays."
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "scatter",
+          "text": "(appearing with four boys) You think say you go do this one alone? Settlement pay me too. Make we scatter am together.",
+          "if": "scatterAlly"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "On the other side of the crowd, Scatter wears a green PJP cap. He is working security for them. He sees you and smiles.",
+          "if": "scatterEnemy"
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "(The rally is starting. What do you really want to do?)",
+          "options": [
+            {
+              "text": "Do the job with Scatter's boys.",
+              "requires": "scatterAlly",
+              "effects": {
+                "setFlag": "rallyWithScatter",
+                "startMode": "rally",
+                "params": {
+                  "job": "disturb",
+                  "help": 5,
+                  "seed": 51
+                },
+                "results": {
+                  "paid": {
+                    "goto": "payday"
+                  },
+                  "faked": {
+                    "setFlag": "settlementSuspicious",
+                    "goto": "payday"
+                  },
+                  "failed": {
+                    "goto": "payday"
+                  },
+                  "arrested": {
+                    "goto": "arrested"
+                  },
+                  "brawl": {
+                    "goto": "brawl"
+                  }
+                }
+              }
+            },
+            {
+              "text": "Do the job.",
+              "effects": {
+                "startMode": "rally",
+                "params": {
+                  "job": "disturb",
+                  "seed": 52
+                },
+                "results": {
+                  "paid": {
+                    "goto": "payday"
+                  },
+                  "faked": {
+                    "setFlag": "settlementSuspicious",
+                    "goto": "payday"
+                  },
+                  "failed": {
+                    "goto": "payday"
+                  },
+                  "arrested": {
+                    "goto": "arrested"
+                  },
+                  "brawl": {
+                    "goto": "brawl"
+                  }
+                }
+              }
+            },
+            {
+              "text": "Warn the PJP people before it starts.",
+              "effects": {
+                "setFlag": "warnedPJP",
+                "changeStat": {
+                  "communityGoodwill": 4
+                },
+                "goto": "warned"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "warned": {
+      "location": "southStreet",
+      "time": "day",
+      "positions": {
+        "ronke": [
+          -18,
+          8,
+          0
+        ]
+      },
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "ronke",
+          "text": "Young man, you came to warn me? In this Lagos? (She presses an envelope into your hand.) Courage is rare. Come and see me after the election. If I win, I remember. If I lose, I remember louder.",
+          "effects": {
+            "changeStat": {
+              "money": 5000
+            },
+            "setFlag": "ronkeOwes"
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Her security forms a wall. Settlement's other boys arrive, look at the wall, and buy gala instead."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Now you have to tell Settlement something."
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "(Settlement will ask how the job went.)",
+          "options": [
+            {
+              "text": "\"Dem get too many security. I try my best.\"",
+              "effects": {
+                "setFlag": "settlementSuspicious",
+                "changeStat": {
+                  "money": 3000,
+                  "settlementTrust": -3
+                },
+                "goto": "payday"
+              }
+            },
+            {
+              "text": "Say nothing. Avoid the jeep.",
+              "effects": {
+                "changeStat": {
+                  "settlementTrust": -8
+                },
+                "remember": {
+                  "settlement": "avoided"
+                },
+                "goto": "evening"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "brawl": {
+      "location": "southStreet",
+      "time": "day",
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "scatter",
+          "text": "I tell you! Lagos na round! Boys, hold am!",
+          "if": "scatterEnemy"
+        },
+        {
+          "type": "startMode",
+          "mode": "fight",
+          "params": {
+            "opponent": "thug",
+            "difficulty": 1
+          },
+          "results": {
+            "won": {
+              "changeStat": {
+                "notoriety": 5
+              },
+              "goto": "payday"
+            },
+            "lost": {
+              "changeStat": {
+                "energy": -20
+              },
+              "setFlag": "beatenAtRally",
+              "goto": "hospital"
+            }
+          }
+        }
+      ]
+    },
+    "hospital": {
+      "location": "frontStop",
+      "time": "dusk",
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "nurse",
+          "text": "You again? General Hospital Iyana-Wahala is not a hotel, my dear. Politician rally, abi? Sit down. Count your teeth."
+        },
+        {
+          "type": "goto",
+          "scene": "payday"
+        }
+      ]
+    },
+    "arrested": {
+      "location": "southStreet",
+      "time": "dusk",
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "bassey",
+          "text": "LETS CLEAN UP! (He sees you.) You again. Rally hooligan now? Enter the van.",
+          "effects": {
+            "changeStat": {
+              "arrests": 1,
+              "policeHeat": 10
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "settlement",
+          "text": "(an hour later, through the cell bars) Settled. Fees deducted from your payment, of course. I believe in accountability.",
+          "effects": {
+            "changeStat": {
+              "money": -3000,
+              "settlementTrust": 2
+            }
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "payday"
+        }
+      ]
+    },
+    "payday": {
+      "location": "frontStop",
+      "time": "dusk",
+      "positions": {
+        "settlement": [
+          -13,
+          -7,
+          200
+        ]
+      },
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "settlement",
+          "text": "Here. Count it later. Never in front of the person who gave it to you.",
+          "variants": [
+            {
+              "if": "settlementSuspicious",
+              "text": "Here. Half. My people say you were... filming yourself? Or talking to the other side? I do not mind. I just remember."
+            }
+          ]
+        },
+        {
+          "type": "cutscene",
+          "cards": [
+            {
+              "title": "Owó Ńlá",
+              "text": "A convoy of six cars. A man in a gold agbada leans out of the fourth one. \"Who be this boy? I like am. Settlement, keep am close.\""
+            }
+          ],
+          "effects": {
+            "setFlag": "owoNlaNoticed"
+          },
+          "if": {
+            "flags": [
+              "rally_paid"
+            ]
+          }
+        },
+        {
+          "type": "setFlag",
+          "flag": "owoNlaNoticed",
+          "if": {
+            "flags": [
+              "rally_paid"
+            ]
+          }
+        },
+        {
+          "type": "setFlag",
+          "flag": "settlementJobs"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "settlement",
+          "text": "There will be more jobs. Smaller crowds, bigger envelopes. You will find my boys on the Roundabout road."
+        },
+        {
+          "type": "goto",
+          "scene": "evening"
+        }
+      ]
+    },
+    "evening": {
+      "location": "frontStop",
+      "time": "dusk",
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "mama",
+          "text": "{name}, Iya Bọ́sẹ̀ don start to dey send voice note at night. She say she see you for TV, for rally. Tell me say na lie.",
+          "if": {
+            "anyOf": [
+              "rally_paid",
+              "rally_brawl",
+              "rally_arrested"
+            ]
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "mama",
+          "text": "{name}, how Lagos? Iya Bọ́sẹ̀ dey ask for the ₦50,000 again. I tell am say my son dey work. Na true, abi?",
+          "if": {
+            "notFlags": [
+              "rally_paid",
+              "rally_brawl",
+              "rally_arrested"
+            ]
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "garba",
+          "text": "(at the tea table, quietly) Somebody tell Settlement's driver say PJP people knew before. Me, I no talk anything. But tea no dey keep secret for long.",
+          "if": "warnedPJP"
+        },
+        {
+          "type": "endChapter",
+          "title": "End of Chapter 5 — Settlement",
+          "summary": "Money {money}. Notoriety {stat:notoriety}. Settlement's trust {stat:settlementTrust}. Election season has started.",
+          "next": "ch6_shellKnock"
+        }
+      ]
+    }
+  }
+}

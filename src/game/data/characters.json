@@ -493,5 +493,46 @@
         }
       ]
     }
+  },
+  "ronke": {
+    "name": "Hon. Mrs. Ronke",
+    "fullName": "Hon. Mrs. Ronke Ademola-Peters (PJP)",
+    "color": "#27ae60",
+    "role": "politician",
+    "look": {
+      "body": "female_dress",
+      "skin": "#5c3a24",
+      "shirt": "#27ae60",
+      "trousers": "#1e8449",
+      "accessories": [
+        {
+          "type": "glasses"
+        }
+      ]
+    }
+  },
+  "nephew": {
+    "name": "Dàpọ̀ (the nephew)",
+    "fullName": "Dàpọ̀, Owó Ńlá's favourite nephew",
+    "color": "#1f5fbf",
+    "role": "extra",
+    "look": {
+      "body": "male_suit",
+      "skin": "#4a2c1a",
+      "shirt": "#1f5fbf",
+      "trousers": "#1f5fbf",
+      "accessories": [
+        {
+          "type": "chain",
+          "color": "#d4af37"
+        }
+      ]
+    }
+  },
+  "hyena": {
+    "name": "Hyena boy",
+    "fullName": "A Purple Hyena",
+    "color": "#8e44ad",
+    "role": "extra"
   }
 }

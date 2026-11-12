@@ -348,6 +348,42 @@ An endless-runner escape along a Lagos road.
 
 The player hangs from a danfo's door. At each stop they drop off the passengers who said this was their stop, shout the right route (a wrong call brings wrong passengers), and give correct change. Mistakes raise **bus anger**: angry passengers refuse to pay, and at 100 a brawl breaks out (`brawl`). Named passengers come from `routes.json` (`named`): Kelvin Crypto offers a "transfer", Prophet Fire-Fire offers a prophecy, Mama Pepper pays exact. At `extortionAt` Scatter's boys block the bus: pay from the fares, let the driver pay (anger +10), or refuse, which ends the mode with `extorted` so the story can start a fight. The player keeps 30% of fares plus tips (`moneyChange`). Routes, stops, fares and passenger lines live in `src/game/data/routes.json`.
 
+### Begging at the gate (`"mode": "begging"`)
+
+```json
+{ "type": "startMode", "mode": "begging",
+  "params": { "count": 6, "wrongPerson": "nephew", "wrongAt": 3 },
+  "results": { "done": { "goto": "afterBeg" }, "chased": { "goto": "afterBeg" }, "wrongPerson": { "goto": "wrongNephew" } } }
+```
+
+Rich people pass the Zone 5 gate one at a time, each described by a hint
+("A Prado with a sticker: Blessed and Highly Favoured"). The player picks an
+approach: praise, sob story, joke, block the car, or let them pass. Each kind
+of target (`jobs.json` → `begging.targets`) pays best for one approach.
+Blocking cars and failing raise **estate anger**; at 100 security chases you
+out (`chased`, half the money is lost). One target can be **the wrong
+person** (`nephew` = Owó Ńlá's nephew, `bassey` = Bassey off duty): anything
+except letting him pass ends the run with `wrongPerson`.
+
+### Rally jobs (`"mode": "rally"`)
+
+```json
+{ "type": "startMode", "mode": "rally", "params": { "job": "disturb", "help": 5 },
+  "results": { "paid": {}, "faked": {}, "failed": {}, "arrested": {}, "brawl": {} } }
+```
+
+Six rounds at the Roundabout. Each round: chant, heckle, share rice (limited),
+knock over the speakers (may start a brawl) or fake it. A random crowd event
+follows. **Noise** must reach the job's goal and **heat** must stay under 100.
+`help` adds noise every round (for example Scatter's boys as allies). Faking
+almost every round gives `faked` (half pay). Jobs and events live in
+`src/game/data/jobs.json`.
+
+### Scene positions bring story-only characters on stage
+
+A scene's `positions` shows an NPC even when its world `"if"` flag is off, so
+characters like Settlement or Chuks appear only in the scenes that place them.
+
 ### Task Force raids
 
 `story/common/raids.json` holds the raid scenes:

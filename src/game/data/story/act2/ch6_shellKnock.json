@@ -1,0 +1,608 @@
+{
+  "id": "ch6_shellKnock",
+  "act": 2,
+  "number": 6,
+  "title": "Chapter 6 — Shell Knock",
+  "description": "Chuks recruits. A begging run goes wrong. The Hyenas beat Professor. Join the Tortoises, or stay independent.",
+  "startScene": "morning",
+  "scenes": {
+    "morning": {
+      "location": "teaTable",
+      "time": "dawn",
+      "positions": {
+        "chuks": [
+          -4.5,
+          -7.4,
+          250
+        ],
+        "garba": [
+          -6,
+          -8.8,
+          0
+        ]
+      },
+      "beats": [
+        {
+          "type": "setFlag",
+          "flags": [
+            "dayLoop",
+            "canCollectFees"
+          ]
+        },
+        {
+          "type": "cutscene",
+          "cards": [
+            {
+              "title": "Day {stat:day}",
+              "text": "A man in a yellow shirt and brown trousers is drinking Mallam Garba's tea with his little finger raised. He knocks twice on his forehead when he sees you."
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "chuks",
+          "text": "Ah, the famous one! Chuks. Smooth Operator. I represent a... society. A society of serious-minded gentlemen with excellent filing systems."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "garba",
+          "text": "(whispering) Tortoise. Yellow and brown. Dem slow, but dem no dey forget anything. Not even tea debt."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "chuks",
+          "text": "No pressure. Today I just want to show you where real money lives. Zone 5. Rich people. Big gate. They give if you know how to ask."
+        },
+        {
+          "type": "choice",
+          "speaker": "chuks",
+          "text": "Come. Watch and learn. Or learn and watch. Same thing.",
+          "options": [
+            {
+              "text": "\"Lead the way.\"",
+              "effects": {
+                "changeStat": {
+                  "cultLoyalty": 2
+                },
+                "setFlag": "followedChuks",
+                "goto": "gate"
+              }
+            },
+            {
+              "text": "\"I go come alone. I no need escort.\"",
+              "effects": {
+                "remember": {
+                  "chuks": "cold"
+                },
+                "goto": "gate"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "gate": {
+      "location": "richStreet",
+      "time": "day",
+      "beats": [
+        {
+          "type": "setFlag",
+          "flag": "canBeg"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "chuks",
+          "text": "Rule of the gate: read the car before you open your mouth. Oga wants praise. Madam wants a story. Big boy wants a show. And some people..."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "chuks",
+          "text": "...some people you must not beg. Ever. Okay, oya. Show me.",
+          "effects": {
+            "remember": {
+              "chuksAdvice": "given"
+            }
+          }
+        },
+        {
+          "type": "startMode",
+          "mode": "begging",
+          "params": {
+            "count": 6,
+            "wrongPerson": "nephew",
+            "wrongAt": 3,
+            "seed": 61
+          },
+          "results": {
+            "done": {
+              "goto": "afterBeg"
+            },
+            "chased": {
+              "changeStat": {
+                "energy": -10
+              },
+              "remember": {
+                "zone5": "chased"
+              },
+              "goto": "afterBeg"
+            },
+            "wrongPerson": {
+              "goto": "wrongNephew"
+            }
+          },
+          "if": "owoNlaNoticed"
+        },
+        {
+          "type": "startMode",
+          "mode": "begging",
+          "params": {
+            "count": 6,
+            "wrongPerson": "bassey",
+            "wrongAt": 3,
+            "seed": 62
+          },
+          "results": {
+            "done": {
+              "goto": "afterBeg"
+            },
+            "chased": {
+              "changeStat": {
+                "energy": -10
+              },
+              "remember": {
+                "zone5": "chased"
+              },
+              "goto": "afterBeg"
+            },
+            "wrongPerson": {
+              "goto": "wrongBassey"
+            }
+          },
+          "if": {
+            "notFlags": [
+              "owoNlaNoticed"
+            ]
+          }
+        }
+      ]
+    },
+    "afterBeg": {
+      "location": "richStreet",
+      "time": "day",
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "chuks",
+          "text": "Not bad. Not bad at all. You see? Alone, you beg. With brothers, people beg YOU. Think about it. Form T-12 is very short. Only nine pages."
+        },
+        {
+          "type": "goto",
+          "scene": "street"
+        }
+      ]
+    },
+    "wrongNephew": {
+      "location": "richStreet",
+      "time": "day",
+      "positions": {
+        "nephew": [
+          27,
+          22,
+          270
+        ]
+      },
+      "beats": [
+        {
+          "type": "setFlag",
+          "flag": "nephewInsulted"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "nephew",
+          "text": "You dey beg ME? Do you know who my uncle is? His face is on the rice! THE RICE!"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "His police escorts take your money, your dignity and one slipper. Chuks has vanished like a man with good instincts.",
+          "effects": {
+            "changeStat": {
+              "money": -2000,
+              "energy": -10
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "settlement",
+          "text": "(a text message, an hour later) Hon. Owó Ńlá is... less fond of you this evening. Please do not beg his family. It is bad for my filing.",
+          "effects": {
+            "changeStat": {
+              "settlementTrust": -6
+            }
+          },
+          "if": "owoNlaNoticed"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "chuks",
+          "text": "(reappearing) Ehen. That is why a man needs brothers. If you were a Tortoise, his escorts would have checked our register first. Think about it."
+        },
+        {
+          "type": "goto",
+          "scene": "street"
+        }
+      ]
+    },
+    "wrongBassey": {
+      "location": "richStreet",
+      "time": "day",
+      "positions": {
+        "bassey": [
+          27,
+          22,
+          270
+        ]
+      },
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "bassey",
+          "text": "You dey beg me? ME? My salary never enter since March. My daughter school fees dey look me like say I owe am. You dey beg ME?"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "bassey",
+          "text": "(he laughs, the first real laugh you have heard from him) Lagos. Lagos is a joke with no punchline. Come. I go buy you akara. Don't tell anybody.",
+          "effects": {
+            "setFlag": "basseySympathy",
+            "changeStat": {
+              "energy": 10
+            }
+          },
+          "if": {
+            "anyOf": [
+              "basseyRespect",
+              "basseyDaughter"
+            ]
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "bassey",
+          "text": "I don write your face for my book. Next raid, I go find you first.",
+          "effects": {
+            "changeStat": {
+              "policeHeat": 10
+            }
+          },
+          "if": {
+            "notFlags": [
+              "basseyRespect",
+              "basseyDaughter"
+            ]
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "street"
+        }
+      ]
+    },
+    "street": {
+      "location": "backSide",
+      "time": "day",
+      "beats": [
+        {
+          "type": "freeRoam",
+          "objective": "Hustle until night. (BEG AT THE GATE is open at Zone 5 now. Settlement's RALLY JOB too, if you work for him.)",
+          "goal": {
+            "atTime": "20:00"
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "attack"
+        }
+      ]
+    },
+    "attack": {
+      "location": "backSide",
+      "time": "night",
+      "positions": {
+        "sunday": [
+          5,
+          -5,
+          160
+        ]
+      },
+      "beats": [
+        {
+          "type": "cutscene",
+          "cards": [
+            {
+              "title": "Night",
+              "text": "From Under-Bridge comes laughter. Not happy laughter. Hyena laughter. Then a scream you know."
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "sunday",
+          "text": "{name}! Dem don touch Professor! Purple shirts! Five of them! Dem laugh while dem dey beat am!"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "You find Professor under the flyover, curled around his missing fingers. A purple bandana lies in the gutter."
+        },
+        {
+          "type": "changeStat",
+          "stats": {
+            "rivalCultHatred": 10
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "hospital"
+        }
+      ]
+    },
+    "hospital": {
+      "location": "frontStop",
+      "time": "night",
+      "positions": {
+        "professor": [
+          -16,
+          -6,
+          180
+        ]
+      },
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "nurse",
+          "text": "Professor. Again. That man fought more boxing in this hospital than in the ring. He will live. His pride, I am not sure."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "professor",
+          "text": "(through a swollen lip) Rule number eleven... when the laugh is familiar... (he stops) No. Forget am. Na old man talk."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "professor",
+          "text": "One of them... I know that laugh. I taught that laugh to say 'Daddy'. Don't tell anybody, {name}. Swear.",
+          "effects": {
+            "setFlag": "knowsProfessorSon",
+            "changeStat": {
+              "mentorBond": 5
+            }
+          },
+          "if": {
+            "stats": {
+              "mentorBond": ">= 25"
+            }
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "ada"
+        }
+      ]
+    },
+    "ada": {
+      "location": "frontStop",
+      "time": "night",
+      "positions": {
+        "ada": [
+          -14,
+          -6.5,
+          200
+        ]
+      },
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "ada",
+          "text": "I brought pap and moi-moi for Professor. And for you, because you look like a man who has been crying in a toilet."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ada",
+          "text": "{name}. Every day I see you, you dey run from something. Tell me the truth one time. Wetin you dey run from?"
+        },
+        {
+          "type": "choice",
+          "speaker": "ada",
+          "text": "(She waits. She is good at waiting.)",
+          "options": [
+            {
+              "text": "Tell her everything: Double-Double, Mama, the ₦850,000.",
+              "effects": {
+                "setFlag": "ada_knowsDebt",
+                "changeStat": {
+                  "friendBond": 10
+                },
+                "remember": {
+                  "adaTruth": "told"
+                },
+                "goto": "adaTold"
+              }
+            },
+            {
+              "text": "\"I dey run from poverty. Like everybody.\"",
+              "effects": {
+                "setFlag": "ada_lied",
+                "changeStat": {
+                  "friendBond": -4
+                },
+                "remember": {
+                  "adaTruth": "lied"
+                },
+                "goto": "adaLied"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "adaTold": {
+      "location": "frontStop",
+      "time": "night",
+      "positions": {
+        "ada": [
+          -14,
+          -6.5,
+          200
+        ]
+      },
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "ada",
+          "text": "...Double-Double? The one with the dancing accountant in the advert? (She doesn't laugh. That is worse.) Okay. Okay. Then we have something to work on. You no go do am alone."
+        },
+        {
+          "type": "goto",
+          "scene": "choice"
+        }
+      ]
+    },
+    "adaLied": {
+      "location": "frontStop",
+      "time": "night",
+      "positions": {
+        "ada": [
+          -14,
+          -6.5,
+          200
+        ]
+      },
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "ada",
+          "text": "(she looks at you for a long time) Okay. When you ready to talk true, my shop dey there. Goodnight."
+        },
+        {
+          "type": "goto",
+          "scene": "choice"
+        }
+      ]
+    },
+    "choice": {
+      "location": "frontStop",
+      "time": "night",
+      "positions": {
+        "chuks": [
+          -12,
+          -7,
+          200
+        ]
+      },
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "chuks",
+          "text": "(outside the hospital, under a streetlight, of course) Terrible thing. Hyenas have no respect. No paperwork. If Professor was a Tortoise, they would have needed a permit to touch him."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "chuks",
+          "text": "Join us. Protection for you. Protection for your people. Collections, raids, Task Force... the Shell covers all. And the Hyenas will think twice before they laugh near you."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ada",
+          "text": "(from the doorway) {name}. Whatever he is selling, ask for the receipt.",
+          "if": "ada_knowsDebt"
+        },
+        {
+          "type": "choice",
+          "speaker": "chuks",
+          "text": "Two knocks on your forehead, and you're family. Or walk alone in this Lagos. Your choice, my brother.",
+          "timeout": 0,
+          "options": [
+            {
+              "text": "Knock twice. Join the Iron Tortoises.",
+              "effects": {
+                "setFlag": [
+                  "tortoise",
+                  "cultPath"
+                ],
+                "changeStat": {
+                  "cultLoyalty": 15,
+                  "rivalCultHatred": 10,
+                  "mentorBond": -5,
+                  "friendBond": -3
+                },
+                "remember": {
+                  "act2Choice": "tortoise"
+                },
+                "noticedBy": "professor",
+                "goto": "joined"
+              }
+            },
+            {
+              "text": "\"I go stand on my own two legs.\"",
+              "effects": {
+                "setFlag": "independentPath",
+                "changeStat": {
+                  "mentorBond": 5,
+                  "communityGoodwill": 3
+                },
+                "remember": {
+                  "act2Choice": "independent"
+                },
+                "goto": "independent"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "joined": {
+      "location": "frontStop",
+      "time": "night",
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "chuks",
+          "text": "Welcome, brother! Your initiation is on Friday. Study your answers. Wrong answers are... educational. Painful, but educational."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "professor",
+          "text": "(from the hospital window, very quietly) Rule number twelve: the shell protects the tortoise. It also never lets him out."
+        },
+        {
+          "type": "endChapter",
+          "title": "End of Act 2 — Shell Knock",
+          "summary": "You knocked twice. Money {money}. Tortoise loyalty {stat:cultLoyalty}. Hyena hatred {stat:rivalCultHatred}."
+        }
+      ]
+    },
+    "independent": {
+      "location": "frontStop",
+      "time": "night",
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "chuks",
+          "text": "(he smiles like a man who has filed your name somewhere) No problem. The door is always open. Until it isn't."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "professor",
+          "text": "(from the hospital window) Good. Now you have to be twice as smart, because nobody go cover your back. Except the people you help."
+        },
+        {
+          "type": "endChapter",
+          "title": "End of Act 2 — Shell Knock",
+          "summary": "You stayed your own man. Money {money}. Goodwill {stat:communityGoodwill}. Hyena hatred {stat:rivalCultHatred}."
+        }
+      ]
+    }
+  }
+}

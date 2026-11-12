@@ -26,6 +26,7 @@ export const STAT_DEFS = {
   friendBond: { label: 'Bond with Ada', group: 'relationship', start: 0, min: 0, max: 100, who: 'Ada' },
   communityGoodwill: { label: 'Community goodwill', group: 'relationship', start: 10, min: 0, max: 100, who: 'The street' },
   policeHeat: { label: 'Task Force heat', group: 'relationship', start: 0, min: 0, max: 100, who: 'The Task Force' },
+  settlementTrust: { label: 'Settlement trusts you', group: 'relationship', start: 0, min: 0, max: 100, who: 'Barrister Settlement' },
   cultLoyalty: { label: 'Tortoise loyalty', group: 'relationship', start: 0, min: 0, max: 100, who: 'The Tortoises' },
   rivalCultHatred: { label: 'Hyena hatred', group: 'relationship', start: 0, min: 0, max: 100, who: 'The Hyenas' },
 }

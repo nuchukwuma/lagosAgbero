@@ -13,6 +13,8 @@ import ChaseMode from './chase/ChaseMode.jsx'
 import FightMode from './fight/FightMode.jsx'
 import RunnerMode from './runner/RunnerMode.jsx'
 import ConductorMode from './conductor/ConductorMode.jsx'
+import BeggingMode from './begging/BeggingMode.jsx'
+import RallyMode from './rally/RallyMode.jsx'
 
 export const MODES = {
   feeCollection: FeeCollectionMode,
@@ -20,12 +22,14 @@ export const MODES = {
   fight: FightMode,
   runner: RunnerMode,
   conductor: ConductorMode,
+  begging: BeggingMode,
+  rally: RallyMode,
 }
 
 // Modes played inside the 3D street (the player walks with joystick/keys).
 export const WORLD_MODES = new Set(['feeCollection', 'chase', 'fight', 'runner', 'conductor'])
 
-export const PLANNED_MODES = ['chase', 'fight', 'runner', 'raid', 'conductor', 'feeCollection', 'begging', 'shop']
+export const PLANNED_MODES = ['chase', 'fight', 'runner', 'raid', 'conductor', 'feeCollection', 'begging', 'rally', 'initiation', 'shop']
 
 export function modeComponent(name) {
   return MODES[name] || StandInMode

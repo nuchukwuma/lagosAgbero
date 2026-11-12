@@ -1,0 +1,81 @@
+{
+  "begging": {
+    "approaches": {
+      "praise": { "label": "Hail them: \"Chairman! Odogwu! Money miss road!\"" },
+      "sob": { "label": "Sob story: \"Mama dey hospital, Oga...\"" },
+      "joke": { "label": "Crack a joke and dance" },
+      "block": { "label": "Stand in front of the car. No shaking." },
+      "skip": { "label": "Let this one pass" }
+    },
+    "targets": {
+      "madam": {
+        "name": "Madam in a jeep",
+        "hints": ["A jeep slows. Gold bangles on the steering wheel, gospel music loud.", "A woman in lace tells her driver to slow down and looks at you like a project."],
+        "base": 2000,
+        "pay": { "praise": 1.2, "sob": 1.5, "joke": 0.6, "block": 0.3, "skip": 0 },
+        "anger": { "block": 20 }
+      },
+      "oga": {
+        "name": "Big oga",
+        "hints": ["A black saloon. The window comes down one inch. Cigar smoke.", "A man in a white kaftan steps out to buy suya. Three phones."],
+        "base": 3000,
+        "pay": { "praise": 1.6, "sob": 0.4, "joke": 0.8, "block": 0.5, "skip": 0 },
+        "anger": { "sob": 5, "block": 15 }
+      },
+      "bigBoy": {
+        "name": "Young big boy",
+        "hints": ["A loud yellow sports car, Afrobeats shaking the gate. He's filming himself.", "A young man with a chain bigger than his neck, live on social media."],
+        "base": 1500,
+        "pay": { "praise": 1.0, "sob": 0.2, "joke": 1.8, "block": 0.6, "skip": 0 },
+        "anger": { "block": 10 }
+      },
+      "pastor": {
+        "name": "Pastor in a Prado",
+        "hints": ["A Prado with a sticker: \"Blessed and Highly Favoured\". The man inside is praying.", "A man in a suit with a big Bible on the dashboard."],
+        "base": 1500,
+        "pay": { "praise": 0.7, "sob": 1.6, "joke": 0.3, "block": 0.2, "skip": 0 },
+        "anger": { "joke": 5, "block": 15 }
+      },
+      "security": {
+        "name": "Estate security",
+        "hints": ["A man in a reflective vest walks out of the gate with a whistle and a long stick.", "Estate security. He has been watching you for a while."],
+        "base": 0,
+        "pay": { "praise": 0.2, "sob": 0.1, "joke": 0.3, "block": 0, "skip": 0 },
+        "anger": { "praise": 10, "sob": 10, "joke": 5, "block": 40 }
+      }
+    },
+    "wrong": {
+      "nephew": {
+        "name": "Young man in FEP agbada",
+        "hints": ["A young man in brand-new FEP agbada. Two police escorts behind his car. A rice bag with a familiar face on the back seat."],
+        "who": "Owó Ńlá's nephew"
+      },
+      "bassey": {
+        "name": "Man in plain clothes",
+        "hints": ["A big man in a plain shirt buying akara. His boots are Task Force boots. He looks very tired and very off duty."],
+        "who": "Commander Bassey, off duty"
+      }
+    }
+  },
+  "rally": {
+    "actions": {
+      "chant": { "label": "Chant louder than everybody", "disruption": 10, "heat": 3 },
+      "heckle": { "label": "Heckle the speaker", "disruption": 15, "heat": 8 },
+      "rice": { "label": "Share the rice bags", "disruption": 12, "heat": 2, "uses": "rice" },
+      "sabotage": { "label": "Knock over the speakers", "disruption": 25, "heat": 20, "brawlChance": 0.35 },
+      "fake": { "label": "Look busy. Film yourself for Settlement.", "disruption": 2, "heat": -5, "fake": true }
+    },
+    "jobs": {
+      "disturb": { "title": "Disturb the PJP rally", "goal": 70, "rounds": 6, "rice": 0, "pay": 15000 },
+      "crowd": { "title": "Fill the FEP rally", "goal": 60, "rounds": 6, "rice": 3, "pay": 10000 }
+    },
+    "events": [
+      { "text": "A TV camera swings towards you.", "heat": 10 },
+      { "text": "The crowd starts singing your chant.", "disruption": 8 },
+      { "text": "Rival thugs push through the crowd towards you.", "brawlChance": 0.25 },
+      { "text": "The mic goes dead. Everybody looks around.", "disruption": 5 },
+      { "text": "A police van parks by the Roundabout.", "heat": 8 },
+      { "text": "Nothing happens. Someone sells gala.", "disruption": 0 }
+    ]
+  }
+}

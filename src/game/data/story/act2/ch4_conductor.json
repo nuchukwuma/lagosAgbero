@@ -436,7 +436,8 @@
         {
           "type": "endChapter",
           "title": "End of Chapter 4 — Hang For Door",
-          "summary": "Money {money}. Notoriety {stat:notoriety}. Goodwill {stat:communityGoodwill}. A big man is coming to the park."
+          "summary": "Money {money}. Notoriety {stat:notoriety}. Goodwill {stat:communityGoodwill}. A big man is coming to the park.",
+          "next": "ch5_settlement"
         }
       ]
     }
