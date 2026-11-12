@@ -21,7 +21,12 @@ share the engine:
   dramas; the characters and plot are original.
 
 After every chapter you see the choices you made, and a story map shows the
-paths you didn't take.
+paths you didn't take. The title screen has an **Endings** page: the endings
+you've reached, and a hint for each one you haven't.
+
+Between story beats there's the street: fee runs, chases, fist fights (land
+hits close together for a combo), escape runs, danfo driving, side quests,
+and small finds lying around for anyone who wanders.
 
 ## Play on a phone or a computer
 
@@ -92,9 +97,12 @@ fights, chases or any mode. Real money can never buy anything in the story.
 
 ```bash
 npm run story:check      # validate story JSON + random play-throughs
+npm run lint             # ESLint: undefined names, unused imports, broken hooks
 npm run assets:clean     # list asset files the game no longer uses (-- --delete to remove)
 npm test                 # engine unit tests
 npm run assets:animations -- a1.zip a2.zip a3.zip a4.rar a5.zip "source-assets/mixamo/Breathing Idle.fbx" source-assets/mixamo/Walking.fbx   # re-import Mixamo clips
+npm run assets:animations -- path/to/rpg-pack/FBX/Cleric.fbx   # add the Quaternius RPG pack clips (roll, cheer, preach, pickUp); other clips are kept
+npm run assets:nature -- path/to/nature-pack.zip   # bake trees, bushes, rocks and grass into the scenery
 ```
 
 ## Docs

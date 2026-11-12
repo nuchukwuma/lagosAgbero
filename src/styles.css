@@ -2226,3 +2226,123 @@ body,
 .bluff-note.truth {
   color: #8ff0a4;
 }
+
+/* pop-up messages sit under the free-roam objective, not on top of it */
+.story-screen:has(.objective) .toasts {
+  top: calc(max(8px, env(safe-area-inset-top)) + 164px);
+}
+
+/* fight: combo counter, pops each time the chain grows */
+.fight-combo {
+  position: fixed;
+  top: calc(max(8px, env(safe-area-inset-top)) + 154px);
+  left: 14px;
+  z-index: 7;
+  font-weight: 900;
+  font-size: 34px;
+  line-height: 1;
+  color: var(--yellow, #f2c300);
+  text-shadow: 0 2px 0 #1a1408, 0 0 14px rgba(242, 195, 0, 0.5);
+  transform-origin: left center;
+  animation: combo-pop 0.28s ease-out;
+  pointer-events: none;
+}
+.fight-combo small {
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  color: #fff;
+}
+@keyframes combo-pop {
+  from { transform: scale(1.7) rotate(-6deg); }
+  to { transform: scale(1) rotate(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fight-combo { animation: none; }
+}
+
+/* endings gallery */
+.endings-screen {
+  gap: 14px;
+  overflow-y: auto;
+  max-width: 640px;
+  margin: 0 auto;
+  justify-content: flex-start;
+}
+.endings-group {
+  width: 100%;
+  background: var(--panel);
+  border-radius: 12px;
+  padding: 14px 16px;
+}
+.endings-group h3 {
+  margin: 0 0 8px;
+  color: var(--danfo);
+}
+.endings-group h3 small {
+  color: #fff;
+  opacity: 0.7;
+  font-weight: 500;
+}
+.endings-bar {
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.14);
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+.endings-bar div {
+  height: 100%;
+  background: var(--danfo);
+}
+.endings-group ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.ending-item {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  opacity: 0.78;
+}
+.ending-item.found {
+  opacity: 1;
+  color: var(--danfo);
+}
+.ending-item.found strong {
+  color: #fff;
+}
+.ending-item div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.ending-item.found div {
+  flex-direction: row;
+  align-items: baseline;
+  gap: 6px;
+}
+.ending-item span {
+  font-size: 0.9rem;
+  opacity: 0.85;
+}
+.ending-item em {
+  color: var(--danfo);
+  font-style: normal;
+  font-size: 0.85rem;
+}
+.ending-lock {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1.5px solid currentColor;
+  display: grid;
+  place-items: center;
+  font-size: 11px;
+  font-weight: 700;
+  opacity: 0.7 !important;
+}

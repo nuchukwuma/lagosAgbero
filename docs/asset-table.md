@@ -10,26 +10,61 @@ Sizes in metres are after pack scaling (1 unit = 1 m).
 | `danfo` | `car-kit/van.glb` | 172 KB | 2.4 × 2.2 × 4.4 | Danfo bus: yellow, black side stripe, body stretched ~5.7 m |
 | `taxi` | `car-kit/taxi.glb` | 171 KB | 2.4 × 2.4 × 4.4 | Yellow taxi, kept yellow, faded |
 | `lorry` | `car-kit/truck.glb` | 172 KB | 2.4 × 2.1 × 4.7 | Commercial lorry bringing goods to the market |
+| `flatbedLorry` | `car-kit/truck-flat.glb` | 203 KB | 2.4 × 2.1 × 4.4 | Sand / cement / scrap lorry |
 | `boxTruck` | `car-kit/delivery.glb` | 235 KB | 2.4 × 2.6 × 5.2 | Drinks and bread distributor truck (fictional brands on the side) |
+| `pickup` | `car-kit/delivery-flat.glb` | 209 KB | 2.4 × 2.2 × 5.2 | Open-back pickup loaded with market goods |
 | `privateCar` | `car-kit/sedan.glb` | 168 KB | 2.4 × 2.1 × 4.1 | Ordinary "tokunbo" private car |
+| `familyJeep` | `car-kit/suv.glb` | 203 KB | 2.4 × 2.1 × 4.3 | Middle-class jeep |
 | `bigManSuv` | `car-kit/suv-luxury.glb` | 172 KB | 2.4 × 2.1 × 4.6 | Rich man's SUV: begging target, convoy car |
+| `bigManSportsCar` | `car-kit/sedan-sports.glb` | 174 KB | 2.1 × 1.8 × 4.1 | Rich kid's sports car: begging target |
+| `flashyHatchback` | `car-kit/hatchback-sports.glb` | 193 KB | 2.1 × 1.8 × 4.6 | Flashy young-money car: loud music, small tip |
 | `taskForceVan` | `car-kit/police.glb` | 191 KB | 2.4 × 2.1 × 5.0 | Task Force van: recoloured khaki-green with fictional TF badge |
+| `taskForceTow` | `car-kit/tractor-police.glb` | 192 KB | 2.1 × 2.7 × 3.7 | Task Force tow tractor that drags away impounded danfos |
+| `ambulance` | `car-kit/ambulance.glb` | 228 KB | 2.4 × 2.9 × 5.2 | Hospital branch after a collapse or a lost fight |
+| `wasteTruck` | `car-kit/garbage-truck.glb` | 262 KB | 2.6 × 2.6 × 5.5 | Fictional waste agency truck, street-clearing event |
+| `fireTruck` | `car-kit/firetruck.glb` | 227 KB | 2.4 × 2.7 × 5.4 | Market fire random event |
+| `demolitionShovel` | `car-kit/tractor-shovel.glb` | 217 KB | 2.7 × 2.4 × 4.0 | Stall demolition during Task Force raids |
+| `roadWorksTractor` | `car-kit/tractor.glb` | 172 KB | 2.1 × 2.6 × 3.5 | Road-works scene, traffic-jam event |
 | `molue` | `vehicles-extra/bus.glb` | 156 KB | 3.0 × 2.8 × 6.9 | Molue / big yellow bus (Quaternius; Kenney has no bus) |
+| `kekeChassis` | `car-kit/kart-oobi.glb` | 246 KB | 1.6 × 2.1 × 2.3 | Base for the keke: driver and front-left/right wheels hidden, one centre wheel and a primitive cabin added |
 
 ## prop
 
 | Game name | File | Download | W × H × L (m) | Planned use |
 |---|---|---|---|---|
 | `cone` | `car-kit/cone.glb` | 16 KB | 0.8 × 1.0 × 0.8 | Traffic cone, roadblock |
+| `coneFlat` | `car-kit/cone-flat.glb` | 16 KB | 0.8 × 0.4 × 0.8 | Knocked-over cone |
 | `carton` | `car-kit/box.glb` | 14 KB | 1.1 × 1.1 × 1.1 | Cartons of goods at stalls, runner obstacle |
 | `okadaWheel` | `car-kit/wheel-dark.glb` | 28 KB | 0.6 × 1.0 × 1.0 | Okada wheels (2 per bike) |
 | `kekeWheel` | `car-kit/wheel-default.glb` | 26 KB | 0.6 × 1.0 × 1.0 | Keke centre front wheel |
+| `truckWheel` | `car-kit/wheel-truck.glb` | 34 KB | 0.6 × 1.0 × 1.0 | Vulcaniser's tyre pile |
 | `spareTyre` | `car-kit/debris-tire.glb` | 26 KB | 0.6 × 1.0 × 1.0 | Vulcaniser's tyre pile, runner obstacle |
+| `scrapDoor` | `car-kit/debris-door.glb` | 7 KB | 0.3 × 1.4 × 1.3 | Mechanic village scrap |
+| `scrapBumper` | `car-kit/debris-bumper.glb` | 11 KB | 2.1 × 0.6 × 0.7 | Accident debris |
+| `scrapPlate` | `car-kit/debris-plate-a.glb` | 5 KB | 1.4 × 0.2 × 1.4 | Scrap metal sheet, runner obstacle |
+| `scrapAxle` | `car-kit/debris-drivetrain.glb` | 36 KB | 1.9 × 0.5 × 3.1 | Mechanic village scrap |
 | `shippingContainerA` | `city-kit-industrial/shipping-container-a.glb` | 36 KB | 3.0 × 2.8 × 6.6 | Market stall / container shop body |
 | `shippingContainerB` | `city-kit-industrial/shipping-container-b.glb` | 36 KB | 3.0 × 2.8 × 6.6 | Market stall / container shop body |
 | `shippingContainerC` | `city-kit-industrial/shipping-container-c.glb` | 36 KB | 3.0 × 2.8 × 6.6 | Market stall / container shop body |
 | `roofTank` | `city-kit-industrial/detail-tank.glb` | 31 KB | 6.8 × 3.3 × 4.1 | Rooftop water tank |
+| `fuelTank` | `city-kit-industrial/detail-tank-large.glb` | 46 KB | 12.1 × 7.7 × 13.2 | Fuel depot tank (fuel-hike story) |
+| `waterTower` | `city-kit-industrial/water-tower.glb` | 92 KB | 6.8 × 17.1 × 6.7 | Borehole water tower |
+| `chimneySmall` | `city-kit-industrial/chimney-small.glb` | 10 KB | 2.4 × 6.0 × 2.4 | Chimney detail |
+| `chimneyMedium` | `city-kit-industrial/chimney-medium.glb` | 15 KB | 3.6 × 15.4 × 3.6 | Chimney detail |
+| `solarPanels` | `city-kit-industrial/solar-panel-landscape-group.glb` | 80 KB | 12.1 × 2.1 × 7.2 | Solar panels on rich men's roofs |
 | `compoundFence` | `city-kit-suburban/fence.glb` | 9 KB | 3.8 × 2.2 × 0.6 | Compound wall, one segment (2.2 m high) |
+| `compoundFenceLow` | `city-kit-suburban/fence-low.glb` | 18 KB | 10.2 × 1.4 × 6.7 | Low fence |
+| `compoundFence1x2` | `city-kit-suburban/fence-1x2.glb` | 16 KB | 7.0 × 2.2 × 3.5 | Compound wall set |
+| `compoundFence1x3` | `city-kit-suburban/fence-1x3.glb` | 21 KB | 10.2 × 2.2 × 3.5 | Compound wall set |
+| `compoundFence1x4` | `city-kit-suburban/fence-1x4.glb` | 25 KB | 13.4 × 2.2 × 3.5 | Compound wall set |
+| `compoundFence2x2` | `city-kit-suburban/fence-2x2.glb` | 23 KB | 7.0 × 2.2 × 6.7 | Compound wall set |
+| `compoundFence2x3` | `city-kit-suburban/fence-2x3.glb` | 28 KB | 10.2 × 2.2 × 6.7 | Compound wall set |
+| `compoundFence3x2` | `city-kit-suburban/fence-3x2.glb` | 31 KB | 7.0 × 2.2 × 9.9 | Compound wall set |
+| `compoundFence3x3` | `city-kit-suburban/fence-3x3.glb` | 35 KB | 10.2 × 2.2 × 9.9 | Compound wall set (big compound) |
+| `driveway` | `city-kit-suburban/driveway-long.glb` | 3 KB | 2.9 × 0.1 × 3.2 | Compound driveway |
+| `drivewayShort` | `city-kit-suburban/driveway-short.glb` | 3 KB | 2.9 × 0.1 × 1.6 | Short driveway |
+| `path` | `city-kit-suburban/path-long.glb` | 3 KB | 1.6 × 0.1 × 3.2 | Footpath |
+| `pathStones` | `city-kit-suburban/path-stones-messy.glb` | 5 KB | 1.2 × 0.1 × 2.9 | Stepping-stone path |
 | `planter` | `city-kit-suburban/planter.glb` | 20 KB | 3.2 × 1.4 × 2.4 | Flower planter at rich compounds |
 
 ## road
@@ -37,21 +72,53 @@ Sizes in metres are after pack scaling (1 unit = 1 m).
 | Game name | File | Download | W × H × L (m) | Planned use |
 |---|---|---|---|---|
 | `roadStraight` | `city-kit-roads/road-straight.glb` | 5 KB | 8.0 × 0.2 × 8.0 | Main road (8 m tile) |
+| `roadStraightHalf` | `city-kit-roads/road-straight-half.glb` | 5 KB | 4.0 × 0.2 × 8.0 | Narrow side street |
 | `roadCrossing` | `city-kit-roads/road-crossing.glb` | 8 KB | 8.0 × 0.2 × 8.0 | Zebra crossing in front of the bus stop |
 | `roadJunctionT` | `city-kit-roads/road-intersection.glb` | 8 KB | 8.0 × 0.2 × 8.0 | T-junction |
+| `roadCrossroad` | `city-kit-roads/road-crossroad.glb` | 10 KB | 8.0 × 0.2 × 8.0 | Four-way junction |
+| `roadBend` | `city-kit-roads/road-bend.glb` | 20 KB | 8.0 × 0.2 × 8.0 | Corner |
+| `roadCurve` | `city-kit-roads/road-curve.glb` | 23 KB | 16.0 × 0.2 × 16.0 | Wide curve (16 m) |
+| `roadEnd` | `city-kit-roads/road-end.glb` | 5 KB | 8.0 × 0.2 × 8.0 | Dead end |
+| `roadTurnaround` | `city-kit-roads/road-end-round.glb` | 17 KB | 8.0 × 0.2 × 8.0 | Motor park turnaround |
+| `roundabout` | `city-kit-roads/road-roundabout.glb` | 103 KB | 24.0 × 0.2 × 24.0 | Big roundabout (24 m), rally location |
+| `roadLayBy` | `city-kit-roads/road-side.glb` | 5 KB | 8.0 × 0.2 × 10.5 | Bus stop lay-by |
+| `roadLayByEntry` | `city-kit-roads/road-side-entry.glb` | 24 KB | 8.0 × 0.2 × 10.5 | Lay-by entry |
+| `roadLayByExit` | `city-kit-roads/road-side-exit.glb` | 24 KB | 8.0 × 0.2 × 10.5 | Lay-by exit |
+| `roadSplit` | `city-kit-roads/road-split.glb` | 59 KB | 8.0 × 0.2 × 16.0 | Road widening into the expressway |
 | `pavedLot` | `city-kit-roads/road-square.glb` | 4 KB | 8.0 × 0.2 × 8.0 | Motor park ground, market floor |
+| `roadDriveway` | `city-kit-roads/road-driveway-single.glb` | 6 KB | 8.0 × 0.2 × 8.0 | Gate into a compound |
+| `roadMedian` | `city-kit-roads/road-straight-barrier.glb` | 4 KB | 8.0 × 0.6 × 8.0 | Expressway median |
 | `flyover` | `city-kit-roads/road-bridge.glb` | 24 KB | 8.0 × 4.2 × 8.0 | Flyover deck |
+| `bridgePillar` | `city-kit-roads/bridge-pillar-wide.glb` | 5 KB | 1.1 × 4.0 × 1.1 | Under-bridge hideout pillars |
+| `ground` | `city-kit-roads/tile-low.glb` | 3 KB | 8.0 × 0.2 × 8.0 | Plain ground / sidewalk tile |
+| `raisedKerb` | `city-kit-roads/tile-high.glb` | 3 KB | 8.0 × 2.0 × 8.0 | Raised platform / kerb block |
 
 ## street
 
 | Game name | File | Download | W × H × L (m) | Planned use |
 |---|---|---|---|---|
 | `electricityPole` | `city-kit-roads/electricity-pole.glb` | 43 KB | 4.6 × 4.2 × 1.7 | NEPA-style pole (fictional power company) |
+| `electricityPoleWide` | `city-kit-roads/electricity-pole-wide.glb` | 55 KB | 8.6 × 4.2 × 1.7 | Wide pole over the main road |
 | `electricityPoleSingle` | `city-kit-roads/electricity-pole-single.glb` | 19 KB | 0.6 × 4.2 × 1.7 | Single pole, side street |
+| `electricitySide` | `city-kit-roads/electricity-side.glb` | 43 KB | 4.5 × 4.2 × 3.4 | Pole leaning over the road |
+| `electricityWires` | `city-kit-roads/electricity-wires.glb` | 9 KB | 4.0 × 0.5 × 1.5 | Sagging wires between poles |
+| `electricityWiresWide` | `city-kit-roads/electricity-wires-wide.glb` | 22 KB | 8.1 × 0.8 × 1.5 | Sagging wires, wide span |
 | `streetLamp` | `city-kit-roads/light-square.glb` | 7 KB | 0.4 × 4.8 × 1.9 | Street lamp (often off: "light no dey") |
+| `streetLampDouble` | `city-kit-roads/light-curved-double.glb` | 14 KB | 0.4 × 5.4 × 3.2 | Double lamp on the median |
+| `streetLampCurved` | `city-kit-roads/light-curved.glb` | 9 KB | 0.4 × 5.4 × 1.8 | Curved lamp |
 | `trafficLight` | `city-kit-roads/traffic-light.glb` | 20 KB | 0.9 × 4.1 × 0.7 | Traffic light nobody obeys |
+| `trafficLightHanging` | `city-kit-roads/traffic-light-hanging.glb` | 22 KB | 0.9 × 4.1 × 2.4 | Hanging traffic light at the junction |
 | `busStopSign` | `city-kit-roads/road-sign-street.glb` | 16 KB | 1.6 × 3.8 × 1.6 | Bus stop sign (custom "BUS STOP" decal) |
+| `stopSign` | `city-kit-roads/road-sign-stop.glb` | 10 KB | 0.6 × 4.0 × 1.1 | Stop sign |
+| `warningSign` | `city-kit-roads/road-sign-warning.glb` | 11 KB | 0.6 × 4.0 × 1.2 | Warning sign |
+| `posterPost` | `city-kit-roads/road-sign-empty.glb` | 6 KB | 0.4 × 3.8 × 0.4 | Post for political / church / "Jesus is Lord" posters |
 | `shopSign` | `city-kit-roads/road-sign-empty-hanging.glb` | 12 KB | 0.7 × 3.8 × 2.4 | Hanging shop sign |
+| `billboard` | `city-kit-roads/sign-highway-wide.glb` | 14 KB | 1.1 × 5.7 × 8.0 | Billboard: fictional ads and politician faces |
+| `billboardTall` | `city-kit-roads/sign-highway-detailed.glb` | 23 KB | 1.1 × 6.6 × 8.0 | Tall billboard over the expressway |
+| `checkpointBarrier` | `city-kit-roads/construction-barrier.glb` | 7 KB | 1.1 × 1.0 × 1.8 | Task Force checkpoint barrier |
+| `checkpointCone` | `city-kit-roads/construction-cone.glb` | 7 KB | 0.6 × 0.8 × 0.6 | Checkpoint cone |
+| `checkpointFence` | `city-kit-roads/construction-fence.glb` | 15 KB | 0.6 × 1.4 × 3.0 | Checkpoint / demolition fence |
+| `checkpointLight` | `city-kit-roads/construction-light.glb` | 15 KB | 0.6 × 1.9 × 0.6 | Flashing checkpoint light |
 | `dumpster` | `city-kit-roads/dumpster.glb` | 24 KB | 2.2 × 1.7 × 3.0 | Refuse bin: hiding spot during raids |
 
 ## building
@@ -60,19 +127,45 @@ Sizes in metres are after pack scaling (1 unit = 1 m).
 |---|---|---|---|---|
 | `marketHall` | `city-kit-industrial/building-k.glb` | 64 KB | 10.4 × 6.2 × 7.3 | Covered market hall (saw-tooth roof) |
 | `warehouseA` | `city-kit-industrial/building-h.glb` | 62 KB | 10.6 × 5.9 × 10.5 | Warehouse |
+| `warehouseB` | `city-kit-industrial/building-i.glb` | 72 KB | 8.2 × 5.9 × 10.4 | Warehouse, small |
+| `warehouseArched` | `city-kit-industrial/building-j.glb` | 79 KB | 8.2 × 6.9 × 10.4 | Arched-roof warehouse: cult hideout candidate |
 | `shopRow` | `city-kit-industrial/building-s.glb` | 79 KB | 17.0 × 6.7 × 7.3 | Row of lock-up shops |
 | `motorParkOffice` | `city-kit-industrial/building-p.glb` | 101 KB | 13.5 × 5.7 × 7.9 | Chairman's motor park office |
+| `partySecretariat` | `city-kit-industrial/building-a.glb` | 173 KB | 16.7 × 11.8 × 9.9 | Fictional party secretariat (the politician's office) |
+| `officeBlock` | `city-kit-industrial/building-b.glb` | 207 KB | 16.7 × 11.8 × 10.1 | Office block |
+| `agencyTower` | `city-kit-industrial/building-d.glb` | 98 KB | 7.1 × 11.3 × 11.4 | Task Force / government agency building |
+| `officeSmall` | `city-kit-industrial/building-o.glb` | 75 KB | 7.1 × 7.3 × 9.9 | Small office: the fixer |
+| `factory` | `city-kit-industrial/building-e.glb` | 126 KB | 13.5 × 13.2 × 10.3 | Factory with chimneys |
+| `bottlingFactory` | `city-kit-industrial/building-m.glb` | 136 KB | 10.5 × 12.2 × 13.6 | Fictional drinks factory (energy items) |
+| `bigFactory` | `city-kit-industrial/building-l.glb` | 159 KB | 16.7 × 15.4 × 15.0 | Large factory complex |
+| `workshop` | `city-kit-industrial/building-n.glb` | 107 KB | 7.8 × 15.2 × 11.4 | Workshop with chimney: mechanic / welder |
 | `printingPress` | `city-kit-industrial/building-g.glb` | 104 KB | 13.4 × 10.2 × 10.3 | Printing press: election posters |
+| `depot` | `city-kit-industrial/building-q.glb` | 177 KB | 17.1 × 7.0 × 14.2 | Goods depot |
+| `coldRoom` | `city-kit-industrial/building-r.glb` | 169 KB | 19.9 × 11.1 × 10.2 | Cold room / fish depot |
+| `warehouseOffice` | `city-kit-industrial/building-t.glb` | 137 KB | 13.8 × 8.1 × 11.1 | Warehouse with office |
+| `sawmill` | `city-kit-industrial/building-c.glb` | 172 KB | 15.0 × 10.0 × 16.9 | Sawmill / yard with machinery |
+| `industrialBlock` | `city-kit-industrial/building-f.glb` | 132 KB | 14.3 × 15.4 × 10.2 | Industrial block, background filler |
 | `tenementA` | `city-kit-suburban/building-type-a.glb` | 96 KB | 10.4 × 6.7 × 8.2 | "Face-me-I-face-you" tenement |
 | `tenementB` | `city-kit-suburban/building-type-h.glb` | 64 KB | 10.4 × 5.9 × 7.3 | Tenement, worn |
 | `tenementC` | `city-kit-suburban/building-type-i.glb` | 68 KB | 10.3 × 5.9 × 8.2 | Tenement, worn |
 | `bungalowWide` | `city-kit-suburban/building-type-g.glb` | 91 KB | 11.6 × 6.1 × 9.4 | Bungalow |
+| `bungalowSquare` | `city-kit-suburban/building-type-m.glb` | 95 KB | 11.4 × 5.9 × 11.4 | Bungalow, square plan |
 | `mentorHouse` | `city-kit-suburban/building-type-k.glb` | 87 KB | 7.4 × 9.2 × 8.2 | Mentor's small storey house |
+| `friendHouse` | `city-kit-suburban/building-type-r.glb` | 86 KB | 8.2 × 9.1 × 8.2 | Friend's family house |
 | `shopHouseA` | `city-kit-suburban/building-type-e.glb` | 142 KB | 10.4 × 9.1 × 8.2 | Storey building, shop on ground floor |
 | `shopHouseB` | `city-kit-suburban/building-type-j.glb` | 97 KB | 11.0 × 8.3 × 7.3 | Storey building, shop on ground floor |
 | `storeyHouseA` | `city-kit-suburban/building-type-c.glb` | 97 KB | 10.3 × 8.3 × 8.2 | Storey house |
+| `storeyHouseB` | `city-kit-suburban/building-type-l.glb` | 107 KB | 8.3 × 8.4 × 8.2 | Storey house, narrow |
 | `storeyHouseC` | `city-kit-suburban/building-type-o.glb` | 112 KB | 10.2 × 9.1 × 8.2 | Storey house |
+| `storeyHouseD` | `city-kit-suburban/building-type-s.glb` | 101 KB | 11.2 × 9.1 × 8.7 | Storey house |
+| `storeyHouseE` | `city-kit-suburban/building-type-u.glb` | 115 KB | 11.4 × 9.1 × 8.7 | Storey house |
 | `richManHouse` | `city-kit-suburban/building-type-b.glb` | 143 KB | 14.6 × 9.1 × 9.1 | Rich man's compound house (begging target) |
+| `richManHouseB` | `city-kit-suburban/building-type-d.glb` | 144 KB | 14.0 × 9.9 × 8.2 | Rich man's house, wide |
+| `richManHouseC` | `city-kit-suburban/building-type-f.glb` | 135 KB | 11.4 × 9.1 × 11.2 | Rich man's house, deep |
+| `chairmanHouse` | `city-kit-suburban/building-type-t.glb` | 164 KB | 10.5 × 9.2 × 11.2 | The Chairman's house |
+| `politicianMansion` | `city-kit-suburban/building-type-n.glb` | 136 KB | 14.3 × 9.1 × 11.0 | The politician's mansion |
+| `bigManDuplex` | `city-kit-suburban/building-type-p.glb` | 107 KB | 9.9 × 7.3 × 7.9 | Modern duplex with pillars |
+| `fixerDuplex` | `city-kit-suburban/building-type-q.glb` | 96 KB | 9.9 × 7.3 × 7.1 | The fixer's modern duplex |
 
 ## nature
 
@@ -95,9 +188,9 @@ Sizes in metres are after pack scaling (1 unit = 1 m).
 | body: female_alternative | `characters/people/female_alternative.glb` | 277 KB | Outfit body (Female_Alternative.fbx); parts: Skin, Eyes, Eyebrows, Shirt, Pants, Socks, Shoes, HairBase, Jacket, LightJacket, Hair |
 | extra: bus | `vehicles-extra/bus.glb` | 156 KB | Molue / BRT-style bus (Kenney has no bus) |
 
-## Retargeted Mixamo animations
+## Retargeted animations
 
-`npm run assets:animations` builds these from your Mixamo FBX files.
+`npm run assets:animations` builds these from the Mixamo FBX files and the Quaternius RPG pack (`Cleric.fbx`).
 
 | Clip | Source file | Length | Loop | Root motion | Download | Planned use |
 |---|---|---|---|---|---|---|
@@ -131,6 +224,28 @@ Sizes in metres are after pack scaling (1 unit = 1 m).
 | `stunned` | Stunned.fbx | 2.13 s | no | 0.49 m/s | 33 KB | Fight: dizzy / stunned |
 | `knockedOut` | Dying.fbx | 4.42 s | no | 0.08 m/s | 68 KB | Cartoon knock-out and energy collapse (no gore) |
 | `fallFlail` | Falling.fbx | 4.50 s | yes | 0 m/s | 69 KB | Flailing in the air (runner fall, thrown out) |
+| `roll` | Cleric.fbx | 1.00 s | no | 0 m/s | 20 KB | Tuck-and-roll (runner, getting thrown) |
+| `pickUp` | Cleric.fbx | 1.27 s | no | 0 m/s | 24 KB | Reach out and take something (a fee, a purchase) |
+| `cheer` | Cleric.fbx | 1.20 s | no | 0 m/s | 24 KB | Arm up: winning a fight, hailing, blessing |
+| `preach` | Cleric.fbx | 1.47 s | yes | 0 m/s | 29 KB | Arms wide then up: preachers, the dibia, rally speakers |
+
+## Baked nature models
+
+`npm run assets:nature` bakes these from the Quaternius nature pack into `src/assets/natureMeshes.json`. World JSON uses them through the prop kinds `tree`, `bush`, `rock` and `grassTuft`.
+
+| Model | Triangles | Height |
+|---|---|---|
+| `tree1` | 390 | 4.03 m |
+| `tree2` | 520 | 4.9 m |
+| `tree3` | 404 | 4.06 m |
+| `tree4` | 752 | 6.77 m |
+| `bush1` | 86 | 1.47 m |
+| `bush2` | 214 | 0.93 m |
+| `bush3` | 104 | 1.24 m |
+| `rock1` | 34 | 1.45 m |
+| `rock2` | 34 | 0.93 m |
+| `rock3` | 28 | 1.89 m |
+| `grass1` | 172 | 0.32 m |
 
 ## Built in code (no model of their own)
 
@@ -146,4 +261,85 @@ Sizes in metres are after pack scaling (1 unit = 1 m).
 
 ## GLB files on disk not used yet
 
-_none_
+- `car-kit/debris-bolt.glb`
+- `car-kit/debris-door-window.glb`
+- `car-kit/debris-drivetrain-axle.glb`
+- `car-kit/debris-nut.glb`
+- `car-kit/debris-plate-b.glb`
+- `car-kit/debris-plate-small-a.glb`
+- `car-kit/debris-plate-small-b.glb`
+- `car-kit/debris-spoiler-a.glb`
+- `car-kit/debris-spoiler-b.glb`
+- `car-kit/kart-oodi.glb`
+- `car-kit/kart-ooli.glb`
+- `car-kit/kart-oopi.glb`
+- `car-kit/kart-oozi.glb`
+- `car-kit/race-future.glb`
+- `car-kit/race.glb`
+- `car-kit/wheel-racing.glb`
+- `car-kit/wheel-tractor-back.glb`
+- `car-kit/wheel-tractor-dark-back.glb`
+- `car-kit/wheel-tractor-dark-front.glb`
+- `car-kit/wheel-tractor-front.glb`
+- `city-kit-industrial/chimney-basic.glb`
+- `city-kit-industrial/chimney-large.glb`
+- `city-kit-industrial/solar-panel-flat.glb`
+- `city-kit-industrial/solar-panel-landscape.glb`
+- `city-kit-industrial/solar-panel-portrait-group.glb`
+- `city-kit-industrial/solar-panel-portrait.glb`
+- `city-kit-industrial/windmill-low.glb`
+- `city-kit-industrial/windmill.glb`
+- `city-kit-roads/bridge-pillar.glb`
+- `city-kit-roads/electricity-side-single.glb`
+- `city-kit-roads/electricity-side-wide.glb`
+- `city-kit-roads/light-curved-cross.glb`
+- `city-kit-roads/light-square-cross.glb`
+- `city-kit-roads/light-square-double.glb`
+- `city-kit-roads/road-bend-barrier.glb`
+- `city-kit-roads/road-bend-sidewalk.glb`
+- `city-kit-roads/road-bend-square-barrier.glb`
+- `city-kit-roads/road-bend-square.glb`
+- `city-kit-roads/road-crossroad-barrier.glb`
+- `city-kit-roads/road-crossroad-line.glb`
+- `city-kit-roads/road-crossroad-path.glb`
+- `city-kit-roads/road-curve-barrier.glb`
+- `city-kit-roads/road-curve-intersection-barrier.glb`
+- `city-kit-roads/road-curve-intersection.glb`
+- `city-kit-roads/road-curve-pavement.glb`
+- `city-kit-roads/road-driveway-double-barrier.glb`
+- `city-kit-roads/road-driveway-double.glb`
+- `city-kit-roads/road-driveway-single-barrier.glb`
+- `city-kit-roads/road-end-barrier.glb`
+- `city-kit-roads/road-end-round-barrier.glb`
+- `city-kit-roads/road-intersection-barrier.glb`
+- `city-kit-roads/road-intersection-line.glb`
+- `city-kit-roads/road-intersection-path.glb`
+- `city-kit-roads/road-roundabout-barrier.glb`
+- `city-kit-roads/road-side-barrier.glb`
+- `city-kit-roads/road-side-entry-barrier.glb`
+- `city-kit-roads/road-side-exit-barrier.glb`
+- `city-kit-roads/road-sign-object-stop.glb`
+- `city-kit-roads/road-sign-object-street.glb`
+- `city-kit-roads/road-sign-object-warning.glb`
+- `city-kit-roads/road-slant-barrier.glb`
+- `city-kit-roads/road-slant-curve-barrier.glb`
+- `city-kit-roads/road-slant-curve.glb`
+- `city-kit-roads/road-slant-flat-curve.glb`
+- `city-kit-roads/road-slant-flat-high.glb`
+- `city-kit-roads/road-slant-flat.glb`
+- `city-kit-roads/road-slant-high-barrier.glb`
+- `city-kit-roads/road-slant-high.glb`
+- `city-kit-roads/road-slant.glb`
+- `city-kit-roads/road-split-barrier.glb`
+- `city-kit-roads/road-square-barrier.glb`
+- `city-kit-roads/road-straight-barrier-end.glb`
+- `city-kit-roads/road-straight-barrier-half.glb`
+- `city-kit-roads/sign-highway.glb`
+- `city-kit-roads/tile-slant.glb`
+- `city-kit-roads/tile-slantHigh.glb`
+- `city-kit-roads/traffic-light-object-hanging.glb`
+- `city-kit-roads/traffic-light-object-horizontal.glb`
+- `city-kit-roads/traffic-light-object-vertical.glb`
+- `city-kit-suburban/path-short.glb`
+- `city-kit-suburban/path-stones-long.glb`
+- `city-kit-suburban/path-stones-short.glb`

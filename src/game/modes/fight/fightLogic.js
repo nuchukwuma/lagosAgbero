@@ -4,6 +4,10 @@
 //
 // Moves: punch, kick, special ("Lagos Roundabout"), block (hold), dodge
 // (quick backstep with a moment of no-hit). Hits fill the special meter.
+// Combos: clean hits landed close together count up (x2, x3...) and each
+// step hits harder. Being blocked or dodged, or waiting too long, breaks
+// the chain. Only the player's chain adds damage (the opponent's power
+// already scales with difficulty).
 
 export const MOVES = {
   punch: { startup: 0.2, active: 0.12, recover: 0.3, range: 1.45, dmg: 8, anim: 'punch', animSpeed: 2.2 },
@@ -17,9 +21,12 @@ const STUN_TIME = 0.38
 const MIN_GAP = 0.85
 const ARENA = 5.5 // metres either side of the centre
 const BLOCK_FACTOR = 0.2
+export const COMBO_WINDOW = 1.6 // seconds to land the next hit
+const COMBO_BONUS = 0.15 // extra damage per step after the first
+const COMBO_MAX = 5
 
 function fighter(x, hp) {
-  return { x, hp, maxHp: hp, action: null, blocking: false, dodgeT: 0, dodgeCd: 0, stunT: 0, special: 0, moving: 0, ai: { think: 0.6, blockT: 0, move: 0 } }
+  return { x, hp, maxHp: hp, action: null, blocking: false, dodgeT: 0, dodgeCd: 0, stunT: 0, special: 0, moving: 0, combo: 0, comboT: 0, ai: { think: 0.6, blockT: 0, move: 0 } }
 }
 
 /**
@@ -66,11 +73,16 @@ function resolveHit(state, attacker, defender, who, power) {
   if (dist > m.range) return
   attacker.action.hit = true
   if (defender.dodgeT > 0) {
+    attacker.combo = 0
     state.events.push({ type: 'dodged', who })
     return
   }
   const blocked = defender.blocking && attacker.action.type !== 'special'
-  const dmg = Math.round(m.dmg * power * (blocked ? BLOCK_FACTOR : 1))
+  // a clean hit soon after the last one continues the chain
+  attacker.combo = blocked ? 0 : Math.min(COMBO_MAX, attacker.comboT > 0 ? attacker.combo + 1 : 1)
+  attacker.comboT = blocked ? 0 : COMBO_WINDOW
+  const chain = who === 'player' ? 1 + Math.max(0, attacker.combo - 1) * COMBO_BONUS : 1
+  const dmg = Math.round(m.dmg * power * chain * (blocked ? BLOCK_FACTOR : 1))
   defender.hp = Math.max(0, defender.hp - dmg)
   attacker.special = Math.min(100, attacker.special + dmg * 2.2)
   defender.special = Math.min(100, defender.special + dmg * 1.2)
@@ -80,7 +92,7 @@ function resolveHit(state, attacker, defender, who, power) {
     const dir = Math.sign(defender.x - attacker.x) || 1
     defender.x += dir * (attacker.action.type === 'special' ? 1.2 : 0.35)
   }
-  state.events.push({ type: blocked ? 'blocked' : 'hit', who, move: attacker.action.type, dmg })
+  state.events.push({ type: blocked ? 'blocked' : 'hit', who, move: attacker.action.type, dmg, combo: attacker.combo })
 }
 
 function think(state, dt, rng) {
@@ -122,6 +134,8 @@ export function stepFight(state, input, dt, rng = Math.random) {
     f.stunT = Math.max(0, f.stunT - dt)
     f.dodgeT = Math.max(0, f.dodgeT - dt)
     f.dodgeCd = Math.max(0, f.dodgeCd - dt)
+    f.comboT = Math.max(0, f.comboT - dt)
+    if (f.comboT <= 0) f.combo = 0
     if (f.action) {
       f.action.t += dt
       if (f.action.t >= total(MOVES[f.action.type])) f.action = null

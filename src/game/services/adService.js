@@ -11,6 +11,14 @@ export const ADS_PER_DAY = 3
 export const REWARDS = {
   radioJingle: { label: 'Listen to Baba Radio\'s sponsor jingle', reward: { money: 500 }, rewardText: '+₦500' },
   garbaTea: { label: 'Help Mallam Garba test a "new" tea advert', reward: { energy: 15 }, rewardText: '+15 energy' },
+  // for the stories away from Iyana-Wahala (no Baba Radio, no energy meter)
+  sponsorRadio: { label: "Listen to a sponsor's jingle on a neighbour's radio", reward: { money: 500 }, rewardText: '+₦500' },
+}
+
+/** Which favour to offer: energy only where the story has an energy meter. */
+export function pickPlacement(campaign, roll = Math.random()) {
+  if (!campaign?.features?.energy) return 'sponsorRadio'
+  return roll < 0.5 ? 'radioJingle' : 'garbaTea'
 }
 
 const SPONSORS = [

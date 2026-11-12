@@ -84,7 +84,7 @@ export default function FightDirector({ playerLook }) {
       hudTimer.current -= dt
       if (hudTimer.current <= 0 || taken || dealt) {
         hudTimer.current = 0.1
-        useFight.setState({ hud: { php: f.p.hp, pmax: f.p.maxHp, ohp: f.o.hp, omax: f.o.maxHp, special: f.p.special, name: profile.name } })
+        useFight.setState({ hud: { php: f.p.hp, pmax: f.p.maxHp, ohp: f.o.hp, omax: f.o.maxHp, special: f.p.special, name: profile.name, combo: f.p.combo } })
       }
       if (f.over && !endScheduled.current) {
         endScheduled.current = true

@@ -62,4 +62,55 @@ describe('fight', () => {
     expect(createFight(idleOpponent, { energy: 100 }).p.maxHp).toBeGreaterThan(createFight(idleOpponent, { energy: 10 }).p.maxHp)
     expect(createFight(idleOpponent, { notoriety: 80 }).o.maxHp).toBeGreaterThan(createFight(idleOpponent).o.maxHp)
   })
+
+  it('clean hits close together build a combo that hits harder', () => {
+    const s = createFight({ hp: 200, aggression: 0, block: 0 })
+    const hits = []
+    for (let n = 0; n < 3; n++) {
+      s.p.x = -0.6
+      s.o.x = 0.6
+      const before = s.o.hp
+      stepFight(s, { punch: true }, 1 / 30, () => 0.99)
+      run(s, () => ({}), 0.7)
+      hits.push(before - s.o.hp)
+    }
+    expect(s.p.combo).toBe(3)
+    expect(hits[0]).toBe(8)
+    expect(hits[1]).toBeGreaterThan(hits[0])
+    expect(hits[2]).toBeGreaterThan(hits[1])
+    run(s, () => ({}), 2) // wait too long: the chain is gone
+    expect(s.p.combo).toBe(0)
+  })
+
+  it('trading blows keeps your combo; the opponent gets no combo bonus', () => {
+    const s = createFight({ hp: 200, aggression: 1, block: 0 })
+    s.p.combo = 3
+    s.p.comboT = 5
+    s.p.x = -0.6
+    s.o.x = 0.6
+    const losses = []
+    let last = s.p.hp
+    for (let t = 0; t < 3; t += 1 / 30) {
+      stepFight(s, {}, 1 / 30, () => 0.1)
+      if (s.p.hp < last) losses.push(last - s.p.hp)
+      last = s.p.hp
+    }
+    expect(losses.length).toBeGreaterThan(1)
+    expect(s.p.combo).toBe(3)
+    expect(Math.max(...losses.filter((d) => d === losses[0]))).toBe(losses[0]) // same move, same damage every time
+    expect(s.o.combo).toBeGreaterThan(1)
+  })
+
+  it('a blocked hit breaks the combo', () => {
+    const s = createFight({ hp: 200, aggression: 0, block: 0 })
+    s.p.combo = 3
+    s.p.comboT = 5
+    s.p.x = -0.6
+    s.o.x = 0.6
+    s.o.blocking = true
+    s.o.ai.blockT = 2
+    stepFight(s, { punch: true }, 1 / 30, () => 0.99)
+    run(s, () => ({}), 0.5)
+    expect(s.p.combo).toBe(0)
+  })
 })

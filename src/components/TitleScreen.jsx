@@ -26,11 +26,6 @@ export default function TitleScreen({ onNavigate, onContinue }) {
       <div className="title-block">
         <h1>AREA BOY</h1>
         <p className="tagline">Owo da? Na street go teach you.</p>
-        {found > 0 && (
-          <p className="endings-found">
-            Endings found {found}/{total}
-          </p>
-        )}
       </div>
       <div className="menu">
         {hasSave && (
@@ -46,6 +41,9 @@ export default function TitleScreen({ onNavigate, onContinue }) {
             Load
           </button>
         )}
+        <button className="btn" onClick={() => onNavigate('endings')}>
+          Endings {found}/{total}
+        </button>
         <button className="btn" onClick={() => onNavigate('about')}>
           About
         </button>

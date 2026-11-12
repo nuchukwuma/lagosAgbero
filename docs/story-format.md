@@ -724,3 +724,18 @@ The initiation quiz screen with an exam bank from `quizzes.json`:
 
 Questions are drawn at random from the bank. `maxWrong` wrong answers mean
 `failed`. The CGPA stat takes two decimals and is shown with `{stat:cgpa}`.
+
+## Small things worth knowing
+
+- **Ending hints.** Each ending in `endings.json` can carry a `"hint"`. The
+  Endings page on the title screen shows it until the player reaches that
+  ending. Keep hints short and vague: a direction, not a walkthrough.
+- **Idle gestures.** An NPC's `"anim"` in world JSON can be any clip name.
+  `"preach"` (arms wide, then one arm up) suits pastors, the dibia and
+  politicians. Whoever is speaking still switches to `talk` or `argue`.
+- **Fight combos.** Clean hits landed within 1.6 seconds of each other
+  count up (x2, x3… up to x5), and each step adds 15% damage. A blocked or
+  dodged hit, or waiting too long, resets the count. Opponents get no combo
+  bonus; their power already scales with `difficulty`.
+- **Favours** (the optional sponsor button in free roam) only offer energy
+  in campaigns with `features.energy`.

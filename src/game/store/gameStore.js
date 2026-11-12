@@ -17,6 +17,7 @@ import { checkCondition } from '../narrative/conditions.js'
 import { useWorldStore } from '../world/worldState.js'
 import { styleOf, styleFlags, costOf, ownedAfter } from '../systems/wardrobe.js'
 import { campaignById, campaignOf, chapterCampaign } from '../narrative/campaigns.js'
+import { collectFind } from '../systems/finds.js'
 
 let toastId = 0
 
@@ -183,6 +184,16 @@ export const useGameStore = create((set, get) => {
       set((s) => ({ game: next, toasts: [...s.toasts, { id: ++toastId, text: r.message }].slice(-4) }))
       saveGame('auto', next, summaryOf(next, get().view))
       return null
+    },
+
+    /** Free roam: the player walked over a street find (a note, a sachet of water...). */
+    pickUpFind: (find, layoutId) => {
+      const { game } = get()
+      const r = game && collectFind(find, layoutId, game)
+      if (!r) return false
+      const next = { ...applyEffects(game, r.effects).state, finds: r.finds }
+      set((s) => ({ game: next, toasts: [...s.toasts, { id: ++toastId, text: r.text }].slice(-4) }))
+      return true
     },
 
     /** Wardrobe: pay for new things, change the look, nickname and style flags. */

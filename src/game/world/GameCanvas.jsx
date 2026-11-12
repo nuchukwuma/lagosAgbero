@@ -34,6 +34,7 @@ import { LOW_ENERGY } from '../systems/energy.js'
 import VendorTracker from './VendorTracker.jsx'
 import ActivityTracker from './ActivityTracker.jsx'
 import QuestTracker from './QuestTracker.jsx'
+import Pickups from './Pickups.jsx'
 import { getLayout } from './worlds.js'
 
 // The 3D street behind the story. The story view decides:
@@ -69,7 +70,7 @@ function useSceneTeleport(view, layout) {
 
 // Fetch the clips everyone uses straight away, so nobody pops from the
 // fallback pose into breathing/walking a second later.
-const COMMON_CLIPS = ['breathingIdle', 'walk', 'run', 'talk', 'argue']
+const COMMON_CLIPS = ['breathingIdle', 'walk', 'run', 'talk', 'argue', 'pickUp']
 
 export default function GameCanvas({ view, game, activity = null, paused = false, onGoalReached }) {
   const layout = getLayout(view.world) // Iyana-Wahala, the village, the campus...
@@ -135,6 +136,7 @@ export default function GameCanvas({ view, game, activity = null, paused = false
           {freeRoam && <VendorTracker />}
           {freeRoam && <ActivityTracker layout={layout} game={game} />}
           {freeRoam && <QuestTracker key={`quests-${layout.id}`} game={game} />}
+          {freeRoam && <Pickups layout={layout} game={game} />}
           <group userData={{ tag: 'traffic' }}>
             {layout.raw.traffic !== false && <Traffic key={`traffic-${layout.id}`} density={layout.raw.traffic?.density ?? 3} paused={paused} raining={Boolean(game.flags.raining)} />}
           </group>

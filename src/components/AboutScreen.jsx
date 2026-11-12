@@ -17,8 +17,8 @@ export default function AboutScreen({ onBack }) {
         </p>
         <h3>Credits</h3>
         <p>City, vehicles and props: Kenney (kenney.nl), CC0.</p>
-        <p>People and the bus: Quaternius (quaternius.com), CC0.</p>
-        <p>Animations: Mixamo (Adobe).</p>
+        <p>People, the bus, trees, bushes and rocks: Quaternius (quaternius.com), CC0.</p>
+        <p>Animations: Mixamo (Adobe) and Quaternius.</p>
       </div>
       <SupportBlock />
       <button className="btn" onClick={onBack}>

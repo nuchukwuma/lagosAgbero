@@ -59,11 +59,15 @@ async function main() {
     }
     for (const [k, b] of Object.entries(m.CHARACTER.bodies)) charFile(`body: ${k}`, b.file, `Outfit body (${b.source}); parts: ${b.parts.map((p) => p.name).join(', ')}`)
     for (const [k, e] of Object.entries(m.EXTRA_MODELS)) charFile(`extra: ${k}`, e.file, k === 'bus' ? 'Molue / BRT-style bus (Kenney has no bus)' : '')
-    lines.push('', '## Retargeted Mixamo animations', '', '`npm run assets:animations` builds these from your Mixamo FBX files.', '', '| Clip | Source file | Length | Loop | Root motion | Download | Planned use |', '|---|---|---|---|---|---|---|')
+    lines.push('', '## Retargeted animations', '', '`npm run assets:animations` builds these from the Mixamo FBX files and the Quaternius RPG pack (`Cleric.fbx`).', '', '| Clip | Source file | Length | Loop | Root motion | Download | Planned use |', '|---|---|---|---|---|---|---|')
     for (const [k, c] of Object.entries(m.CHARACTER.clips)) {
       const p = path.join(PUBLIC_ASSETS, c.file)
       lines.push(`| \`${k}\` | ${c.source} | ${c.duration.toFixed(2)} s | ${c.loop ? 'yes' : 'no'} | ${c.rootMotion.speed} m/s | ${fs.existsSync(p) ? kb(fs.statSync(p).size) : 'MISSING'} | ${c.use} |`)
     }
+    // nature models baked into the merged scenery (no file of their own to download)
+    const nature = JSON.parse(fs.readFileSync(path.join(ROOT, 'src/assets/natureMeshes.json'), 'utf8'))
+    lines.push('', '## Baked nature models', '', '`npm run assets:nature` bakes these from the Quaternius nature pack into `src/assets/natureMeshes.json`. World JSON uses them through the prop kinds `tree`, `bush`, `rock` and `grassTuft`.', '', '| Model | Triangles | Height |', '|---|---|---|')
+    for (const [k, n] of Object.entries(nature)) lines.push(`| \`${k}\` | ${n.part.length} | ${n.h} m |`)
     lines.push('', '## Built in code (no model of their own)', '', '| Name | Uses | How |', '|---|---|---|')
     for (const [k, v] of Object.entries(m.PROCEDURAL)) lines.push(`| \`${k}\` | ${v.parts.map((p) => `\`${p}\``).join(', ') || '—'} | ${v.use} |`)
     lines.push('', '## GLB files on disk not used yet', '', unusedGlb.length ? unusedGlb.map((f) => `- \`${f}\``).join('\n') : '_none_', '')

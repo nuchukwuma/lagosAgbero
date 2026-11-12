@@ -58,9 +58,27 @@ copies):
 | `spots` | Named places the story uses: `location`, `goal.reach` |
 | `npcs` | Story characters. `"if": "flag"` controls when they appear. |
 | `extras` | Background people with a random look (`seed`) |
-| `placed` | Hand-placed props from the city palette (palm trees, yam barns, the shrine, goal posts, notice boards, the gatehouse…) |
+| `placed` | Hand-placed props from the city palette: `{ "kind": "tree", "at": [x, z, rotation], "seed": 4 }`. Kinds include `tree`, `bush`, `rock`, `grassTuft`, `palmTree`, `yamBarn`, `shrine`, `goalPost`, `noticeBoard`, `gatehouse`. |
+| `clutter` | Zones filled at random (but the same every time): `{ "rect": [x, z, width, depth], "count": 12, "seed": 40, "kinds": ["bush", "grassTuft", "rock", "tree"] }`. A kind listed twice is twice as likely. Nothing lands inside a building or on a story spot. |
 | `treeline` | Rings of trees round the edge, so the bush or the campus fades out instead of ending |
 | `traffic` | `{ "density": 3 }` for moving cars, or `false` for none (the village) |
 
 The layout test (`npm test`) checks that every spot is walkable and every
 model exists.
+
+## Trees, bushes, rocks and grass
+
+`tree`, `bush`, `rock` and `grassTuft` come from a low-poly nature pack. They
+are baked into the same merged, vertex-coloured scenery as the kiosks and
+umbrellas (`npm run assets:nature`), so a forest costs triangles but no
+extra draw calls. Leaf colours vary per tree. `treeline` rings mix palms,
+these trees and big shrubs. On budget phones, watch the triangle count: a
+tree is 400–750 triangles, a bush about 100, a grass clump 172.
+
+## Street finds
+
+During free roam, six small finds (a naira note, a sachet of water, a lost
+ID card) lie near the named `spots` of the world, never inside a building.
+They change with the day and the chapter. What they are and what they give
+is in `src/game/data/finds.json`; a kind can be limited to some campaigns
+with `"campaigns": ["grace"]`.

@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useGameStore } from '../../game/store/gameStore.js'
 import Icon from '../Icon.jsx'
-import { canOfferAd, showRewardedAd, REWARDS, ADS_PER_DAY, useAd } from '../../game/services/adService.js'
+import { canOfferAd, showRewardedAd, REWARDS, ADS_PER_DAY, useAd, pickPlacement } from '../../game/services/adService.js'
+import { campaignOf } from '../../game/narrative/campaigns.js'
 
 // An optional favour during free roam (a mock rewarded ad in costume).
 export default function FavourButton({ view, activity, overlay }) {
@@ -9,8 +10,9 @@ export default function FavourButton({ view, activity, overlay }) {
   const grantFavour = useGameStore((s) => s.grantFavour)
   const playing = useAd((s) => s.playing)
   const adsToday = game?.ads?.day === game?.stats.day ? game.ads.count : 0
-  const [placement] = useState(() => (Math.random() < 0.5 ? 'radioJingle' : 'garbaTea'))
+  const [roll] = useState(() => Math.random())
   if (!game || playing || !canOfferAd({ view, activity, overlay, adsToday })) return null
+  const placement = pickPlacement(campaignOf(game), roll)
   const r = REWARDS[placement]
   return (
     <button

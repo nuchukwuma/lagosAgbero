@@ -94,7 +94,7 @@ export default function FightMode({ params, onFinish }) {
     return (
       <div className="fee-intro">
         <h2>Fight! {fight.hud.name}</h2>
-        <p>Punch, kick, block and dodge. Land hits to fill your meter, then unleash the <strong>Lagos Roundabout</strong>.</p>
+        <p>Punch, kick, block and dodge. Land hits to fill your meter, then unleash the <strong>Lagos Roundabout</strong>. Hits landed close together build a <strong>combo</strong>: each one hits harder.</p>
         <p className="muted">{touch ? (
             <span className="icon-legend">
               <Icon name="fist" size={18} /> punch <Icon name="boot" size={18} /> kick <Icon name="shield" size={18} /> block (hold) <Icon name="dodge" size={18} /> dodge <Icon name="bolt" size={18} /> special
@@ -120,7 +120,7 @@ export default function FightMode({ params, onFinish }) {
       </div>
     )
 
-  const { php, pmax, ohp, omax, special, name } = fight.hud
+  const { php, pmax, ohp, omax, special, name, combo = 0 } = fight.hud
   return (
     <>
       <div className="fight-hud">
@@ -128,6 +128,11 @@ export default function FightMode({ params, onFinish }) {
         <div className="fight-vs">VS</div>
         <Bar value={ohp} max={omax} color="#e2553a" label={name} right />
       </div>
+      {combo >= 2 && (
+        <div className="fight-combo" key={combo}>
+          x{combo} <small>COMBO</small>
+        </div>
+      )}
       <div className="fight-special">
         <div style={{ width: `${special}%` }} className={special >= 100 ? 'full' : ''} />
         <span>{special >= 100 ? 'SPECIAL READY!' : 'Special'}</span>

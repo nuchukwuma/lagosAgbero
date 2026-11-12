@@ -22,7 +22,8 @@
       },
       "At 5:40 a.m. a boy steps off the night bus with a phone on 3% battery. Somebody who is definitely not a conductor walks towards him.",
       "You stand up. \"Oya. Come here, JJC.\""
-    ]
+    ],
+    "hint": "Earn Baba Ticket's chair, or take it."
   },
   "cult_boss": {
     "title": "Cult Boss",
@@ -40,7 +41,8 @@
       },
       "You sit. The chair is warm. Outside, the Hyenas are quiet, and the junction pays its dues on time.",
       "Your first official act is to sign Form T-12 for a nervous boy with a phone on 3% battery. Nine pages. In triplicate."
-    ]
+    ],
+    "hint": "Rise through the Shell and win the war."
   },
   "wanted": {
     "title": "Wanted",
@@ -62,7 +64,8 @@
         "text": "Your phone buzzes. Iya Bọ́sẹ̀. You let it ring all the way to Ogun State."
       },
       "Formula One laughs into the wind. For the first time since you arrived, so do you."
-    ]
+    ],
+    "hint": "Let the police heat run hot, and make the wrong enemies."
   },
   "legit_businessman": {
     "title": "Legit Businessman",
@@ -90,7 +93,8 @@
       },
       "Your drivers pay one fair fee to one co-operative and nobody else.",
       "Some mornings you still wake up at 5:40, ready to run."
-    ]
+    ],
+    "hint": "Save your hustle money and stay clear of the cults."
   },
   "informant": {
     "title": "The Informant",
@@ -114,7 +118,8 @@
       },
       "The food here is fine. It is just... fine. You would sell your new name for one plate of Mama Put's ewa agoyin.",
       "At night you call out bus stops in your sleep. The guard has started answering."
-    ]
+    ],
+    "hint": "Give Commander Bassey what he wants."
   },
   "rock_bottom": {
     "title": "Rock Bottom",
@@ -135,7 +140,8 @@
       "Your phone rings. It's Mama. You don't have the strength to lie any more.",
       "\"{name}, come home. We go find the money together. Market women no dey kill person. Dem just dey talk until you wish dem kill you.\"",
       "You laugh. It hurts. You laugh anyway."
-    ]
+    ],
+    "hint": "Walk away with nothing."
   },
   "jailed": {
     "title": "Jailed",
@@ -159,7 +165,8 @@
       },
       "Your case file is on a desk somewhere, under nine other case files.",
       "Outside, somebody else is calling your stop."
-    ]
+    ],
+    "hint": "Be the hottest name on the street when the Sweep comes."
   },
   "go_home": {
     "title": "Go Home",
@@ -183,7 +190,8 @@
         "text": "Professor sends a voice note: \"Rule number one hundred: go home while home is still there. Well done, my son.\""
       },
       "That night the whole town eats. Nobody mentions Double-Double. Everybody mentions it the next morning."
-    ]
+    ],
+    "hint": "Pay every naira. Keep your hands and your friendships clean."
   },
   "the_honourable": {
     "title": "The Honourable",
@@ -196,7 +204,8 @@
       "You stare at the bags for a long time.",
       "Then you sign for them.",
       "The cycle continues."
-    ]
+    ],
+    "hint": "Expose the right man, in front of the right crowd."
   },
   "_fates": [
     {
@@ -556,7 +565,8 @@
       },
       "It is not much money. It is yours.",
       "Grace, it turns out, is not the opposite of grass. It's what grows on it when you stop burning the field."
-    ]
+    ],
+    "hint": "Come home with a clean conscience and no debts."
   },
   "grace_unbound": {
     "title": "Unbound",
@@ -582,7 +592,8 @@
       },
       "The money goes with the page. All of it. The Benz won't start. The house in Zone 5 belongs to someone else's cousin now.",
       "You are poor, and free, and the drums are very loud."
-    ]
+    ],
+    "hint": "Find out how the book's hold is broken."
   },
   "grace_witness": {
     "title": "The Witness",
@@ -607,7 +618,8 @@
         "if": "savedIke",
         "text": "Ike testifies by video from a country with good weather. At the end, for the first time in years, he laughs. The judge has to call for order."
       }
-    ]
+    ],
+    "hint": "Tell the truth to the one man who has been following the Chief."
   },
   "grace_goldenCage": {
     "title": "Golden Cage",
@@ -632,7 +644,8 @@
         "text": "Sometimes you think you see Ike at the gate. It's always the gardener."
       },
       "Outside, Lagos laughs at something. The sound doesn't reach the house."
-    ]
+    ],
+    "hint": "Come home rich."
   },
   "grace_whiteCloth": {
     "title": "The White Cloth",
@@ -643,7 +656,8 @@
       "A year later you sit in the white room. A boy from a village you've never heard of sits in the white chair. His eyes are hungry.",
       "You ask him who he loves most in the world.",
       "You don't laugh. You can't remember when you stopped."
-    ]
+    ],
+    "hint": "Let the fellowship keep its hold on you."
   },
   "grace_prodigal": {
     "title": "The Prodigal",
@@ -683,7 +697,8 @@
         "text": "At Chinwe's wedding you dance at the back, badly, and nobody minds."
       },
       "On the third morning, Dibia Ọ̀kwụ̀ walks past your door and nods. Not approval. Recognition. That's enough to start with."
-    ]
+    ],
+    "hint": "Come home with nothing but yourself."
   },
   "_fates_grace": [
     {
@@ -871,7 +886,8 @@
         "text": "Half the students you tutored come to shake your hand. One of them cries."
       },
       "You did it without one bought mark. Royal Crest offers you a graduate assistant job. You take it, and you're strict about handouts."
-    ]
+    ],
+    "hint": "Ace your exams without buying a single mark."
   },
   "u_graduate": {
     "title": "Somtochukwu, Son of the Pap Seller",
@@ -891,7 +907,8 @@
         "text": "The cafeteria still sells your akara. They put your name on it. It's spelled wrong."
       },
       "It isn't a first class. It's a degree with your real name on it, and the right woman in the crowd."
-    ]
+    ],
+    "hint": "Let Mama stand beside you where everyone can see."
   },
   "u_goldenLie": {
     "title": "The Golden Lie",
@@ -915,7 +932,8 @@
         "text": "Mama went home on the first danfo. She didn't wait for the photos."
       },
       "Five years later you have a house in Lekki, a job you hate and a story you can never stop telling."
-    ]
+    ],
+    "hint": "Never tell anyone the truth."
   },
   "u_viral": {
     "title": "The Story",
@@ -936,7 +954,8 @@
         "text": "You collect your certificate a week later, in an office, with no crowd. You don't mind."
       },
       "Three universities set up sexual-harassment panels that summer. A journalism school offers you a place. Ife takes the other one."
-    ]
+    ],
+    "hint": "Help Ife, keep the evidence, and put your name on it."
   },
   "u_donsCapo": {
     "title": "Capo",
@@ -948,7 +967,8 @@
         "text": "Spike carries your bag now. He hates it. He does it."
       },
       "The money is good. The nights are long. Every new student who reaches the gate reminds you of yourself in first year. You stop looking at their faces."
-    ]
+    ],
+    "hint": "Say yes to the Dons, every time."
   },
   "u_bigMansBoy": {
     "title": "The Honourable's Boy",
@@ -960,7 +980,8 @@
         "text": "The scholarship he gave you was never free. Now you know the price: everything you'll ever say."
       },
       "Tamara's mother loses the election by four thousand votes. You know which four thousand. You were there."
-    ]
+    ],
+    "hint": "Take the politician's money and do what he asks."
   },
   "u_dubai": {
     "title": "Cotonou",
@@ -976,7 +997,8 @@
         "text": "The Task Force has your photo. Dubai is somewhere in Ghana. He doesn't answer your calls."
       },
       "You send Mama money every month through three different agents. She never asks where it comes from. She never spends it."
-    ]
+    ],
+    "hint": "Take Dubai's last job, and outrun what follows."
   },
   "u_expelled": {
     "title": "Expelled",
@@ -988,7 +1010,8 @@
         "text": "The leaked paper cost you four years. It was worth ₦20,000."
       },
       "Mama meets you at the bus stop. She doesn't ask. She hands you a cup of pap and a tray of akara. 'Help me sell,' she says. You do."
-    ]
+    ],
+    "hint": "Get caught where the panel can see."
   },
   "u_cell": {
     "title": "Remand",
@@ -1000,7 +1023,8 @@
         "text": "Tobi visits every month. He brings suya and the latest campus gossip. He never mentions Bonny Deep Energy."
       },
       "When you finally walk out, the danfo to Iyana-Wahala costs ₦300 more than it used to. Everything does."
-    ]
+    ],
+    "hint": "Take Dubai's job, and don't run fast enough."
   },
   "u_home": {
     "title": "Back to the Bus Stop",
@@ -1020,7 +1044,8 @@
         "text": "Tamara sent one message: 'Good luck, whoever you are.' You read it until the bus stop."
       },
       "Mama's stand is where it always was. The degree, or the lack of it, doesn't change the price of pap. You pick up a ladle."
-    ]
+    ],
+    "hint": "Leave with what you came with."
   },
   "_fates_campus": [
     {
