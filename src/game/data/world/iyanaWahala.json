@@ -2,131 +2,1258 @@
   "id": "iyanaWahala",
   "name": "Iyana-Wahala Bus Stop",
   "notes": "Metres. +X east, +Z south. Main road runs east-west along z=0. roadStraight runs along X at rotation 0. Item shorthand \"at\": [x, z, rotationDegrees, scale]. Rotation 0 = model as authored.",
-  "bounds": { "minX": -54, "maxX": 54, "minZ": -36, "maxZ": 38 },
-  "spawn": { "pos": [-14, -8], "facing": 180 },
-
-  "roads": [
-    { "model": "roadStraight", "rotation": 0, "line": { "from": [-92, 0], "to": [92, 0], "step": 8 }, "skip": [[28, 0], [-12, 0]] },
-    { "model": "roadCrossing", "rotation": 0, "at": [[-12, 0]] },
-    { "model": "roadJunctionT", "rotation": 0, "at": [[28, 0]] },
-    { "model": "roadStraight", "rotation": 90, "line": { "from": [28, 8], "to": [28, 40], "step": 8 } },
-    { "model": "pavedLot", "rotation": 0, "at": [[-46, -14], [-38, -14], [-30, -14], [-46, -22], [-38, -22], [-30, -22], [-46, -30], [-38, -30], [-30, -30]] }
-  ],
-
-  "pavements": [
-    { "rect": [-54, -8, 108, 4], "color": "#9b958c" },
-    { "rect": [-54, 4, 78, 4], "color": "#9b958c" },
-    { "rect": [32, 4, 22, 4], "color": "#9b958c" },
-    { "rect": [20, 8, 4, 30], "color": "#9b958c" },
-    { "rect": [32, 8, 4, 30], "color": "#9b958c" },
-    { "rect": [-6, -22, 12, 14], "color": "#7d7468" },
-    { "rect": [10, -34, 36, 26], "color": "#8a7a62" }
-  ],
-
-  "flyover": { "x": 0, "width": 10, "deckY": 6.6, "fromZ": -36, "toZ": 38, "pillars": [-11, 11, -27, 27] },
-
-  "props": [
-    { "model": "electricityPoleSingle", "scale": 1.5, "rotation": 0, "at": [[-50, -7], [-37, -7], [-24, -7], [14, -7], [27, -7], [40, -7], [52, -7]], "solid": true, "wires": "north" },
-    { "model": "electricityPoleSingle", "scale": 1.5, "rotation": 0, "at": [[-50, 7], [-37, 7], [-24, 7], [-11, 7], [14, 7], [40, 7], [52, 7]], "solid": true, "wires": "south" },
-    { "model": "streetLamp", "scale": 1.2, "rotation": 180, "at": [[-30, -4.6], [20, -4.6], [46, -4.6]] },
-    { "model": "streetLamp", "scale": 1.2, "rotation": 0, "at": [[-42, 4.6], [-18, 4.6], [8, 4.6], [36, 4.6]] },
-    { "model": "busStopSign", "scale": 1.3, "rotation": 0, "at": [[-11.5, -5.2]] },
-    { "model": "trafficLight", "scale": 1.3, "rotation": 0, "at": [[23.5, 4.6]] },
-    { "model": "dumpster", "rotation": 90, "at": [[9, -9.5], [-24, 9.5]], "solid": true },
-    { "model": "carton", "rotation": 15, "at": [[-3, -14], [-2.2, -14.6], [12.5, -9], [30, -9.6], [-7, 9.3]] },
-    { "model": "spareTyre", "rotation": 0, "at": [[-48, 9.4], [-47.4, 9.6], [-47.7, 10.2]] },
-    { "model": "treeLarge", "rotation": 0, "at": [[-46, 30], [-6, 34], [38, 9.5], [52, 34], [-52, -20]] },
-    { "model": "treeSmall", "rotation": 0, "at": [[12, 34], [-34, 36]] },
-    { "model": "cone", "rotation": 0, "at": [[-8, -3.4], [-5.5, -3.4]] },
-    { "model": "roofTank", "rotation": 0, "at": [[-30, 15.5], [-18, 15.5]] },
-    { "model": "planter", "rotation": 0, "at": [[40, 18], [40, 26]] }
-  ],
-
-  "buildings": [
-    { "model": "motorParkOffice", "rotation": 0, "at": [[-38, -31]], "solid": true },
-    { "model": "marketHall", "rotation": 0, "at": [[38, -25]], "solid": true },
-    { "model": "warehouseA", "rotation": 0, "at": [[50, -16]], "solid": true },
-    { "model": "shopRow", "rotation": 180, "at": [[-14, -16]], "solid": true },
-    { "model": "printingPress", "rotation": 0, "at": [[-52, -32]], "solid": true },
-    { "model": "shopHouseA", "rotation": 180, "at": [[-44, 13]], "solid": true },
-    { "model": "tenementA", "rotation": 180, "at": [[-32, 13]], "solid": true },
-    { "model": "tenementB", "rotation": 180, "at": [[-20, 13]], "solid": true },
-    { "model": "storeyHouseA", "rotation": 180, "at": [[12, 13]], "solid": true },
-    { "model": "tenementC", "rotation": 180, "at": [[-42, 27]], "solid": true },
-    { "model": "bungalowWide", "rotation": 180, "at": [[-26, 28]], "solid": true },
-    { "model": "mentorHouse", "rotation": 180, "at": [[-12, 27]], "solid": true },
-    { "model": "shopHouseB", "rotation": 90, "at": [[14, 27]], "solid": true },
-    { "model": "richManHouse", "rotation": 270, "at": [[46, 22]], "solid": true },
-    { "model": "compoundFence", "rotation": 90, "line": { "from": [38, 13], "to": [38, 31], "step": 3.8 }, "solid": true },
-    { "model": "compoundFence", "rotation": 0, "line": { "from": [40, 33], "to": [54, 33], "step": 3.8 }, "solid": true },
-    { "model": "compoundFence", "rotation": 0, "line": { "from": [40, 11], "to": [54, 11], "step": 3.8 }, "solid": true }
-  ],
-
-  "vehicles": [
-    { "model": "danfo", "rotation": 90, "at": [[-40, -18.5], [-32, -28]], "solid": true },
-    { "model": "danfo", "rotation": 0, "at": [[-46, -24], [-42, -24], [-34, -16]], "solid": true },
-    { "model": "taxi", "rotation": 0, "at": [[-30, -24]], "solid": true },
-    { "model": "lorry", "rotation": 270, "at": [[44, -10.5]], "solid": true },
-    { "model": "bigManSuv", "rotation": 180, "at": [[30, 22]], "solid": true }
-  ],
-
-  "stalls": [
-    { "id": "adaShop", "at": [22, -14, 0], "color": "#d9586b", "goods": "provisions", "sign": "ADA'S CORNER" },
-    { "id": "stall2", "at": [14, -14, 0], "color": "#3a8fd9", "goods": "fabric", "sign": "GOD DEY FABRICS" },
-    { "id": "stall3", "at": [30, -14, 0], "color": "#2f8f5b", "goods": "phones", "sign": "NO WAHALA PHONES" },
-    { "id": "stall4", "at": [14, -25, 0], "color": "#e67e22", "goods": "food", "sign": "PROVISIONS" },
-    { "id": "stall5", "at": [22, -25, 0], "color": "#8e44ad", "goods": "fabric", "sign": "OKRIKA PALACE" },
-    { "id": "mamaPut", "at": [-8, 10, 180], "color": "#c0392b", "goods": "food", "sign": "MAMA PUT BUKA", "small": true },
-    { "id": "radioStall", "at": [8, -10.5, 0], "color": "#7f8c8d", "goods": "radio", "small": true, "sign": "BABA RADIO" },
-    { "id": "teaTable", "at": [-6, -9.5, 0], "color": "#16a085", "goods": "tea", "small": true, "sign": "MAI SHAYI" }
-  ],
-
-  "signs": [
-    { "at": [-24, -9.5, 0], "y": 4.5, "size": [8, 3.2], "post": true, "bg": "#7a4fd9", "fg": "#ffffff", "lines": ["VOTE OWÓ ŃLÁ", "Forward Ever, Backward Sometimes", "FEP"] },
-    { "at": [52, -4, 270], "y": 4.5, "size": [7, 3], "post": true, "bg": "#c0392b", "fg": "#ffe08a", "lines": ["KONJI COLA", "E dey knack your tiredness!"] },
-    { "at": [0, -11.2, 0], "y": 5.4, "size": [7, 1], "bg": "#2f8f5b", "fg": "#ffffff", "lines": ["IYANA-WAHALA"] },
-    { "at": [0, 11.2, 180], "y": 5.4, "size": [7, 1], "bg": "#2f8f5b", "fg": "#ffffff", "lines": ["IYANA-WAHALA"] },
-    { "at": [-38, -24.9, 0], "y": 3.6, "size": [5, 0.9], "bg": "#1e6b43", "fg": "#ffe08a", "lines": ["U.M.P.B.A. MOTOR PARK"] },
-    { "at": [-16, -5.6, 0], "y": 2.7, "size": [4, 0.6], "bg": "#f2c300", "fg": "#1a1408", "lines": ["FRONT STOP"] }
-  ],
-
-  "shelters": [{ "at": [-16, -6, 0] }],
-
-  "spots": {
-    "arrival": { "pos": [-14, -5.8], "facing": 180 },
-    "frontStop": { "pos": [-16, -7], "facing": 180, "radius": 4 },
-    "backSide": { "pos": [6, -6], "facing": 200, "radius": 3.5 },
-    "underBridge": { "pos": [0, -15], "facing": 180, "radius": 4 },
-    "teaTable": { "pos": [-6, -7.6], "facing": 180, "radius": 2.5 },
-    "motorPark": { "pos": [-38, -20], "facing": 180, "radius": 5 },
-    "babaTicketOffice": { "pos": [-38, -22], "facing": 0, "radius": 3.5 },
-    "market": { "pos": [22, -10], "facing": 0, "radius": 5 },
-    "adaShop": { "pos": [22, -9.5], "facing": 0, "radius": 3 },
-    "mamaPut": { "pos": [-8, 8], "facing": 0, "radius": 3 },
-    "southStreet": { "pos": [-20, 8.5], "facing": 0, "radius": 4 },
-    "richStreet": { "pos": [28, 24], "facing": 90, "radius": 5 }
+  "bounds": {
+    "minX": -54,
+    "maxX": 54,
+    "minZ": -36,
+    "maxZ": 38
   },
-
-  "npcs": [
-    { "id": "professor", "pos": [4, -14.5], "facing": 180, "anim": "idle" },
-    { "id": "garba", "pos": [-6, -11], "facing": 180, "anim": "idle" },
-    { "id": "babaRadio", "pos": [8, -12.2], "facing": 180, "anim": "idle" },
-    { "id": "ada", "pos": [22, -10.5], "facing": 180, "anim": "idle" },
-    { "id": "babaTicket", "pos": [-38, -23.5], "facing": 180, "anim": "talk" },
-    { "id": "biodun", "pos": [-24.5, -4.6], "facing": 0, "anim": "idle" },
-    { "id": "mamaPut", "pos": [-8, 11.6], "facing": 0, "anim": "idle" },
-    { "id": "fakeConductor", "pos": [-12, -6.5], "facing": 270, "anim": "argue", "if": "!ch1_scammerGone" },
-    { "id": "sunday", "pos": [-20, -5.4], "facing": 180, "anim": "talk", "if": "ch1_metSunday" }
+  "spawn": {
+    "pos": [
+      -14,
+      -8
+    ],
+    "facing": 180
+  },
+  "roads": [
+    {
+      "model": "roadStraight",
+      "rotation": 0,
+      "line": {
+        "from": [
+          -92,
+          0
+        ],
+        "to": [
+          92,
+          0
+        ],
+        "step": 8
+      },
+      "skip": [
+        [
+          28,
+          0
+        ],
+        [
+          -12,
+          0
+        ]
+      ]
+    },
+    {
+      "model": "roadCrossing",
+      "rotation": 0,
+      "at": [
+        [
+          -12,
+          0
+        ]
+      ]
+    },
+    {
+      "model": "roadJunctionT",
+      "rotation": 0,
+      "at": [
+        [
+          28,
+          0
+        ]
+      ]
+    },
+    {
+      "model": "roadStraight",
+      "rotation": 90,
+      "line": {
+        "from": [
+          28,
+          8
+        ],
+        "to": [
+          28,
+          40
+        ],
+        "step": 8
+      }
+    },
+    {
+      "model": "pavedLot",
+      "rotation": 0,
+      "at": [
+        [
+          -46,
+          -14
+        ],
+        [
+          -38,
+          -14
+        ],
+        [
+          -30,
+          -14
+        ],
+        [
+          -46,
+          -22
+        ],
+        [
+          -38,
+          -22
+        ],
+        [
+          -30,
+          -22
+        ],
+        [
+          -46,
+          -30
+        ],
+        [
+          -38,
+          -30
+        ],
+        [
+          -30,
+          -30
+        ]
+      ]
+    }
   ],
-
+  "pavements": [
+    {
+      "rect": [
+        -54,
+        -8,
+        108,
+        4
+      ],
+      "color": "#9b958c"
+    },
+    {
+      "rect": [
+        -54,
+        4,
+        78,
+        4
+      ],
+      "color": "#9b958c"
+    },
+    {
+      "rect": [
+        32,
+        4,
+        22,
+        4
+      ],
+      "color": "#9b958c"
+    },
+    {
+      "rect": [
+        20,
+        8,
+        4,
+        30
+      ],
+      "color": "#9b958c"
+    },
+    {
+      "rect": [
+        32,
+        8,
+        4,
+        30
+      ],
+      "color": "#9b958c"
+    },
+    {
+      "rect": [
+        -6,
+        -22,
+        12,
+        14
+      ],
+      "color": "#7d7468"
+    },
+    {
+      "rect": [
+        10,
+        -34,
+        36,
+        26
+      ],
+      "color": "#8a7a62"
+    }
+  ],
+  "flyover": {
+    "x": 0,
+    "width": 10,
+    "deckY": 6.6,
+    "fromZ": -36,
+    "toZ": 38,
+    "pillars": [
+      -11,
+      11,
+      -27,
+      27
+    ]
+  },
+  "props": [
+    {
+      "model": "electricityPoleSingle",
+      "scale": 1.5,
+      "rotation": 0,
+      "at": [
+        [
+          -50,
+          -7
+        ],
+        [
+          -37,
+          -7
+        ],
+        [
+          -24,
+          -7
+        ],
+        [
+          14,
+          -7
+        ],
+        [
+          27,
+          -7
+        ],
+        [
+          40,
+          -7
+        ],
+        [
+          52,
+          -7
+        ]
+      ],
+      "solid": true,
+      "wires": "north"
+    },
+    {
+      "model": "electricityPoleSingle",
+      "scale": 1.5,
+      "rotation": 0,
+      "at": [
+        [
+          -50,
+          7
+        ],
+        [
+          -37,
+          7
+        ],
+        [
+          -24,
+          7
+        ],
+        [
+          -11,
+          7
+        ],
+        [
+          14,
+          7
+        ],
+        [
+          40,
+          7
+        ],
+        [
+          52,
+          7
+        ]
+      ],
+      "solid": true,
+      "wires": "south"
+    },
+    {
+      "model": "streetLamp",
+      "scale": 1.2,
+      "rotation": 180,
+      "at": [
+        [
+          -30,
+          -4.6
+        ],
+        [
+          20,
+          -4.6
+        ],
+        [
+          46,
+          -4.6
+        ]
+      ]
+    },
+    {
+      "model": "streetLamp",
+      "scale": 1.2,
+      "rotation": 0,
+      "at": [
+        [
+          -42,
+          4.6
+        ],
+        [
+          -18,
+          4.6
+        ],
+        [
+          8,
+          4.6
+        ],
+        [
+          36,
+          4.6
+        ]
+      ]
+    },
+    {
+      "model": "busStopSign",
+      "scale": 1.3,
+      "rotation": 0,
+      "at": [
+        [
+          -11.5,
+          -5.2
+        ]
+      ]
+    },
+    {
+      "model": "trafficLight",
+      "scale": 1.3,
+      "rotation": 0,
+      "at": [
+        [
+          23.5,
+          4.6
+        ]
+      ]
+    },
+    {
+      "model": "dumpster",
+      "rotation": 90,
+      "at": [
+        [
+          9,
+          -9.5
+        ],
+        [
+          -24,
+          9.5
+        ]
+      ],
+      "solid": true
+    },
+    {
+      "model": "carton",
+      "rotation": 15,
+      "at": [
+        [
+          -3,
+          -14
+        ],
+        [
+          -2.2,
+          -14.6
+        ],
+        [
+          12.5,
+          -9
+        ],
+        [
+          30,
+          -9.6
+        ],
+        [
+          -7,
+          9.3
+        ]
+      ]
+    },
+    {
+      "model": "spareTyre",
+      "rotation": 0,
+      "at": [
+        [
+          -48,
+          9.4
+        ],
+        [
+          -47.4,
+          9.6
+        ],
+        [
+          -47.7,
+          10.2
+        ]
+      ]
+    },
+    {
+      "model": "treeLarge",
+      "rotation": 0,
+      "at": [
+        [
+          -46,
+          30
+        ],
+        [
+          -6,
+          34
+        ],
+        [
+          38,
+          9.5
+        ],
+        [
+          52,
+          34
+        ],
+        [
+          -52,
+          -20
+        ]
+      ]
+    },
+    {
+      "model": "treeSmall",
+      "rotation": 0,
+      "at": [
+        [
+          12,
+          34
+        ],
+        [
+          -34,
+          36
+        ]
+      ]
+    },
+    {
+      "model": "cone",
+      "rotation": 0,
+      "at": [
+        [
+          -8,
+          -3.4
+        ],
+        [
+          -5.5,
+          -3.4
+        ]
+      ]
+    },
+    {
+      "model": "roofTank",
+      "rotation": 0,
+      "at": [
+        [
+          -30,
+          15.5
+        ],
+        [
+          -18,
+          15.5
+        ]
+      ]
+    },
+    {
+      "model": "planter",
+      "rotation": 0,
+      "at": [
+        [
+          40,
+          18
+        ],
+        [
+          40,
+          26
+        ]
+      ]
+    }
+  ],
+  "buildings": [
+    {
+      "model": "motorParkOffice",
+      "rotation": 0,
+      "at": [
+        [
+          -38,
+          -31
+        ]
+      ],
+      "solid": true
+    },
+    {
+      "model": "marketHall",
+      "rotation": 0,
+      "at": [
+        [
+          38,
+          -25
+        ]
+      ],
+      "solid": true
+    },
+    {
+      "model": "warehouseA",
+      "rotation": 0,
+      "at": [
+        [
+          50,
+          -16
+        ]
+      ],
+      "solid": true
+    },
+    {
+      "model": "shopRow",
+      "rotation": 180,
+      "at": [
+        [
+          -14,
+          -16
+        ]
+      ],
+      "solid": true
+    },
+    {
+      "model": "printingPress",
+      "rotation": 0,
+      "at": [
+        [
+          -52,
+          -32
+        ]
+      ],
+      "solid": true
+    },
+    {
+      "model": "shopHouseA",
+      "rotation": 180,
+      "at": [
+        [
+          -44,
+          13
+        ]
+      ],
+      "solid": true
+    },
+    {
+      "model": "tenementA",
+      "rotation": 180,
+      "at": [
+        [
+          -32,
+          13
+        ]
+      ],
+      "solid": true
+    },
+    {
+      "model": "tenementB",
+      "rotation": 180,
+      "at": [
+        [
+          -20,
+          13
+        ]
+      ],
+      "solid": true
+    },
+    {
+      "model": "storeyHouseA",
+      "rotation": 180,
+      "at": [
+        [
+          12,
+          13
+        ]
+      ],
+      "solid": true
+    },
+    {
+      "model": "tenementC",
+      "rotation": 180,
+      "at": [
+        [
+          -42,
+          27
+        ]
+      ],
+      "solid": true
+    },
+    {
+      "model": "bungalowWide",
+      "rotation": 180,
+      "at": [
+        [
+          -26,
+          28
+        ]
+      ],
+      "solid": true
+    },
+    {
+      "model": "mentorHouse",
+      "rotation": 180,
+      "at": [
+        [
+          -12,
+          27
+        ]
+      ],
+      "solid": true
+    },
+    {
+      "model": "shopHouseB",
+      "rotation": 90,
+      "at": [
+        [
+          14,
+          27
+        ]
+      ],
+      "solid": true
+    },
+    {
+      "model": "richManHouse",
+      "rotation": 270,
+      "at": [
+        [
+          46,
+          22
+        ]
+      ],
+      "solid": true
+    },
+    {
+      "model": "compoundFence",
+      "rotation": 90,
+      "line": {
+        "from": [
+          38,
+          13
+        ],
+        "to": [
+          38,
+          31
+        ],
+        "step": 3.8
+      },
+      "solid": true
+    },
+    {
+      "model": "compoundFence",
+      "rotation": 0,
+      "line": {
+        "from": [
+          40,
+          33
+        ],
+        "to": [
+          54,
+          33
+        ],
+        "step": 3.8
+      },
+      "solid": true
+    },
+    {
+      "model": "compoundFence",
+      "rotation": 0,
+      "line": {
+        "from": [
+          40,
+          11
+        ],
+        "to": [
+          54,
+          11
+        ],
+        "step": 3.8
+      },
+      "solid": true
+    }
+  ],
+  "vehicles": [
+    {
+      "model": "danfo",
+      "rotation": 90,
+      "at": [
+        [
+          -40,
+          -18.5
+        ],
+        [
+          -32,
+          -28
+        ]
+      ],
+      "solid": true
+    },
+    {
+      "model": "danfo",
+      "rotation": 0,
+      "at": [
+        [
+          -46,
+          -24
+        ],
+        [
+          -42,
+          -24
+        ],
+        [
+          -34,
+          -16
+        ]
+      ],
+      "solid": true
+    },
+    {
+      "model": "taxi",
+      "rotation": 0,
+      "at": [
+        [
+          -30,
+          -24
+        ]
+      ],
+      "solid": true
+    },
+    {
+      "model": "lorry",
+      "rotation": 270,
+      "at": [
+        [
+          44,
+          -10.5
+        ]
+      ],
+      "solid": true
+    },
+    {
+      "model": "bigManSuv",
+      "rotation": 180,
+      "at": [
+        [
+          30,
+          22
+        ]
+      ],
+      "solid": true
+    }
+  ],
+  "stalls": [
+    {
+      "id": "adaShop",
+      "at": [
+        22,
+        -14,
+        0
+      ],
+      "color": "#d9586b",
+      "goods": "provisions",
+      "sign": "ADA'S CORNER"
+    },
+    {
+      "id": "stall2",
+      "at": [
+        14,
+        -14,
+        0
+      ],
+      "color": "#3a8fd9",
+      "goods": "fabric",
+      "sign": "GOD DEY FABRICS"
+    },
+    {
+      "id": "stall3",
+      "at": [
+        30,
+        -14,
+        0
+      ],
+      "color": "#2f8f5b",
+      "goods": "phones",
+      "sign": "NO WAHALA PHONES"
+    },
+    {
+      "id": "stall4",
+      "at": [
+        14,
+        -25,
+        0
+      ],
+      "color": "#e67e22",
+      "goods": "food",
+      "sign": "PROVISIONS"
+    },
+    {
+      "id": "stall5",
+      "at": [
+        22,
+        -25,
+        0
+      ],
+      "color": "#8e44ad",
+      "goods": "fabric",
+      "sign": "OKRIKA PALACE"
+    },
+    {
+      "id": "mamaPut",
+      "at": [
+        -8,
+        10,
+        180
+      ],
+      "color": "#c0392b",
+      "goods": "food",
+      "sign": "MAMA PUT BUKA",
+      "small": true
+    },
+    {
+      "id": "radioStall",
+      "at": [
+        8,
+        -10.5,
+        0
+      ],
+      "color": "#7f8c8d",
+      "goods": "radio",
+      "small": true,
+      "sign": "BABA RADIO"
+    },
+    {
+      "id": "teaTable",
+      "at": [
+        -6,
+        -9.5,
+        0
+      ],
+      "color": "#16a085",
+      "goods": "tea",
+      "small": true,
+      "sign": "MAI SHAYI"
+    },
+    {
+      "id": "paraga",
+      "at": [
+        -3.2,
+        -18.8,
+        0
+      ],
+      "color": "#7b3f00",
+      "goods": "tea",
+      "small": true,
+      "sign": "PARAGA"
+    }
+  ],
+  "signs": [
+    {
+      "at": [
+        -24,
+        -9.5,
+        0
+      ],
+      "y": 4.5,
+      "size": [
+        8,
+        3.2
+      ],
+      "post": true,
+      "bg": "#7a4fd9",
+      "fg": "#ffffff",
+      "lines": [
+        "VOTE OWÓ ŃLÁ",
+        "Forward Ever, Backward Sometimes",
+        "FEP"
+      ]
+    },
+    {
+      "at": [
+        52,
+        -4,
+        270
+      ],
+      "y": 4.5,
+      "size": [
+        7,
+        3
+      ],
+      "post": true,
+      "bg": "#c0392b",
+      "fg": "#ffe08a",
+      "lines": [
+        "KONJI COLA",
+        "E dey knack your tiredness!"
+      ]
+    },
+    {
+      "at": [
+        0,
+        -11.2,
+        0
+      ],
+      "y": 5.4,
+      "size": [
+        7,
+        1
+      ],
+      "bg": "#2f8f5b",
+      "fg": "#ffffff",
+      "lines": [
+        "IYANA-WAHALA"
+      ]
+    },
+    {
+      "at": [
+        0,
+        11.2,
+        180
+      ],
+      "y": 5.4,
+      "size": [
+        7,
+        1
+      ],
+      "bg": "#2f8f5b",
+      "fg": "#ffffff",
+      "lines": [
+        "IYANA-WAHALA"
+      ]
+    },
+    {
+      "at": [
+        -38,
+        -24.9,
+        0
+      ],
+      "y": 3.6,
+      "size": [
+        5,
+        0.9
+      ],
+      "bg": "#1e6b43",
+      "fg": "#ffe08a",
+      "lines": [
+        "U.M.P.B.A. MOTOR PARK"
+      ]
+    },
+    {
+      "at": [
+        -16,
+        -5.6,
+        0
+      ],
+      "y": 2.7,
+      "size": [
+        4,
+        0.6
+      ],
+      "bg": "#f2c300",
+      "fg": "#1a1408",
+      "lines": [
+        "FRONT STOP"
+      ]
+    }
+  ],
+  "shelters": [
+    {
+      "at": [
+        -16,
+        -6,
+        0
+      ]
+    }
+  ],
+  "spots": {
+    "arrival": {
+      "pos": [
+        -14,
+        -5.8
+      ],
+      "facing": 180
+    },
+    "frontStop": {
+      "pos": [
+        -16,
+        -7
+      ],
+      "facing": 180,
+      "radius": 4
+    },
+    "backSide": {
+      "pos": [
+        6,
+        -6
+      ],
+      "facing": 200,
+      "radius": 3.5
+    },
+    "underBridge": {
+      "pos": [
+        0,
+        -15
+      ],
+      "facing": 180,
+      "radius": 4
+    },
+    "teaTable": {
+      "pos": [
+        -6,
+        -7.6
+      ],
+      "facing": 180,
+      "radius": 2.5
+    },
+    "motorPark": {
+      "pos": [
+        -38,
+        -20
+      ],
+      "facing": 180,
+      "radius": 5
+    },
+    "babaTicketOffice": {
+      "pos": [
+        -38,
+        -22
+      ],
+      "facing": 0,
+      "radius": 3.5
+    },
+    "market": {
+      "pos": [
+        22,
+        -10
+      ],
+      "facing": 0,
+      "radius": 5
+    },
+    "adaShop": {
+      "pos": [
+        22,
+        -9.5
+      ],
+      "facing": 0,
+      "radius": 3
+    },
+    "mamaPut": {
+      "pos": [
+        -8,
+        8
+      ],
+      "facing": 0,
+      "radius": 3
+    },
+    "southStreet": {
+      "pos": [
+        -20,
+        8.5
+      ],
+      "facing": 0,
+      "radius": 4
+    },
+    "richStreet": {
+      "pos": [
+        28,
+        24
+      ],
+      "facing": 90,
+      "radius": 5
+    },
+    "paraga": {
+      "pos": [
+        -3.2,
+        -15.2
+      ],
+      "facing": 0,
+      "radius": 2.5
+    }
+  },
+  "npcs": [
+    {
+      "id": "professor",
+      "pos": [
+        4,
+        -14.5
+      ],
+      "facing": 180,
+      "anim": "idle"
+    },
+    {
+      "id": "garba",
+      "pos": [
+        -6,
+        -11
+      ],
+      "facing": 180,
+      "anim": "idle"
+    },
+    {
+      "id": "babaRadio",
+      "pos": [
+        8,
+        -12.2
+      ],
+      "facing": 180,
+      "anim": "idle"
+    },
+    {
+      "id": "ada",
+      "pos": [
+        22,
+        -10.5
+      ],
+      "facing": 180,
+      "anim": "idle"
+    },
+    {
+      "id": "babaTicket",
+      "pos": [
+        -38,
+        -23.5
+      ],
+      "facing": 180,
+      "anim": "talk"
+    },
+    {
+      "id": "biodun",
+      "pos": [
+        -24.5,
+        -4.6
+      ],
+      "facing": 0,
+      "anim": "idle"
+    },
+    {
+      "id": "mamaPut",
+      "pos": [
+        -8,
+        11.6
+      ],
+      "facing": 0,
+      "anim": "idle"
+    },
+    {
+      "id": "fakeConductor",
+      "pos": [
+        -12,
+        -6.5
+      ],
+      "facing": 270,
+      "anim": "argue",
+      "if": "!ch1_scammerGone"
+    },
+    {
+      "id": "sunday",
+      "pos": [
+        -20,
+        -5.4
+      ],
+      "facing": 180,
+      "anim": "talk",
+      "if": "ch1_metSunday"
+    },
+    {
+      "id": "babaParaga",
+      "pos": [
+        -3.2,
+        -17.2
+      ],
+      "facing": 160,
+      "anim": "idle"
+    },
+    {
+      "id": "comedian",
+      "pos": [
+        -23,
+        -8.6
+      ],
+      "facing": 180,
+      "anim": "talk"
+    }
+  ],
   "extras": [
-    { "seed": 3, "pos": [-17, -6.4], "facing": 180, "anim": "idle" },
-    { "seed": 7, "pos": [-15, -6.8], "facing": 170, "anim": "talk" },
-    { "seed": 11, "pos": [-19.5, -6.5], "facing": 200, "anim": "idle" },
-    { "seed": 19, "pos": [17, -10.5], "facing": 180, "anim": "idle" },
-    { "seed": 23, "pos": [27, -10.2], "facing": 160, "anim": "argue" },
-    { "seed": 29, "pos": [-34, -20], "facing": 90, "anim": "idle" },
-    { "seed": 31, "pos": [-10, 8.6], "facing": 20, "anim": "idle" },
-    { "seed": 37, "pos": [-44, 8.5], "facing": 0, "anim": "crouchIdle" }
+    {
+      "seed": 3,
+      "pos": [
+        -17,
+        -6.4
+      ],
+      "facing": 180,
+      "anim": "idle"
+    },
+    {
+      "seed": 7,
+      "pos": [
+        -15,
+        -6.8
+      ],
+      "facing": 170,
+      "anim": "talk"
+    },
+    {
+      "seed": 11,
+      "pos": [
+        -19.5,
+        -6.5
+      ],
+      "facing": 200,
+      "anim": "idle"
+    },
+    {
+      "seed": 19,
+      "pos": [
+        17,
+        -10.5
+      ],
+      "facing": 180,
+      "anim": "idle"
+    },
+    {
+      "seed": 23,
+      "pos": [
+        27,
+        -10.2
+      ],
+      "facing": 160,
+      "anim": "argue"
+    },
+    {
+      "seed": 29,
+      "pos": [
+        -34,
+        -20
+      ],
+      "facing": 90,
+      "anim": "idle"
+    },
+    {
+      "seed": 31,
+      "pos": [
+        -10,
+        8.6
+      ],
+      "facing": 20,
+      "anim": "idle"
+    },
+    {
+      "seed": 37,
+      "pos": [
+        -44,
+        8.5
+      ],
+      "facing": 0,
+      "anim": "crouchIdle"
+    }
   ]
 }

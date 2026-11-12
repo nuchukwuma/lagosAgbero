@@ -261,6 +261,29 @@ Bumping into pedestrians makes the player stumble.
 - `won`: +₦500, flag `caughtDefaulter`, energy cost
 - `lost`: flag `defaulterEscaped`, energy cost
 
+### Interruptions: the common chapter
+
+`story/common/common.json` (`"common": true`) holds scenes the game cuts to
+from anywhere. The first is `collapse`, which plays when energy hits 0.
+
+- Code calls `interrupt("common:collapse")`.
+- The scene ends with `{ "type": "goto", "scene": "@resume" }`, which returns
+  to the start of the interrupted scene (its checkpoint).
+- A scene can also end the game instead, e.g. `rockBottom` after three
+  collapses while broke.
+
+### Energy items
+
+`items.json` lists drinks, food and "hard jokes", plus which vendor sells
+what. Each item has a price, an energy boost, an optional delayed `crash`,
+and a hidden `habit` value.
+
+Buying sets the flag `used_<itemId>`, and strong drinks also set
+`hadStrongDrink`. The hidden stats `habit` and `collapses` can be used in
+conditions, for example
+`{ "if": { "stats": { "habit": ">= 25" } } }` so a character comments on
+the drinking.
+
 ### Gameplay modes
 
 `startMode` (as a beat, or inside effects) launches a mode with `params`.

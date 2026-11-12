@@ -16,6 +16,8 @@ import { useFeeRun } from '../modes/feeCollection/feeRunStore.js'
 import ChaseDirector from '../modes/chase/ChaseDirector.jsx'
 import { useChase } from '../modes/chase/chaseStore.js'
 import { WORLD_MODES } from '../modes/modeRegistry.js'
+import { LOW_ENERGY } from '../systems/energy.js'
+import VendorTracker from './VendorTracker.jsx'
 import street from '../data/world/iyanaWahala.json'
 
 // The 3D street behind the story. The story view decides:
@@ -75,7 +77,8 @@ export default function GameCanvas({ view, game, paused = false, onGoalReached }
       <Suspense fallback={null}>
         <StreetScene layout={layout} />
         <NPCs layout={layout} flags={game.flags} positions={view.positions} speaker={speaker} mood={view.mood} />
-        <PlayerController layout={layout} look={look} enabled={(freeRoam || feeRunActive || chaseActive) && !paused} eyeRed={eyeRed} />
+        <PlayerController layout={layout} look={look} enabled={(freeRoam || feeRunActive || chaseActive) && !paused} eyeRed={eyeRed} tired={game.stats.energy < LOW_ENERGY} />
+        {freeRoam && <VendorTracker />}
         <Traffic paused={paused} />
         {worldMode && view.mode === 'feeCollection' && <FeeRunDirector />}
         {worldMode && view.mode === 'chase' && <ChaseDirector />}

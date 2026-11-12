@@ -1,0 +1,54 @@
+{
+  "id": "common",
+  "act": 0,
+  "common": true,
+  "title": "Wahala",
+  "description": "Scenes the game cuts to from anywhere (collapse, raids...). They end with goto \"@resume\", which returns to the start of the interrupted scene.",
+  "startScene": "collapse",
+  "scenes": {
+    "collapse": {
+      "time": "day",
+      "location": "underBridge",
+      "beats": [
+        { "type": "changeStat", "stats": { "collapses": 1 } },
+        {
+          "type": "cutscene",
+          "cards": [
+            { "title": "Your eyes go white.", "text": "The street tilts. A danfo horn stretches into one long note. Everything goes quiet. Then black." },
+            { "title": "General Hospital Iyana-Wahala", "text": "Ward C. The fan works on Mondays." }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "nurse",
+          "text": "You don wake? Good. Exhaustion. No food, no rest, too much sun. Lagos don collect your battery.",
+          "variants": [
+            { "if": { "stats": { "habit": ">= 25" } }, "text": "You don wake? Your blood dey smell like Agbára Bitters factory. My brother, those drinks dey borrow energy from tomorrow. Tomorrow don come collect." },
+            { "if": { "stats": { "collapses": ">= 2" } }, "text": "You again? Ehn. Next time I go give you loyalty card. Tenth collapse, free drip." }
+          ]
+        },
+        { "type": "dialogue", "speaker": "professor", "text": "Rule number five: the street no go wait for you. But e no go carry you either. Eat, drink water, sleep. Then hustle.", "if": { "stats": { "mentorBond": ">= 15" } } },
+        { "type": "goto", "if": { "stats": { "collapses": ">= 3", "money": "< 1000" } }, "scene": "rockBottom" },
+        {
+          "type": "choice",
+          "speaker": "nurse",
+          "text": "Your bill na ₦2,000. Cash or transfer. We no dey collect \"I go pay\".",
+          "options": [
+            { "text": "Pay the bill", "cost": 2000, "effects": { "changeStat": { "energy": 60 } } },
+            { "text": "\"Nurse, abeg. I go bring am tomorrow.\"", "effects": { "changeStat": { "energy": 40, "debt": 3000 }, "setFlag": "owesHospital", "toast": "₦3,000 added to your debts. Nurse Rónkẹ́ wrote your name in red." } },
+            { "text": "Sneak out through the window", "effects": { "changeStat": { "energy": 30, "notoriety": 2 }, "setFlag": "escapedHospital", "noticedBy": ["Nurse Rónkẹ́"] } }
+          ]
+        },
+        { "type": "dialogue", "speaker": "narrator", "text": "You walk out into the noise. Same street. Same wahala. Small small, you go again." },
+        { "type": "goto", "scene": "@resume" }
+      ]
+    },
+    "rockBottom": {
+      "time": "night",
+      "beats": [
+        { "type": "dialogue", "speaker": "nurse", "text": "Third time. No money. I don call the number for your phone. The one wey you save as \"Mama\"." },
+        { "type": "endChapter", "title": "Rock Bottom", "ending": "rock_bottom" }
+      ]
+    }
+  }
+}

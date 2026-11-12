@@ -431,5 +431,29 @@
     "fullName": "Passenger",
     "color": "#95a5a6",
     "role": "extra"
+  },
+  "babaParaga": {
+    "name": "Baba Paraga",
+    "fullName": "Baba Paraga, seller of roots and regrets",
+    "color": "#7b3f00",
+    "role": "drinkSeller",
+    "look": {
+      "body": "male_longsleeve",
+      "skin": "#4e2f1d",
+      "shirt": "#7b3f00",
+      "trousers": "#3e2723",
+      "height": 0.95,
+      "width": 1.15,
+      "accessories": [
+        {
+          "type": "fila",
+          "color": "#3e2723"
+        },
+        {
+          "type": "chain",
+          "color": "#bdc3c7"
+        }
+      ]
+    }
   }
 }

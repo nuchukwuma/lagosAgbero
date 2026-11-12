@@ -1,0 +1,22 @@
+{
+  "items": {
+    "combatZobo": { "name": "Combat Zobo", "kind": "drink", "price": 150, "energy": 12, "crash": 0, "duration": 0, "habit": 0, "blurb": "Hibiscus, ginger, small sugar. Your grandmother go approve." },
+    "konjiCola": { "name": "Konji Cola", "kind": "drink", "price": 250, "energy": 18, "crash": 5, "duration": 90, "habit": 1, "blurb": "\"E dey knack your tiredness.\" E also dey knack your teeth." },
+    "agbaraBitters": { "name": "Agbára Bitters", "kind": "drink", "price": 300, "energy": 25, "crash": 10, "duration": 120, "habit": 3, "blurb": "Roots, bark and one ingredient nobody fit pronounce. Eyes go red small." },
+    "redEyeTonic": { "name": "Red-Eye Tonic", "kind": "drink", "price": 600, "energy": 40, "crash": 20, "duration": 150, "habit": 6, "blurb": "The label get only one word: \"WAHALA\". Your eyes go red like traffic light." },
+    "ogaPataSchnapps": { "name": "Ọ̀gá Pátá Schnapps", "kind": "drink", "price": 1200, "energy": 60, "crash": 30, "duration": 180, "habit": 10, "blurb": "For big men only. Small men wey drink am dey wake up for gutter." },
+    "smallJoke": { "name": "Small Joke", "kind": "joke", "price": 100, "energy": 8, "crash": 0, "duration": 0, "habit": 0, "blurb": "Comedian Ẹ̀wọ̀: \"Why danfo no dey use indicator? E no wan show you its future.\"" },
+    "hardJoke": { "name": "Hard Joke", "kind": "joke", "price": 400, "energy": 22, "crash": 0, "duration": 0, "habit": 0, "blurb": "A joke about NEPA so hard your eyes go water red." },
+    "seniorJoke": { "name": "Senior Joke", "kind": "joke", "price": 900, "energy": 45, "crash": 8, "duration": 100, "habit": 0, "blurb": "A 20-minute story about a politician, a goat and a generator. You go laugh until your belle pain you." },
+    "breadAkara": { "name": "Bread & Akara", "kind": "food", "price": 200, "energy": 15, "crash": 0, "duration": 0, "habit": 0, "blurb": "Hot akara inside agege bread. Breakfast of champions and conductors." },
+    "riceBeans": { "name": "Rice & Beans + Plantain", "kind": "food", "price": 500, "energy": 30, "crash": 0, "duration": 0, "habit": 0, "blurb": "Mama Put go add extra stew if she like your face." },
+    "garbaTea": { "name": "Mallam Garba Tea", "kind": "food", "price": 150, "energy": 10, "crash": 0, "duration": 0, "habit": 0, "blurb": "Lipton, condensed milk, and Garba's opinions about everything." }
+  },
+  "vendors": {
+    "babaParaga": { "title": "Baba Paraga's drinks", "items": ["agbaraBitters", "redEyeTonic", "ogaPataSchnapps", "konjiCola"] },
+    "ada": { "title": "Ada's Corner", "items": ["combatZobo", "konjiCola", "breadAkara"] },
+    "mamaPut": { "title": "Mama Put Buka", "items": ["riceBeans", "breadAkara", "combatZobo"] },
+    "garba": { "title": "Mai Shayi", "items": ["garbaTea", "breadAkara"] },
+    "comedian": { "title": "Comedian Ẹ̀wọ̀'s jokes", "items": ["smallJoke", "hardJoke", "seniorJoke"] }
+  }
+}

@@ -63,10 +63,19 @@ const withStory = (state, patch) => ({ ...state, story: { ...state.story, ...pat
 const nextBeat = (state) => withStory(state, { beatIndex: state.story.beatIndex + 1 })
 
 function jump(ctx, state, target, events) {
+  // "@resume": go back to where an interruption (collapse, raid...) happened
+  if (target === '@resume') {
+    const back = state.story.returnTo || state.story.checkpoint
+    if (!back) throw new Error('Nothing to resume')
+    events.push({ type: 'scene', ...back })
+    return withStory(state, { ...back, beatIndex: 0, returnTo: null })
+  }
   const p = resolveTarget(target, state.story)
   chapterOf(ctx, p.chapterId) // throws early on a bad target
   events.push({ type: 'scene', ...p })
-  return withStory(state, p)
+  // every scene start in a normal chapter is a checkpoint to retry from
+  const checkpoint = ctx.chapters[p.chapterId].common ? state.story.checkpoint : { chapterId: p.chapterId, sceneId: p.sceneId }
+  return withStory(state, { ...p, checkpoint })
 }
 
 // ---------- callbacks & dialogue ----------
@@ -194,8 +203,24 @@ function visibleOptions(state, beat) {
 export function startChapter(ctx, state, chapterId, sceneId) {
   const events = []
   const chapter = chapterOf(ctx, chapterId)
-  state = withStory(state, { chapterId, sceneId: sceneId || chapter.startScene, beatIndex: 0, pendingMode: null, ending: null })
+  const startScene = sceneId || chapter.startScene
+  state = withStory(state, { chapterId, sceneId: startScene, beatIndex: 0, pendingMode: null, ending: null, checkpoint: chapter.common ? state.story.checkpoint : { chapterId, sceneId: startScene } })
   events.push({ type: 'chapter', chapterId, title: chapter.title })
+  state = run(ctx, state, events)
+  events.push({ type: 'autosave' })
+  return { state, events }
+}
+
+/**
+ * Cut away to a scene right now (collapse, Task Force raid...), whatever the
+ * player was doing. A running mode is abandoned. `goto "@resume"` later
+ * returns to the start of the scene that was interrupted (the checkpoint).
+ */
+export function interrupt(ctx, state, target) {
+  const events = []
+  const returnTo = state.story.checkpoint || { chapterId: state.story.chapterId, sceneId: state.story.sceneId }
+  state = withStory(state, { pendingMode: null, returnTo })
+  state = jump(ctx, state, target, events)
   state = run(ctx, state, events)
   events.push({ type: 'autosave' })
   return { state, events }

@@ -8,7 +8,7 @@ function DevChapterPicker() {
   return (
     <select className="dev-picker" value="" onChange={(e) => e.target.value && devStart(e.target.value)} aria-label="Dev: start chapter">
       <option value="">Dev: jump to chapter…</option>
-      {Object.values(storyCtx.chapters).map((c) => (
+      {Object.values(storyCtx.chapters).filter((c) => !c.common).map((c) => (
         <option key={c.id} value={c.id}>
           {c.title} ({c.id})
         </option>
@@ -47,7 +47,7 @@ export default function TitleScreen({ onNavigate, onContinue }) {
         </button>
         {import.meta.env.DEV && <DevChapterPicker />}
       </div>
-      <p className="footnote">Phase 2 build · Iyana-Wahala street</p>
+      <p className="footnote">Build: Phases 1–5</p>
     </div>
   )
 }

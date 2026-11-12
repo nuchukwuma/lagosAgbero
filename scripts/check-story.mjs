@@ -50,11 +50,20 @@ if (!errors.length) {
     for (let run = 0; run < 200; run++) {
       let state = engine.newGameState({ name: 'Tester' })
       try {
-        state = engine.startChapter(ctx, state, chapterId).state
+        const ch = chapters[chapterId]
+        if (ch.common) {
+          // common scenes are reached by interruption from a normal chapter
+          const host = Object.keys(chapters).find((id) => !chapters[id].common)
+          state = engine.startChapter(ctx, state, host).state
+          const scenes = Object.keys(ch.scenes)
+          state = engine.interrupt(ctx, state, `${chapterId}:${scenes[run % scenes.length]}`).state
+          if (run % 3 === 0) state = { ...state, stats: { ...state.stats, collapses: 5, money: 0 } }
+        } else state = engine.startChapter(ctx, state, chapterId).state
         for (let step = 0; step < 2000; step++) {
           const view = engine.renderView(ctx, state)
           if (view.type === 'ending' || view.type === 'finished') break
           if (view.type === 'chapterEnd' && state.story.chapterId !== chapterId) break
+          if (chapters[chapterId].common && state.story.chapterId !== chapterId) break // resumed
           if (view.type === 'choice') {
             const open = view.options.filter((o) => !o.locked)
             if (!open.length) throw new Error(`every option locked at ${view.key}`)

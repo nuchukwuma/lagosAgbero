@@ -3,7 +3,7 @@
   "act": 1,
   "number": 1,
   "title": "Chapter 1 — JJC",
-  "description": "DRAFT for approval. Phase 2: opening to the Back Side. Phase 3: first night, fee level, Day 1 fee run, first defaulter. Phase 4 adds the real chase.",
+  "description": "Chapter 1: arrival, Professor, Baba Ticket, the first fee run, the first defaulter and chase, the first drink, the evening collection and the fuel hike.",
   "startScene": "arrival",
   "scenes": {
     "arrival": {
@@ -727,13 +727,20 @@
           "text": "Evening go reach, and Baba Ticket go come for him money. Count your bag. Hide small for your sock. Rule number four: sock na the only bank wey no dey close."
         },
         {
-          "type": "freeRoam",
-          "objective": "Walk around Iyana-Wahala. (Chapter 1 continues in the next update: the real chase, Baba Ticket's collection and the fuel hike.)"
+          "type": "dialogue",
+          "speaker": "professor",
+          "text": "Your eyes don dey white. Energy low. When your eyes white for this work, people go chop you. Go Baba Paraga under the bridge, or Mama Put for food. Then evening, Baba Ticket go come."
         },
         {
-          "type": "endChapter",
-          "title": "To be continued",
-          "summary": "Chapter 1 continues in Phase 4 with the chase, and Phase 5 with energy, Baba Ticket's evening collection and the fuel hike."
+          "type": "freeRoam",
+          "objective": "Rest, eat or drink something (Baba Paraga is under the bridge, Mama Put across the road). When you're ready, go to Baba Ticket at the motor park.",
+          "goal": {
+            "talkTo": "babaTicket"
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "evening"
         }
       ]
     },
@@ -860,6 +867,339 @@
         {
           "type": "goto",
           "scene": "afterChase"
+        }
+      ]
+    },
+    "evening": {
+      "location": "babaTicketOffice",
+      "time": "dusk",
+      "positions": {
+        "professor": [
+          -35.5,
+          -22.5,
+          230
+        ]
+      },
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "babaTicket",
+          "text": "JJC! My money. Na evening. Even the sun dey go house. Bring am make I see whether you be worker or tourist."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "professor",
+          "text": "(whispering) If e no reach, no lie. Him fit smell lie like suya.",
+          "if": {
+            "stats": {
+              "money": "< 15000"
+            }
+          }
+        },
+        {
+          "type": "choice",
+          "speaker": "babaTicket",
+          "text": "Today share na {stat:quota} naira. Oya.",
+          "options": [
+            {
+              "text": "Pay the full share",
+              "cost": "stat:quota",
+              "effects": {
+                "changeStat": {
+                  "chairmanTrust": 6
+                },
+                "remember": {
+                  "quota_ch1": "paid"
+                }
+              },
+              "showLocked": true,
+              "lockedText": "Your bag no reach"
+            },
+            {
+              "text": "\"Chairman, na wetin I get be this.\" (pay everything)",
+              "effects": {
+                "changeStat": {
+                  "money": -999999,
+                  "chairmanTrust": -3
+                },
+                "remember": {
+                  "quota_ch1": "partial"
+                },
+                "setFlag": "ch1_shortQuota"
+              }
+            },
+            {
+              "text": "\"Make I bring am tomorrow, sir.\" (pay nothing)",
+              "effects": {
+                "changeStat": {
+                  "chairmanTrust": -8
+                },
+                "remember": {
+                  "quota_ch1": "owing"
+                },
+                "setFlag": [
+                  "ch1_shortQuota",
+                  "owesChairman"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "babaTicket",
+          "text": "Ehen! Correct! This one na worker. Professor, you hear? Worker!",
+          "variants": [
+            {
+              "if": {
+                "memory": {
+                  "quota_ch1": "partial"
+                }
+              },
+              "text": "This one? Hmm. First day, I go manage am. Second day, I go manage YOU. Understand?",
+              "mood": "angry"
+            },
+            {
+              "if": {
+                "memory": {
+                  "quota_ch1": "owing"
+                }
+              },
+              "text": "Tomorrow? You know how many people tomorrow don kill for this park? Tomorrow plus interest. Commot for my front.",
+              "mood": "angry"
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "firstDrink"
+        }
+      ]
+    },
+    "firstDrink": {
+      "location": "underBridge",
+      "time": "night",
+      "positions": {
+        "professor": [
+          1.5,
+          -15.2,
+          200
+        ],
+        "babaParaga": [
+          -3.2,
+          -17.2,
+          160
+        ]
+      },
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Night under the bridge. Baba Paraga's bottles shine like a church window. Professor sits on an upturned crate like a chief on a throne."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "professor",
+          "text": "First day no easy. Come. Make I buy you your first one. For this work, everybody get something wey dey keep them standing.",
+          "variants": [
+            {
+              "if": "hadStrongDrink",
+              "text": "I see say you don already find Baba Paraga by yourself. Hmm. Fast learner. Make we drink the second one together, but small small."
+            }
+          ]
+        },
+        {
+          "type": "choice",
+          "speaker": "babaParaga",
+          "text": "Agbára Bitters? E go wake your ancestors. Or Red-Eye Tonic for the brave.",
+          "options": [
+            {
+              "text": "Take the Agbára Bitters from Professor",
+              "effects": {
+                "changeStat": {
+                  "energy": 25,
+                  "habit": 3,
+                  "mentorBond": 3
+                },
+                "setFlag": [
+                  "firstDrink",
+                  "hadStrongDrink"
+                ],
+                "remember": {
+                  "first_drink": "bitters"
+                }
+              }
+            },
+            {
+              "text": "\"Give me Combat Zobo. I no dey drink.\"",
+              "effects": {
+                "changeStat": {
+                  "energy": 12,
+                  "mentorBond": 1
+                },
+                "setFlag": "firstDrinkZobo",
+                "remember": {
+                  "first_drink": "zobo"
+                }
+              }
+            },
+            {
+              "text": "\"Red-Eye Tonic. I be man.\" (₦600)",
+              "cost": 600,
+              "effects": {
+                "changeStat": {
+                  "energy": 40,
+                  "habit": 6,
+                  "notoriety": 1
+                },
+                "setFlag": [
+                  "firstDrink",
+                  "hadStrongDrink"
+                ],
+                "remember": {
+                  "first_drink": "tonic"
+                },
+                "noticedBy": [
+                  "Professor"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "professor",
+          "text": "Ehen. See your eyes. Red like correct agbero. Rule number six: na the red eye dey make driver respect you. But the red eye also get its own landlord. One day e go come collect rent.",
+          "variants": [
+            {
+              "if": "firstDrinkZobo",
+              "text": "Zobo! Hahaha. Okay, Pastor. Rule number six: some people dey run on fire, some dey run on zobo. Na the zobo people dey live long. But dem no dey get respect for park."
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "fuelHike"
+        }
+      ]
+    },
+    "fuelHike": {
+      "time": "night",
+      "positions": {
+        "professor": [
+          1.5,
+          -15.2,
+          200
+        ]
+      },
+      "beats": [
+        {
+          "type": "newsBroadcast",
+          "source": "Baba Radio's stall — Wahala FM 99.9",
+          "headline": "FUEL PRICE GO UP 40%",
+          "text": "The Minister of Petroleum Matters says the new price is \"a bold step towards the future\". The future, he adds, will be expensive. Drivers are advised to \"adjust\".",
+          "effects": {
+            "changeStat": {
+              "fairFee": 100,
+              "quota": 3000
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "biodun",
+          "text": "Una hear am?! Fuel don cost! Me I no fit pay ₦{stat:stopFee} again. We go strike! Una agbero must reduce am!",
+          "mood": "angry",
+          "variants": [
+            {
+              "if": "biodunAlly",
+              "text": "JJC, you hear the news? Fuel don cost. You be my person now, so I go tell you straight: if una no reduce the fee, drivers go stop to dey stop for Back Side."
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "babaTicket",
+          "text": "Fuel don go up, so ticket go up. My share from tomorrow na {stat:quota}. If drivers dey cry, tell dem make dem cry inside danfo, e get roof."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "professor",
+          "text": "Now you dey in the middle. Drivers for one side, Baba Ticket for the other side. Na here agbero dey learn wetin him be."
+        },
+        {
+          "type": "choice",
+          "speaker": "professor",
+          "text": "From tomorrow, wetin you go do with your fee?",
+          "options": [
+            {
+              "text": "Raise it by ₦200. Baba Ticket must chop.",
+              "effects": {
+                "changeStat": {
+                  "stopFee": 200,
+                  "chairmanTrust": 5,
+                  "communityGoodwill": -6
+                },
+                "setFlag": "raisedFees",
+                "remember": {
+                  "fuel_hike": "raised"
+                }
+              }
+            },
+            {
+              "text": "Keep it the same. Drivers dey suffer already.",
+              "effects": {
+                "changeStat": {
+                  "communityGoodwill": 6,
+                  "chairmanTrust": -3
+                },
+                "setFlag": "absorbedHike",
+                "remember": {
+                  "fuel_hike": "absorbed"
+                }
+              }
+            },
+            {
+              "text": "Raise small, ₦100, and tell drivers why.",
+              "effects": {
+                "changeStat": {
+                  "stopFee": 100,
+                  "communityGoodwill": 1,
+                  "chairmanTrust": 1
+                },
+                "setFlag": "splitHike",
+                "remember": {
+                  "fuel_hike": "split"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "biodun",
+          "text": "Hmm. Okay. We go see how e go be.",
+          "variants": [
+            {
+              "if": "raisedFees",
+              "text": "₦200 more?! For this economy?! JJC, you don become Baba Ticket small boy. Okay o. The road long.",
+              "mood": "angry"
+            },
+            {
+              "if": "absorbedHike",
+              "text": "You no increase am? ... You sure say you be agbero? God bless you. I go tell the others."
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "mama",
+          "text": "{name}, Iya Bọ́sẹ̀ say by end of this month, she want the first ₦50,000. Or she go carry the matter go community meeting. My son... you dey hear me?"
+        },
+        {
+          "type": "endChapter",
+          "title": "End of Chapter 1 — JJC",
+          "summary": "Pocket: {money}. Fee: ₦{stat:stopFee} per danfo. Baba Ticket's share: ₦{stat:quota}. Mama's debt: {debt}."
         }
       ]
     }

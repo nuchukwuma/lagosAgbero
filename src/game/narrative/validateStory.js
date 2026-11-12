@@ -36,6 +36,7 @@ export function validateStory({ chapters, characters = {}, callbacks = {}, endin
     if (!chapter.scenes?.[chapter.startScene]) errors.push(`${chapterId}: startScene "${chapter.startScene}" does not exist`)
 
     const checkTarget = (target, at) => {
+      if (target === '@resume') return
       const [a, b] = String(target).split(':')
       const [ch, sc] = b ? [a, b] : [chapterId, a]
       if (!chapters[ch]) errors.push(`${at}: goto chapter "${ch}" does not exist`)

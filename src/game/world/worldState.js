@@ -22,4 +22,6 @@ export const npcRegistry = new Map()
 export const useWorldStore = create((set) => ({
   canTalk: null, // npc id the player can talk to right now, or null
   setCanTalk: (id) => set((s) => (s.canTalk === id ? s : { canTalk: id })),
+  nearVendor: null, // npc id of a seller the player is standing next to
+  setNearVendor: (id) => set((s) => (s.nearVendor === id ? s : { nearVendor: id })),
 }))

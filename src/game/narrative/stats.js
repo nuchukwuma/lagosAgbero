@@ -13,6 +13,10 @@ export const STAT_DEFS = {
   // body and street
   energy: { label: 'Energy (red eyes)', group: 'street', start: 70, min: 0, max: 100 },
   notoriety: { label: 'Notoriety', group: 'street', start: 0, min: 0, max: 100 },
+  habit: { label: 'Drinking habit', group: 'hidden', start: 0, min: 0, max: 100 },
+  collapses: { label: 'Times collapsed', group: 'hidden', start: 0, min: 0, max: 99 },
+  fairFee: { label: 'What drivers call fair', group: 'hidden', start: 500, min: 100, max: 5000 },
+  day: { label: 'Day', group: 'hidden', start: 1, min: 1, max: 999 },
 
   // relationships (0–100)
   chairmanTrust: { label: 'Baba Ticket trusts you', group: 'relationship', start: 10, min: 0, max: 100, who: 'Baba Ticket' },

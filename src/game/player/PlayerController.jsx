@@ -22,7 +22,7 @@ const clipRate = (clip, speed) => {
   return Math.min(2.2, Math.max(0.6, (speed / natural) * 0.85))
 }
 
-export default function PlayerController({ layout, look, enabled, eyeRed = 0 }) {
+export default function PlayerController({ layout, look, enabled, eyeRed = 0, tired = false }) {
   const ref = useRef()
   const [anim, setAnim] = useState({ name: 'idle', speed: 1 })
   const animRef = useRef(anim)
@@ -53,7 +53,7 @@ export default function PlayerController({ layout, look, enabled, eyeRed = 0 }) 
     playerState.moving = false
     if (stunned) next = { name: 'bumped', speed: 1.3 }
     else if (m.len > 0.08) {
-      const running = (m.run || m.len > 0.95) && playerState.canRun
+      const running = (m.run || m.len > 0.95) && playerState.canRun && !tired
       playerState.running = running
       playerState.moving = true
       const speed = (running ? RUN_SPEED : WALK_SPEED) * Math.max(0.5, m.len)
@@ -69,7 +69,7 @@ export default function PlayerController({ layout, look, enabled, eyeRed = 0 }) 
       let diff = target - playerState.facing
       diff = Math.atan2(Math.sin(diff), Math.cos(diff))
       playerState.facing += diff * Math.min(1, TURN_RATE * dt)
-      const clip = running ? 'run' : 'walk'
+      const clip = running ? 'run' : tired ? 'drunkWalk' : 'walk'
       next = { name: clip, speed: Math.round(clipRate(clip, speed) * 10) / 10 }
     }
 

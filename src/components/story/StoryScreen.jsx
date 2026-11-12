@@ -4,6 +4,10 @@ import GameCanvas from '../../game/world/GameCanvas.jsx'
 import HUD from '../hud/HUD.jsx'
 import FreeRoamControls from '../hud/FreeRoamControls.jsx'
 import LoadingOverlay from '../hud/LoadingOverlay.jsx'
+import EnergyTicker from '../hud/EnergyTicker.jsx'
+import ShopPanel from '../hud/ShopPanel.jsx'
+import { useFeeRun } from '../../game/modes/feeCollection/feeRunStore.js'
+import { useChase } from '../../game/modes/chase/chaseStore.js'
 import DialogueBox from './DialogueBox.jsx'
 import ChoiceMenu from './ChoiceMenu.jsx'
 import NewsBroadcast from './NewsBroadcast.jsx'
@@ -19,7 +23,10 @@ import ModeHost from './ModeHost.jsx'
 // During a freeRoam beat the player walks; otherwise the story has the floor.
 export default function StoryScreen() {
   const { game, view, toasts, error, advance, choose, save, load, quitToTitle, dismissToast, goTo } = useGameStore()
-  const [overlay, setOverlay] = useState(null) // 'status' | 'menu' | null
+  const [overlay, setOverlay] = useState(null) // 'status' | 'menu' | 'shop:<vendor>' | null
+  const feeRunOn = useFeeRun((s) => s.active && s.started && !s.ended)
+  const chaseOn = useChase((s) => s.active && s.started && !s.ended)
+  const streetMode = feeRunOn || chaseOn
 
   if (!game || !view) return null
 
@@ -74,7 +81,8 @@ export default function StoryScreen() {
       {raining && <div className="rain" aria-hidden="true" />}
       <HUD game={game} onStatus={() => setOverlay('status')} onMenu={() => setOverlay('menu')} />
       {view.chapterTitle && view.type !== 'cutscene' && <div className="chapter-chip">{view.chapterTitle}</div>}
-      {view.type === 'freeRoam' && !overlay && <FreeRoamControls view={view} onTalk={advance} />}
+      {view.type === 'freeRoam' && !overlay && <FreeRoamControls view={view} onTalk={advance} onShop={(v) => setOverlay(`shop:${v}`)} />}
+      <EnergyTicker active={(view.type === 'freeRoam' || streetMode) && !overlay} />
       <div className="story-content">{content}</div>
       {error && (
         <div className="story-error">
@@ -86,6 +94,7 @@ export default function StoryScreen() {
       <Toasts toasts={toasts} onDone={dismissToast} />
       <LoadingOverlay />
       {overlay === 'status' && <StatusPanel game={game} onClose={() => setOverlay(null)} />}
+      {overlay?.startsWith('shop:') && <ShopPanel vendor={overlay.slice(5)} onClose={() => setOverlay(null)} />}
       {overlay === 'menu' && (
         <GameMenu
           onClose={() => setOverlay(null)}

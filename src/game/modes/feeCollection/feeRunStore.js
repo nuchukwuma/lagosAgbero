@@ -135,7 +135,7 @@ export const useFeeRun = create((set, get) => {
         collected: 0,
         quota: stats.quota ?? 15000,
         stopFee: stats.stopFee ?? 500,
-        fairFee: params.fairFee ?? BASE_FAIR_FEE,
+        fairFee: params.fairFee ?? stats.fairFee ?? BASE_FAIR_FEE,
         notoriety: stats.notoriety ?? 0,
         near: null,
         popup: null,

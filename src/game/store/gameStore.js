@@ -8,7 +8,8 @@ import { storyCtx, FIRST_CHAPTER } from '../narrative/storyData.js'
 import * as engine from '../narrative/storyEngine.js'
 import { bus } from '../narrative/eventBus.js'
 import { saveGame, loadGame, latestSave } from './saveSystem.js'
-import { defaultStats } from '../narrative/stats.js'
+import { defaultStats, clampStat } from '../narrative/stats.js'
+import { useItem, dueEffects, drainRate, ITEMS } from '../systems/energy.js'
 
 let toastId = 0
 
@@ -69,6 +70,45 @@ export const useGameStore = create((set, get) => {
     advance: () => dispatch((g) => engine.advance(storyCtx, g)),
     choose: (index) => dispatch((g) => engine.choose(storyCtx, g, index)),
     modeResult: (result) => dispatch((g) => engine.receiveModeResult(storyCtx, g, result)),
+
+    /** Cut to a scene from anywhere (collapse, raid...). */
+    interrupt: (target) => dispatch((g) => engine.interrupt(storyCtx, g, target)),
+
+    /**
+     * Called about once a second while the player is out on the street.
+     * Drains energy, lands drink crashes, and collapses the player at 0.
+     */
+    tick: (dt, { running = false } = {}) => {
+      const { game } = get()
+      if (!game || game.story.ending || game.story.chapterId === 'common') return
+      const clock = (game.clock || 0) + dt
+      const raining = Boolean(game.flags.raining)
+      let energy = game.stats.energy - drainRate({ running, raining }) * dt
+      const { remaining, crash, due } = dueEffects(game.effects, clock)
+      const toasts = []
+      if (crash) {
+        energy -= crash
+        for (const e of due) toasts.push({ id: ++toastId, text: `The ${ITEMS[e.item]?.name || 'drink'} don wear off. Your head dey bang (−${e.crash}).` })
+      }
+      energy = clampStat('energy', energy)
+      set((s) => ({ game: { ...game, clock, effects: remaining, stats: { ...game.stats, energy } }, toasts: [...s.toasts, ...toasts].slice(-4) }))
+      if (energy <= 0) get().interrupt('common:collapse')
+    },
+
+    /** Buy and use an item from a vendor. Returns an error message or null. */
+    buy: (itemId) => {
+      const { game } = get()
+      const r = useItem(itemId, game, game.clock || 0)
+      if (r.error) return r.error
+      const stats = { ...game.stats }
+      for (const [k, d] of Object.entries(r.stats)) stats[k] = clampStat(k, (stats[k] ?? 0) + d)
+      const flags = { ...game.flags, [`used_${itemId}`]: true }
+      if (ITEMS[itemId].kind === 'drink' && ITEMS[itemId].habit) flags.hadStrongDrink = true
+      const next = { ...game, stats, flags, effects: [...(game.effects || []), ...r.effects] }
+      set((s) => ({ game: next, toasts: [...s.toasts, { id: ++toastId, text: r.message }].slice(-4) }))
+      saveGame('auto', next, summaryOf(next, get().view))
+      return null
+    },
 
     save: (slot) => {
       const { game, view } = get()
