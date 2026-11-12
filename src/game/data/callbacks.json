@@ -38,9 +38,17 @@
     }
   },
   "biodun_ch1": {
-    "caught": {
+    "caught_fair": {
       "speaker": "professor",
-      "text": "You catch Bíọ́dún! For your first day! Baba Ticket go hear am before lunch. But that man get long memory. Watch your back for park."
+      "text": "You catch am and you no squeeze am. Na so. Baba Ticket go hear you catch Bíọ́dún, and the drivers go hear you no wicked. Two birds, one ₦500."
+    },
+    "caught_fined": {
+      "speaker": "professor",
+      "text": "₦1,500 from Bíọ́dún. Baba Ticket go like am. But that man get long memory and him cousin dey Task Force. Watch your back."
+    },
+    "caught_forgiven": {
+      "speaker": "professor",
+      "text": "You run am down like thief, then you dash am the money back? Hahaha! Lagos never see this kind thing. Bíọ́dún go tell everybody. Some go call you fool. Some go call you friend."
     },
     "escaped": {
       "speaker": "professor",

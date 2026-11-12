@@ -240,6 +240,27 @@ fee.
 - `quota`: Baba Ticket's daily share. A choice can charge exactly that with
   `"cost": "stat:quota"`.
 
+### Chase (`"mode": "chase"`)
+
+This is a chase on foot after a fleeing vehicle. The vehicle crawls through
+go-slow traffic, the player runs along the pavement, and GRAB wins.
+
+| Param | Meaning |
+|---|---|
+| `target` | A named driver from `drivers.json` (`biodun` or `driver_biodun`) |
+| `difficulty` | 1 (gentle) to 3 (hard): how fast the vehicle weaves through traffic |
+| `kind` | The vehicle kind (defaults to the driver's own) |
+| `escapeX` | The vehicle gets away once it passes this x (default −52, past the motor park) |
+| `timeLimit` | Seconds (default 45) |
+
+**Stamina** starts from the player's energy and drains while running.
+Bumping into pedestrians makes the player stumble.
+
+**Outcomes:**
+
+- `won`: +₦500, flag `caughtDefaulter`, energy cost
+- `lost`: flag `defaulterEscaped`, energy cost
+
 ### Gameplay modes
 
 `startMode` (as a beat, or inside effects) launches a mode with `params`.

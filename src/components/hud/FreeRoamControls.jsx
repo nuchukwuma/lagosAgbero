@@ -1,6 +1,5 @@
 import { useEffect } from 'react'
-import Joystick from './Joystick.jsx'
-import { input } from '../../game/player/input.js'
+import MoveControls from './MoveControls.jsx'
 import { useWorldStore } from '../../game/world/worldState.js'
 import characters from '../../game/data/characters.json'
 
@@ -18,7 +17,6 @@ export default function FreeRoamControls({ view, onTalk }) {
     return () => window.removeEventListener('keydown', onKey)
   }, [canTalk, onTalk])
 
-  useEffect(() => () => (input.runButton = false), [])
 
   return (
     <>
@@ -27,27 +25,7 @@ export default function FreeRoamControls({ view, onTalk }) {
           <span className="objective-tag">Objective</span> {view.objective}
         </div>
       )}
-      <div className="controls">
-        <Joystick />
-        <div className="action-buttons">
-          {talkName && (
-            <button className="action-btn talk" onClick={onTalk}>
-              TALK
-              <small>{talkName}</small>
-            </button>
-          )}
-          <button
-            className="action-btn run"
-            onPointerDown={() => (input.runButton = true)}
-            onPointerUp={() => (input.runButton = false)}
-            onPointerLeave={() => (input.runButton = false)}
-            onPointerCancel={() => (input.runButton = false)}
-          >
-            RUN
-          </button>
-        </div>
-      </div>
-      <div className="keyboard-hint">WASD / arrows move · Shift run · E talk</div>
+      <MoveControls actionLabel={talkName ? 'TALK' : null} actionSub={talkName} onAction={onTalk} />
     </>
   )
 }

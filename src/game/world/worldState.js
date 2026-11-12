@@ -9,6 +9,11 @@ export const playerState = {
   position: new THREE.Vector3(),
   facing: 0, // radians, 0 = facing +Z
   teleport: null, // { x, z, facing } to apply on the next frame
+  running: false, // set by the controller every frame
+  moving: false,
+  // gameplay modes can limit the player:
+  canRun: true, // e.g. out of stamina in a chase
+  stunUntil: 0, // performance.now() ms; the player stumbles until then
 }
 
 /** id -> { position: Vector3 } for every NPC currently in the world */

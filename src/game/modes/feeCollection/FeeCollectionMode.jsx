@@ -3,7 +3,7 @@ import { useFeeRun } from './feeRunStore.js'
 import { traffic, releaseVehicle } from '../../systems/traffic.js'
 import { feeFor } from '../../systems/fees.js'
 import { useGameStore } from '../../store/gameStore.js'
-import Joystick from '../../../components/hud/Joystick.jsx'
+import MoveControls from '../../../components/hud/MoveControls.jsx'
 import { input } from '../../player/input.js'
 import { formatNaira } from '../../narrative/stats.js'
 
@@ -130,26 +130,7 @@ export default function FeeCollectionMode({ params, onFinish }) {
         </div>
       )}
 
-      <div className="controls">
-        <Joystick />
-        <div className="action-buttons">
-          {nearVehicle && !store.popup && (
-            <button className="action-btn talk" onClick={() => store.collect(nearVehicle.id)}>
-              COLLECT
-              <small>{formatNaira(nearFee)}</small>
-            </button>
-          )}
-          <button
-            className="action-btn run"
-            onPointerDown={() => (input.runButton = true)}
-            onPointerUp={() => (input.runButton = false)}
-            onPointerLeave={() => (input.runButton = false)}
-            onPointerCancel={() => (input.runButton = false)}
-          >
-            RUN
-          </button>
-        </div>
-      </div>
+      <MoveControls actionLabel={nearVehicle && !store.popup ? 'COLLECT' : null} actionSub={nearVehicle ? formatNaira(nearFee) : null} onAction={() => nearVehicle && store.collect(nearVehicle.id)} />
       {import.meta.env.DEV && (
         <button className="btn btn-small dev-end" onClick={() => store.end('done')}>
           End run (dev)

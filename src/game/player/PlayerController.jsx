@@ -47,9 +47,15 @@ export default function PlayerController({ layout, look, enabled, eyeRed = 0 }) 
     }
 
     let next = { name: 'idle', speed: 1 }
-    const m = enabled ? readMove() : { x: 0, y: 0, len: 0 }
-    if (m.len > 0.08) {
-      const running = m.run || m.len > 0.95
+    const stunned = performance.now() < playerState.stunUntil
+    const m = enabled && !stunned ? readMove() : { x: 0, y: 0, len: 0 }
+    playerState.running = false
+    playerState.moving = false
+    if (stunned) next = { name: 'bumped', speed: 1.3 }
+    else if (m.len > 0.08) {
+      const running = (m.run || m.len > 0.95) && playerState.canRun
+      playerState.running = running
+      playerState.moving = true
       const speed = (running ? RUN_SPEED : WALK_SPEED) * Math.max(0.5, m.len)
       // screen up = north (-Z)
       const dx = m.x

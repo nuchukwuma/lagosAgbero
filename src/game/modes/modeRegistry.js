@@ -9,14 +9,15 @@
 
 import StandInMode from './StandInMode.jsx'
 import FeeCollectionMode from './feeCollection/FeeCollectionMode.jsx'
+import ChaseMode from './chase/ChaseMode.jsx'
 
 export const MODES = {
   feeCollection: FeeCollectionMode,
-  // chase: ChaseMode,   (Phase 4)
+  chase: ChaseMode,
 }
 
 // Modes played inside the 3D street (the player walks with joystick/keys).
-export const WORLD_MODES = new Set(['feeCollection'])
+export const WORLD_MODES = new Set(['feeCollection', 'chase'])
 
 export const PLANNED_MODES = ['chase', 'fight', 'runner', 'raid', 'conductor', 'feeCollection', 'begging', 'shop']
 

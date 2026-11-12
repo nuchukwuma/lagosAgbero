@@ -662,7 +662,7 @@
               "effects": {
                 "startMode": "chase",
                 "params": {
-                  "target": "driver_biodun",
+                  "target": "biodun",
                   "difficulty": 1
                 },
                 "results": {
@@ -670,19 +670,14 @@
                     "changeStat": {
                       "chairmanTrust": 5
                     },
-                    "remember": {
-                      "biodun_ch1": "caught"
-                    },
-                    "goto": "afterChase"
+                    "goto": "caught"
                   },
                   "lost": {
-                    "changeStat": {
-                      "energy": -10
-                    },
                     "remember": {
                       "biodun_ch1": "escaped"
                     },
-                    "goto": "afterChase"
+                    "setFlag": "biodunLaughs",
+                    "goto": "escaped"
                   }
                 }
               }
@@ -690,7 +685,10 @@
             {
               "text": "Let am go, na small money",
               "effects": {
-                "setFlag": "letDriverGo",
+                "setFlag": [
+                  "letDriverGo",
+                  "biodunAlly"
+                ],
                 "changeStat": {
                   "chairmanTrust": -5,
                   "communityGoodwill": 5
@@ -709,9 +707,9 @@
       "time": "day",
       "positions": {
         "professor": [
-          8,
+          -30,
           -6.2,
-          200
+          90
         ]
       },
       "beats": [
@@ -736,6 +734,132 @@
           "type": "endChapter",
           "title": "To be continued",
           "summary": "Chapter 1 continues in Phase 4 with the chase, and Phase 5 with energy, Baba Ticket's evening collection and the fuel hike."
+        }
+      ]
+    },
+    "caught": {
+      "time": "day",
+      "positions": {
+        "professor": [
+          -30,
+          -6.2,
+          90
+        ],
+        "biodun": [
+          -27,
+          -4.6,
+          270
+        ]
+      },
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "You catch the door of \"God's Time Is The Best\" with one hand and your breath with the other. Passengers clap. One of them is filming."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "biodun",
+          "text": "Okay! Okay! Na joke I dey joke! Take your ₦500! Haba, you wan kill person for ₦500?",
+          "mood": "angry"
+        },
+        {
+          "type": "choice",
+          "speaker": "biodun",
+          "text": "Na only ₦500 you go collect abi? Abi you wan show me pepper?",
+          "timeout": 12,
+          "timeoutOption": 0,
+          "options": [
+            {
+              "text": "\"₦500. Na the fee. Next time no run.\"",
+              "effects": {
+                "remember": {
+                  "biodun_ch1": "caught_fair"
+                },
+                "changeStat": {
+                  "communityGoodwill": 2
+                }
+              }
+            },
+            {
+              "text": "\"₦500 plus ₦1,000 for running. Pay or I seize your key.\"",
+              "effects": {
+                "remember": {
+                  "biodun_ch1": "caught_fined"
+                },
+                "setFlag": "biodunEnemy",
+                "changeStat": {
+                  "money": 1000,
+                  "notoriety": 3,
+                  "communityGoodwill": -3,
+                  "chairmanTrust": 2
+                }
+              }
+            },
+            {
+              "text": "Give him back the ₦500. \"Today na free. Tomorrow no run.\"",
+              "effects": {
+                "remember": {
+                  "biodun_ch1": "caught_forgiven"
+                },
+                "setFlag": "biodunAlly",
+                "changeStat": {
+                  "money": -500,
+                  "communityGoodwill": 4,
+                  "mentorBond": 2
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "biodun",
+          "text": "Hmm. You be correct person. I go remember.",
+          "variants": [
+            {
+              "if": {
+                "memory": {
+                  "biodun_ch1": "caught_fined"
+                }
+              },
+              "text": "₦1,500?! For one morning? Ehen. I don hear. Lagos small, JJC. Lagos very small.",
+              "mood": "angry"
+            },
+            {
+              "if": {
+                "memory": {
+                  "biodun_ch1": "caught_forgiven"
+                }
+              },
+              "text": "Free? ... Who send you come this junction? Okay. Okay. I go remember this one. God go bless you, JJC."
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "afterChase"
+        }
+      ]
+    },
+    "escaped": {
+      "time": "day",
+      "positions": {
+        "professor": [
+          -30,
+          -6.2,
+          90
+        ]
+      },
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "\"God's Time Is The Best\" turns the corner past the motor park. Bíọ́dún's hand comes out of the window and waves. Slowly. Like a pageant queen."
+        },
+        {
+          "type": "goto",
+          "scene": "afterChase"
         }
       ]
     }
