@@ -109,6 +109,7 @@ export default function StoryScreen() {
           view={view}
           onTalk={advance}
           onShop={(v) => setOverlay(`shop:${v}`)}
+          onQuest={(q) => useGameStore.getState().startQuest(q)}
           onActivity={(id) => {
             const a = (street.activities || []).find((x) => x.id === id)
             if (a) startActivity({ ...a, key: `${a.id}-${Date.now()}` })

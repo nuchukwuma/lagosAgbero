@@ -76,7 +76,9 @@ export default function ChaseDirector() {
     const driver = namedDriver(id)
     // clear the lane just ahead so nothing spawns inside him
     for (const v of [...traffic.vehicles]) if (v.lane === 'west' && Math.abs(v.x - (startX - 10)) < 12) removeVehicle(v.id)
-    const v = spawnVehicle({ kind: chase.params.kind || driver?.kind || 'danfo', lane: 'west', slogan: driver?.slogan || "GOD'S TIME IS THE BEST", tag: { chaseTarget: true }, force: true })
+    const kind = chase.params.kind || driver?.kind || 'danfo'
+    const open = kind === 'keke' || kind === 'okada' // you can see who is riding
+    const v = spawnVehicle({ kind, lane: 'west', slogan: kind === 'danfo' ? driver?.slogan || "GOD'S TIME IS THE BEST" : null, riderLook: open ? randomLook(77, 'male') : null, color: kind === 'keke' ? '#e8c21c' : null, tag: { chaseTarget: true }, force: true })
     v.x = startX - 9
     v.speed = 3
     vehicleRef.current = v

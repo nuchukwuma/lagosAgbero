@@ -370,10 +370,6 @@
         [
           30,
           -9.6
-        ],
-        [
-          -7,
-          9.3
         ]
       ]
     },
@@ -1292,12 +1288,17 @@
     {
       "id": "iyaKeke",
       "pos": [
-        60,
-        20
+        -28.5,
+        -5.0
       ],
       "facing": 0,
       "anim": "idle",
-      "if": "iyaKekeAround"
+      "if": {
+        "anyOf": [
+          "iyaKekeAround",
+          "dayLoop"
+        ]
+      }
     },
     {
       "id": "owoNla",
@@ -1312,12 +1313,17 @@
     {
       "id": "formulaOne",
       "pos": [
-        60,
-        20
+        -49,
+        -5.2
       ],
-      "facing": 0,
+      "facing": 90,
       "anim": "idle",
-      "if": "formulaOneAround"
+      "if": {
+        "anyOf": [
+          "formulaOneAround",
+          "dayLoop"
+        ]
+      }
     },
     {
       "id": "iyaBose",
@@ -1328,6 +1334,26 @@
       "facing": 0,
       "anim": "idle",
       "if": "iyaBoseAround"
+    },
+    {
+      "id": "kelvin",
+      "pos": [
+        -1.5,
+        -9.4
+      ],
+      "facing": 200,
+      "anim": "talk",
+      "if": "dayLoop"
+    },
+    {
+      "id": "prophet",
+      "pos": [
+        -15,
+        9.4
+      ],
+      "facing": 0,
+      "anim": "argue",
+      "if": "dayLoop"
     }
   ],
   "extras": [

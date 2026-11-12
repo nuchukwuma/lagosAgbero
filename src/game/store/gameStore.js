@@ -79,6 +79,11 @@ export const useGameStore = create((set, get) => {
 
     /** Cut to a scene from anywhere (collapse, raid...). */
     interrupt: (target) => dispatch((g) => engine.interrupt(storyCtx, g, target)),
+    /** Start a side quest (quests.json) from free roam. */
+    startQuest: (quest) => {
+      if (get().view?.type !== 'freeRoam' || get().activity) return
+      dispatch((g) => engine.interrupt(storyCtx, g, quest.start))
+    },
 
     /**
      * Called about once a second while the player is out on the street.

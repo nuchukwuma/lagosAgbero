@@ -31,6 +31,8 @@ export const useWorldStore = create((set) => ({
   setJam: (seconds) => set({ jamUntil: performance.now() + seconds * 1000 }),
   nearActivity: null, // id of a free-roam activity the player can start here
   setNearActivity: (id) => set((s) => (s.nearActivity === id ? s : { nearActivity: id })),
+  nearQuest: null, // id of a side quest whose giver the player is standing next to
+  setNearQuest: (id) => set((s) => (s.nearQuest === id ? s : { nearQuest: id })),
   nearVendor: null, // npc id of a seller the player is standing next to
   setNearVendor: (id) => set((s) => (s.nearVendor === id ? s : { nearVendor: id })),
 }))

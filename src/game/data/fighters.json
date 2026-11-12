@@ -135,5 +135,14 @@
     "speed": 1.0,
     "block": 0.25,
     "aggression": 0.7
+  },
+  "professorSpar": {
+    "name": "Professor",
+    "character": "professor",
+    "hp": 90,
+    "power": 1.0,
+    "speed": 0.85,
+    "block": 0.55,
+    "aggression": 0.4
   }
 }

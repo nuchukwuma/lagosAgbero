@@ -33,6 +33,7 @@ import { WORLD_MODES } from '../modes/modeRegistry.js'
 import { LOW_ENERGY } from '../systems/energy.js'
 import VendorTracker from './VendorTracker.jsx'
 import ActivityTracker from './ActivityTracker.jsx'
+import QuestTracker from './QuestTracker.jsx'
 import street from '../data/world/iyanaWahala.json'
 
 // The 3D street behind the story. The story view decides:
@@ -55,11 +56,18 @@ const DEG = Math.PI / 180
 
 function useSceneTeleport(view, layout) {
   const last = useRef(null)
+  const lastStory = useRef(null) // the last scene of a normal (non-common) chapter
   useEffect(() => {
     const key = `${view.chapterId}/${view.sceneId}`
     if (last.current === key) return
     const first = last.current === null
     last.current = key
+    if (storyCtx.chapters[view.chapterId]?.common) return // side quests, events, raids: stay put
+    // back from a quest / event / raid to the scene that was interrupted:
+    // the player stays where they were
+    const resumed = lastStory.current === key
+    lastStory.current = key
+    if (resumed) return
     const spot = view.location ? layout.spots[view.location] : null
     if (spot) playerState.teleport = { x: spot.pos[0], z: spot.pos[1], facing: (spot.facing ?? 0) * DEG }
     else if (first) playerState.teleport = { x: layout.spawn.pos[0], z: layout.spawn.pos[1], facing: (layout.spawn.facing ?? 0) * DEG }
@@ -128,6 +136,7 @@ export default function GameCanvas({ view, game, activity = null, paused = false
           {!(fightOn && modeName === 'fight') && !busOn && <PlayerController layout={layout} look={look} enabled={(freeRoam || feeRunActive || chaseActive) && !paused} eyeRed={eyeRed} tired={game.stats.energy < LOW_ENERGY} />}
           {freeRoam && <VendorTracker />}
           {freeRoam && <ActivityTracker layout={layout} game={game} />}
+          {freeRoam && <QuestTracker game={game} />}
           <Traffic paused={paused} raining={Boolean(game.flags.raining)} />
           <Suspense fallback={null}>
             <Crowd layout={layout} quality={quality} paused={paused} />

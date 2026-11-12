@@ -332,6 +332,251 @@
           "scene": "@resume"
         }
       ]
+    },
+    "phoneSnatch": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "A boy on an okada snatches a phone from a woman at the bus stop and zooms off. \"THIEF! THIEF!\" Everybody looks at the fastest person nearby. That's you."
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "(The okada is weaving through traffic.)",
+          "timeout": 6,
+          "timeoutOption": 1,
+          "options": [
+            {
+              "text": "Chase him!",
+              "effects": {
+                "startMode": "chase",
+                "params": {
+                  "target": "thief",
+                  "kind": "okada",
+                  "difficulty": 2,
+                  "timeLimit": 30
+                },
+                "results": {
+                  "won": {
+                    "changeStat": {
+                      "communityGoodwill": 4,
+                      "notoriety": 2
+                    },
+                    "toast": "You grab the phone. The woman hugs you. The thief joins a church the next day."
+                  },
+                  "lost": {
+                    "changeStat": {
+                      "energy": -8
+                    },
+                    "toast": "Gone. The woman sighs: \"Lagos.\""
+                  }
+                }
+              }
+            },
+            {
+              "text": "Let him go. Not today.",
+              "effects": {
+                "changeStat": {
+                  "communityGoodwill": -1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "@resume"
+        }
+      ]
+    },
+    "okadaCrash": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "CRASH. An okada and a keke meet in the middle of the road. Nobody is badly hurt, but both riders are shouting and a crowd is gathering to 'help'."
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "(The crowd is getting hot.)",
+          "options": [
+            {
+              "text": "Calm everybody down and push the bikes off the road.",
+              "effects": {
+                "changeStat": {
+                  "communityGoodwill": 3,
+                  "energy": -5
+                },
+                "toast": "Traffic moves again. A driver throws you ₦200 through his window.",
+                "goto": "@resume"
+              }
+            },
+            {
+              "text": "Charge both of them 'accident clearance fee' (₦1,000).",
+              "effects": {
+                "changeStat": {
+                  "money": 1000,
+                  "communityGoodwill": -3,
+                  "notoriety": 2
+                },
+                "goto": "@resume"
+              }
+            },
+            {
+              "text": "Keep walking.",
+              "effects": {
+                "goto": "@resume"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "lostChild": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "passenger",
+          "text": "(a small girl in school uniform, holding a lunch flask, crying) I no know where my mummy dey. She say make I wait for here. Since morning."
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "(She's maybe six.)",
+          "options": [
+            {
+              "text": "Take her round the market until you find her mother.",
+              "effects": {
+                "changeStat": {
+                  "communityGoodwill": 5,
+                  "energy": -8
+                },
+                "setFlag": "foundLostChild",
+                "toast": "Her mother is at Ada's Corner, frantic. She hugs the girl, then you, then the girl again."
+              }
+            },
+            {
+              "text": "Take her to Mama Put to wait, and ask around.",
+              "effects": {
+                "changeStat": {
+                  "communityGoodwill": 3
+                },
+                "toast": "Mama Put feeds her. Her mother arrives an hour later and pays for the food. Mama Put refuses."
+              }
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "@resume"
+        }
+      ]
+    },
+    "bigManCash": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "A convoy slows down. Someone in the third car throws naira notes out of the window. The bus stop becomes a rugby match."
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "(Money is raining.)",
+          "options": [
+            {
+              "text": "Dive in.",
+              "effects": {
+                "changeStat": {
+                  "money": 1500,
+                  "energy": -6,
+                  "communityGoodwill": -1
+                },
+                "toast": "You come out with ₦1,500 and somebody's shoe."
+              }
+            },
+            {
+              "text": "Help the old woman who got knocked down.",
+              "effects": {
+                "changeStat": {
+                  "communityGoodwill": 4
+                },
+                "toast": "She blesses you in three languages. You feel richer than ₦1,500."
+              }
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "@resume"
+        }
+      ]
+    },
+    "touts": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Two touts from another park stroll into your area and start collecting from YOUR drivers. One of them winks at you."
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "(Your drivers are watching.)",
+          "options": [
+            {
+              "text": "\"This na my area.\" (fight)",
+              "effects": {
+                "startMode": "fight",
+                "params": {
+                  "opponent": "thug",
+                  "difficulty": 1
+                },
+                "results": {
+                  "won": {
+                    "changeStat": {
+                      "notoriety": 4,
+                      "chairmanTrust": 2
+                    },
+                    "toast": "They leave. Your drivers pay you a little faster today."
+                  },
+                  "lost": {
+                    "changeStat": {
+                      "money": -1000,
+                      "energy": -10
+                    },
+                    "toast": "They take ₦1,000 and your dignity, in that order."
+                  }
+                }
+              }
+            },
+            {
+              "text": "Report them to Baba Ticket's boys.",
+              "effects": {
+                "changeStat": {
+                  "chairmanTrust": 1
+                },
+                "toast": "Baba Ticket's boys handle it. You owe them now."
+              }
+            },
+            {
+              "text": "Split it with them. Peace.",
+              "effects": {
+                "changeStat": {
+                  "money": 500,
+                  "notoriety": -1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "@resume"
+        }
+      ]
     }
   }
 }

@@ -162,6 +162,66 @@
       "effects": {
         "toast": "Baba Radio: \"The dollar has gone to the gym. The naira has gone to the hospital.\""
       }
+    },
+    {
+      "id": "phoneSnatch",
+      "weight": 2,
+      "once": true,
+      "if": {
+        "stats": {
+          "day": ">= 2"
+        }
+      },
+      "scene": "events:phoneSnatch"
+    },
+    {
+      "id": "okadaCrash",
+      "weight": 2,
+      "once": true,
+      "scene": "events:okadaCrash"
+    },
+    {
+      "id": "lostChild",
+      "weight": 1,
+      "once": true,
+      "scene": "events:lostChild"
+    },
+    {
+      "id": "bigManCash",
+      "weight": 1,
+      "once": true,
+      "if": {
+        "flags": [
+          "electionSeason"
+        ]
+      },
+      "scene": "events:bigManCash"
+    },
+    {
+      "id": "touts",
+      "weight": 2,
+      "once": true,
+      "minNotoriety": 10,
+      "scene": "events:touts"
+    },
+    {
+      "id": "nepaLight",
+      "weight": 1,
+      "effects": {
+        "toast": "UP NEPA! Light don come! The whole street screams. Light don go. The whole street screams again."
+      }
+    },
+    {
+      "id": "radioKelvin",
+      "weight": 1,
+      "if": {
+        "flags": [
+          "quest_kelvinPitch_done"
+        ]
+      },
+      "effects": {
+        "toast": "Baba Radio: \"Another investment scheme don migrate. Please, stop giving your money to servers.\""
+      }
     }
   ]
 }

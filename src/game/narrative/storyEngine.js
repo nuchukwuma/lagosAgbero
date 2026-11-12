@@ -77,7 +77,7 @@ function jump(ctx, state, target, events) {
     const back = state.story.returnTo || state.story.checkpoint
     if (!back) throw new Error('Nothing to resume')
     events.push({ type: 'scene', ...back })
-    return withStory(state, { ...back, beatIndex: 0, returnTo: null })
+    return withStory(state, { chapterId: back.chapterId, sceneId: back.sceneId, beatIndex: back.beatIndex ?? 0, returnTo: null })
   }
   const p = resolveTarget(target, state.story)
   chapterOf(ctx, p.chapterId) // throws early on a bad target
@@ -224,11 +224,22 @@ export function startChapter(ctx, state, chapterId, sceneId) {
 /**
  * Cut away to a scene right now (collapse, Task Force raid...), whatever the
  * player was doing. A running mode is abandoned. `goto "@resume"` later
- * returns to the start of the scene that was interrupted (the checkpoint).
+ * returns to the free-roam beat that was interrupted, or else to the start
+ * of the scene (the checkpoint).
  */
 export function interrupt(ctx, state, target) {
   const events = []
-  const returnTo = state.story.checkpoint || { chapterId: state.story.chapterId, sceneId: state.story.sceneId }
+  // Interrupted while walking around (free roam)? Come back to that same
+  // free-roam beat, so a side quest or a street event doesn't replay the
+  // scene's dialogue. Anything else goes back to the scene start.
+  const here = currentBeat(ctx, state)
+  const inCommon = ctx.chapters[state.story.chapterId]?.common
+  const returnTo =
+    here?.type === 'freeRoam' && !inCommon
+      ? { chapterId: state.story.chapterId, sceneId: state.story.sceneId, beatIndex: state.story.beatIndex }
+      : inCommon && state.story.returnTo
+        ? state.story.returnTo
+        : state.story.checkpoint || { chapterId: state.story.chapterId, sceneId: state.story.sceneId }
   state = withStory(state, { pendingMode: null, returnTo })
   state = jump(ctx, state, target, events)
   state = run(ctx, state, events)

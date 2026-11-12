@@ -1,4 +1,6 @@
 import { STAT_DEFS, formatNaira } from '../../game/narrative/stats.js'
+import { QUESTS, questState } from '../../game/systems/quests.js'
+import characters from '../../game/data/characters.json'
 
 // Player-facing status: money pockets, debt, relationship meters.
 // In development builds it also lists flags and remembered choices.
@@ -51,6 +53,20 @@ export default function StatusPanel({ game, onClose }) {
         {byGroup('relationship').map(([k, d]) => (
           <Meter key={k} label={d.label} value={stats[k]} danger={k === 'policeHeat' || k === 'rivalCultHatred'} />
         ))}
+
+        <h3>
+          Side quests <small>{QUESTS.filter((q) => questState(game, q) === 'done').length}/{QUESTS.length} done</small>
+        </h3>
+        <ul className="quest-log">
+          {QUESTS.map((q) => ({ q, st: questState(game, q) }))
+            .filter(({ st }) => st !== 'locked')
+            .map(({ q, st }) => (
+              <li key={q.id} className={st}>
+                <strong>{q.title}</strong> <small>{st === 'done' ? 'done' : st === 'active' ? 'in progress' : `ask ${characters[q.giver]?.name || q.giver}`}</small>
+                {st === 'available' && <div className="muted">{q.blurb}</div>}
+              </li>
+            ))}
+        </ul>
 
         {import.meta.env.DEV && (
           <details className="dev-details">

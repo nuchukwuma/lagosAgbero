@@ -1983,3 +1983,32 @@ body,
     width: min(420px, 50vw);
   }
 }
+
+.quest-log {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.quest-log li {
+  padding: 6px 8px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  font-size: 0.9rem;
+}
+
+.quest-log li.available {
+  border-left: 3px solid #f2c300;
+}
+
+.quest-log li.done {
+  opacity: 0.55;
+}
+
+.quest-log small {
+  opacity: 0.75;
+  margin-left: 4px;
+}

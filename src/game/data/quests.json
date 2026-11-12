@@ -1,0 +1,218 @@
+{
+  "quests": [
+    {
+      "id": "gasCylinder",
+      "giver": "mamaPut",
+      "title": "Mama Put's gas",
+      "icon": "quest",
+      "if": {
+        "flags": [
+          "dayLoop"
+        ],
+        "notFlags": [
+          "quest_gasCylinder"
+        ]
+      },
+      "blurb": "Mama Put's gas finished in the middle of the lunch rush.",
+      "start": "quests:gasCylinder"
+    },
+    {
+      "id": "kelvinPitch",
+      "giver": "kelvin",
+      "title": "Kelvin's opportunity",
+      "icon": "naira",
+      "if": {
+        "flags": [
+          "dayLoop"
+        ],
+        "notFlags": [
+          "quest_kelvinPitch"
+        ]
+      },
+      "blurb": "Kelvin Crypto has a new investment. It doubles. Of course it does.",
+      "start": "quests:kelvinPitch"
+    },
+    {
+      "id": "kelvinCollapse",
+      "giver": "kelvin",
+      "title": "The server migrated",
+      "icon": "naira",
+      "if": {
+        "flags": [
+          "quest_kelvinPitch_done",
+          "electionSeason"
+        ],
+        "notFlags": [
+          "quest_kelvinCollapse"
+        ]
+      },
+      "blurb": "Kelvin's 'investment' has... migrated.",
+      "start": "quests:kelvinCollapse"
+    },
+    {
+      "id": "crusade",
+      "giver": "prophet",
+      "title": "Prophet Fire-Fire's crusade",
+      "icon": "megaphone",
+      "if": {
+        "flags": [
+          "dayLoop"
+        ],
+        "notFlags": [
+          "quest_crusade"
+        ]
+      },
+      "blurb": "The Prophet needs hands for tonight's open-air miracle.",
+      "start": "quests:crusade"
+    },
+    {
+      "id": "stolenKeke",
+      "giver": "iyaKeke",
+      "title": "Iya Keke's keke",
+      "icon": "hand",
+      "if": {
+        "flags": [
+          "dayLoop"
+        ],
+        "notFlags": [
+          "quest_stolenKeke"
+        ]
+      },
+      "blurb": "Somebody drove off with Iya Keke's keke.",
+      "start": "quests:stolenKeke"
+    },
+    {
+      "id": "labour",
+      "giver": "biodun",
+      "title": "Hold on, Madam!",
+      "icon": "bus",
+      "if": {
+        "flags": [
+          "canDrive"
+        ],
+        "notFlags": [
+          "quest_labour"
+        ]
+      },
+      "blurb": "A woman is in labour at the Back Side. Bíọ́dún's bus is free.",
+      "start": "quests:labour"
+    },
+    {
+      "id": "sparring",
+      "giver": "professor",
+      "title": "Old legs",
+      "icon": "fist",
+      "if": {
+        "flags": [
+          "dayLoop"
+        ],
+        "notFlags": [
+          "professor_dead",
+          "professor_jailed",
+          "professor_village",
+          "quest_sparring"
+        ]
+      },
+      "blurb": "Professor wants to spar. 'For my legs. Not for my pride.'",
+      "start": "quests:sparring"
+    },
+    {
+      "id": "antenna",
+      "giver": "babaRadio",
+      "title": "Wahala FM is off air",
+      "icon": "radio",
+      "if": {
+        "flags": [
+          "dayLoop"
+        ],
+        "notFlags": [
+          "quest_antenna"
+        ]
+      },
+      "blurb": "Baba Radio's antenna fell. Iyana-Wahala has no news. Panic.",
+      "start": "quests:antenna"
+    },
+    {
+      "id": "heckler",
+      "giver": "comedian",
+      "title": "The heckler",
+      "icon": "talk",
+      "if": {
+        "flags": [
+          "dayLoop"
+        ],
+        "notFlags": [
+          "quest_heckler"
+        ]
+      },
+      "blurb": "Somebody keeps ruining Comedian Ẹ̀wọ̀'s punchlines.",
+      "start": "quests:heckler"
+    },
+    {
+      "id": "teaDebts",
+      "giver": "garba",
+      "title": "Mallam Garba's book",
+      "icon": "naira",
+      "if": {
+        "flags": [
+          "dayLoop"
+        ],
+        "notFlags": [
+          "quest_teaDebts"
+        ]
+      },
+      "blurb": "Mallam Garba's tea-debt book is thicker than the Bible.",
+      "start": "quests:teaDebts"
+    },
+    {
+      "id": "supplier",
+      "giver": "ada",
+      "title": "Short supply",
+      "icon": "buy",
+      "if": {
+        "stats": {
+          "friendBond": ">= 10"
+        },
+        "notFlags": [
+          "ada_estranged",
+          "quest_supplier"
+        ]
+      },
+      "blurb": "Ada's supplier delivered half and charged full.",
+      "start": "quests:supplier"
+    },
+    {
+      "id": "danceBattle",
+      "giver": "sunday",
+      "title": "Shoki battle",
+      "icon": "star",
+      "if": {
+        "flags": [
+          "metSunday"
+        ],
+        "notFlags": [
+          "lostSunday",
+          "quest_danceBattle"
+        ]
+      },
+      "blurb": "Under-Bridge challenged Sunday to a dance battle. He needs a hype man.",
+      "start": "quests:danceBattle"
+    },
+    {
+      "id": "impound",
+      "giver": "formulaOne",
+      "title": "Formula One's okada",
+      "icon": "run",
+      "if": {
+        "flags": [
+          "dayLoop"
+        ],
+        "notFlags": [
+          "quest_impound"
+        ]
+      },
+      "blurb": "The Task Force impounded Formula One's okada. He has a plan. It is a bad plan.",
+      "start": "quests:impound"
+    }
+  ]
+}

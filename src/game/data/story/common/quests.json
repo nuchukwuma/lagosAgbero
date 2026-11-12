@@ -1,0 +1,1344 @@
+{
+  "id": "quests",
+  "act": 0,
+  "common": true,
+  "title": "Side quests",
+  "description": "Side quests from people around Iyana-Wahala (see quests.json for givers). Each ends with @resume.",
+  "startScene": "gasCylinder",
+  "scenes": {
+    "gasCylinder": {
+      "beats": [
+        {
+          "type": "setFlag",
+          "flag": "quest_gasCylinder"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "mamaPut",
+          "text": "{name}! My gas don finish and twenty customers dey wait with their mouth open. Carry this cylinder go the motor park, Iya Keke's brother dey refill there. Run!"
+        },
+        {
+          "type": "freeRoam",
+          "objective": "Carry Mama Put's gas cylinder to the motor park.",
+          "goal": {
+            "reach": "motorPark"
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Iya Keke's brother weighs the cylinder, looks at you, and doubles the price because you are sweating."
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "\"₦3,000 for refill? Na gold you dey put inside?\"",
+          "options": [
+            {
+              "text": "Pay it from your pocket (₦3,000).",
+              "cost": 3000,
+              "effects": {
+                "setFlag": "mamaPutCredit",
+                "changeStat": {
+                  "communityGoodwill": 3
+                },
+                "remember": {
+                  "gasCylinder": "paid"
+                }
+              }
+            },
+            {
+              "text": "\"Mama Put sent me. You want her to stop selling you food?\"",
+              "effects": {
+                "changeStat": {
+                  "notoriety": 1
+                },
+                "remember": {
+                  "gasCylinder": "threatened"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "freeRoam",
+          "objective": "Bring the full cylinder back to Mama Put.",
+          "goal": {
+            "reach": "mamaPut"
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "mamaPut",
+          "text": "Ehen! My hero! Sit down. Eat. Today, na free food. And any day you hungry and broke, come. I go write am for book.",
+          "if": "mamaPutCredit"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "mamaPut",
+          "text": "He reduce am because of my name? Hmm. Na so e suppose be. Take this plate, you don sweat.",
+          "if": {
+            "notFlags": [
+              "mamaPutCredit"
+            ]
+          }
+        },
+        {
+          "type": "setFlag",
+          "flag": "quest_gasCylinder_done"
+        },
+        {
+          "type": "changeStat",
+          "stats": {
+            "energy": 30,
+            "communityGoodwill": 2
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "@resume"
+        }
+      ]
+    },
+    "kelvinPitch": {
+      "beats": [
+        {
+          "type": "setFlag",
+          "flag": "quest_kelvinPitch"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "kelvin",
+          "text": "My guy! Opportunity of a lifetime. 'Double-Double 2.0'. Put ₦5,000 today, collect ₦10,000 next week. Guaranteed. The server is very stable this time."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "player",
+          "text": "(Double-Double. The same name. The same smile. You feel ₦850,000 sit down on your chest.)"
+        },
+        {
+          "type": "choice",
+          "speaker": "kelvin",
+          "text": "So? You dey in?",
+          "options": [
+            {
+              "text": "Invest ₦5,000. Maybe this time is different.",
+              "cost": 5000,
+              "effects": {
+                "setFlag": "kelvinInvested",
+                "remember": {
+                  "kelvin": "invested"
+                }
+              }
+            },
+            {
+              "text": "Tell him the truth: what Double-Double did to Mama.",
+              "effects": {
+                "setFlag": "kelvinWarned",
+                "changeStat": {
+                  "mentorBond": 2
+                },
+                "remember": {
+                  "kelvin": "warned"
+                },
+                "goto": "kelvinWarned"
+              }
+            },
+            {
+              "text": "Shout it to the whole market: \"Kelvin dey run Ponzi!\"",
+              "effects": {
+                "setFlag": "kelvinExposed",
+                "changeStat": {
+                  "communityGoodwill": 5,
+                  "notoriety": 2
+                },
+                "remember": {
+                  "kelvin": "exposed"
+                },
+                "goto": "kelvinExposed"
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "kelvin",
+          "text": "Correct guy! You go thank me. Next week. Or the week after. Depends on the server."
+        },
+        {
+          "type": "setFlag",
+          "flag": "quest_kelvinPitch_done"
+        },
+        {
+          "type": "goto",
+          "scene": "@resume"
+        }
+      ]
+    },
+    "kelvinWarned": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "kelvin",
+          "text": "...Your mama? ₦850,000? (He looks at his phone for a long time.) Me, I just dey sell what dem sell me. Okay. I go... I go think am."
+        },
+        {
+          "type": "setFlag",
+          "flag": "quest_kelvinPitch_done"
+        },
+        {
+          "type": "changeStat",
+          "stats": {
+            "friendBond": 1
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "@resume"
+        }
+      ]
+    },
+    "kelvinExposed": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Three market women surround Kelvin. One of them is holding a pestle. Kelvin remembers an appointment in Ghana."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "kelvin",
+          "text": "(from a safe distance) Hater! When I blow, I no go know you!"
+        },
+        {
+          "type": "setFlag",
+          "flag": "quest_kelvinPitch_done"
+        },
+        {
+          "type": "goto",
+          "scene": "@resume"
+        }
+      ]
+    },
+    "kelvinCollapse": {
+      "beats": [
+        {
+          "type": "setFlag",
+          "flag": "quest_kelvinCollapse"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "kelvin",
+          "text": "(sitting on the kerb, very small) Double-Double 2.0 don... migrate. To a new server. In Dubai. With everybody money."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "player",
+          "text": "(Your ₦5,000 is in Dubai now. It never sends a postcard.)",
+          "if": "kelvinInvested"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "kelvin",
+          "text": "You warn me. I no hear. But I comot my own money before e crash, because of you. Take ₦2,000. Na thank-you, no be investment.",
+          "effects": {
+            "changeStat": {
+              "money": 2000
+            }
+          },
+          "if": "kelvinWarned"
+        },
+        {
+          "type": "choice",
+          "speaker": "kelvin",
+          "text": "People wan beat me. Wetin I go do?",
+          "options": [
+            {
+              "text": "\"Go and tell them yourself. Pay back what you can.\"",
+              "effects": {
+                "changeStat": {
+                  "communityGoodwill": 3,
+                  "mentorBond": 2
+                },
+                "remember": {
+                  "kelvinEnd": "faced"
+                }
+              }
+            },
+            {
+              "text": "\"Run, Kelvin. Run.\"",
+              "effects": {
+                "remember": {
+                  "kelvinEnd": "ran"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "setFlag",
+          "flag": "quest_kelvinCollapse_done"
+        },
+        {
+          "type": "goto",
+          "scene": "@resume"
+        }
+      ]
+    },
+    "crusade": {
+      "beats": [
+        {
+          "type": "setFlag",
+          "flag": "quest_crusade"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "prophet",
+          "text": "My son! Tonight, the crusade of FIRE! I need a strong man to carry generator, arrange chairs and... help with one small miracle."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "prophet",
+          "text": "(whispering) Brother Taiwo will be blind from 7 to 7:15. Then he will see. You will lead him to the stage. Simple."
+        },
+        {
+          "type": "choice",
+          "speaker": "prophet",
+          "text": "₦3,000 and free anointing oil. Deal?",
+          "options": [
+            {
+              "text": "Do it. ₦3,000 is ₦3,000.",
+              "effects": {
+                "changeStat": {
+                  "money": 3000,
+                  "energy": -10,
+                  "communityGoodwill": -2
+                },
+                "setFlag": "helpedMiracle",
+                "remember": {
+                  "crusade": "helped"
+                }
+              }
+            },
+            {
+              "text": "Carry the chairs, skip the 'miracle'.",
+              "effects": {
+                "changeStat": {
+                  "money": 1000,
+                  "energy": -8
+                },
+                "remember": {
+                  "crusade": "chairs"
+                }
+              }
+            },
+            {
+              "text": "Tell the crowd Brother Taiwo can see perfectly.",
+              "effects": {
+                "changeStat": {
+                  "communityGoodwill": 4,
+                  "notoriety": 3
+                },
+                "setFlag": "exposedProphet",
+                "remember": {
+                  "crusade": "exposed"
+                },
+                "goto": "crusadeExposed"
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "At 7:15, Brother Taiwo sees. The crowd faints. The offering bucket fills. Somewhere, a goat bleats in disbelief."
+        },
+        {
+          "type": "setFlag",
+          "flag": "quest_crusade_done"
+        },
+        {
+          "type": "goto",
+          "scene": "@resume"
+        }
+      ]
+    },
+    "crusadeExposed": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "prophet",
+          "text": "(through the microphone, very calm) The young man is possessed by the spirit of truth. It is a very dangerous spirit. Ushers, remove him."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "The ushers remove you. Gently. Half the crowd follows you out, laughing. Prophet Fire-Fire's next prophecy is about you. It is not kind."
+        },
+        {
+          "type": "setFlag",
+          "flag": "quest_crusade_done"
+        },
+        {
+          "type": "goto",
+          "scene": "@resume"
+        }
+      ]
+    },
+    "stolenKeke": {
+      "beats": [
+        {
+          "type": "setFlag",
+          "flag": "quest_stolenKeke"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "iyaKeke",
+          "text": "My keke! Some boy just drive am comot! I no dey pay agbero, but today I go pay you. Catch am!"
+        },
+        {
+          "type": "startMode",
+          "mode": "chase",
+          "params": {
+            "target": "iyaKeke",
+            "kind": "keke",
+            "difficulty": 2,
+            "timeLimit": 40
+          },
+          "results": {
+            "won": {
+              "setFlag": "iyaKekePays",
+              "changeStat": {
+                "communityGoodwill": 4,
+                "notoriety": 2
+              },
+              "goto": "kekeBack"
+            },
+            "lost": {
+              "changeStat": {
+                "energy": -10
+              },
+              "goto": "kekeGone"
+            }
+          }
+        }
+      ]
+    },
+    "kekeBack": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "iyaKeke",
+          "text": "(counting her seat cushions) Everything dey. Hmm. Okay. From today, I go pay your fee. Small small. No tell anybody say I talk am."
+        },
+        {
+          "type": "setFlag",
+          "flag": "quest_stolenKeke_done"
+        },
+        {
+          "type": "changeStat",
+          "stats": {
+            "money": 1500
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "@resume"
+        }
+      ]
+    },
+    "kekeGone": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "iyaKeke",
+          "text": "E don go. (She stares at the road for a long time.) You try. Na me no lock am. Lagos."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Two days later the keke is back, painted green, with a new slogan: \"RETURNED BY CONSCIENCE\". Nobody explains."
+        },
+        {
+          "type": "setFlag",
+          "flag": "quest_stolenKeke_done"
+        },
+        {
+          "type": "changeStat",
+          "stats": {
+            "communityGoodwill": 1
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "@resume"
+        }
+      ]
+    },
+    "labour": {
+      "beats": [
+        {
+          "type": "setFlag",
+          "flag": "quest_labour"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "biodun",
+          "text": "{name}! One woman dey born for Back Side! Ambulance say dem go come \"by God's grace\". My bus dey there. Drive am go General Hospital. Now!"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "She climbs in, holding the seat and your shoulder and her husband's collar. \"DRIVE!\""
+        },
+        {
+          "type": "startMode",
+          "mode": "drive",
+          "params": {
+            "length": 1300,
+            "stops": 1,
+            "fuel": 70,
+            "checkpoints": 1,
+            "slogan": "GOD'S TIME IS THE BEST",
+            "fare": 0,
+            "seed": 7
+          },
+          "results": {
+            "done": {
+              "goto": "labourDone"
+            },
+            "caught": {
+              "goto": "labourCaught"
+            },
+            "default": {
+              "goto": "labourLate"
+            }
+          }
+        }
+      ]
+    },
+    "labourDone": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "nurse",
+          "text": "You again? ...Oh. Oh! Bring her in! Quick!"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Forty minutes later: a baby boy, loud as a danfo horn. The mother asks your name. The baby is now called {name} Chukwuemeka Adebayo Musa. It's a compromise."
+        },
+        {
+          "type": "setFlag",
+          "flag": "quest_labour_done"
+        },
+        {
+          "type": "changeStat",
+          "stats": {
+            "communityGoodwill": 8,
+            "notoriety": 2
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "@resume"
+        }
+      ]
+    },
+    "labourCaught": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "bassey",
+          "text": "(looks into the bus, sees the woman, sees the situation) ...GO! What are you waiting for? GO! (He clears the road himself.)"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "A Task Force van escorts you to the hospital, siren on. Nobody at the junction believes this story later. You barely believe it yourself."
+        },
+        {
+          "type": "setFlag",
+          "flag": "quest_labour_done"
+        },
+        {
+          "type": "changeStat",
+          "stats": {
+            "communityGoodwill": 6,
+            "policeHeat": -5
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "@resume"
+        }
+      ]
+    },
+    "labourLate": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "You don't make it to the hospital. The baby doesn't wait. Mama Put, two market women and a passing nurse deliver him on the danfo's back seat."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "nurse",
+          "text": "(wiping her hands) Healthy. Loud. Next time, drive faster. Or slower. Just drive better."
+        },
+        {
+          "type": "setFlag",
+          "flag": "quest_labour_done"
+        },
+        {
+          "type": "changeStat",
+          "stats": {
+            "communityGoodwill": 4
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "@resume"
+        }
+      ]
+    },
+    "sparring": {
+      "beats": [
+        {
+          "type": "setFlag",
+          "flag": "quest_sparring"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "professor",
+          "text": "My legs dey forget how to move. Come. Spar with me. No mercy. If you give me mercy, I go vex pass if you beat me."
+        },
+        {
+          "type": "startMode",
+          "mode": "fight",
+          "params": {
+            "opponent": "professorSpar",
+            "difficulty": 1
+          },
+          "results": {
+            "won": {
+              "changeStat": {
+                "mentorBond": 6,
+                "notoriety": 1
+              },
+              "goto": "sparWon"
+            },
+            "lost": {
+              "changeStat": {
+                "mentorBond": 6,
+                "energy": -8
+              },
+              "goto": "sparLost"
+            }
+          }
+        }
+      ]
+    },
+    "sparWon": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "professor",
+          "text": "(on the floor, laughing) Ehen! Rule number fourteen: when the old man falls, help him up before you celebrate. ...Help me up."
+        },
+        {
+          "type": "setFlag",
+          "flag": "quest_sparring_done"
+        },
+        {
+          "type": "goto",
+          "scene": "@resume"
+        }
+      ]
+    },
+    "sparLost": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "professor",
+          "text": "Three fingers. Fifty-four years. Bad knees. And still. (He offers you his hand.) Rule number fourteen: respect the old man. He has seen your move before you made it."
+        },
+        {
+          "type": "setFlag",
+          "flag": "quest_sparring_done"
+        },
+        {
+          "type": "goto",
+          "scene": "@resume"
+        }
+      ]
+    },
+    "antenna": {
+      "beats": [
+        {
+          "type": "setFlag",
+          "flag": "quest_antenna"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "babaRadio",
+          "text": "Disaster! My antenna fall! No news for Iyana-Wahala! People go start to think for themselves! Carry this new pole go Under-Bridge, my cousin go weld am for top of the paraga shed."
+        },
+        {
+          "type": "freeRoam",
+          "objective": "Carry Baba Radio's antenna to the paraga shed under the bridge.",
+          "goal": {
+            "reach": "paraga"
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "The welder takes ₦500 and twenty minutes. Sparks fly. Somewhere, a goat considers a career in electronics."
+        },
+        {
+          "type": "freeRoam",
+          "objective": "Go back and tell Baba Radio.",
+          "goal": {
+            "reach": "teaTable"
+          }
+        },
+        {
+          "type": "newsBroadcast",
+          "source": "Baba Radio's stall — Wahala FM 99.9",
+          "headline": "WE DEY BACK ON AIR!",
+          "text": "Wahala FM thanks one young man from the Back Side for climbing what needed to be climbed. Our first song goes out to him. It is a very old song. It is the only song."
+        },
+        {
+          "type": "setFlag",
+          "flag": "quest_antenna_done"
+        },
+        {
+          "type": "changeStat",
+          "stats": {
+            "communityGoodwill": 3,
+            "money": -500
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "@resume"
+        }
+      ]
+    },
+    "heckler": {
+      "beats": [
+        {
+          "type": "setFlag",
+          "flag": "quest_heckler"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "comedian",
+          "text": "Every joke I tell, that man for back shout the ending first. Every single one. My career is dying in front of my eyes."
+        },
+        {
+          "type": "choice",
+          "speaker": "comedian",
+          "text": "Handle am for me. Any way.",
+          "options": [
+            {
+              "text": "\"Oga, come outside make we talk.\" (fight)",
+              "effects": {
+                "startMode": "fight",
+                "params": {
+                  "opponent": "passenger",
+                  "difficulty": 1
+                },
+                "results": {
+                  "won": {
+                    "changeStat": {
+                      "notoriety": 2
+                    },
+                    "goto": "hecklerDone"
+                  },
+                  "lost": {
+                    "changeStat": {
+                      "energy": -8
+                    },
+                    "goto": "hecklerDone"
+                  }
+                }
+              }
+            },
+            {
+              "text": "Out-joke him.",
+              "effects": {
+                "goto": "jokeOff"
+              }
+            },
+            {
+              "text": "Pay him ₦500 to laugh at the right places.",
+              "cost": 500,
+              "effects": {
+                "remember": {
+                  "heckler": "paid"
+                },
+                "goto": "hecklerDone"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "jokeOff": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "The heckler stands up. \"Oya, you. Make me laugh.\" The crowd turns. You have one shot."
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "(Which joke?)",
+          "options": [
+            {
+              "text": "\"NEPA called. Them say make you return the light you borrow for your face.\"",
+              "effects": {
+                "changeStat": {
+                  "communityGoodwill": 3,
+                  "notoriety": 2
+                },
+                "remember": {
+                  "heckler": "roasted"
+                },
+                "goto": "hecklerDone"
+              }
+            },
+            {
+              "text": "\"Why the chicken cross the road? Because the danfo no stop.\"",
+              "effects": {
+                "remember": {
+                  "heckler": "meh"
+                },
+                "goto": "jokeFlop"
+              }
+            },
+            {
+              "text": "\"Your village people dey look for you. Dem say you owe them.\"",
+              "effects": {
+                "changeStat": {
+                  "communityGoodwill": 2,
+                  "notoriety": 1
+                },
+                "remember": {
+                  "heckler": "roasted"
+                },
+                "goto": "hecklerDone"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "jokeFlop": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Silence. A cricket. Then the heckler laughs, not at the joke, at you. The crowd laughs with him. Somehow, it works anyway: he's too busy laughing to heckle."
+        },
+        {
+          "type": "goto",
+          "scene": "hecklerDone"
+        }
+      ]
+    },
+    "hecklerDone": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "comedian",
+          "text": "Free! My punchlines are free! Here, take a joke on the house. A Senior Joke. Don't laugh too hard, your eyes will turn red.",
+          "effects": {
+            "changeStat": {
+              "energy": 20
+            }
+          }
+        },
+        {
+          "type": "setFlag",
+          "flag": "quest_heckler_done"
+        },
+        {
+          "type": "goto",
+          "scene": "@resume"
+        }
+      ]
+    },
+    "teaDebts": {
+      "beats": [
+        {
+          "type": "setFlag",
+          "flag": "quest_teaDebts"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "garba",
+          "text": "This book. Na tea debt since 2019. Three names dey on top: Kpakpa, the Pastor Driver, and... Baba Ticket. Collect anything. You keep half."
+        },
+        {
+          "type": "choice",
+          "speaker": "garba",
+          "text": "Who first?",
+          "options": [
+            {
+              "text": "Kpakpa (₦1,200).",
+              "effects": {
+                "goto": "debtKpakpa"
+              }
+            },
+            {
+              "text": "Baba Ticket (₦4,500). Brave.",
+              "effects": {
+                "goto": "debtBabaTicket"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "debtKpakpa": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "kpakpa",
+          "text": "Tea debt? Me? (He looks at your face, then at the book.) ...Scatter no go hear this one. Take ₦1,200. Tell Garba the tea no sweet anyway."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "garba",
+          "text": "Hmm! Kpakpa pay! Write the date! Today na holiday! Here, your half.",
+          "effects": {
+            "changeStat": {
+              "money": 600,
+              "communityGoodwill": 1
+            }
+          }
+        },
+        {
+          "type": "setFlag",
+          "flag": "quest_teaDebts_done"
+        },
+        {
+          "type": "goto",
+          "scene": "@resume"
+        }
+      ]
+    },
+    "debtBabaTicket": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "babaTicket",
+          "text": "(chewing) Tea debt. For my own park. From Garba. (He laughs so long that his guards start laughing.) The man who owes the tea seller... owes the tea seller. Take ₦4,500. Tell Garba he has courage. That is rarer than sugar."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "garba",
+          "text": "Wallahi! Baba Ticket pay?! Ah. You be magician. Your half.",
+          "effects": {
+            "changeStat": {
+              "money": 2250,
+              "chairmanTrust": 2,
+              "notoriety": 2
+            }
+          }
+        },
+        {
+          "type": "setFlag",
+          "flag": "quest_teaDebts_done"
+        },
+        {
+          "type": "goto",
+          "scene": "@resume"
+        }
+      ]
+    },
+    "supplier": {
+      "beats": [
+        {
+          "type": "setFlag",
+          "flag": "quest_supplier"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ada",
+          "text": "My supplier send twenty cartons, charge me for forty. When I complain, he say na 'logistics'. He dey come back by 4. I need witness. Big witness."
+        },
+        {
+          "type": "freeRoam",
+          "objective": "Wait with Ada at her shop for the supplier.",
+          "goal": {
+            "reach": "adaShop"
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "The supplier arrives in a clean shirt and a very confident walk. He sees you standing behind Ada. The walk becomes less confident."
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "(How do you handle him?)",
+          "options": [
+            {
+              "text": "Count the cartons out loud in front of the whole market.",
+              "effects": {
+                "changeStat": {
+                  "friendBond": 8,
+                  "communityGoodwill": 3
+                },
+                "remember": {
+                  "supplier": "counted"
+                }
+              }
+            },
+            {
+              "text": "Lean on the counter and stare. Say nothing.",
+              "effects": {
+                "changeStat": {
+                  "friendBond": 5,
+                  "notoriety": 2
+                },
+                "remember": {
+                  "supplier": "stared"
+                }
+              }
+            },
+            {
+              "text": "Let Ada do it. Just stand there.",
+              "effects": {
+                "changeStat": {
+                  "friendBond": 10
+                },
+                "remember": {
+                  "supplier": "adaWon"
+                },
+                "goto": "supplierAda"
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ada",
+          "text": "He refund everything! Everything! (She punches your arm.) You get use small. Small.",
+          "effects": {
+            "changeStat": {
+              "money": 1000
+            }
+          }
+        },
+        {
+          "type": "setFlag",
+          "flag": "quest_supplier_done"
+        },
+        {
+          "type": "goto",
+          "scene": "@resume"
+        }
+      ]
+    },
+    "supplierAda": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "ada",
+          "text": "(after destroying the supplier with numbers, receipts and one devastating proverb) You see? I no need you. ...But thank you for standing there. E help."
+        },
+        {
+          "type": "setFlag",
+          "flag": "quest_supplier_done"
+        },
+        {
+          "type": "goto",
+          "scene": "@resume"
+        }
+      ]
+    },
+    "danceBattle": {
+      "beats": [
+        {
+          "type": "setFlag",
+          "flag": "quest_danceBattle"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "sunday",
+          "text": "Under-Bridge boys challenge me! Shoki battle, tonight! I need hype man. Somebody wey go shout my name like say na election."
+        },
+        {
+          "type": "choice",
+          "speaker": "sunday",
+          "text": "First round. Their dancer does a perfect Zanku. What does Sunday answer with?",
+          "options": [
+            {
+              "text": "\"Shoki! Shoki! SHOKI!\" (play to the crowd)",
+              "effects": {
+                "setFlag": "dance1"
+              }
+            },
+            {
+              "text": "\"Do Azonto! Old school!\"",
+              "effects": {}
+            }
+          ]
+        },
+        {
+          "type": "choice",
+          "speaker": "sunday",
+          "text": "Round two. He's getting tired. What now?",
+          "options": [
+            {
+              "text": "\"Leg work! Make the ground feel am!\"",
+              "effects": {
+                "setFlag": "dance2"
+              }
+            },
+            {
+              "text": "\"Freeze! Stand still! Confuse them!\"",
+              "effects": {}
+            }
+          ]
+        },
+        {
+          "type": "choice",
+          "speaker": "sunday",
+          "text": "Final round. Everybody is watching.",
+          "options": [
+            {
+              "text": "Jump in and dance WITH him.",
+              "effects": {
+                "setFlag": "dance3"
+              }
+            },
+            {
+              "text": "Throw your cap at the other dancer.",
+              "effects": {
+                "changeStat": {
+                  "notoriety": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "The crowd decides before the judge does. Sunday is carried round the bus stop like a trophy. He cries. He will deny crying.",
+          "effects": {
+            "changeStat": {
+              "communityGoodwill": 4,
+              "friendBond": 1
+            },
+            "remember": {
+              "danceBattle": "won"
+            }
+          },
+          "if": {
+            "flags": [
+              "dance1",
+              "dance2",
+              "dance3"
+            ]
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Under-Bridge wins on a technicality nobody understands. Sunday shrugs. \"Next time. Next time na war.\"",
+          "effects": {
+            "remember": {
+              "danceBattle": "lost"
+            }
+          },
+          "if": {
+            "notFlags": [
+              "dance3"
+            ]
+          }
+        },
+        {
+          "type": "setFlag",
+          "clear": [
+            "dance1",
+            "dance2",
+            "dance3"
+          ],
+          "flags": []
+        },
+        {
+          "type": "setFlag",
+          "flag": "quest_danceBattle_done"
+        },
+        {
+          "type": "goto",
+          "scene": "@resume"
+        }
+      ]
+    },
+    "impound": {
+      "beats": [
+        {
+          "type": "setFlag",
+          "flag": "quest_impound"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "formulaOne",
+          "text": "Task Force carry my okada. Impound fee na ₦15,000. I get ₦300 and one plan. You go distract the guard. I go climb fence. Then... we run. Fast. Na my name."
+        },
+        {
+          "type": "choice",
+          "speaker": "formulaOne",
+          "text": "You dey in?",
+          "options": [
+            {
+              "text": "\"Oya. I go distract am.\"",
+              "effects": {
+                "goto": "impoundRun"
+              }
+            },
+            {
+              "text": "Pay part of the fee (₦5,000) and talk them down.",
+              "cost": 5000,
+              "effects": {
+                "changeStat": {
+                  "communityGoodwill": 2
+                },
+                "remember": {
+                  "impound": "paid"
+                },
+                "goto": "impoundPaid"
+              }
+            },
+            {
+              "text": "\"Formula, no. Not today.\"",
+              "effects": {
+                "remember": {
+                  "impound": "refused"
+                },
+                "goto": "impoundNo"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "impoundRun": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "You ask the guard about his favourite football club. Forty minutes of passion later, an okada engine coughs behind the yard. The guard turns. \"HEY!\""
+        },
+        {
+          "type": "startMode",
+          "mode": "runner",
+          "params": {
+            "chaser": "taskForce",
+            "goal": 220,
+            "difficulty": 1
+          },
+          "results": {
+            "escaped": {
+              "setFlag": "formulaOneOwes",
+              "changeStat": {
+                "policeHeat": 4,
+                "notoriety": 2
+              },
+              "goto": "impoundDone"
+            },
+            "caught": {
+              "changeStat": {
+                "policeHeat": 8,
+                "money": -2000
+              },
+              "goto": "impoundCaught"
+            }
+          }
+        }
+      ]
+    },
+    "impoundDone": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "formulaOne",
+          "text": "(screeching up beside you) Enter! ...Brother, any day you need to disappear: Formula One. Free. For life. Or at least for this year."
+        },
+        {
+          "type": "setFlag",
+          "flag": "quest_impound_done"
+        },
+        {
+          "type": "goto",
+          "scene": "@resume"
+        }
+      ]
+    },
+    "impoundCaught": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "The guard catches you by the collar. Formula One gets away clean, waving. You pay ₦2,000 for 'trespass and football discussion'."
+        },
+        {
+          "type": "setFlag",
+          "flag": "quest_impound_done"
+        },
+        {
+          "type": "goto",
+          "scene": "@resume"
+        }
+      ]
+    },
+    "impoundPaid": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "formulaOne",
+          "text": "You pay?! For me? (He checks the bike, then you.) Okay. Formula One no dey forget. Any day you need to vanish, call me.",
+          "effects": {
+            "setFlag": "formulaOneOwes"
+          }
+        },
+        {
+          "type": "setFlag",
+          "flag": "quest_impound_done"
+        },
+        {
+          "type": "goto",
+          "scene": "@resume"
+        }
+      ]
+    },
+    "impoundNo": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "formulaOne",
+          "text": "No wahala. I go find another crazy person. Lagos get plenty."
+        },
+        {
+          "type": "setFlag",
+          "flag": "quest_impound_done"
+        },
+        {
+          "type": "goto",
+          "scene": "@resume"
+        }
+      ]
+    }
+  }
+}

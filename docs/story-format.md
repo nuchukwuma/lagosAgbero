@@ -516,6 +516,27 @@ A world activity's per-outcome result can start another mode right away:
 DRIVE DANFO (motor park, after the conductor chapter) uses this: road rage
 leads into a fight, an abandoned bus into the escape runner.
 
+### Side quests
+
+`src/game/data/quests.json` lists every side quest:
+
+```json
+{ "id": "gasCylinder", "giver": "mamaPut", "title": "Mama Put's gas", "icon": "quest",
+  "if": { "flags": ["dayLoop"], "notFlags": ["quest_gasCylinder"] },
+  "blurb": "Mama Put's gas finished in the middle of the lunch rush.", "start": "quests:gasCylinder" }
+```
+
+During free roam a yellow **!** floats over every giver with a quest for you;
+walk up to them and the TALK button becomes the quest. Quest scenes live in
+the common chapter `story/common/quests.json`. Each sets `quest_<id>` at the
+start and `quest_<id>_done` at the end, then `goto "@resume"`. Quests can use
+free-roam errands (`"goal": { "reach": "motorPark" }`), choices, and any mode
+(chase, fight, drive, runner). The status panel lists quests and who to ask.
+
+When an interruption (quest, street event, raid) happens during free roam,
+`@resume` returns to that same free-roam beat, and the player stays where
+they are: the scene's opening dialogue does not replay.
+
 ### Task Force raids
 
 `story/common/raids.json` holds the raid scenes:
