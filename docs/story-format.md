@@ -311,6 +311,21 @@ the drinking.
   `canCollectFees` is set. Their results go straight to the stats, and the
   clock moves on.
 
+### Fight (`"mode": "fight"`)
+
+A side-on fight in the street where the player stands.
+
+- **Moves:** punch, kick, block (hold), dodge, and a special (the "Lagos
+  Roundabout"), which needs a full meter.
+- **Params:** `opponent` (an id from `fighters.json`: `kpakpa`,
+  `conductor`, `scatter`, `taskForce`, `hyenaBoy`, `tortoiseBoy`,
+  `lordLaffy`, `thug`, `passenger`) and `difficulty` (1–3).
+- **Health and toughness:** the player's health comes from energy, and
+  opponents get tougher with the player's notoriety.
+- **Outcomes:**
+  - `won`: energy cost, notoriety +2, flag `wonFight`
+  - `lost`: a bigger energy cost, flag `lostFight`
+
 ### Gameplay modes
 
 `startMode` (as a beat, or inside effects) launches a mode with `params`.

@@ -31,7 +31,12 @@ export default function CameraRig({ mode = 'follow', speaker = null, ceiling = n
       camera.lookAt(0, 0, 0)
       return
     }
-    if (mode === 'dialogue' && npc) {
+    if (mode === 'fight' && playerState.fightView) {
+      // side-on, fighting-game style
+      const c = playerState.fightView
+      tmpLook.set(c.x, 1.05, c.z)
+      tmpPos.set(c.x, portrait ? 3.2 : 2.4, c.z + (portrait ? 9 : 6.5))
+    } else if (mode === 'dialogue' && npc) {
       // Raised three-quarter shot from the street side (south), so poles and
       // parked danfos rarely block the faces.
       const n = npc.position

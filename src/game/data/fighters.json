@@ -1,0 +1,11 @@
+{
+  "kpakpa": { "name": "Kpakpa", "character": "kpakpa", "hp": 85, "power": 1.0, "speed": 1.0, "block": 0.25, "aggression": 0.55 },
+  "conductor": { "name": "Angry conductor", "seed": 77, "hp": 70, "power": 0.85, "speed": 1.1, "block": 0.15, "aggression": 0.6 },
+  "scatter": { "name": "Scatter", "character": "scatter", "hp": 120, "power": 1.15, "speed": 1.15, "block": 0.4, "aggression": 0.6 },
+  "passenger": { "name": "Vexed passenger", "seed": 91, "hp": 60, "power": 0.8, "speed": 0.9, "block": 0.1, "aggression": 0.5 },
+  "taskForce": { "name": "Task Force officer", "character": "bassey", "lookOverride": { "body": "male_longsleeve" }, "hp": 125, "power": 1.2, "speed": 0.95, "block": 0.45, "aggression": 0.5 },
+  "hyenaBoy": { "name": "Hyena boy", "seed": 131, "lookOverride": { "shirt": "#8e44ad", "accessories": [{ "type": "bandana", "color": "#ffffff" }] }, "hp": 100, "power": 1.1, "speed": 1.15, "block": 0.3, "aggression": 0.7 },
+  "tortoiseBoy": { "name": "Tortoise boy", "seed": 149, "lookOverride": { "shirt": "#b8862b", "accessories": [{ "type": "scarf", "color": "#e0b400" }] }, "hp": 100, "power": 1.05, "speed": 0.95, "block": 0.45, "aggression": 0.5 },
+  "lordLaffy": { "name": "Lord Laffy", "seed": 157, "lookOverride": { "body": "male_suit", "shirt": "#8e44ad", "accessories": [{ "type": "glasses" }, { "type": "chain", "color": "#d4af37" }] }, "hp": 160, "power": 1.3, "speed": 1.2, "block": 0.5, "aggression": 0.7 },
+  "thug": { "name": "Rally thug", "seed": 163, "hp": 90, "power": 1.0, "speed": 1.0, "block": 0.2, "aggression": 0.65 }
+}

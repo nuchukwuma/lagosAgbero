@@ -1305,3 +1305,148 @@ body,
   color: var(--muted);
   text-shadow: 0 1px 2px #000;
 }
+
+/* ---------------- Phase 7: fight ---------------- */
+
+.fight-hud {
+  position: fixed;
+  top: calc(max(8px, env(safe-area-inset-top)) + 92px);
+  left: 12px;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 7;
+}
+
+.fight-bar {
+  flex: 1;
+}
+
+.fight-bar.right {
+  text-align: right;
+}
+
+.fight-name {
+  font-weight: 800;
+  font-size: 13px;
+  text-shadow: 0 1px 2px #000;
+}
+
+.fight-track {
+  height: 14px;
+  border-radius: 7px;
+  background: rgba(0, 0, 0, 0.55);
+  border: 2px solid #1a1408;
+  overflow: hidden;
+}
+
+.fight-bar.right .fight-track {
+  transform: scaleX(-1);
+}
+
+.fight-fill {
+  height: 100%;
+  transition: width 0.15s;
+}
+
+.fight-vs {
+  font-weight: 900;
+  color: var(--danfo);
+  text-shadow: 2px 2px 0 #000;
+}
+
+.fight-special {
+  position: fixed;
+  top: calc(max(8px, env(safe-area-inset-top)) + 128px);
+  left: 12px;
+  width: min(220px, 45vw);
+  height: 16px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.55);
+  overflow: hidden;
+  z-index: 7;
+}
+
+.fight-special div {
+  height: 100%;
+  background: #f39c12;
+}
+
+.fight-special div.full {
+  background: var(--danfo);
+  animation: pulse 0.8s infinite;
+}
+
+.fight-special span {
+  position: absolute;
+  inset: 0;
+  font-size: 11px;
+  font-weight: 800;
+  text-align: center;
+  line-height: 16px;
+}
+
+.fight-controls {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 12px;
+  padding-bottom: max(16px, env(safe-area-inset-bottom));
+  z-index: 8;
+  pointer-events: none;
+}
+
+.fight-move,
+.fight-actions {
+  display: flex;
+  gap: 8px;
+  pointer-events: auto;
+}
+
+.fight-actions {
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  max-width: 240px;
+}
+
+.fight-btn {
+  min-width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 3px solid #1a1408;
+  background: rgba(246, 236, 210, 0.88);
+  color: #1a1408;
+  font-weight: 900;
+  font-size: 12px;
+  touch-action: none;
+  user-select: none;
+}
+
+.fight-btn.big {
+  min-width: 78px;
+  height: 78px;
+  background: var(--danfo);
+}
+
+.fight-btn.block {
+  background: #8fb3ff;
+}
+
+.fight-btn.ready {
+  background: #e2553a;
+  color: #fff;
+  animation: pulse 0.8s infinite;
+}
+
+.fight-btn.dim {
+  opacity: 0.45;
+}
+
+.fight-move .fight-btn {
+  font-size: 22px;
+}

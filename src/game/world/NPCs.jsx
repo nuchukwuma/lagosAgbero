@@ -47,9 +47,9 @@ function NPC({ id, look, pos, facing, anim, speaking, mood }) {
   return <Character ref={ref} look={look} animation={animation} position={[pos[0], GROUND_Y, pos[1]]} />
 }
 
-export default function NPCs({ layout, flags, positions = {}, speaker, mood }) {
+export default function NPCs({ layout, flags, positions = {}, speaker, mood, hidden = [] }) {
   const state = { flags, stats: {}, memory: {} }
-  const npcs = (layout.raw.npcs || []).filter((n) => checkCondition(n.if, state))
+  const npcs = (layout.raw.npcs || []).filter((n) => checkCondition(n.if, state) && !hidden.includes(n.id))
   return (
     <>
       {npcs.map((n) => {

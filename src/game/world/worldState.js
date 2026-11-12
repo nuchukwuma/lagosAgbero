@@ -14,6 +14,7 @@ export const playerState = {
   // gameplay modes can limit the player:
   canRun: true, // e.g. out of stamina in a chase
   stunUntil: 0, // performance.now() ms; the player stumbles until then
+  fightView: null, // { x, z } centre of a fight in progress (camera)
 }
 
 /** id -> { position: Vector3 } for every NPC currently in the world */
