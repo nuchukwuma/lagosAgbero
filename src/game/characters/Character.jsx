@@ -7,6 +7,7 @@ import { ASSET_ROOT, CHARACTER } from '../../assets/assetManifest.js'
 import { loadClip, readClip } from './clipLoader.js'
 import { bodyInfo, normalizeLook, paintGeometry } from './look.js'
 import { attachAccessories } from './accessories.js'
+import { useBlobShadow } from '../world/Shadows.jsx'
 
 // One person in the 3D world. Everyone (player, NPCs, crowd) uses this.
 //   look       see look.js (body/outfit, colours, size, accessories)
@@ -104,9 +105,12 @@ const Character = forwardRef(function Character({ look: lookInput, animation = '
 
   useFrame((_, delta) => mixer.update(Math.min(delta, 0.1)))
 
+  const inner = useRef()
+  useBlobShadow(inner, { radius: 0.42 })
+
   return (
     <group ref={ref} {...groupProps}>
-      <group scale={[rootScale * look.width, rootScale * look.height, rootScale * look.width]}>
+      <group ref={inner} scale={[rootScale * look.width, rootScale * look.height, rootScale * look.width]}>
         <primitive object={object} />
       </group>
     </group>

@@ -7,8 +7,8 @@ import { resolveCollisions, GROUND_Y } from '../world/layout.js'
 import { CHARACTER } from '../../assets/assetManifest.js'
 import { vehicleColliders } from '../systems/traffic.js'
 
-// Moves the player around the street. The camera looks north, so "up" on the
-// joystick / W walks north (-Z). Animations follow speed: idle / walk / run.
+// Moves the player around the street. "Up" on the joystick / W walks away
+// from the camera (north, -Z, in the normal view). Animations follow speed: idle / walk / run.
 
 const WALK_SPEED = 1.9 // m/s
 const RUN_SPEED = 4.8
@@ -26,6 +26,7 @@ export default function PlayerController({ layout, look, enabled, eyeRed = 0, ti
   const ref = useRef()
   const [anim, setAnim] = useState({ name: 'idle', speed: 1 })
   const animRef = useRef(anim)
+  const basis = useRef(false)
 
   useEffect(() => attachKeyboard(), [])
   useEffect(() => {
@@ -57,9 +58,12 @@ export default function PlayerController({ layout, look, enabled, eyeRed = 0, ti
       playerState.running = running
       playerState.moving = true
       const speed = (running ? RUN_SPEED : WALK_SPEED) * Math.max(0.5, m.len)
-      // screen up = north (-Z)
-      const dx = m.x
-      const dz = -m.y
+      // screen up = away from the camera: north (-Z) normally, south when the
+      // camera films from the north. The direction only changes while the
+      // stick is at rest, so a camera flip never reverses a walk in progress.
+      const flip = basis.current ? -1 : 1
+      const dx = m.x * flip
+      const dz = -m.y * flip
       const len = Math.hypot(dx, dz) || 1
       p.x += (dx / len) * speed * dt
       p.z += (dz / len) * speed * dt
@@ -72,6 +76,8 @@ export default function PlayerController({ layout, look, enabled, eyeRed = 0, ti
       const clip = running ? 'run' : tired ? 'drunkWalk' : 'walk'
       next = { name: clip, speed: Math.round(clipRate(clip, speed) * 10) / 10 }
     }
+
+    if (m.len <= 0.08) basis.current = playerState.viewFlipped
 
     g.position.copy(p)
     g.rotation.y = playerState.facing

@@ -2,6 +2,10 @@ import { Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { PerformanceMonitor } from '@react-three/drei'
 import Lighting from './Lighting.jsx'
+import Sky from './Sky.jsx'
+import Crowd from './Crowd.jsx'
+import { BlobShadows } from './Shadows.jsx'
+import { storyCtx } from '../narrative/storyData.js'
 import StreetScene from './StreetScene.jsx'
 import NPCs from './NPCs.jsx'
 import CameraRig from './CameraRig.jsx'
@@ -35,7 +39,15 @@ import street from '../data/world/iyanaWahala.json'
 //   speaker    who the camera frames and who plays "talk"
 //   freeRoam   player control + goal marker
 
-export const STREET_LAYOUT = parseLayout(street)
+// Every mark the story places a character on, so generated street clutter
+// (kiosks, drums...) never lands where somebody has to stand.
+function storyMarks() {
+  const marks = []
+  for (const ch of Object.values(storyCtx.chapters)) for (const sc of Object.values(ch.scenes || {})) for (const p of Object.values(sc.positions || {})) marks.push([p[0], p[1], 1.8])
+  return marks
+}
+
+export const STREET_LAYOUT = parseLayout(street, { reserved: storyMarks() })
 const DIALOGUE_VIEWS = new Set(['dialogue', 'choice', 'news'])
 const DEG = Math.PI / 180
 
@@ -88,11 +100,16 @@ export default function GameCanvas({ view, game, activity = null, paused = false
     <Canvas
       className="game-canvas"
       dpr={dpr}
-      gl={{ antialias: true, powerPreference: 'high-performance' }}
-      camera={{ fov: 50, near: 0.3, far: 180, position: [0, 8, 12] }}
+      gl={{ antialias: true, powerPreference: 'high-performance', stencil: true }}
+      camera={{ fov: 50, near: 0.3, far: 220, position: [0, 8, 12] }}
+      onCreated={({ gl }) => {
+        if (import.meta.env.DEV) window.__gl = gl // dev: draw-call / triangle counts for the perf checks
+      }}
     >
       <PerformanceMonitor onDecline={() => setDpr(range.min)} onIncline={() => setDpr(range.max)} flipflops={3} onFallback={() => setDpr(range.min)} />
       <Lighting time={view.time} raining={Boolean(game.flags.raining)} />
+      <Sky />
+      <BlobShadows />
       {runnerOn ? (
         <Suspense fallback={null}>
           <RunnerScene playerLook={look} />
@@ -105,6 +122,9 @@ export default function GameCanvas({ view, game, activity = null, paused = false
           {freeRoam && <VendorTracker />}
           {freeRoam && <ActivityTracker layout={layout} game={game} />}
           <Traffic paused={paused} raining={Boolean(game.flags.raining)} />
+          <Suspense fallback={null}>
+            <Crowd layout={layout} quality={quality} paused={paused} />
+          </Suspense>
           {worldMode && modeName === 'feeCollection' && <FeeRunDirector />}
           {worldMode && modeName === 'chase' && <ChaseDirector />}
           {worldMode && modeName === 'fight' && fightOn && <FightDirector playerLook={look} />}
@@ -112,7 +132,7 @@ export default function GameCanvas({ view, game, activity = null, paused = false
         </Suspense>
       )}
       {freeRoam && <GoalTracker key={view.key} goal={view.goal} layout={layout} onReached={onGoalReached} />}
-      <CameraRig mode={busOn ? 'vehicle' : runnerOn ? 'runner' : modeName === 'fight' && fightOn ? 'fight' : talking ? 'dialogue' : 'follow'} speaker={speaker} ceiling={runnerOn ? null : layout.raw.flyover} />
+      <CameraRig mode={busOn ? 'vehicle' : runnerOn ? 'runner' : modeName === 'fight' && fightOn ? 'fight' : talking ? 'dialogue' : 'follow'} speaker={speaker} ceiling={runnerOn ? null : layout.raw.flyover} obstacles={runnerOn ? null : layout.shadows} />
     </Canvas>
   )
 }

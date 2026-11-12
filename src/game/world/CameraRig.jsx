@@ -1,3 +1,4 @@
+import { useRef } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
 import * as THREE from 'three'
 import { playerState, npcRegistry } from './worldState.js'
@@ -7,7 +8,9 @@ import { playerState, npcRegistry } from './worldState.js'
 //   dialogue  side-on shot of the player and whoever is talking
 // Movement is smoothed so cuts never feel jumpy.
 
-const FOLLOW_OFFSET = new THREE.Vector3(0, 9, 12.5)
+// Low enough to see the street, the buildings and the sky (not just the
+// ground); it rises on its own when a building would block the view.
+const FOLLOW_OFFSET = new THREE.Vector3(0, 6.2, 11.5)
 
 // Developer: add ?cam=top to the URL for an overhead map view.
 export const TOP_VIEW = import.meta.env.DEV && typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('cam') === 'top'
@@ -17,9 +20,30 @@ const lookAt = new THREE.Vector3()
 
 // `ceiling` (optional): { x, width, deckY, fromZ, toZ } — the flyover. Under it
 // the camera drops below the deck instead of filming concrete.
-export default function CameraRig({ mode = 'follow', speaker = null, ceiling = null }) {
+function blockedHeight(p, cam, obstacles) {
+  let need = 0
+  for (const t of [0.45, 0.7, 1]) {
+    const x = p.x + (cam.x - p.x) * t
+    const z = p.z + (cam.z - p.z) * t
+    for (const o of obstacles) {
+      if (o.h < 2.6) continue
+      const dx = x - o.x
+      const dz = z - o.z
+      const c = Math.cos(o.angle)
+      const s = Math.sin(o.angle)
+      const lx = dx * c - dz * s
+      const lz = dx * s + dz * c
+      if (Math.abs(lx) < o.hw + 1 && Math.abs(lz) < o.hd + 1) need = Math.max(need, o.h + 2.5 + (1 - t) * 4)
+    }
+  }
+  return need
+}
+
+// `obstacles` (optional): [{ x, z, hw, hd, angle, h }] building footprints.
+export default function CameraRig({ mode = 'follow', speaker = null, ceiling = null, obstacles = null }) {
   const camera = useThree((s) => s.camera)
   const size = useThree((s) => s.size)
+  const follow = useRef({ kind: 'south', clearSince: 0 })
 
   useFrame((_, delta) => {
     const p = playerState.position
@@ -80,10 +104,37 @@ export default function CameraRig({ mode = 'follow', speaker = null, ceiling = n
       const side = p.z > 4 ? -1 : 1
       tmpPos.set(p.x + 2, portrait ? 4.8 : 4, p.z + side * (portrait ? 7.5 : 6.5))
     } else {
-      const k = portrait ? 1.25 : 1
-      tmpLook.set(p.x, 1.1, p.z - 2)
-      tmpPos.set(p.x + FOLLOW_OFFSET.x, FOLLOW_OFFSET.y * k, p.z + FOLLOW_OFFSET.z * k)
+      // Three ways to film the player, tried in order:
+      //   south  the normal view: camera south of the player, looking north
+      //   north  when houses block that view (south side of the street)
+      //   over   looking almost straight down, between two rows of houses
+      const k = portrait ? 1.3 : 1
+      const now = performance.now()
+      const view = follow.current
+      const southNeed = obstacles ? blockedHeight(p, tmpPos.set(p.x, FOLLOW_OFFSET.y * k, p.z + FOLLOW_OFFSET.z * k), obstacles) : 0
+      const northNeed = obstacles ? blockedHeight(p, tmpPos.set(p.x, FOLLOW_OFFSET.y * k, p.z - FOLLOW_OFFSET.z * k), obstacles) : 0
+      let want = southNeed === 0 ? 'south' : northNeed === 0 && p.z > 2 ? 'north' : 'over'
+      // don't flip back and forth: leave the current view only when it is
+      // blocked, or once the normal view has been clear for a moment
+      if (want !== view.kind) {
+        const currentBlocked = view.kind === 'south' ? southNeed > 0 : view.kind === 'north' ? northNeed > 0 : false
+        if (!currentBlocked && !(want === 'south' && now - view.clearSince > 700)) want = view.kind
+      }
+      if (southNeed > 0) view.clearSince = now
+      view.kind = want
+      playerState.viewFlipped = want === 'north'
+      if (want === 'north') {
+        tmpLook.set(p.x, 1.5, p.z + 3)
+        tmpPos.set(p.x, FOLLOW_OFFSET.y * k, p.z - FOLLOW_OFFSET.z * k)
+      } else if (want === 'over') {
+        tmpLook.set(p.x, 1.0, p.z - 0.5)
+        tmpPos.set(p.x, 15 * k, p.z + 4.5)
+      } else {
+        tmpLook.set(p.x, 1.5, p.z - 3)
+        tmpPos.set(p.x + FOLLOW_OFFSET.x, FOLLOW_OFFSET.y * k, p.z + FOLLOW_OFFSET.z * k)
+      }
     }
+    if (mode !== 'follow') playerState.viewFlipped = false
 
     if (ceiling && Math.abs(tmpPos.x - ceiling.x) < ceiling.width / 2 + 2 && tmpPos.z > ceiling.fromZ && tmpPos.z < ceiling.toZ) {
       const maxY = ceiling.deckY - 1.4

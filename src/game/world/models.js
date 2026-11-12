@@ -22,7 +22,7 @@ const materialCache = new Map()
 const atlasCache = new Map()
 const stripeMaterial = new THREE.MeshLambertMaterial({ color: '#141414' })
 
-function atlasTexture(pack, variant, like) {
+export function atlasTexture(pack, variant, like) {
   const file = ATLASES[pack]?.[variant]
   if (!file) return like
   const key = `${pack}/${variant}`
@@ -150,12 +150,17 @@ function processModel(asset, scene) {
   return { object, parts, asset }
 }
 
+/** The processed prototype for a manifest name, given its loaded glTF. */
+export function prototypeFor(name, gltf) {
+  if (!protoCache.has(name)) protoCache.set(name, processModel(getAsset(name), gltf.scene))
+  return protoCache.get(name)
+}
+
 /** React hook: the processed prototype for a manifest name (suspends while loading). */
 export function useModelPrototype(name) {
   const asset = getAsset(name)
   const gltf = useGLTF(asset.url)
-  if (!protoCache.has(name)) protoCache.set(name, processModel(asset, gltf.scene))
-  return protoCache.get(name)
+  return prototypeFor(name, gltf)
 }
 
 /** Start downloading models early (e.g. everything the street needs). */

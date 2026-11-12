@@ -2,37 +2,12 @@ import { useMemo } from 'react'
 import * as THREE from 'three'
 import { GROUND_Y } from './layout.js'
 
-// Simple shapes for things the Kenney packs don't have: the ground, pavements,
-// the flyover, sagging electricity wires and the bus shelter.
+// Simple shapes for things the Kenney packs don't have: the flyover, sagging electricity wires and the bus shelter.
 
 const concrete = new THREE.MeshLambertMaterial({ color: '#8e8a83' })
 const concreteDark = new THREE.MeshLambertMaterial({ color: '#6f6b64' })
 const metal = new THREE.MeshLambertMaterial({ color: '#3c3f44' })
 const roofMat = new THREE.MeshLambertMaterial({ color: '#2f8f5b' })
-
-export function Ground({ bounds }) {
-  const w = bounds.maxX - bounds.minX + 80
-  const d = bounds.maxZ - bounds.minZ + 80
-  return (
-    <mesh rotation-x={-Math.PI / 2} position={[(bounds.minX + bounds.maxX) / 2, -0.04, (bounds.minZ + bounds.maxZ) / 2]}>
-      <planeGeometry args={[w, d]} />
-      {/* Lagos red earth */}
-      <meshLambertMaterial color="#9c6b43" />
-    </mesh>
-  )
-}
-
-export function Pavements({ list }) {
-  return list.map((p, i) => {
-    const [x, z, w, d] = p.rect
-    return (
-      <mesh key={i} rotation-x={-Math.PI / 2} position={[x + w / 2, GROUND_Y + 0.005 + i * 0.001, z + d / 2]}>
-        <planeGeometry args={[w, d]} />
-        <meshLambertMaterial color={p.color} />
-      </mesh>
-    )
-  })
-}
 
 export function Flyover({ f }) {
   const len = f.toZ - f.fromZ

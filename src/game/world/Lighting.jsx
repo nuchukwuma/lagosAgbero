@@ -2,17 +2,18 @@ import { useEffect, useMemo, useRef } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
 import * as THREE from 'three'
 import { TOP_VIEW } from './CameraRig.jsx'
+import { env } from './env.js'
 
-// Time-of-day lighting. No shadow maps (too slow for budget phones): a sky
-// colour, fog in the same colour to hide the world's edge, a hemisphere light
-// and one directional "sun". Changes of time blend smoothly over a few
+// Time-of-day lighting. No shadow maps (too slow for budget phones; see
+// Shadows.jsx for the cheap ones): a horizon colour, fog in the same colour
+// to hide the world's edge, a hemisphere light and one directional "sun". Changes of time blend smoothly over a few
 // seconds; rain greys the sky and dims everything.
 
 export const TIMES = {
-  dawn: { sky: '#f2a46b', hemiSky: '#ffd9b0', hemiGround: '#6b4f3a', hemi: 1.1, sun: '#ffb27a', sunI: 1.5, sunPos: [60, 25, -20], fog: [35, 110] },
-  day: { sky: '#9fd3ee', hemiSky: '#ffffff', hemiGround: '#8a6f4f', hemi: 1.15, sun: '#fff4e0', sunI: 2.0, sunPos: [20, 60, 30], fog: [45, 140] },
-  dusk: { sky: '#e0795a', hemiSky: '#ffc49b', hemiGround: '#4d3426', hemi: 0.95, sun: '#ff9a6a', sunI: 1.3, sunPos: [-60, 20, 10], fog: [35, 110] },
-  night: { sky: '#121a36', hemiSky: '#7d8fd0', hemiGround: '#3a2e24', hemi: 1.25, sun: '#b4c3ff', sunI: 0.9, sunPos: [-30, 50, 20], fog: [25, 85] },
+  dawn: { sky: '#f4b183', zenith: '#6f8fc0', hemiSky: '#ffe2c4', hemiGround: '#6b4f3a', hemi: 0.95, sun: '#ffb27a', sunI: 1.9, sunPos: [60, 24, 14], fog: [40, 125], shadow: 0.26, night: 0.15 },
+  day: { sky: '#cfe8f5', zenith: '#3d8bd9', hemiSky: '#eaf4ff', hemiGround: '#8a6f4f', hemi: 0.95, sun: '#fff1d6', sunI: 2.4, sunPos: [45, 52, 24], fog: [55, 150], shadow: 0.36, night: 0 },
+  dusk: { sky: '#f08a5d', zenith: '#3f4a8a', hemiSky: '#ffc49b', hemiGround: '#4d3426', hemi: 0.85, sun: '#ff9a6a', sunI: 1.6, sunPos: [-60, 20, 16], fog: [40, 120], shadow: 0.24, night: 0.55 },
+  night: { sky: '#1a2244', zenith: '#060a1a', hemiSky: '#7d8fd0', hemiGround: '#3a2e24', hemi: 1.15, sun: '#b4c3ff', sunI: 0.8, sunPos: [-25, 50, 22], fog: [28, 95], shadow: 0.12, night: 1 },
 }
 const RAIN = { sky: new THREE.Color('#6f7a86'), dim: 0.7, fog: [20, 70] }
 
@@ -21,6 +22,7 @@ export default function Lighting({ time = 'day', raining = false }) {
   const hemi = useRef()
   const sun = useRef()
   const lamps = useRef()
+  const started = useRef(false)
   const target = useMemo(() => {
     const t = TIMES[time] || TIMES.day
     const sky = new THREE.Color(t.sky)
@@ -28,6 +30,9 @@ export default function Lighting({ time = 'day', raining = false }) {
     const dim = raining ? RAIN.dim : 1
     return {
       sky,
+      zenith: new THREE.Color(t.zenith).lerp(RAIN.sky, raining ? 0.7 : 0),
+      shadow: raining ? 0.1 : t.shadow,
+      night: t.night,
       hemiSky: new THREE.Color(t.hemiSky),
       hemiGround: new THREE.Color(t.hemiGround),
       hemi: t.hemi * dim,
@@ -43,6 +48,15 @@ export default function Lighting({ time = 'day', raining = false }) {
   useEffect(() => {
     if (!scene.background) scene.background = target.sky.clone()
     if (!scene.fog && !TOP_VIEW) scene.fog = new THREE.Fog(target.sky.clone(), target.fog[0], target.fog[1])
+    if (!started.current) {
+      started.current = true
+      env.horizon.copy(target.sky)
+      env.zenith.copy(target.zenith)
+      env.sunColor.copy(target.sun)
+      env.sunDir.copy(target.sunPos).normalize()
+      env.shadow = target.shadow
+      env.night = target.night
+    }
   }, [scene, target])
 
   useFrame((_, dt) => {
@@ -63,6 +77,13 @@ export default function Lighting({ time = 'day', raining = false }) {
       sun.current.intensity += (target.sunI - sun.current.intensity) * k
       sun.current.position.lerp(target.sunPos, k)
     }
+    // shared state for the sky dome, fake shadows and window lights
+    env.horizon.copy(scene.background || target.sky)
+    env.zenith.lerp(target.zenith, k)
+    env.sunColor.lerp(target.sun, k)
+    if (sun.current) env.sunDir.copy(sun.current.position).normalize()
+    env.shadow += (target.shadow - env.shadow) * k
+    env.night += (target.night - env.night) * k
     if (lamps.current) {
       for (const l of lamps.current.children) l.intensity += ((target.lampsOn ? l.userData.on : 0) - l.intensity) * k
     }
