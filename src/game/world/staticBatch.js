@@ -21,10 +21,39 @@ function sharedMaterial(asset, src) {
     const fade = 1 - 0.3 * (tweak.weathering || 0)
     sharedMaterials.set(
       key,
-      new THREE.MeshLambertMaterial({ map: atlasTexture(asset.pack, tweak.atlas || 'base', src.map), color: new THREE.Color(fade, fade, fade), side: src.side }),
+      new THREE.MeshLambertMaterial({ map: atlasTexture(asset.pack, tweak.atlas || 'base', src.map), color: new THREE.Color(fade, fade, fade), side: src.side, vertexColors: true }),
     )
   }
   return sharedMaterials.get(key)
+}
+
+// Baked into vertex colours (free at runtime):
+//  - a darker band where walls meet the ground (cheap ambient occlusion),
+//    so buildings sit on the street instead of floating on it
+//  - a small per-object tint, so the same house model repeated down a street
+//    doesn't look copy-pasted
+function bakeColours(g, { ao, tint }) {
+  const pos = g.attributes.position
+  const col = new Float32Array(pos.count * 3)
+  for (let i = 0; i < pos.count; i++) {
+    const y = pos.getY(i)
+    const k = ao ? 0.62 + 0.38 * Math.min(1, Math.max(0, y / 2.2)) : 1
+    col[i * 3] = k * tint[0]
+    col[i * 3 + 1] = k * tint[1]
+    col[i * 3 + 2] = k * tint[2]
+  }
+  g.setAttribute('color', new THREE.BufferAttribute(col, 3))
+  return g
+}
+
+function tintFor(item, category) {
+  if (category === 'road' || category === 'street') return [1, 1, 1]
+  // stable pseudo-random from the position
+  const h = Math.abs(Math.sin(item.position[0] * 12.9898 + item.position[2] * 78.233) * 43758.5453) % 1
+  const h2 = Math.abs(Math.sin(item.position[0] * 39.3468 + item.position[2] * 11.135) * 24634.6345) % 1
+  const bright = 0.88 + h * 0.16
+  const warm = (h2 - 0.5) * 0.08
+  return [bright * (1 + warm), bright, bright * (1 - warm)]
 }
 
 function clean(geometry, matrix) {
@@ -59,7 +88,10 @@ export function buildStaticBatches(groups, gltfs) {
         const material = sharedMaterial(asset, part.material)
         const key = `${material.uuid}|${cell}`
         if (!buckets.has(key)) buckets.set(key, { material, list: [] })
-        buckets.get(key).list.push(clean(part.geometry, m.multiplyMatrices(place, part.matrix)))
+        const g = clean(part.geometry, m.multiplyMatrices(place, part.matrix))
+        // world y is from the placement, so the AO band follows the ground
+        bakeColours(g, { ao: asset.category !== 'road', tint: tintFor(item, asset.category) })
+        buckets.get(key).list.push(g)
       }
     }
   }
