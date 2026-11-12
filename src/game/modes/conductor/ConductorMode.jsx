@@ -3,6 +3,7 @@ import { create } from 'zustand'
 import routesData from '../../data/routes.json'
 import { createTrip, dropOff, callRoute, paymentFor, changeOptions, settleFare, settleQuirk, nextStop, conductorPay, isLastStop, stopName } from './conductorLogic.js'
 import { formatNaira } from '../../narrative/stats.js'
+import { sfx } from '../../audio/audio.js'
 
 // Bus conductor mission. Story params (startMode "conductor"):
 //   route        "oshodi"
@@ -41,6 +42,7 @@ export default function ConductorMode({ params, onFinish }) {
   useEffect(() => {
     if (step !== 'driving') return undefined
     useBus.getState().setPhase('driving', trip.stopIndex)
+    sfx('hornLong')
     const id = setTimeout(() => {
       useBus.getState().setPhase('stopped', trip.stopIndex)
       arrive()
@@ -225,6 +227,7 @@ export default function ConductorMode({ params, onFinish }) {
                 className="btn"
                 onClick={() => {
                   const b = callRoute(trip, c === trip.route.call)
+                  sfx(c === trip.route.call ? 'horn' : 'wrong')
                   setBoarding(b)
                   setFareIdx(0)
                   setNote(b.map((p) => `${p.name} → ${trip.route.stops[p.dest]}`).join(' · '))
@@ -275,6 +278,7 @@ export default function ConductorMode({ params, onFinish }) {
                     className="btn"
                     onClick={() => {
                       const r = settleFare(trip, current, given, c)
+                      sfx(r.outcome === 'ok' ? 'coin' : 'wrong')
                       setNote(r.outcome === 'ok' ? pick(lines.happy) : r.outcome === 'short' ? pick(lines.angryShort) : r.outcome === 'refused' ? pick(lines.refuse) : 'You gave too much change. Your loss.')
                       refresh()
                       nextFare()

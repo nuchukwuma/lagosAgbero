@@ -2,7 +2,7 @@
 import { create } from 'zustand'
 
 const KEY = 'areaBoy.settings'
-const DEFAULTS = { quality: 'auto' } // auto | low | high
+const DEFAULTS = { quality: 'auto', music: true, sound: true } // quality: auto | low | high
 
 function read() {
   try {

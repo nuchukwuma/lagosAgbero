@@ -1587,3 +1587,66 @@ body,
     max-height: 60vh;
   }
 }
+
+/* soft vignette over the 3D view: frames the scene, costs nothing */
+.story-screen::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background: radial-gradient(ellipse at 50% 45%, rgba(0, 0, 0, 0) 55%, rgba(20, 10, 0, 0.28) 100%);
+}
+
+/* icons */
+.icon {
+  display: block;
+  flex: none;
+}
+
+.action-btn .icon,
+.fight-btn .icon {
+  margin: 0 auto;
+}
+
+.favour-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.icon-btn .icon {
+  margin: 0 auto;
+}
+
+.icon-legend {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 6px;
+}
+
+/* escape runner: arrow pad for thumbs (swipes still work) */
+.runner-pad {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 18px);
+  z-index: 7;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 0 18px;
+  pointer-events: none;
+}
+
+.runner-pad .fight-btn {
+  pointer-events: auto;
+  width: 68px;
+}
+
+.runner-pad-mid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}

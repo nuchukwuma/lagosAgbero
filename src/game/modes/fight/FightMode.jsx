@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useFight, fightInput } from './fightStore.js'
 import { useDevice } from '../../../components/hud/useDevice.js'
+import Icon from '../../../components/Icon.jsx'
 
 // Fight overlay: health bars, special meter, buttons (touch) or keys.
 // Keys: A/D or ←/→ move · J punch · K kick · L block (hold) · Space dodge · U special
@@ -23,10 +24,12 @@ function Bar({ value, max, color, label, right }) {
   )
 }
 
-function HoldButton({ action, label, className = '' }) {
+function HoldButton({ action, icon, label, className = '' }) {
   return (
     <button
       className={`fight-btn ${className}`}
+      aria-label={label}
+      title={label}
       onPointerDown={(e) => {
         e.preventDefault()
         if (action === 'block') fightInput.block = true
@@ -43,7 +46,7 @@ function HoldButton({ action, label, className = '' }) {
         if (action === 'left' || action === 'right') fightInput.move = 0
       }}
     >
-      {label}
+      <Icon name={icon} size={className.includes('big') ? 40 : 32} />
     </button>
   )
 }
@@ -92,7 +95,13 @@ export default function FightMode({ params, onFinish }) {
       <div className="fee-intro">
         <h2>Fight! {fight.hud.name}</h2>
         <p>Punch, kick, block and dodge. Land hits to fill your meter, then unleash the <strong>Lagos Roundabout</strong>.</p>
-        <p className="muted">{touch ? 'Buttons: ◀ ▶ move · PUNCH · KICK · BLOCK (hold) · DODGE · SPECIAL' : 'Keys: A/D move · J punch · K kick · L block (hold) · Space dodge · U special'}</p>
+        <p className="muted">{touch ? (
+            <span className="icon-legend">
+              <Icon name="fist" size={18} /> punch <Icon name="boot" size={18} /> kick <Icon name="shield" size={18} /> block (hold) <Icon name="dodge" size={18} /> dodge <Icon name="bolt" size={18} /> special
+            </span>
+          ) : (
+            'Keys: A/D move · J punch · K kick · L block (hold) · Space dodge · U special'
+          )}</p>
         <button className="btn btn-primary" onClick={fight.begin}>
           Oya!
         </button>
@@ -126,15 +135,15 @@ export default function FightMode({ params, onFinish }) {
       {touch ? (
         <div className="fight-controls">
           <div className="fight-move">
-            <HoldButton action="left" label="◀" />
-            <HoldButton action="right" label="▶" />
+            <HoldButton action="left" icon="left" label="Move left" />
+            <HoldButton action="right" icon="right" label="Move right" />
           </div>
           <div className="fight-actions">
-            <HoldButton action="block" label="BLOCK" className="block" />
-            <HoldButton action="dodge" label="DODGE" />
-            <HoldButton action="kick" label="KICK" />
-            <HoldButton action="punch" label="PUNCH" className="big" />
-            <HoldButton action="special" label="SPECIAL" className={special >= 100 ? 'ready' : 'dim'} />
+            <HoldButton action="block" icon="shield" label="Block (hold)" className="block" />
+            <HoldButton action="dodge" icon="dodge" label="Dodge" />
+            <HoldButton action="kick" icon="boot" label="Kick" />
+            <HoldButton action="punch" icon="fist" label="Punch" className="big" />
+            <HoldButton action="special" icon="bolt" label="Special move" className={special >= 100 ? 'ready' : 'dim'} />
           </div>
         </div>
       ) : (

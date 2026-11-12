@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useGameStore } from '../../game/store/gameStore.js'
+import Icon from '../Icon.jsx'
 import { canOfferAd, showRewardedAd, REWARDS, ADS_PER_DAY, useAd } from '../../game/services/adService.js'
 
 // An optional favour during free roam (a mock rewarded ad in costume).
@@ -18,8 +19,9 @@ export default function FavourButton({ view, activity, overlay }) {
         if (await showRewardedAd(placement)) grantFavour(r.reward)
       }}
       title={`${r.label} (${ADS_PER_DAY - adsToday} left today)`}
+      aria-label={`Favour: ${r.label}`}
     >
-      📻 Favour <small>{r.rewardText}</small>
+      <Icon name="radio" size={18} /> <small>{r.rewardText}</small>
     </button>
   )
 }

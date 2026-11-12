@@ -8,6 +8,7 @@ import { playerState } from '../../world/worldState.js'
 import { GROUND_Y } from '../../world/layout.js'
 import { useGameStore } from '../../store/gameStore.js'
 import characters from '../../data/characters.json'
+import { sfx } from '../../audio/audio.js'
 
 // Runs a fight in the street where the player stands: two fighters face
 // each other along the road (player on the left), the camera films from the
@@ -62,6 +63,13 @@ export default function FightDirector({ playerLook }) {
       const before = { p: f.p.hp, o: f.o.hp }
       stepFight(f, { ...fightInput }, dt)
       fightInput.punch = fightInput.kick = fightInput.special = fightInput.dodge = false
+      for (const ev of f.events) {
+        if (ev.type === 'dodged') sfx('whoosh')
+        else if (ev.type === 'blocked') sfx('block')
+        else if (ev.move === 'special') sfx('special')
+        else if (ev.who === 'p') sfx(ev.move === 'kick' || ev.move === 'roundhouse' ? 'kick' : 'punch')
+        else sfx('hurt')
+      }
       const taken = before.p - f.p.hp
       const dealt = before.o - f.o.hp
       if (taken || dealt) useFight.setState({ stats: { dealt: store.stats.dealt + dealt, taken: store.stats.taken + taken } })
@@ -72,6 +80,8 @@ export default function FightDirector({ playerLook }) {
       }
       if (f.over && !endScheduled.current) {
         endScheduled.current = true
+        sfx('ko')
+        setTimeout(() => sfx(f.over === 'won' ? 'win' : 'lose'), 900)
         setTimeout(() => useFight.getState().end(f.over), 1600) // let the knock-out play
       }
     }

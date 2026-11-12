@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react'
 import { useSettings, fullscreenSupported, toggleFullscreen } from '../../game/store/settings.js'
 import { useDevice } from '../hud/useDevice.js'
+import Icon from '../Icon.jsx'
 
 export default function SettingsPanel() {
   const quality = useSettings((s) => s.quality)
+  const music = useSettings((s) => s.music !== false)
+  const sound = useSettings((s) => s.sound !== false)
   const update = useSettings((s) => s.update)
   const { touch } = useDevice()
   const [full, setFull] = useState(Boolean(document.fullscreenElement))
@@ -26,6 +29,15 @@ export default function SettingsPanel() {
             {label}
           </button>
         ))}
+      </div>
+      <div className="swatch-row">
+        <span>Audio</span>
+        <button className={`chip ${music ? 'on' : ''}`} onClick={() => update({ music: !music })} aria-pressed={music}>
+          <Icon name="music" size={16} /> Music
+        </button>
+        <button className={`chip ${sound ? 'on' : ''}`} onClick={() => update({ sound: !sound })} aria-pressed={sound}>
+          <Icon name={sound ? 'sound' : 'mute'} size={16} /> Sound
+        </button>
       </div>
       {fullscreenSupported() ? (
         <button className="btn" onClick={toggleFullscreen}>

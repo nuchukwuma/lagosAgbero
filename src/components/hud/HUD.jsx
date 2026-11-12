@@ -1,6 +1,7 @@
 import RedEyes from './RedEyes.jsx'
 import { formatNaira } from '../../game/narrative/stats.js'
 import { formatClock } from '../../game/systems/clock.js'
+import Icon from '../Icon.jsx'
 
 // Always-visible status: who you are, money, energy (red eyes), notoriety.
 export default function HUD({ game, onStatus, onMenu }) {
@@ -27,11 +28,11 @@ export default function HUD({ game, onStatus, onMenu }) {
         </div>
       </div>
       <div className="hud-right">
-        <button className="icon-btn" onClick={onStatus} aria-label="Status">
-          ☰
+        <button className="icon-btn" onClick={onStatus} aria-label="Status" title="Status">
+          <Icon name="stats" size={22} />
         </button>
-        <button className="icon-btn" onClick={onMenu} aria-label="Menu">
-          ⏸
+        <button className="icon-btn" onClick={onMenu} aria-label="Menu" title="Pause menu">
+          <Icon name="pause" size={22} />
         </button>
       </div>
     </div>

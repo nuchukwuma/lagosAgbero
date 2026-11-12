@@ -8,6 +8,7 @@ import { loadClip, readClip } from './clipLoader.js'
 import { bodyInfo, normalizeLook, paintGeometry } from './look.js'
 import { attachAccessories } from './accessories.js'
 import { useBlobShadow } from '../world/Shadows.jsx'
+import { smoothNormals } from './smoothNormals.js'
 
 // One person in the 3D world. Everyone (player, NPCs, crowd) uses this.
 //   look       see look.js (body/outfit, colours, size, accessories)
@@ -39,7 +40,7 @@ const Character = forwardRef(function Character({ look: lookInput, animation = '
     let skinned = null
     o.traverse((child) => {
       if (child.isMesh) {
-        child.geometry = child.geometry.clone() // own vertex colours per person
+        child.geometry = smoothNormals(child.geometry).clone() // own vertex colours per person
         child.material = PERSON_MATERIAL
         child.frustumCulled = false // skinned bounds are unreliable when animated
         if (child.isSkinnedMesh) skinned = child

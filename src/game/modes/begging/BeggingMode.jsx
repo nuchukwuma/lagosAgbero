@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { createBegRun, approach, currentTarget, begResult, BEG } from './beggingLogic.js'
 import { formatNaira } from '../../narrative/stats.js'
 import { useGameStore } from '../../store/gameStore.js'
+import { sfx } from '../../audio/audio.js'
 
 // Aggressive begging at the Zone 5 Estate gate. Story params:
 //   count        how many people pass (default 6)
@@ -85,6 +86,7 @@ export default function BeggingMode({ params, onFinish }) {
               className="btn"
               onClick={() => {
                 const r = approach(run, id)
+                sfx(r.outcome === 'wrongPerson' ? 'siren' : r.gain > 0 ? 'coin' : r.outcome === 'nothing' ? 'wrong' : 'click')
                 if (r.outcome !== 'wrongPerson') setNote(`${pick(REACTIONS[r.outcome] || REACTIONS.nothing)}${r.gain ? ` +${formatNaira(r.gain)}` : ''}`)
                 force((n) => n + 1)
               }}

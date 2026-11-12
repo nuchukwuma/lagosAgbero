@@ -132,7 +132,7 @@ export default function FeeCollectionMode({ params, onFinish }) {
         </div>
       )}
 
-      <MoveControls actionLabel={nearVehicle && !store.popup ? 'COLLECT' : null} actionSub={nearVehicle ? formatNaira(nearFee) : null} onAction={() => nearVehicle && store.collect(nearVehicle.id)} />
+      <MoveControls actionLabel={nearVehicle && !store.popup ? 'COLLECT' : null} actionIcon="naira" actionSub={nearVehicle ? formatNaira(nearFee) : null} onAction={() => nearVehicle && store.collect(nearVehicle.id)} />
       {import.meta.env.DEV && (
         <button className="btn btn-small dev-end" onClick={() => store.end('done')}>
           End run (dev)

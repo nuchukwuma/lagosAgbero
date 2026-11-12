@@ -9,6 +9,7 @@ import SaveSlots from './components/SaveSlots.jsx'
 import StoryScreen from './components/story/StoryScreen.jsx'
 import { AdOverlay } from './components/hud/FavourButton.jsx'
 import MockCheckout from './components/menu/MockCheckout.jsx'
+import AudioDirector from './game/audio/AudioDirector.jsx'
 
 function Screen() {
   const screen = useGameStore((s) => s.screen)
@@ -47,6 +48,7 @@ export default function App() {
   return (
     <>
       <Screen />
+      <AudioDirector />
       <AdOverlay />
       <MockCheckout />
     </>

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useRunner, runnerInput } from './runnerStore.js'
 import { useDevice } from '../../../components/hud/useDevice.js'
+import Icon from '../../../components/Icon.jsx'
 
 // Escape run overlay: distance, stumbles, pursuers; swipe (or arrow keys /
 // WASD / Space) to change lane, jump and slide.
@@ -39,7 +40,7 @@ export default function RunnerMode({ params, onFinish }) {
       <div className="fee-intro">
         <h2>RUN!</h2>
         <p>{params.chaser === 'hyenas' ? 'The Hyenas dey behind you.' : 'Task Force dey behind you!'} Reach {params.goal ?? 320} m to escape. Grab naira notes on the way.</p>
-        <p className="muted">{touch ? 'Swipe left/right to change lane, up to jump cartons, down to slide under banners.' : '←/→ or A/D change lane · ↑/W/Space jump · ↓/S slide'}</p>
+        <p className="muted">{touch ? 'Swipe, or tap the arrows: left/right change lane, up jumps cartons, down slides under banners.' : '←/→ or A/D change lane · ↑/W/Space jump · ↓/S slide'}</p>
         <button className="btn btn-primary" onClick={runner.begin}>
           Go!
         </button>
@@ -90,7 +91,26 @@ export default function RunnerMode({ params, onFinish }) {
           <span className={pursuer < 6 ? 'warn' : 'muted'}>They're {Math.max(0, Math.round(pursuer))} m behind</span>
         </div>
       </div>
-      {!touch && <div className="keyboard-hint">←/→ change lane · ↑ jump · ↓ slide</div>}
+      {touch ? (
+        <div className="runner-pad">
+          <button className="fight-btn" aria-label="Lane left" onPointerDown={() => (runnerInput.left = true)}>
+            <Icon name="left" size={30} />
+          </button>
+          <div className="runner-pad-mid">
+            <button className="fight-btn" aria-label="Jump" onPointerDown={() => (runnerInput.jump = true)}>
+              <Icon name="up" size={30} />
+            </button>
+            <button className="fight-btn" aria-label="Slide" onPointerDown={() => (runnerInput.slide = true)}>
+              <Icon name="down" size={30} />
+            </button>
+          </div>
+          <button className="fight-btn" aria-label="Lane right" onPointerDown={() => (runnerInput.right = true)}>
+            <Icon name="right" size={30} />
+          </button>
+        </div>
+      ) : (
+        <div className="keyboard-hint">←/→ change lane · ↑ jump · ↓ slide</div>
+      )}
       {import.meta.env.DEV && (
         <button className="btn btn-small dev-end" onClick={() => runner.end('escaped')}>
           Escape (dev)

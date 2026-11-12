@@ -10,6 +10,7 @@ import { createRun, stepRun } from './runnerLogic.js'
 import { playerState } from '../../world/worldState.js'
 import { useGameStore } from '../../store/gameStore.js'
 import characters from '../../data/characters.json'
+import { sfx } from '../../audio/audio.js'
 
 // The escape run: a straight Lagos road built from the same street pieces.
 // The player runs towards -Z; lanes are 2.6 m apart.
@@ -120,7 +121,10 @@ export default function RunnerScene({ playerLook }) {
   useFrame((_, raw) => {
     const dt = Math.min(raw, 0.05)
     if (started && !run.over) {
+      if (runnerInput.jump) sfx('jump')
+      if (runnerInput.slide) sfx('slide')
       stepRun(run, { ...runnerInput }, dt)
+      for (const ev of run.events) sfx(ev.type === 'note' ? 'coin' : 'bump')
       runnerInput.left = runnerInput.right = runnerInput.jump = runnerInput.slide = false
       hudTimer.current -= dt
       if (hudTimer.current <= 0 || run.events.length) {

@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { sfx } from '../../audio/audio.js';
 import {
   createInitiation,
   answer,
@@ -31,6 +32,7 @@ export default function InitiationMode({ params, onFinish }) {
 
   const pick = (choice) => {
     const ok = answer(s, choice);
+    sfx(ok ? 'correct' : 'wrong');
     setNote(
       ok
         ? "Silence. Then a single knock on the table. Correct."

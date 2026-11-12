@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { createRally, playRound, rallyResult, canUse, RALLY } from './rallyLogic.js'
 import { formatNaira } from '../../narrative/stats.js'
+import { sfx } from '../../audio/audio.js'
 
 // Settlement's rally job at the Roundabout. Story params:
 //   job   "disturb" (scatter the PJP rally) | "crowd" (fill the FEP rally)
@@ -81,6 +82,7 @@ export default function RallyMode({ params, onFinish }) {
               disabled={!canUse(rally, id)}
               onClick={() => {
                 const r = playRound(rally, id)
+                sfx(r.brawl ? 'hurt' : id === 'fake' ? 'click' : 'crowd')
                 setNote(r.event)
                 force((n) => n + 1)
               }}

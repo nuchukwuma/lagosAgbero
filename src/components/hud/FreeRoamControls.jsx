@@ -36,6 +36,7 @@ export default function FreeRoamControls({ view, onTalk, onShop, onActivity }) {
       )}
       <MoveControls
         actionLabel={talkName ? 'TALK' : activity ? activity.label : vendorName ? 'BUY' : null}
+        actionIcon={talkName ? 'talk' : activity ? activity.icon || 'star' : 'buy'}
         actionSub={talkName || (activity ? activity.where : vendorName)}
         onAction={() => (talkName ? onTalk() : activity ? onActivity(activity.id) : nearVendor && onShop(nearVendor))}
       />
