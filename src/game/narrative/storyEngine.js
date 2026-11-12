@@ -27,15 +27,44 @@ const LEGACY_BACKGROUNDS = {
   underBridge: { location: 'underBridge', time: 'day' },
 }
 
-export function newGameState({ name = 'Tunde', nickname = 'JJC', look = null } = {}) {
+export function newGameState({ name = 'Tunde', nickname = 'JJC', look = null, campaign = 'areaBoy', stats = {} } = {}) {
   return {
+    campaign,
     player: { name, nickname, look },
-    stats: defaultStats(),
+    stats: defaultStats(stats),
     flags: {},
     memory: {},
     time: TIME_OF.dawn, // minutes since midnight
-    story: { chapterId: null, sceneId: null, beatIndex: 0, pendingMode: null, ending: null, completedChapters: [] },
+    story: { chapterId: null, sceneId: null, beatIndex: 0, pendingMode: null, ending: null, completedChapters: [], visited: {}, picks: [] },
   }
+}
+
+/** The choices made in a chapter, in order, plus how much of it was explored. */
+export function chapterRecap(ctx, state, chapterId) {
+  const chapter = ctx.chapters[chapterId]
+  if (!chapter) return null
+  const picks = (state.story.picks || [])
+    .filter(([c]) => c === chapterId)
+    .map(([, sceneId, beatIndex, optionIndex]) => {
+      const beat = chapter.scenes[sceneId]?.beats?.[beatIndex]
+      const option = beat?.options?.[optionIndex]
+      return option ? { sceneId, prompt: interpolate(beat.text || '', state), text: interpolate(option.text, state) } : null
+    })
+    .filter(Boolean)
+  const scenes = Object.keys(chapter.scenes || {})
+  const seen = scenes.filter((id) => state.story.visited?.[`${chapterId}/${id}`]).length
+  return { picks, explored: scenes.length ? seen / scenes.length : 0, seen, total: scenes.length }
+}
+
+// ---------- history: every scene reached and every choice made ----------
+// story.visited  { "chapter/scene": true }
+// story.picks    [[chapterId, sceneId, beatIndex, optionIndex], ...] in order
+// Used by the story map (branches taken / missed) and the chapter recap.
+function markVisited(state) {
+  const key = `${state.story.chapterId}/${state.story.sceneId}`
+  const visited = state.story.visited || {}
+  if (visited[key]) return state
+  return withStory(state, { visited: { ...visited, [key]: true } })
 }
 
 // ---------- lookups ----------
@@ -84,7 +113,7 @@ function jump(ctx, state, target, events) {
   events.push({ type: 'scene', ...p })
   // every scene start in a normal chapter is a checkpoint to retry from
   const checkpoint = ctx.chapters[p.chapterId].common ? state.story.checkpoint : { chapterId: p.chapterId, sceneId: p.sceneId }
-  return withSceneTime(ctx, withStory(state, { ...p, checkpoint }))
+  return markVisited(withSceneTime(ctx, withStory(state, { ...p, checkpoint })))
 }
 
 // ---------- callbacks & dialogue ----------
@@ -215,7 +244,7 @@ export function startChapter(ctx, state, chapterId, sceneId) {
   const startScene = sceneId || chapter.startScene
   state = withStory(state, { chapterId, sceneId: startScene, beatIndex: 0, pendingMode: null, ending: null, checkpoint: chapter.common ? state.story.checkpoint : { chapterId, sceneId: startScene } })
   events.push({ type: 'chapter', chapterId, title: chapter.title })
-  state = withSceneTime(ctx, state)
+  state = markVisited(withSceneTime(ctx, state))
   state = run(ctx, state, events)
   events.push({ type: 'autosave' })
   return { state, events }
@@ -274,6 +303,8 @@ export function choose(ctx, state, index, random) {
 
   const raw = beat.options[index]
   const effects = raw.effects || {}
+  const { chapterId, sceneId, beatIndex } = state.story
+  state = withStory(state, { picks: [...(state.story.picks || []), [chapterId, sceneId, beatIndex, index]] })
   if (option.cost) state = apply(state, { changeStat: { money: -option.cost }, noticedBy: [] }, events)
   state = apply(state, effects, events)
   const fallback = { chapterId: state.story.chapterId, sceneId: state.story.sceneId, beatIndex: state.story.beatIndex + 1 }
@@ -304,7 +335,7 @@ export function renderView(ctx, state) {
     const ending = ctx.endings?.[story.ending] || { title: story.ending, epilogue: [] }
     // epilogue lines and the shared "fates" can be { "if": <condition>, "text": "..." }
     const lines = (list) => (list || []).filter((l) => typeof l === 'string' || checkCondition(l.if, state)).map((l) => interpolate(typeof l === 'string' ? l : l.text, state))
-    return { type: 'ending', id: story.ending, title: ending.title, secret: Boolean(ending.secret), epilogue: lines(ending.epilogue), fates: lines(ctx.endings?._fates) }
+    return { type: 'ending', id: story.ending, title: ending.title, secret: Boolean(ending.secret), epilogue: lines(ending.epilogue), fates: lines(ctx.endings?.[state.campaign && state.campaign !== 'areaBoy' ? `_fates_${state.campaign}` : '_fates']) }
   }
   if (story.finished || !story.chapterId) return { type: 'finished' }
 
@@ -321,6 +352,7 @@ export function renderView(ctx, state) {
     time: scene.time ?? legacy.time ?? phaseOf(state.time),
     clock: state.time ?? TIME_OF.day,
     positions: scene.positions || {}, // NPC position overrides for this scene
+    world: scene.world || chapter.world || 'iyanaWahala', // which 3D place this scene happens in
   }
 
   if (story.pendingMode) {
@@ -357,7 +389,7 @@ export function renderView(ctx, state) {
     case 'freeRoam':
       return { ...base, key, type: 'freeRoam', objective: interpolate(beat.objective || '', state), goal: beat.goal || null }
     case 'endChapter':
-      return { ...base, key, type: 'chapterEnd', title: interpolate(beat.title || `End of ${chapter.title}`, state), summary: interpolate(beat.summary || '', state) }
+      return { ...base, key, type: 'chapterEnd', title: interpolate(beat.title || `End of ${chapter.title}`, state), summary: interpolate(beat.summary || '', state), recap: chapterRecap(ctx, state, story.chapterId) }
     default:
       return { ...base, type: 'loading' }
   }

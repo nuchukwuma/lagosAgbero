@@ -6,7 +6,7 @@
 
 import fs from 'node:fs'
 import path from 'node:path'
-import { validateStory } from '../src/game/narrative/validateStory.js'
+import { validateStory, auditConsequences } from '../src/game/narrative/validateStory.js'
 import * as engine from '../src/game/narrative/storyEngine.js'
 
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..')
@@ -15,6 +15,10 @@ const readJson = (p) => JSON.parse(fs.readFileSync(p, 'utf8'))
 
 function walk(dir) {
   return fs.readdirSync(dir, { withFileTypes: true }).flatMap((d) => (d.isDirectory() ? walk(path.join(dir, d.name)) : d.name.endsWith('.json') ? [path.join(dir, d.name)] : []))
+}
+
+function walk2(dir, re) {
+  return fs.readdirSync(dir, { withFileTypes: true }).flatMap((d) => (d.isDirectory() ? walk2(path.join(dir, d.name), re) : re.test(d.name) ? [path.join(dir, d.name)] : []))
 }
 
 const chapters = {}
@@ -36,12 +40,28 @@ const ctx = {
   endings: readJson(path.join(DATA, 'endings.json')),
 }
 
-const worldJson = readJson(path.join(DATA, 'world/iyanaWahala.json'))
-const world = { spots: Object.keys(worldJson.spots || {}), npcs: (worldJson.npcs || []).map((n) => n.id) }
+const worlds = {}
+for (const f of fs.readdirSync(path.join(DATA, 'world')).filter((f) => f.endsWith('.json'))) {
+  const w = readJson(path.join(DATA, 'world', f))
+  worlds[w.id] = { spots: Object.keys(w.spots || {}), npcs: (w.npcs || []).map((n) => n.id) }
+}
 
-const { errors, warnings } = validateStory({ ...ctx, modes: [], world })
+const { errors, warnings } = validateStory({ ...ctx, modes: [], worlds })
 for (const w of warnings) console.warn(`! ${w}`)
 for (const e of errors) console.error(`✗ ${e}`)
+
+// "Every choice counts": choices that change nothing, flags nobody reads.
+// Errors in strict campaigns (campaigns.json "strict": true), warnings elsewhere.
+const campaigns = readJson(path.join(DATA, 'campaigns.json')).campaigns
+const strictCampaigns = new Set(campaigns.filter((c) => c.strict).map((c) => c.id))
+const strict = new Set(Object.values(chapters).filter((c) => strictCampaigns.has(c.campaign || 'areaBoy')).map((c) => c.id))
+const otherData = walk(DATA).filter((f) => !f.includes(`${path.sep}story${path.sep}`)).map((f) => fs.readFileSync(f, 'utf8'))
+const code = walk2(path.join(ROOT, 'src'), /\.(js|jsx)$/).filter((f) => !f.includes('.test.')).map((f) => fs.readFileSync(f, 'utf8'))
+const audit = auditConsequences(chapters, [...otherData, ...code].join('\n'), strict)
+for (const e of audit.errors) console.error(`✗ ${e}`)
+if (process.argv.includes('--audit')) for (const w of audit.warnings) console.warn(`~ ${w}`)
+else if (audit.warnings.length) console.warn(`~ ${audit.warnings.length} consequence warning(s) in non-strict chapters (run with --audit to list them)`)
+errors.push(...audit.errors)
 
 // Random play-throughs.
 let playErrors = 0

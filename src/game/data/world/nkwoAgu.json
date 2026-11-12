@@ -1,0 +1,1136 @@
+{
+  "id": "nkwoAgu",
+  "name": "Nkwọ-Agụụ village",
+  "notes": "Fictional village in the east. Metres. +X east, +Z south. The one tarred road (to Lagos) runs east-west along z=0; a side road goes south into the village square.",
+  "bounds": {
+    "minX": -60,
+    "maxX": 60,
+    "minZ": -45,
+    "maxZ": 45
+  },
+  "spawn": {
+    "pos": [
+      -20,
+      -5
+    ],
+    "facing": 180
+  },
+  "traffic": {
+    "density": 1
+  },
+  "roads": [
+    {
+      "model": "roadStraight",
+      "rotation": 0,
+      "line": {
+        "from": [
+          -92,
+          0
+        ],
+        "to": [
+          92,
+          0
+        ],
+        "step": 8
+      },
+      "skip": [
+        [
+          12,
+          0
+        ]
+      ]
+    },
+    {
+      "model": "roadJunctionT",
+      "rotation": 0,
+      "at": [
+        [
+          12,
+          0
+        ]
+      ]
+    },
+    {
+      "model": "roadStraight",
+      "rotation": 90,
+      "line": {
+        "from": [
+          12,
+          8
+        ],
+        "to": [
+          12,
+          16
+        ],
+        "step": 8
+      }
+    }
+  ],
+  "pavements": [
+    {
+      "rect": [
+        0,
+        20,
+        26,
+        16
+      ],
+      "color": "#b5703f",
+      "texture": "earth"
+    },
+    {
+      "rect": [
+        -16,
+        -42,
+        36,
+        17
+      ],
+      "color": "#7a5a33",
+      "texture": "earth"
+    },
+    {
+      "rect": [
+        -34,
+        4,
+        12,
+        3
+      ],
+      "color": "#9b958c"
+    }
+  ],
+  "props": [
+    {
+      "model": "treeLarge",
+      "rotation": 0,
+      "scale": 1.8,
+      "at": [
+        [
+          4,
+          27
+        ]
+      ]
+    },
+    {
+      "model": "treeLarge",
+      "rotation": 0,
+      "at": [
+        [
+          -40,
+          24
+        ],
+        [
+          20,
+          40
+        ],
+        [
+          -20,
+          -30
+        ],
+        [
+          56,
+          -38
+        ],
+        [
+          48,
+          -26
+        ],
+        [
+          -56,
+          38
+        ],
+        [
+          36,
+          22
+        ]
+      ]
+    },
+    {
+      "model": "treeSmall",
+      "rotation": 0,
+      "at": [
+        [
+          -12,
+          22
+        ],
+        [
+          44,
+          -14
+        ],
+        [
+          -30,
+          -14
+        ]
+      ]
+    },
+    {
+      "model": "electricityPoleSingle",
+      "scale": 1.5,
+      "rotation": 0,
+      "at": [
+        [
+          -50,
+          -6
+        ],
+        [
+          -30,
+          -6
+        ],
+        [
+          -10,
+          -6
+        ],
+        [
+          30,
+          -6
+        ],
+        [
+          50,
+          -6
+        ]
+      ],
+      "solid": true,
+      "wires": "north"
+    },
+    {
+      "model": "carton",
+      "rotation": 12,
+      "at": [
+        [
+          16,
+          23
+        ],
+        [
+          17,
+          23.5
+        ]
+      ]
+    }
+  ],
+  "buildings": [
+    {
+      "model": "tenementC",
+      "rotation": 180,
+      "at": [
+        [
+          40,
+          37
+        ]
+      ],
+      "solid": true
+    },
+    {
+      "model": "storeyHouseB",
+      "rotation": 180,
+      "at": [
+        [
+          -8,
+          37
+        ]
+      ],
+      "solid": true
+    },
+    {
+      "model": "warehouseArched",
+      "rotation": 180,
+      "at": [
+        [
+          -32,
+          37
+        ]
+      ],
+      "solid": true
+    },
+    {
+      "model": "chairmanHouse",
+      "rotation": 0,
+      "at": [
+        [
+          -50,
+          -31
+        ]
+      ],
+      "solid": true
+    },
+    {
+      "model": "richManHouseB",
+      "rotation": 0,
+      "at": [
+        [
+          30,
+          -32
+        ]
+      ],
+      "solid": true
+    },
+    {
+      "model": "compoundFence",
+      "rotation": 90,
+      "line": {
+        "from": [
+          21.5,
+          -38
+        ],
+        "to": [
+          21.5,
+          -26
+        ],
+        "step": 3.8
+      },
+      "solid": true
+    },
+    {
+      "model": "compoundFence",
+      "rotation": 90,
+      "line": {
+        "from": [
+          38.5,
+          -38
+        ],
+        "to": [
+          38.5,
+          -26
+        ],
+        "step": 3.8
+      },
+      "solid": true
+    }
+  ],
+  "vehicles": [
+    {
+      "model": "danfo",
+      "rotation": 90,
+      "at": [
+        [
+          -30,
+          -8.5
+        ]
+      ],
+      "solid": true
+    },
+    {
+      "model": "molue",
+      "rotation": 90,
+      "at": [
+        [
+          -42,
+          -9
+        ]
+      ],
+      "solid": true
+    },
+    {
+      "model": "bigManSuv",
+      "rotation": 0,
+      "at": [
+        [
+          25,
+          -23
+        ]
+      ],
+      "solid": true
+    }
+  ],
+  "rows": [
+    {
+      "from": [
+        -58,
+        -14
+      ],
+      "to": [
+        -36,
+        -14
+      ],
+      "face": 0,
+      "set": "houses",
+      "gap": 2,
+      "seed": 101,
+      "solid": true,
+      "jitter": 0.5
+    },
+    {
+      "from": [
+        42,
+        -14
+      ],
+      "to": [
+        58,
+        -14
+      ],
+      "face": 0,
+      "set": "houses",
+      "gap": 2,
+      "seed": 102,
+      "solid": true,
+      "jitter": 0.5
+    },
+    {
+      "from": [
+        -58,
+        14
+      ],
+      "to": [
+        -2,
+        14
+      ],
+      "face": 180,
+      "set": "houses",
+      "gap": 2.4,
+      "seed": 103,
+      "solid": true,
+      "jitter": 0.6
+    },
+    {
+      "from": [
+        26,
+        14
+      ],
+      "to": [
+        58,
+        14
+      ],
+      "face": 180,
+      "set": "houses",
+      "gap": 2.4,
+      "seed": 104,
+      "solid": true,
+      "jitter": 0.6
+    },
+    {
+      "from": [
+        -104,
+        52
+      ],
+      "to": [
+        104,
+        52
+      ],
+      "face": 180,
+      "set": "houses",
+      "gap": 5,
+      "seed": 105,
+      "jitter": 3
+    },
+    {
+      "from": [
+        -104,
+        -52
+      ],
+      "to": [
+        104,
+        -52
+      ],
+      "face": 0,
+      "set": "houses",
+      "gap": 5,
+      "seed": 106,
+      "jitter": 3
+    }
+  ],
+  "treeline": {
+    "rings": [
+      10,
+      24
+    ],
+    "seed": 7
+  },
+  "placed": [
+    {
+      "kind": "shrine",
+      "at": [
+        52,
+        -33,
+        0
+      ]
+    },
+    {
+      "kind": "yamBarn",
+      "at": [
+        32,
+        33,
+        0
+      ]
+    },
+    {
+      "kind": "yamBarn",
+      "at": [
+        -18,
+        33,
+        0
+      ],
+      "seed": 4
+    },
+    {
+      "kind": "palmTree",
+      "at": [
+        -24,
+        24,
+        0
+      ]
+    },
+    {
+      "kind": "palmTree",
+      "at": [
+        30,
+        24,
+        0
+      ],
+      "seed": 9
+    },
+    {
+      "kind": "palmTree",
+      "at": [
+        -44,
+        -22,
+        0
+      ],
+      "seed": 11
+    },
+    {
+      "kind": "palmTree",
+      "at": [
+        46,
+        -20,
+        0
+      ],
+      "seed": 13
+    },
+    {
+      "kind": "palmTree",
+      "at": [
+        0,
+        40,
+        0
+      ],
+      "seed": 15
+    },
+    {
+      "kind": "palmTree",
+      "at": [
+        56,
+        22,
+        0
+      ],
+      "seed": 17
+    },
+    {
+      "kind": "bench",
+      "at": [
+        24,
+        -8.4,
+        0
+      ]
+    },
+    {
+      "kind": "bench",
+      "at": [
+        20.5,
+        -8.4,
+        0
+      ],
+      "seed": 2
+    }
+  ],
+  "noClutter": [
+    [
+      -60,
+      -4.2,
+      120,
+      8.4
+    ],
+    [
+      0,
+      18,
+      26,
+      20
+    ],
+    [
+      8,
+      4,
+      8,
+      16
+    ]
+  ],
+  "clutter": [
+    {
+      "rect": [
+        -14,
+        -41,
+        32,
+        15
+      ],
+      "count": 14,
+      "kinds": [
+        "maize"
+      ],
+      "seed": 61,
+      "face": 0,
+      "spin": 4
+    },
+    {
+      "rect": [
+        -58,
+        18,
+        56,
+        24
+      ],
+      "count": 12,
+      "kinds": [
+        "palmTree",
+        "goat",
+        "clothesline",
+        "waterTank",
+        "bench",
+        "yamBarn"
+      ],
+      "seed": 62,
+      "face": 0,
+      "spin": 90
+    },
+    {
+      "rect": [
+        26,
+        18,
+        32,
+        24
+      ],
+      "count": 8,
+      "kinds": [
+        "palmTree",
+        "goat",
+        "clothesline",
+        "bench",
+        "kegs"
+      ],
+      "seed": 63,
+      "face": 0,
+      "spin": 90
+    },
+    {
+      "rect": [
+        -58,
+        -42,
+        40,
+        26
+      ],
+      "count": 8,
+      "kinds": [
+        "palmTree",
+        "goat",
+        "maize",
+        "refuse"
+      ],
+      "seed": 64,
+      "face": 0,
+      "spin": 90
+    },
+    {
+      "rect": [
+        42,
+        -44,
+        16,
+        8
+      ],
+      "count": 4,
+      "kinds": [
+        "palmTree"
+      ],
+      "seed": 65
+    },
+    {
+      "rect": [
+        -58,
+        -11,
+        110,
+        3
+      ],
+      "count": 10,
+      "kinds": [
+        "okada",
+        "kegs",
+        "umbrella",
+        "bench",
+        "drums",
+        "signboard"
+      ],
+      "seed": 66,
+      "face": 0,
+      "spin": 15
+    },
+    {
+      "rect": [
+        -58,
+        8,
+        110,
+        3
+      ],
+      "count": 8,
+      "kinds": [
+        "kegs",
+        "bench",
+        "goat",
+        "umbrella",
+        "okada"
+      ],
+      "seed": 67,
+      "face": 180,
+      "spin": 15
+    }
+  ],
+  "stalls": [
+    {
+      "id": "nkwo1",
+      "at": [
+        6,
+        22,
+        0
+      ],
+      "color": "#e67e22",
+      "goods": "food",
+      "small": true,
+      "sign": "NKWỌ MARKET"
+    },
+    {
+      "id": "nkwo2",
+      "at": [
+        20,
+        22,
+        0
+      ],
+      "color": "#27ae60",
+      "goods": "provisions",
+      "small": true,
+      "sign": "YAM & GARRI"
+    },
+    {
+      "id": "nkwo3",
+      "at": [
+        20,
+        31,
+        180
+      ],
+      "color": "#2980b9",
+      "goods": "fabric",
+      "small": true,
+      "sign": "OKEKE CLOTHS"
+    },
+    {
+      "id": "palmwine",
+      "at": [
+        24,
+        -11.5,
+        0
+      ],
+      "color": "#7b3f00",
+      "goods": "tea",
+      "small": true,
+      "sign": "PAPA NGWỌ"
+    }
+  ],
+  "signs": [
+    {
+      "at": [
+        -22,
+        -8.4,
+        0
+      ],
+      "y": 3.6,
+      "size": [
+        6,
+        1.1
+      ],
+      "post": true,
+      "bg": "#1e8449",
+      "fg": "#ffffff",
+      "lines": [
+        "NKWỌ-AGỤỤ JUNCTION",
+        "Buses to Lagos: 9 p.m."
+      ]
+    },
+    {
+      "at": [
+        -32,
+        30.4,
+        180
+      ],
+      "y": 3.4,
+      "size": [
+        6,
+        0.9
+      ],
+      "bg": "#f2f2f2",
+      "fg": "#1a1408",
+      "lines": [
+        "HOLY TRINITY PARISH"
+      ]
+    },
+    {
+      "at": [
+        30,
+        -25.6,
+        0
+      ],
+      "y": 3.2,
+      "size": [
+        5,
+        0.9
+      ],
+      "bg": "#d4af37",
+      "fg": "#1a1408",
+      "lines": [
+        "IKE MONEY VILLA"
+      ]
+    },
+    {
+      "at": [
+        -50,
+        -24.6,
+        0
+      ],
+      "y": 3.2,
+      "size": [
+        5,
+        0.8
+      ],
+      "bg": "#7b241c",
+      "fg": "#ffe08a",
+      "lines": [
+        "OBI ỌNYỊSỊ ỌHA"
+      ]
+    }
+  ],
+  "shelters": [
+    {
+      "at": [
+        -22,
+        -6.4,
+        0
+      ]
+    }
+  ],
+  "spots": {
+    "junction": {
+      "pos": [
+        -20,
+        -5
+      ],
+      "facing": 180,
+      "radius": 3.5
+    },
+    "emekaHome": {
+      "pos": [
+        40,
+        30
+      ],
+      "facing": 180,
+      "radius": 3.5
+    },
+    "square": {
+      "pos": [
+        12,
+        25
+      ],
+      "facing": 0,
+      "radius": 4
+    },
+    "church": {
+      "pos": [
+        -32,
+        29.5
+      ],
+      "facing": 180,
+      "radius": 3.5
+    },
+    "chinweHouse": {
+      "pos": [
+        -8,
+        30
+      ],
+      "facing": 180,
+      "radius": 3
+    },
+    "obi": {
+      "pos": [
+        -50,
+        -21
+      ],
+      "facing": 0,
+      "radius": 3.5
+    },
+    "ikeHouse": {
+      "pos": [
+        30,
+        -21
+      ],
+      "facing": 0,
+      "radius": 3.5
+    },
+    "shrine": {
+      "pos": [
+        52,
+        -27
+      ],
+      "facing": 0,
+      "radius": 3
+    },
+    "farm": {
+      "pos": [
+        2,
+        -23
+      ],
+      "facing": 0,
+      "radius": 4
+    },
+    "palmwine": {
+      "pos": [
+        24,
+        -8
+      ],
+      "facing": 0,
+      "radius": 3
+    }
+  },
+  "npcs": [
+    {
+      "id": "nneEmeka",
+      "pos": [
+        41,
+        31.2
+      ],
+      "facing": 180,
+      "anim": "idle"
+    },
+    {
+      "id": "chinwe",
+      "pos": [
+        -6.5,
+        31.2
+      ],
+      "facing": 180,
+      "anim": "idle",
+      "if": {
+        "notFlags": [
+          "chinweGone"
+        ]
+      }
+    },
+    {
+      "id": "reverend",
+      "pos": [
+        -30.5,
+        30.6
+      ],
+      "facing": 180,
+      "anim": "talk"
+    },
+    {
+      "id": "dibia",
+      "pos": [
+        52,
+        -30.4
+      ],
+      "facing": 0,
+      "anim": "idle"
+    },
+    {
+      "id": "onyisi",
+      "pos": [
+        -50,
+        -22.5
+      ],
+      "facing": 0,
+      "anim": "idle"
+    },
+    {
+      "id": "papaNgwo",
+      "pos": [
+        24,
+        -13
+      ],
+      "facing": 0,
+      "anim": "idle"
+    },
+    {
+      "id": "uncleDozie",
+      "pos": [
+        9,
+        28.5
+      ],
+      "facing": 90,
+      "anim": "talk"
+    },
+    {
+      "id": "ike",
+      "pos": [
+        28,
+        -22
+      ],
+      "facing": 0,
+      "anim": "idle",
+      "if": "ikeAround"
+    },
+    {
+      "id": "chiefOdu",
+      "pos": [
+        60,
+        40
+      ],
+      "facing": 0,
+      "anim": "idle",
+      "if": "chiefOduAround"
+    },
+    {
+      "id": "usher",
+      "pos": [
+        60,
+        40
+      ],
+      "facing": 0,
+      "anim": "idle",
+      "if": "usherAround"
+    }
+  ],
+  "extras": [
+    {
+      "seed": 201,
+      "pos": [
+        14,
+        27
+      ],
+      "facing": 200,
+      "anim": "talk"
+    },
+    {
+      "seed": 203,
+      "pos": [
+        16.5,
+        25.5
+      ],
+      "facing": 20,
+      "anim": "idle"
+    },
+    {
+      "seed": 205,
+      "pos": [
+        -26,
+        -5.5
+      ],
+      "facing": 180,
+      "anim": "idle"
+    },
+    {
+      "seed": 207,
+      "pos": [
+        22,
+        -9.6
+      ],
+      "facing": 0,
+      "anim": "talk"
+    },
+    {
+      "seed": 209,
+      "pos": [
+        -6,
+        -24
+      ],
+      "facing": 30,
+      "anim": "crouchIdle"
+    },
+    {
+      "seed": 211,
+      "pos": [
+        44,
+        29
+      ],
+      "facing": 200,
+      "anim": "idle"
+    }
+  ],
+  "gatherings": [
+    {
+      "at": [
+        -28,
+        -11
+      ],
+      "n": 3
+    },
+    {
+      "at": [
+        8,
+        32
+      ],
+      "n": 3
+    },
+    {
+      "at": [
+        -38,
+        20
+      ],
+      "n": 2,
+      "r": 0.7
+    },
+    {
+      "at": [
+        48,
+        18
+      ],
+      "n": 2,
+      "r": 0.7
+    },
+    {
+      "at": [
+        0,
+        -11
+      ],
+      "n": 2,
+      "r": 0.6
+    }
+  ],
+  "walkways": [
+    {
+      "from": [
+        -78,
+        -6
+      ],
+      "to": [
+        78,
+        -6
+      ],
+      "wrap": true,
+      "n": 3
+    },
+    {
+      "from": [
+        -78,
+        6
+      ],
+      "to": [
+        78,
+        6
+      ],
+      "wrap": true,
+      "n": 3
+    },
+    {
+      "from": [
+        12,
+        10
+      ],
+      "to": [
+        12,
+        36
+      ],
+      "n": 3
+    },
+    {
+      "from": [
+        -40,
+        26
+      ],
+      "to": [
+        44,
+        26
+      ],
+      "n": 3
+    }
+  ],
+  "activities": []
+}

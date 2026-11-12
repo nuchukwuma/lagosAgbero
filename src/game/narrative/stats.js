@@ -30,6 +30,27 @@ export const STAT_DEFS = {
   settlementTrust: { label: 'Settlement trusts you', group: 'relationship', start: 0, min: 0, max: 100, who: 'Barrister Settlement' },
   cultLoyalty: { label: 'Tortoise loyalty', group: 'relationship', start: 0, min: 0, max: 100, who: 'The Tortoises' },
   rivalCultHatred: { label: 'Hyena hatred', group: 'relationship', start: 0, min: 0, max: 100, who: 'The Hyenas' },
+
+  // ---- Grass to Grace (Emeka) ----
+  conscience: { label: 'Conscience', group: 'street', start: 60, min: 0, max: 100 },
+  villageDebt: { label: 'What you owe Nkwọ-Agụụ', group: 'money', start: 0, min: 0, max: Infinity },
+  hold: { label: "The Fellowship's hold on you", group: 'street', start: 0, min: 0, max: 100 },
+  motherBond: { label: 'Bond with Nne', group: 'relationship', start: 60, min: 0, max: 100, who: 'Nne' },
+  chinweBond: { label: 'Bond with Chinwe', group: 'relationship', start: 55, min: 0, max: 100, who: 'Chinwe' },
+  ikeTrust: { label: 'Ike trusts you', group: 'relationship', start: 40, min: 0, max: 100, who: 'Ike' },
+  chiefFavour: { label: "Chief Ọ̀dụ̀'s favour", group: 'relationship', start: 0, min: 0, max: 100, who: 'Chief Ọ̀dụ̀' },
+  villageStanding: { label: 'Standing in Nkwọ-Agụụ', group: 'relationship', start: 40, min: 0, max: 100, who: 'Nkwọ-Agụụ' },
+
+  // ---- Campus (Somto) ----
+  schoolFees: { label: 'Fees owed', group: 'money', start: 0, min: 0, max: Infinity },
+  loanDebt: { label: 'QuickCash loan', group: 'money', start: 0, min: 0, max: Infinity },
+  cgpa: { label: 'CGPA', group: 'street', start: 3.5, min: 0, max: 5, decimals: 2 },
+  cover: { label: 'Your cover story', group: 'street', start: 70, min: 0, max: 100 },
+  tamaraBond: { label: 'Bond with Tamara', group: 'relationship', start: 0, min: 0, max: 100, who: 'Tamara' },
+  momBond: { label: 'Bond with Mama', group: 'relationship', start: 70, min: 0, max: 100, who: 'Mama' },
+  dubaiBond: { label: 'Bond with Dubai', group: 'relationship', start: 20, min: 0, max: 100, who: 'Dubai' },
+  campusRep: { label: 'Campus reputation', group: 'relationship', start: 10, min: 0, max: 100, who: 'The campus' },
+  donsHeat: { label: 'Crimson Dons interest', group: 'relationship', start: 0, min: 0, max: 100, who: 'The Crimson Dons' },
 }
 
 // Tortoise ranks, indexed by the cultRank stat.
@@ -37,8 +58,8 @@ export const RANK_NAMES = ['Outsider', 'Egg', 'Hatchling', 'Shell', 'Hard Shell'
 
 export const STAT_KEYS = Object.keys(STAT_DEFS)
 
-export function defaultStats() {
-  return Object.fromEntries(STAT_KEYS.map((k) => [k, STAT_DEFS[k].start]))
+export function defaultStats(overrides = {}) {
+  return { ...Object.fromEntries(STAT_KEYS.map((k) => [k, STAT_DEFS[k].start])), ...overrides }
 }
 
 export function clampStat(key, value) {

@@ -21,7 +21,7 @@ export default function SaveSlots({ mode, onSave, onLoad }) {
                 <small>Empty</small>
               ) : (
                 <small>
-                  {s.summary?.name} · {s.summary?.chapterTitle} · {formatNaira(s.summary?.money || 0)}
+                  {s.summary?.campaign ? `${s.summary.campaign} · ` : ''}{s.summary?.name} · {s.summary?.chapterTitle} · {formatNaira(s.summary?.money || 0)}
                   <br />
                   {new Date(s.savedAt).toLocaleString()}
                 </small>

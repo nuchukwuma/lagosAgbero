@@ -16,11 +16,13 @@ import { applyEffects, resultToEffects } from '../narrative/effects.js'
 import { checkCondition } from '../narrative/conditions.js'
 import { useWorldStore } from '../world/worldState.js'
 import { styleOf, styleFlags, costOf, ownedAfter } from '../systems/wardrobe.js'
+import { campaignById, campaignOf, chapterCampaign } from '../narrative/campaigns.js'
 
 let toastId = 0
 
 function summaryOf(game, view) {
   return {
+    campaign: campaignOf(game).title,
     name: game.player.name,
     nickname: game.player.nickname,
     chapterTitle: view?.chapterTitle || view?.title || '',
@@ -59,14 +61,17 @@ export const useGameStore = create((set, get) => {
 
     goTo: (screen) => set({ screen }),
 
-    newGame: ({ name, nickname, look }) => {
-      set({ game: engine.newGameState({ name, nickname, look }), screen: 'story', toasts: [] })
-      dispatch((g) => engine.startChapter(storyCtx, g, FIRST_CHAPTER))
+    /** Start a campaign (campaigns.json): Area Boy, Grass to Grace, the campus story... */
+    newGame: ({ name, nickname, look, campaign = 'areaBoy' }) => {
+      const c = campaignById(campaign)
+      set({ game: engine.newGameState({ name, nickname, look, campaign: c.id, stats: c.startStats || {} }), screen: 'story', toasts: [] })
+      dispatch((g) => engine.startChapter(storyCtx, g, c.firstChapter || FIRST_CHAPTER))
     },
 
     // Developer: new test player dropped straight into a chapter.
     devStart: (chapterId, sceneId) => {
-      set({ game: engine.newGameState({ name: 'Tester' }), screen: 'story', toasts: [] })
+      const c = campaignById(chapterCampaign(storyCtx.chapters[chapterId]))
+      set({ game: engine.newGameState({ name: c.hero?.name || 'Tester', nickname: c.hero?.nickname, look: c.hero?.look || null, campaign: c.id, stats: c.startStats || {} }), screen: 'story', toasts: [] })
       dispatch((g) => engine.startChapter(storyCtx, g, chapterId, sceneId))
     },
 
@@ -95,7 +100,9 @@ export const useGameStore = create((set, get) => {
       if (!game || game.story.ending || storyCtx.chapters[game.story.chapterId]?.common) return
       const clock = (game.clock || 0) + dt
       const raining = Boolean(game.flags.raining)
-      let energy = game.stats.energy - drainRate({ running, raining }) * dt
+      // only Area Boy has the energy (red eyes) system
+      const energyOn = campaignOf(game).features?.energy !== false
+      let energy = energyOn ? game.stats.energy - drainRate({ running, raining }) * dt : game.stats.energy
       const { remaining, crash, due } = dueEffects(game.effects, clock)
       const toasts = []
       if (crash) {
@@ -126,7 +133,7 @@ export const useGameStore = create((set, get) => {
       }
       set((s) => ({ game: next, toasts: [...s.toasts, ...toasts].slice(-4) }))
 
-      if (energy <= 0) return get().interrupt('common:collapse')
+      if (energyOn && energy <= 0) return get().interrupt('common:collapse')
       if (activity) return undefined
       if (dayLoop && time >= EVENING_AT && view?.type === 'freeRoam') return get().interrupt('daily:evening')
       if (eventScene) return get().interrupt(eventScene)

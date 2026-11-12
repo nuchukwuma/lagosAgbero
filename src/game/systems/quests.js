@@ -9,7 +9,8 @@ export const QUESTS = data.quests
 /** Quests that can be started now. */
 export function availableQuests(game) {
   if (!game) return []
-  return QUESTS.filter((q) => checkCondition(q.if, game))
+  const campaign = game.campaign || 'areaBoy'
+  return QUESTS.filter((q) => (q.campaign || 'areaBoy') === campaign && checkCondition(q.if, game))
 }
 
 export function questState(game, q) {

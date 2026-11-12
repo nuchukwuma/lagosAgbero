@@ -1354,6 +1354,56 @@
       "facing": 0,
       "anim": "argue",
       "if": "dayLoop"
+    },
+    {
+      "id": "ike",
+      "pos": [
+        60,
+        20
+      ],
+      "facing": 0,
+      "anim": "idle",
+      "if": "ikeAround"
+    },
+    {
+      "id": "chiefOdu",
+      "pos": [
+        60,
+        20
+      ],
+      "facing": 0,
+      "anim": "idle",
+      "if": "chiefOduAround"
+    },
+    {
+      "id": "usher",
+      "pos": [
+        60,
+        20
+      ],
+      "facing": 0,
+      "anim": "idle",
+      "if": "usherAround"
+    },
+    {
+      "id": "mamaSomto",
+      "pos": [
+        -11.5,
+        -10
+      ],
+      "facing": 180,
+      "anim": "idle",
+      "if": "mamaSomtoAround"
+    },
+    {
+      "id": "tamara",
+      "pos": [
+        60,
+        20
+      ],
+      "facing": 0,
+      "anim": "idle",
+      "if": "tamaraAround"
     }
   ],
   "extras": [

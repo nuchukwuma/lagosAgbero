@@ -558,5 +558,350 @@
     "fullName": "Barrister Shell, Esq. (Tortoise legal department)",
     "color": "#8b6a2b",
     "role": "tortoise"
+  },
+  "nneEmeka": {
+    "name": "Nne",
+    "fullName": "Nne Emeka (Mrs. Nwankwo)",
+    "color": "#8e44ad",
+    "role": "mother",
+    "look": {
+      "body": "female_dress",
+      "skin": "#5c3a24",
+      "shirt": "#6c3483",
+      "trousers": "#4a235a",
+      "accessories": [
+        {
+          "type": "gele",
+          "color": "#d4ac0d"
+        }
+      ],
+      "height": 0.96
+    }
+  },
+  "chinwe": {
+    "name": "Chinwe",
+    "fullName": "Chinwe Okeke, cloth trader's daughter",
+    "color": "#e67e22",
+    "role": "fiancee",
+    "look": {
+      "body": "female_casual",
+      "skin": "#6e4329",
+      "shirt": "#e67e22",
+      "trousers": "#784212"
+    }
+  },
+  "ike": {
+    "name": "Ike Money",
+    "fullName": "Ikenna \"Ike Money\" Okafor",
+    "color": "#d4af37",
+    "role": "friend",
+    "look": {
+      "body": "male_suit",
+      "skin": "#4e2f1d",
+      "shirt": "#f2f2f2",
+      "trousers": "#d4af37",
+      "accessories": [
+        {
+          "type": "glasses"
+        },
+        {
+          "type": "chain",
+          "color": "#d4af37"
+        }
+      ]
+    }
+  },
+  "chiefOdu": {
+    "name": "Chief Ọ̀dụ̀",
+    "fullName": "Chief Ọ̀dụ̀, Grand Patron of the Fellowship of Endless Abundance",
+    "color": "#f5f5f5",
+    "role": "villain",
+    "look": {
+      "body": "male_suit",
+      "skin": "#3d2516",
+      "shirt": "#fbfbfb",
+      "trousers": "#fbfbfb",
+      "accessories": [
+        {
+          "type": "chain",
+          "color": "#d4af37"
+        },
+        {
+          "type": "cap",
+          "color": "#7b241c"
+        }
+      ],
+      "width": 1.15
+    }
+  },
+  "usher": {
+    "name": "Brother Usher",
+    "fullName": "An usher of the Fellowship (he never says his name)",
+    "color": "#f5f5f5",
+    "role": "cultist",
+    "look": {
+      "body": "male_longsleeve",
+      "skin": "#4e2f1d",
+      "shirt": "#fbfbfb",
+      "trousers": "#fbfbfb",
+      "accessories": [
+        {
+          "type": "chain",
+          "color": "#d4af37"
+        }
+      ]
+    }
+  },
+  "reverend": {
+    "name": "Reverend Ụ̀zọ",
+    "fullName": "Reverend Ụ̀zọ of Holy Trinity Parish",
+    "color": "#1a1a1a",
+    "role": "priest",
+    "look": {
+      "body": "male_longsleeve",
+      "skin": "#4e2f1d",
+      "shirt": "#1a1a1a",
+      "trousers": "#1a1a1a",
+      "accessories": [
+        {
+          "type": "scarf",
+          "color": "#ffffff"
+        }
+      ]
+    }
+  },
+  "dibia": {
+    "name": "Dibia Ọ̀kwụ̀",
+    "fullName": "Dibia Ọ̀kwụ̀, the old seer by the stream",
+    "color": "#c0392b",
+    "role": "seer",
+    "look": {
+      "body": "male_shirt",
+      "skin": "#3d2516",
+      "shirt": "#c0392b",
+      "trousers": "#7b241c",
+      "accessories": [
+        {
+          "type": "cap",
+          "color": "#c0392b"
+        }
+      ],
+      "height": 0.93
+    }
+  },
+  "onyisi": {
+    "name": "Ọ̀nyịsị Ọha",
+    "fullName": "Ọ̀nyịsị Ọha, eldest man of Nkwọ-Agụụ",
+    "color": "#7b241c",
+    "role": "elder",
+    "look": {
+      "body": "male_suit",
+      "skin": "#46291a",
+      "shirt": "#7b241c",
+      "trousers": "#7b241c",
+      "accessories": [
+        {
+          "type": "cap",
+          "color": "#c0392b"
+        }
+      ],
+      "height": 0.95
+    }
+  },
+  "papaNgwo": {
+    "name": "Papa Ngwọ",
+    "fullName": "Papa Ngwọ, palm-wine tapper",
+    "color": "#d4ac0d",
+    "role": "tapper",
+    "look": {
+      "body": "male_casual",
+      "skin": "#5c3a24",
+      "shirt": "#d8d2c4",
+      "trousers": "#5d4037",
+      "accessories": [
+        {
+          "type": "beanie",
+          "color": "#7b241c"
+        }
+      ]
+    }
+  },
+  "uncleDozie": {
+    "name": "Uncle Dozie",
+    "fullName": "Uncle Dozie, Papa's younger brother",
+    "color": "#2c3e50",
+    "role": "uncle",
+    "look": {
+      "body": "male_shirt",
+      "skin": "#4e2f1d",
+      "shirt": "#2c3e50",
+      "trousers": "#1a1a1a",
+      "width": 1.15
+    }
+  },
+  "mamaSomto": {
+    "name": "Mama Somto",
+    "fullName": "Mama Somto, pap and akara seller at Iyana-Wahala",
+    "color": "#16a085",
+    "role": "mother",
+    "look": {
+      "body": "female_dress",
+      "skin": "#4e2f1d",
+      "shirt": "#16a085",
+      "trousers": "#0e6655",
+      "accessories": [
+        {
+          "type": "gele",
+          "color": "#16a085"
+        }
+      ]
+    }
+  },
+  "tamara": {
+    "name": "Tamara",
+    "fullName": "Tamara Ademola-Peters",
+    "color": "#e84393",
+    "role": "loveInterest",
+    "look": {
+      "body": "female_alternative",
+      "skin": "#6e4329",
+      "shirt": "#e84393",
+      "trousers": "#1a1a1a",
+      "accessories": [
+        {
+          "type": "glasses"
+        }
+      ]
+    }
+  },
+  "dubai": {
+    "name": "Dubai",
+    "fullName": "Chukwudubem \"Dubai\" Eze, your roommate",
+    "color": "#8e44ad",
+    "role": "roommate",
+    "look": {
+      "body": "male_shirt",
+      "skin": "#3d2516",
+      "shirt": "#8e44ad",
+      "trousers": "#1a1a1a",
+      "accessories": [
+        {
+          "type": "chain",
+          "color": "#d4af37"
+        },
+        {
+          "type": "cap",
+          "color": "#1a1a1a"
+        }
+      ]
+    }
+  },
+  "tobi": {
+    "name": "Tobi",
+    "fullName": "Tobi Lawal-Coker, very rich, very bored",
+    "color": "#2980b9",
+    "role": "richFriend",
+    "look": {
+      "body": "male_suit",
+      "skin": "#5c3a24",
+      "shirt": "#2980b9",
+      "trousers": "#ecf0f1",
+      "accessories": [
+        {
+          "type": "glasses"
+        }
+      ]
+    }
+  },
+  "drSorting": {
+    "name": "Dr. Fasanya",
+    "fullName": "Dr. Fasanya, lecturer in GST 101 (students call him \"Dr. Sorting\")",
+    "color": "#7f8c8d",
+    "role": "lecturer",
+    "look": {
+      "body": "male_suit",
+      "skin": "#46291a",
+      "shirt": "#7f8c8d",
+      "trousers": "#2c3e50",
+      "accessories": [
+        {
+          "type": "glasses"
+        }
+      ],
+      "width": 1.2
+    }
+  },
+  "spike": {
+    "name": "Spike",
+    "fullName": "Spike, \"Capo\" of the Crimson Dons",
+    "color": "#c0392b",
+    "role": "cultist",
+    "look": {
+      "body": "male_longsleeve",
+      "skin": "#3d2516",
+      "shirt": "#c0392b",
+      "trousers": "#1a1a1a",
+      "accessories": [
+        {
+          "type": "bandana",
+          "color": "#c0392b"
+        }
+      ]
+    }
+  },
+  "babaGate": {
+    "name": "Baba Gate",
+    "fullName": "Baba Gate, campus security since before electricity",
+    "color": "#1e6b43",
+    "role": "security",
+    "look": {
+      "body": "male_longsleeve",
+      "skin": "#4e2f1d",
+      "shirt": "#1e6b43",
+      "trousers": "#1e6b43",
+      "accessories": [
+        {
+          "type": "cap",
+          "color": "#1e6b43"
+        }
+      ],
+      "height": 0.95
+    }
+  },
+  "ife": {
+    "name": "Ifeoluwa",
+    "fullName": "Ifeoluwa, your coursemate",
+    "color": "#27ae60",
+    "role": "coursemate",
+    "look": {
+      "body": "female_casual",
+      "skin": "#5c3a24",
+      "shirt": "#27ae60",
+      "trousers": "#2c3e50"
+    }
+  },
+  "vc": {
+    "name": "The VC",
+    "fullName": "Professor Ìbùkún Ọlátúnjí, Vice-Chancellor",
+    "color": "#2c3e50",
+    "role": "vc",
+    "look": {
+      "body": "female_dress",
+      "skin": "#4e2f1d",
+      "shirt": "#2c3e50",
+      "trousers": "#2c3e50",
+      "accessories": [
+        {
+          "type": "gele",
+          "color": "#7f8c8d"
+        }
+      ]
+    }
+  },
+  "quickcash": {
+    "name": "QuickCash",
+    "fullName": "QuickCash Loans (an app with feelings)",
+    "color": "#e74c3c",
+    "role": "app"
   }
 }

@@ -1,0 +1,918 @@
+{
+  "facts": {
+    "home": {
+      "lekki": "Lekki Phase 1",
+      "ikoyi": "Ikoyi, Bourdillon side",
+      "iyanaWahala": "Iyana-Wahala, by the bus stop"
+    },
+    "dad": {
+      "oil": "Oil and gas",
+      "consultant": "International consultant",
+      "late": "He passed. Mama sells pap.",
+      "senator": "Politics. I won't say more."
+    },
+    "school": {
+      "crestfield": "Crestfield International",
+      "greenwood": "Greenwood Royal College",
+      "community": "Iyana-Wahala Community Secondary"
+    },
+    "summer": {
+      "dubai": "Dubai, as usual",
+      "london": "London with cousins",
+      "akara": "Frying akara with my mum"
+    },
+    "car": {
+      "gwagon": "The driver brings me in the G-Wagon",
+      "trek": "I trek. Fitness.",
+      "brt": "BRT and two danfos"
+    },
+    "phone": {
+      "repair": "My iPhone is at the repairer",
+      "minimalist": "I'm a minimalist",
+      "cheap": "This is my only phone"
+    },
+    "dadCo": {
+      "bonny": "Bonny Deep Energy Ltd",
+      "private": "It's a private family company"
+    },
+    "church": {
+      "cathedral": "The Cathedral, front row",
+      "house": "A small house fellowship",
+      "none": "We don't really go"
+    },
+    "company": {
+      "mega": "Mega Fortune Holdings, Lagos",
+      "coop": "A farmers' co-operative",
+      "none": "There is no company"
+    },
+    "boss": {
+      "ike": "Ike Okafor himself",
+      "alhaji": "One Alhaji in Lagos"
+    },
+    "returns": {
+      "double": "Double, by Christmas",
+      "fair": "Ten percent, in a year"
+    },
+    "land": {
+      "mine": "Papa left it to me alone",
+      "family": "It is family land"
+    },
+    "mamaAgreed": {
+      "signed": "Nne has signed",
+      "notYet": "She will sign"
+    },
+    "loved": {
+      "mother": "My mother",
+      "chinwe": "Chinwe, my betrothed",
+      "nobody": "Nobody. I stand alone."
+    },
+    "fear": {
+      "poverty": "Being poor again",
+      "god": "God",
+      "nothing": "Nothing"
+    },
+    "money": {
+      "business": "Spare parts business",
+      "fellowship": "A fellowship of businessmen",
+      "gift": "A gift from a chief"
+    }
+  },
+  "reactions": {
+    "ok": [
+      "Hmm. Okay.",
+      "\"I see.\"",
+      "They nod slowly.",
+      "\"Interesting.\""
+    ],
+    "consistent": [
+      "\"Ehen, same thing you said before.\"",
+      "It matches. They relax a little."
+    ],
+    "contradiction": [
+      "\"Wait. That's not what you said before.\"",
+      "A long pause. \"Last time you said something else.\"",
+      "Their eyes narrow. They remember."
+    ],
+    "deflected": [
+      "They laugh, then they don't.",
+      "\"Funny. Answer the question.\"",
+      "\"You dey dodge.\""
+    ],
+    "hesitated": [
+      "You take too long. They notice.",
+      "\"Why you dey think about it?\"",
+      "Silence. Too much silence."
+    ],
+    "truth": [
+      "They look at you differently. Not worse. Differently.",
+      "\"Thank you for saying that.\""
+    ],
+    "confessed": [
+      "It's out. You can't take it back.",
+      "The room goes very quiet."
+    ]
+  },
+  "scenarios": {
+    "orientation": {
+      "title": "Fresher's orientation",
+      "asker": "tobi",
+      "intro": "Tobi and his friends circle you at the orientation party. They're asking the questions rich kids ask, to find out who belongs.",
+      "coverStat": "cover",
+      "questions": [
+        {
+          "id": "home",
+          "fact": "home",
+          "q": "\"So where are you from? Lekki? Ikoyi? VI?\"",
+          "answers": [
+            {
+              "text": "\"Lekki Phase 1.\"",
+              "says": {
+                "home": "lekki"
+              },
+              "risk": 8
+            },
+            {
+              "text": "\"Ikoyi. Bourdillon side.\"",
+              "says": {
+                "home": "ikoyi"
+              },
+              "risk": 14
+            },
+            {
+              "text": "\"Iyana-Wahala. By the bus stop.\"",
+              "says": {
+                "home": "iyanaWahala"
+              },
+              "risk": 0,
+              "truth": true,
+              "core": true
+            }
+          ]
+        },
+        {
+          "id": "dad",
+          "fact": "dad",
+          "q": "\"What does your dad do?\"",
+          "answers": [
+            {
+              "text": "\"Oil and gas.\"",
+              "says": {
+                "dad": "oil"
+              },
+              "risk": 10
+            },
+            {
+              "text": "\"Consulting. International.\"",
+              "says": {
+                "dad": "consultant"
+              },
+              "risk": 12
+            },
+            {
+              "text": "\"Na long story. Who get suya?\"",
+              "risk": 0,
+              "deflect": true
+            },
+            {
+              "text": "\"He passed. My mum sells pap.\"",
+              "says": {
+                "dad": "late"
+              },
+              "risk": 0,
+              "truth": true,
+              "core": true
+            }
+          ]
+        },
+        {
+          "id": "school",
+          "fact": "school",
+          "q": "\"Which secondary school?\"",
+          "answers": [
+            {
+              "text": "\"Crestfield International.\"",
+              "says": {
+                "school": "crestfield"
+              },
+              "risk": 12
+            },
+            {
+              "text": "\"Greenwood Royal College.\"",
+              "says": {
+                "school": "greenwood"
+              },
+              "risk": 12
+            },
+            {
+              "text": "\"Iyana-Wahala Community Secondary.\"",
+              "says": {
+                "school": "community"
+              },
+              "risk": 0,
+              "truth": true,
+              "core": true
+            }
+          ]
+        },
+        {
+          "id": "summer",
+          "fact": "summer",
+          "q": "\"Where did you spend summer?\"",
+          "answers": [
+            {
+              "text": "\"Dubai, as usual.\"",
+              "says": {
+                "summer": "dubai"
+              },
+              "risk": 12
+            },
+            {
+              "text": "\"London with cousins.\"",
+              "says": {
+                "summer": "london"
+              },
+              "risk": 10
+            },
+            {
+              "text": "\"Summer na weather, abeg.\"",
+              "risk": 0,
+              "deflect": true
+            },
+            {
+              "text": "\"Frying akara with my mum.\"",
+              "says": {
+                "summer": "akara"
+              },
+              "risk": 0,
+              "truth": true,
+              "core": true
+            }
+          ]
+        },
+        {
+          "id": "car",
+          "fact": "car",
+          "q": "\"Which car brought you this morning?\"",
+          "answers": [
+            {
+              "text": "\"The driver dropped me. G-Wagon.\"",
+              "says": {
+                "car": "gwagon"
+              },
+              "risk": 18
+            },
+            {
+              "text": "\"I trek. Fitness.\"",
+              "says": {
+                "car": "trek"
+              },
+              "risk": 6
+            },
+            {
+              "text": "\"BRT and two danfos.\"",
+              "says": {
+                "car": "brt"
+              },
+              "risk": 0,
+              "truth": true,
+              "core": true
+            }
+          ]
+        }
+      ],
+      "doubtAt": 70
+    },
+    "roommate": {
+      "title": "Dubai is suspicious",
+      "asker": "dubai",
+      "intro": "Your roommate Dubai has been watching you for a week. He sits on his bed, phone in hand, smiling like a detective.",
+      "coverStat": "cover",
+      "startSuspicion": 20,
+      "questions": [
+        {
+          "id": "food",
+          "q": "\"Guy, you no dey order food. Every night na garri. You dey fast?\"",
+          "answers": [
+            {
+              "text": "\"Na diet. My trainer said so.\"",
+              "risk": 10
+            },
+            {
+              "text": "\"Garri na culture. Respect am.\"",
+              "risk": 0,
+              "deflect": true
+            },
+            {
+              "text": "\"Money no dey, Dubai.\"",
+              "says": {
+                "home": "iyanaWahala"
+              },
+              "risk": 0,
+              "truth": true,
+              "core": true
+            }
+          ]
+        },
+        {
+          "id": "car",
+          "fact": "car",
+          "q": "\"Where your car dey? Everybody for this hostel get car.\"",
+          "answers": [
+            {
+              "text": "\"It's in the workshop.\"",
+              "says": {
+                "car": "gwagon"
+              },
+              "risk": 14
+            },
+            {
+              "text": "\"I trek. Fitness.\"",
+              "says": {
+                "car": "trek"
+              },
+              "risk": 6
+            },
+            {
+              "text": "\"BRT. Na my car be that.\"",
+              "says": {
+                "car": "brt"
+              },
+              "risk": 0,
+              "truth": true
+            }
+          ]
+        },
+        {
+          "id": "phone",
+          "fact": "phone",
+          "q": "\"And this phone... na 2019 model. With crack.\"",
+          "answers": [
+            {
+              "text": "\"My iPhone dey repairer.\"",
+              "says": {
+                "phone": "repair"
+              },
+              "risk": 10
+            },
+            {
+              "text": "\"I'm a minimalist.\"",
+              "says": {
+                "phone": "minimalist"
+              },
+              "risk": 12
+            },
+            {
+              "text": "\"Na my only phone.\"",
+              "says": {
+                "phone": "cheap"
+              },
+              "risk": 0,
+              "truth": true
+            }
+          ]
+        },
+        {
+          "id": "call",
+          "fact": "home",
+          "q": "\"Your mama call you yesterday. I hear 'akara' and danfo horn for background. Where una dey stay?\"",
+          "answers": [
+            {
+              "text": "\"She was visiting our driver's family.\"",
+              "says": {
+                "home": "lekki"
+              },
+              "risk": 20
+            },
+            {
+              "text": "\"Iyana-Wahala. Happy?\"",
+              "says": {
+                "home": "iyanaWahala"
+              },
+              "risk": 0,
+              "truth": true,
+              "core": true
+            }
+          ]
+        }
+      ]
+    },
+    "dinner": {
+      "title": "Dinner with Hon. Mrs. Ademola-Peters",
+      "asker": "ronke",
+      "intro": "Tamara's mother has invited you to dinner. She smiles like a politician. She asks questions like a policeman.",
+      "coverStat": "cover",
+      "startSuspicion": 10,
+      "doubtAt": 50,
+      "questions": [
+        {
+          "id": "home",
+          "fact": "home",
+          "q": "\"Which estate in Lekki? I know everybody in Lekki.\"",
+          "answers": [
+            {
+              "text": "\"Phase 1. Near the roundabout.\"",
+              "says": {
+                "home": "lekki"
+              },
+              "risk": 14
+            },
+            {
+              "text": "\"Actually Ikoyi now. We moved.\"",
+              "says": {
+                "home": "ikoyi"
+              },
+              "risk": 20
+            },
+            {
+              "text": "\"I'm from Iyana-Wahala, Ma.\"",
+              "says": {
+                "home": "iyanaWahala"
+              },
+              "risk": 0,
+              "truth": true,
+              "core": true
+            }
+          ]
+        },
+        {
+          "id": "dad",
+          "fact": "dad",
+          "q": "\"And your father? What does he do?\"",
+          "answers": [
+            {
+              "text": "\"Oil and gas, Ma.\"",
+              "says": {
+                "dad": "oil"
+              },
+              "risk": 12
+            },
+            {
+              "text": "\"He's in politics. He keeps quiet about it.\"",
+              "says": {
+                "dad": "senator"
+              },
+              "risk": 25
+            },
+            {
+              "text": "\"He passed when I was ten, Ma.\"",
+              "says": {
+                "dad": "late"
+              },
+              "risk": 0,
+              "truth": true
+            }
+          ]
+        },
+        {
+          "id": "company",
+          "fact": "dadCo",
+          "q": "\"The company's name? I sit on two energy committees.\"",
+          "answers": [
+            {
+              "text": "\"Bonny Deep Energy.\"",
+              "says": {
+                "dadCo": "bonny"
+              },
+              "risk": 22
+            },
+            {
+              "text": "\"It's private. Family business.\"",
+              "says": {
+                "dadCo": "private"
+              },
+              "risk": 14
+            },
+            {
+              "text": "\"Ma, there is no company.\"",
+              "says": {
+                "dadCo": "none"
+              },
+              "risk": 0,
+              "truth": true,
+              "core": true
+            }
+          ]
+        },
+        {
+          "id": "church",
+          "fact": "church",
+          "q": "\"Which church does your family attend?\"",
+          "answers": [
+            {
+              "text": "\"The Cathedral. Front row.\"",
+              "says": {
+                "church": "cathedral"
+              },
+              "risk": 14
+            },
+            {
+              "text": "\"A small house fellowship.\"",
+              "says": {
+                "church": "house"
+              },
+              "risk": 4
+            },
+            {
+              "text": "\"Mama goes to the one beside the bus stop.\"",
+              "says": {
+                "church": "house"
+              },
+              "risk": 0,
+              "truth": true
+            }
+          ]
+        }
+      ]
+    },
+    "panel": {
+      "title": "The disciplinary panel",
+      "asker": "vc",
+      "intro": "Five lecturers, one Vice-Chancellor, one fan that doesn't work. The exam-leak panel is in session.",
+      "coverStat": "campusRep",
+      "startSuspicion": 25,
+      "questions": [
+        {
+          "id": "where",
+          "fact": "examNight",
+          "q": "\"Where were you the night before the GST exam?\"",
+          "answers": [
+            {
+              "text": "\"In my room, reading.\"",
+              "says": {
+                "examNight": "room"
+              },
+              "risk": 12
+            },
+            {
+              "text": "\"At the library till midnight.\"",
+              "says": {
+                "examNight": "library"
+              },
+              "risk": 14
+            },
+            {
+              "text": "\"At Dr. Fasanya's house. Collecting the questions.\"",
+              "says": {
+                "examNight": "fasanya"
+              },
+              "risk": 0,
+              "truth": true,
+              "core": true
+            }
+          ]
+        },
+        {
+          "id": "who",
+          "q": "\"Who gave students the questions?\"",
+          "answers": [
+            {
+              "text": "\"I don't know, sir.\"",
+              "risk": 14
+            },
+            {
+              "text": "\"Ask Dr. Fasanya.\"",
+              "risk": 20
+            },
+            {
+              "text": "\"Ask the people selling them at the back gate.\"",
+              "risk": 0,
+              "deflect": true
+            }
+          ]
+        },
+        {
+          "id": "money",
+          "q": "\"Two hundred students paid ₦20,000 each. Where did that money go?\"",
+          "answers": [
+            {
+              "text": "\"I don't know anything about money, sir.\"",
+              "risk": 16
+            },
+            {
+              "text": "\"I have the transfer records. All of them.\"",
+              "risk": 0,
+              "truth": true,
+              "core": true
+            }
+          ]
+        }
+      ]
+    },
+    "harvestCon": {
+      "title": "The harvest council",
+      "asker": "onyisi",
+      "intro": "The village council sits under the big tree. The harvest money is in a box on the table. You are here to 'invest' it.",
+      "coverStat": "villageStanding",
+      "questions": [
+        {
+          "id": "company",
+          "fact": "company",
+          "q": "\"Which company is this you want us to give our harvest money?\"",
+          "answers": [
+            {
+              "text": "\"Mega Fortune Holdings, Lagos.\"",
+              "says": {
+                "company": "mega"
+              },
+              "risk": 12
+            },
+            {
+              "text": "\"A farmers' co-operative.\"",
+              "says": {
+                "company": "coop"
+              },
+              "risk": 8
+            },
+            {
+              "text": "\"There is no company. I need transport money.\"",
+              "says": {
+                "company": "none"
+              },
+              "risk": 0,
+              "truth": true,
+              "core": true
+            }
+          ]
+        },
+        {
+          "id": "boss",
+          "fact": "boss",
+          "q": "\"Who is the oga there?\"",
+          "answers": [
+            {
+              "text": "\"Ike Okafor himself.\"",
+              "says": {
+                "boss": "ike"
+              },
+              "risk": 8
+            },
+            {
+              "text": "\"One Alhaji. Very rich, very quiet.\"",
+              "says": {
+                "boss": "alhaji"
+              },
+              "risk": 14
+            },
+            {
+              "text": "\"Ọnyịsị, these questions are deep o.\"",
+              "risk": 0,
+              "deflect": true
+            }
+          ]
+        },
+        {
+          "id": "returns",
+          "fact": "returns",
+          "q": "\"And when will our money come back?\"",
+          "answers": [
+            {
+              "text": "\"Double, by Christmas.\"",
+              "says": {
+                "returns": "double"
+              },
+              "risk": 16
+            },
+            {
+              "text": "\"Ten percent, in a year.\"",
+              "says": {
+                "returns": "fair"
+              },
+              "risk": 6
+            }
+          ]
+        }
+      ],
+      "doubtAt": 45
+    },
+    "landSale": {
+      "title": "Selling Papa's land",
+      "asker": "uncleDozie",
+      "intro": "Uncle Dozie has found a buyer for Papa's land. The buyer has questions. Uncle Dozie has a commission.",
+      "coverStat": "villageStanding",
+      "questions": [
+        {
+          "id": "land",
+          "fact": "land",
+          "q": "Buyer: \"Is this land yours to sell?\"",
+          "answers": [
+            {
+              "text": "\"Papa left it to me alone.\"",
+              "says": {
+                "land": "mine"
+              },
+              "risk": 14
+            },
+            {
+              "text": "\"It is family land.\"",
+              "says": {
+                "land": "family"
+              },
+              "risk": 0,
+              "truth": true,
+              "core": true
+            }
+          ]
+        },
+        {
+          "id": "mama",
+          "fact": "mamaAgreed",
+          "q": "Buyer: \"And your mother? She agrees?\"",
+          "answers": [
+            {
+              "text": "\"She has signed.\"",
+              "says": {
+                "mamaAgreed": "signed"
+              },
+              "risk": 20
+            },
+            {
+              "text": "\"She will sign.\"",
+              "says": {
+                "mamaAgreed": "notYet"
+              },
+              "risk": 10
+            }
+          ]
+        },
+        {
+          "id": "price",
+          "q": "Buyer: \"₦400,000. Cash. Today.\"",
+          "answers": [
+            {
+              "text": "\"₦600,000 or nothing.\"",
+              "risk": 8
+            },
+            {
+              "text": "\"Done. Today.\"",
+              "risk": 4
+            }
+          ]
+        }
+      ]
+    },
+    "vetting": {
+      "title": "The Fellowship's questions",
+      "asker": "usher",
+      "intro": "A white room. A white chair. A man in white asks you questions in a voice like cold water. Somewhere behind a curtain, someone is writing.",
+      "coverStat": "hold",
+      "questions": [
+        {
+          "id": "loved",
+          "fact": "loved",
+          "q": "\"Who loves you most in this world?\"",
+          "answers": [
+            {
+              "text": "\"My mother.\"",
+              "says": {
+                "loved": "mother"
+              },
+              "risk": 0,
+              "truth": true
+            },
+            {
+              "text": "\"Chinwe. My betrothed.\"",
+              "says": {
+                "loved": "chinwe"
+              },
+              "risk": 4
+            },
+            {
+              "text": "\"Nobody. I stand alone.\"",
+              "says": {
+                "loved": "nobody"
+              },
+              "risk": 26
+            }
+          ]
+        },
+        {
+          "id": "fear",
+          "fact": "fear",
+          "q": "\"What do you fear?\"",
+          "answers": [
+            {
+              "text": "\"Being poor again.\"",
+              "says": {
+                "fear": "poverty"
+              },
+              "risk": 0,
+              "truth": true
+            },
+            {
+              "text": "\"God.\"",
+              "says": {
+                "fear": "god"
+              },
+              "risk": 14
+            },
+            {
+              "text": "\"Nothing.\"",
+              "says": {
+                "fear": "nothing"
+              },
+              "risk": 24
+            }
+          ]
+        },
+        {
+          "id": "wants",
+          "q": "\"How much is enough?\"",
+          "answers": [
+            {
+              "text": "\"Enough to never go back.\"",
+              "risk": 4
+            },
+            {
+              "text": "\"There is no enough.\"",
+              "risk": 0
+            },
+            {
+              "text": "\"Enough to pay back what I took.\"",
+              "risk": 18
+            }
+          ]
+        }
+      ]
+    },
+    "policeLagos": {
+      "title": "Commander Bassey asks questions",
+      "asker": "bassey",
+      "intro": "A Task Force office that smells like old files. Commander Bassey has your name on a list. He wants to know where the money came from.",
+      "coverStat": "policeHeat",
+      "startSuspicion": 15,
+      "questions": [
+        {
+          "id": "money",
+          "fact": "money",
+          "q": "\"Three months ago you sold spare parts. Today you drive a Benz. Explain.\"",
+          "answers": [
+            {
+              "text": "\"Spare parts business. Booming.\"",
+              "says": {
+                "money": "business"
+              },
+              "risk": 16
+            },
+            {
+              "text": "\"A gift from a chief.\"",
+              "says": {
+                "money": "gift"
+              },
+              "risk": 12
+            },
+            {
+              "text": "\"I joined a fellowship of businessmen.\"",
+              "says": {
+                "money": "fellowship"
+              },
+              "risk": 0,
+              "truth": true,
+              "core": true
+            }
+          ]
+        },
+        {
+          "id": "chief",
+          "q": "\"Chief Ọ̀dụ̀. You know him?\"",
+          "answers": [
+            {
+              "text": "\"Never heard of him.\"",
+              "risk": 22
+            },
+            {
+              "text": "\"Everybody knows Chief Ọ̀dụ̀.\"",
+              "risk": 8
+            },
+            {
+              "text": "\"Commander, are you asking or warning?\"",
+              "risk": 0,
+              "deflect": true
+            }
+          ]
+        },
+        {
+          "id": "village",
+          "fact": "company",
+          "q": "\"Your village says you took their harvest money for 'a Lagos company'. Which company?\"",
+          "answers": [
+            {
+              "text": "\"Mega Fortune Holdings.\"",
+              "says": {
+                "company": "mega"
+              },
+              "risk": 14
+            },
+            {
+              "text": "\"There was never a company.\"",
+              "says": {
+                "company": "none"
+              },
+              "risk": 0,
+              "truth": true
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

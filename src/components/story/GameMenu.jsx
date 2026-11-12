@@ -6,7 +6,7 @@ import SettingsPanel from '../menu/SettingsPanel.jsx'
 const TITLES = { main: 'Paused', save: 'Save game', load: 'Load game', wardrobe: 'Wardrobe', settings: 'Settings' }
 
 // Pause menu: resume, wardrobe, save, load, settings, quit to title.
-export default function GameMenu({ onClose, onSave, onLoad, onQuit, canDress = true }) {
+export default function GameMenu({ onClose, onSave, onLoad, onQuit, onMap, canDress = true }) {
   const [tab, setTab] = useState('main')
   return (
     <div className="overlay" onClick={onClose}>
@@ -22,6 +22,11 @@ export default function GameMenu({ onClose, onSave, onLoad, onQuit, canDress = t
             <button className="btn btn-primary" onClick={onClose}>
               Resume
             </button>
+            {onMap && (
+              <button className="btn" onClick={onMap}>
+                Story map
+              </button>
+            )}
             {canDress && (
               <button className="btn" onClick={() => setTab('wardrobe')}>
                 Wardrobe

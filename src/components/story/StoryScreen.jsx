@@ -9,7 +9,8 @@ import ShopPanel from '../hud/ShopPanel.jsx'
 import { useFeeRun } from '../../game/modes/feeCollection/feeRunStore.js'
 import { useChase } from '../../game/modes/chase/chaseStore.js'
 import { modeComponent } from '../../game/modes/modeRegistry.js'
-import street from '../../game/data/world/iyanaWahala.json'
+import { worldJson } from '../../game/world/worlds.js'
+import { campaignOf } from '../../game/narrative/campaigns.js'
 import DialogueBox from './DialogueBox.jsx'
 import ChoiceMenu from './ChoiceMenu.jsx'
 import NewsBroadcast from './NewsBroadcast.jsx'
@@ -21,6 +22,7 @@ import GameMenu from './GameMenu.jsx'
 import Toasts from './Toasts.jsx'
 import ModeHost from './ModeHost.jsx'
 import FavourButton from '../hud/FavourButton.jsx'
+import StoryMap from './StoryMap.jsx'
 
 // The story screen: the 3D street + HUD + whatever the engine says to show.
 // During a freeRoam beat the player walks; otherwise the story has the floor.
@@ -73,7 +75,7 @@ export default function StoryScreen() {
       content = <CutsceneCards view={view} onDone={advance} />
       break
     case 'chapterEnd':
-      content = <ChapterEndCard view={view} onNext={advance} />
+      content = <ChapterEndCard view={view} onNext={advance} onMap={() => setOverlay('map')} />
       break
     case 'mode':
       content = <ModeHost key={view.key} view={view} />
@@ -111,7 +113,7 @@ export default function StoryScreen() {
           onShop={(v) => setOverlay(`shop:${v}`)}
           onQuest={(q) => useGameStore.getState().startQuest(q)}
           onActivity={(id) => {
-            const a = (street.activities || []).find((x) => x.id === id)
+            const a = (worldJson(view.world).activities || []).find((x) => x.id === id)
             if (a) startActivity({ ...a, key: `${a.id}-${Date.now()}` })
           }}
         />
@@ -130,6 +132,7 @@ export default function StoryScreen() {
       <Toasts toasts={toasts} onDone={dismissToast} />
       <LoadingOverlay />
       {overlay === 'status' && <StatusPanel game={game} onClose={() => setOverlay(null)} />}
+      {overlay === 'map' && <StoryMap game={game} onClose={() => setOverlay(null)} />}
       {overlay?.startsWith('shop:') && <ShopPanel vendor={overlay.slice(5)} onClose={() => setOverlay(null)} />}
       {overlay === 'menu' && (
         <GameMenu
@@ -141,6 +144,7 @@ export default function StoryScreen() {
           }}
           onQuit={quitToTitle}
           canDress={view.type === 'freeRoam' && !activity}
+          onMap={() => setOverlay('map')}
         />
       )}
     </div>

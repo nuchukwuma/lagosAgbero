@@ -228,6 +228,82 @@ export const PROPS = {
       ],
     }
   },
+  palmTree(rng) {
+    const h = 6 + rng() * 4
+    const lean = (rng() - 0.5) * 0.18
+    const prims = []
+    for (let i = 0; i < 6; i++) prims.push({ s: 'cyl', p: [lean * i * 1.6, (i + 0.5) * (h / 6), 0], d: [0.22 - i * 0.012, h / 6 + 0.05], c: i % 2 ? '#6e5640' : '#5e4a37', rz: -lean })
+    const top = [lean * 6 * 1.6, h, 0]
+    for (let i = 0; i < 9; i++) {
+      const a = (i / 9) * Math.PI * 2
+      prims.push({ s: 'box', p: [top[0] + Math.sin(a) * 1.1, top[1] - 0.25, top[2] + Math.cos(a) * 1.1], d: [0.35, 0.05, 2.4], c: i % 2 ? '#3f7a2a' : '#4d8f30', ry: a, rx: 0.42 })
+    }
+    prims.push({ s: 'cone', p: [top[0], h + 0.1, top[2]], d: [0.4, 0.6], c: '#c0392b' })
+    return { solid: [0.3, 0.3], shadow: h * 0.6, prims }
+  },
+  yamBarn(rng) {
+    const prims = []
+    for (const x of [-1.2, 0, 1.2]) prims.push({ s: 'box', p: [x, 1.1, 0], d: [0.12, 2.2, 0.12], c: '#6b4a2b' })
+    for (const y of [0.5, 1.1, 1.7]) prims.push({ s: 'box', p: [0, y, 0], d: [2.6, 0.06, 0.08], c: '#6b4a2b' })
+    for (let i = 0; i < 18; i++) prims.push({ s: 'box', p: [-1.15 + (i % 6) * 0.46, 0.65 + Math.floor(i / 6) * 0.6, 0.12], d: [0.18, 0.42, 0.18], c: rng() < 0.5 ? '#8a6a4a' : '#7a5a3c', rz: (rng() - 0.5) * 0.4 })
+    return { solid: [1.4, 0.4], shadow: 2.2, prims }
+  },
+  shrine() {
+    return {
+      solid: [1.4, 1.4],
+      shadow: 2.6,
+      prims: [
+        { s: 'box', p: [0, 0.9, 0], d: [2.2, 1.8, 2.2], c: '#8a5a3a' },
+        { s: 'cone', p: [0, 2.3, 0], d: [2.0, 1.3], c: '#b89a5a' },
+        { s: 'box', p: [0, 0.8, 1.12], d: [0.8, 1.4, 0.04], c: '#1c1712' },
+        { s: 'box', p: [-0.9, 1.6, 1.13], d: [0.5, 0.3, 0.02], c: '#c0392b' },
+        { s: 'box', p: [0.9, 1.6, 1.13], d: [0.5, 0.3, 0.02], c: '#ecf0f1' },
+        { s: 'cyl', p: [-1.6, 0.35, 1.2], d: [0.22, 0.7], c: '#5d4037' },
+        { s: 'cyl', p: [1.6, 0.25, 1.4], d: [0.3, 0.5], c: '#7a5a3c' },
+      ],
+    }
+  },
+  maize(rng) {
+    const prims = []
+    for (let r = 0; r < 3; r++)
+      for (let i = 0; i < 7; i++) {
+        const h = 1.3 + rng() * 0.6
+        prims.push({ s: 'cone', p: [-1.8 + i * 0.6, h / 2, -0.9 + r * 0.9], d: [0.18, h], c: rng() < 0.5 ? '#5f8a2e' : '#7a9a35', flat: true })
+      }
+    return { prims }
+  },
+  goalPost() {
+    return {
+      prims: [
+        { s: 'box', p: [-2.4, 1.2, 0], d: [0.12, 2.4, 0.12], c: '#f2f2f2' },
+        { s: 'box', p: [2.4, 1.2, 0], d: [0.12, 2.4, 0.12], c: '#f2f2f2' },
+        { s: 'box', p: [0, 2.4, 0], d: [4.9, 0.12, 0.12], c: '#f2f2f2' },
+      ],
+    }
+  },
+  noticeBoard(rng) {
+    const prims = [
+      { s: 'box', p: [-1.0, 1.0, 0], d: [0.1, 2.0, 0.1], c: '#5d4037' },
+      { s: 'box', p: [1.0, 1.0, 0], d: [0.1, 2.0, 0.1], c: '#5d4037' },
+      { s: 'box', p: [0, 1.5, 0], d: [2.2, 1.0, 0.08], c: '#7a5a3c' },
+    ]
+    for (let i = 0; i < 6; i++) prims.push({ s: 'box', p: [-0.8 + (i % 3) * 0.8, 1.3 + Math.floor(i / 3) * 0.42, 0.05], d: [0.55, 0.35, 0.01], c: ['#ecf0f1', '#f1c40f', '#fadbd8', '#d6eaf8'][Math.floor(rng() * 4)], rz: (rng() - 0.5) * 0.15 })
+    return { solid: [1.1, 0.2], prims }
+  },
+  gatehouse() {
+    return {
+      solid: [1.6, 1.4],
+      shadow: 2.8,
+      light: [0, 2.2, 1.5],
+      prims: [
+        { s: 'box', p: [0, 1.3, 0], d: [3.0, 2.6, 2.6], c: '#e8e2d0' },
+        { s: 'box', p: [0, 2.7, 0], d: [3.4, 0.2, 3.0], c: '#1e6b43' },
+        { s: 'box', p: [0, 1.5, 1.31], d: [1.6, 0.9, 0.02], c: '#2f3b46' },
+        { s: 'box', p: [2.4, 1.0, 1.6], d: [3.0, 0.12, 0.12], c: '#d63a2a' },
+        { s: 'box', p: [1.0, 0.5, 1.6], d: [0.18, 1.0, 0.18], c: '#f2f2f2' },
+      ],
+    }
+  },
   okada(rng) {
     const c = ['#c0392b', '#2c5aa0', '#1e8449', '#111111'][Math.floor(rng() * 4)]
     return {
@@ -278,6 +354,22 @@ export function generateFill(json, existing = [], reserved = []) {
       groupsByModel.get(b.model).push(b.item)
       shadows.push({ ...b.collider, h: b.height })
       if (row.solid) colliders.push(b.collider)
+    }
+  }
+
+  // ---- hand-placed shape props: "placed": [{ "kind": "shrine", "at": [x, z, rotDeg], "seed": 1 }] ----
+  for (const pl of json.placed || []) {
+    const make = PROPS[pl.kind]
+    if (!make) continue
+    const [x, z, rot = 0] = pl.at
+    const yaw = rot * DEG
+    const prop = make(mulberry32(pl.seed ?? Math.round(x * 31 + z * 17)))
+    prims.push(...transformPrims(prop.prims, x, z, yaw))
+    if (prop.solid) colliders.push({ x, z, hw: prop.solid[0], hd: prop.solid[1], angle: yaw })
+    if (prop.shadow) shadows.push({ x, z, hw: prop.solid ? prop.solid[0] : 0.5, hd: prop.solid ? prop.solid[1] : 0.5, angle: yaw, h: prop.shadow })
+    if (prop.light) {
+      const [lx, lz] = rotate(prop.light[0], prop.light[2], yaw)
+      lights.push({ x: x + lx, y: prop.light[1], z: z + lz })
     }
   }
 
@@ -368,6 +460,37 @@ export function generateFill(json, existing = [], reserved = []) {
         const bz = cz + z + (rng() - 0.5) * 8
         if (shadows.some((c) => hitsBox(bx, bz, Math.max(w, dep) / 2 + 1, c))) continue // a real building stands here
         blocks.push({ x: bx, z: bz, w, d: dep, h, rot, style: Math.floor(rng() * 6) })
+      }
+    })
+  }
+
+  // ---- tree line: a ring of palms and bush around a village ----
+  const tl = json.treeline
+  if (tl) {
+    const rng = mulberry32(tl.seed ?? 5)
+    const b = json.bounds
+    tl.rings.forEach((ring) => {
+      const hx = (b.maxX - b.minX) / 2 + ring
+      const hz = (b.maxZ - b.minZ) / 2 + ring
+      const cx = (b.minX + b.maxX) / 2
+      const cz = (b.minZ + b.maxZ) / 2
+      const perimeter = 4 * (hx + hz)
+      for (let d = 0; d < perimeter; d += 3 + rng() * 4) {
+        let x
+        let z
+        if (d < 2 * hx) { x = -hx + d; z = -hz }
+        else if (d < 2 * hx + 2 * hz) { x = hx; z = -hz + (d - 2 * hx) }
+        else if (d < 4 * hx + 2 * hz) { x = hx - (d - 2 * hx - 2 * hz); z = hz }
+        else { x = -hx; z = hz - (d - 4 * hx - 2 * hz) }
+        if (Math.abs(cz + z) < 7) continue // the road runs through
+        const px = cx + x + (rng() - 0.5) * 8
+        const pz = cz + z + (rng() - 0.5) * 8
+        if (rng() < 0.55) prims.push(...transformPrims(PROPS.palmTree(rng).prims, px, pz, rng() * 6.28))
+        else {
+          const h = 3 + rng() * 4
+          prims.push({ s: 'cone', p: [px, h * 0.55, pz], d: [1.6 + rng() * 1.6, h], c: rng() < 0.5 ? '#3e6e2a' : '#4b7d30' })
+          prims.push({ s: 'cyl', p: [px, 0.6, pz], d: [0.2, 1.2], c: '#5d4037' })
+        }
       }
     })
   }

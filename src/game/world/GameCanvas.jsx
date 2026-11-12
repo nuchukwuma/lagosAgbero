@@ -12,7 +12,6 @@ import NPCs from './NPCs.jsx'
 import CameraRig from './CameraRig.jsx'
 import GoalTracker from './GoalTracker.jsx'
 import PlayerController from '../player/PlayerController.jsx'
-import { parseLayout } from './layout.js'
 import { playerState } from './worldState.js'
 import { loadClips } from '../characters/clipLoader.js'
 import Traffic from './Traffic.jsx'
@@ -35,7 +34,7 @@ import { LOW_ENERGY } from '../systems/energy.js'
 import VendorTracker from './VendorTracker.jsx'
 import ActivityTracker from './ActivityTracker.jsx'
 import QuestTracker from './QuestTracker.jsx'
-import street from '../data/world/iyanaWahala.json'
+import { getLayout } from './worlds.js'
 
 // The 3D street behind the story. The story view decides:
 //   location   where the player stands when a scene starts
@@ -43,15 +42,7 @@ import street from '../data/world/iyanaWahala.json'
 //   speaker    who the camera frames and who plays "talk"
 //   freeRoam   player control + goal marker
 
-// Every mark the story places a character on, so generated street clutter
-// (kiosks, drums...) never lands where somebody has to stand.
-function storyMarks() {
-  const marks = []
-  for (const ch of Object.values(storyCtx.chapters)) for (const sc of Object.values(ch.scenes || {})) for (const p of Object.values(sc.positions || {})) marks.push([p[0], p[1], 1.8])
-  return marks
-}
-
-export const STREET_LAYOUT = parseLayout(street, { reserved: storyMarks() })
+export const STREET_LAYOUT = getLayout('iyanaWahala') // kept for tools and tests
 const DIALOGUE_VIEWS = new Set(['dialogue', 'choice', 'news'])
 const DEG = Math.PI / 180
 
@@ -59,9 +50,10 @@ function useSceneTeleport(view, layout) {
   const last = useRef(null)
   const lastStory = useRef(null) // the last scene of a normal (non-common) chapter
   useEffect(() => {
-    const key = `${view.chapterId}/${view.sceneId}`
+    const key = `${layout.id}/${view.chapterId}/${view.sceneId}`
     if (last.current === key) return
-    const first = last.current === null
+    // first scene, or a different world (village -> Lagos): start somewhere sensible
+    const first = last.current === null || !last.current.startsWith(`${layout.id}/`)
     last.current = key
     if (storyCtx.chapters[view.chapterId]?.common) return // side quests, events, raids: stay put
     // back from a quest / event / raid to the scene that was interrupted:
@@ -80,7 +72,7 @@ function useSceneTeleport(view, layout) {
 const COMMON_CLIPS = ['breathingIdle', 'walk', 'run', 'talk', 'argue']
 
 export default function GameCanvas({ view, game, activity = null, paused = false, onGoalReached }) {
-  const layout = STREET_LAYOUT
+  const layout = getLayout(view.world) // Iyana-Wahala, the village, the campus...
   useSceneTeleport(view, layout)
   useEffect(() => {
     loadClips(COMMON_CLIPS).catch(() => {})
@@ -135,20 +127,20 @@ export default function GameCanvas({ view, game, activity = null, paused = false
         </Suspense>
       ) : (
       <Suspense fallback={null}>
-          <StreetScene layout={layout} />
+          <StreetScene key={layout.id} layout={layout} />
           <group userData={{ tag: 'npcs' }}>
           <NPCs layout={layout} flags={game.flags} positions={view.positions} speaker={speaker} mood={view.mood} hidden={fightOpponent ? [fightOpponent] : []} />
           </group>
           {!(fightOn && modeName === 'fight') && !busOn && <PlayerController layout={layout} look={look} enabled={(freeRoam || feeRunActive || chaseActive) && !paused} eyeRed={eyeRed} tired={game.stats.energy < LOW_ENERGY} />}
           {freeRoam && <VendorTracker />}
           {freeRoam && <ActivityTracker layout={layout} game={game} />}
-          {freeRoam && <QuestTracker game={game} />}
+          {freeRoam && <QuestTracker key={layout.id} game={game} />}
           <group userData={{ tag: 'traffic' }}>
-            <Traffic paused={paused} raining={Boolean(game.flags.raining)} />
+            {layout.raw.traffic !== false && <Traffic key={layout.id} density={layout.raw.traffic?.density ?? 3} paused={paused} raining={Boolean(game.flags.raining)} />}
           </group>
           <Suspense fallback={null}>
             <group userData={{ tag: 'crowd' }}>
-              <Crowd layout={layout} quality={quality} paused={paused} />
+              <Crowd key={layout.id} layout={layout} quality={quality} paused={paused} />
             </group>
           </Suspense>
           {worldMode && modeName === 'feeCollection' && <FeeRunDirector />}

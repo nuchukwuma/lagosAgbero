@@ -1,0 +1,198 @@
+{
+  "cult": {
+    "questions": {
+      "fastest": {
+        "q": "Who walks fastest in the forest?",
+        "answers": [
+          "The one who carries his house.",
+          "The cheetah, obviously.",
+          "Okada man with no brakes."
+        ],
+        "right": 0
+      },
+      "knocks": {
+        "q": "How many knocks open the shell?",
+        "answers": [
+          "One. Quick and clean.",
+          "Two. Never three.",
+          "As many as it takes."
+        ],
+        "right": 1
+      },
+      "money": {
+        "q": "Where does a Tortoise keep his money?",
+        "answers": [
+          "Under his shell.",
+          "In the bank, with interest.",
+          "In the register. Signed, stamped, filed."
+        ],
+        "right": 2
+      },
+      "hyena": {
+        "q": "What does the Tortoise say to the Hyena?",
+        "answers": [
+          "Nothing. The Tortoise files a report.",
+          "Ha ha ha!",
+          "Come and fight me now now."
+        ],
+        "right": 0
+      },
+      "late": {
+        "q": "When is a Tortoise late?",
+        "answers": [
+          "On Mondays.",
+          "Never. Everybody else is early.",
+          "When the danfo breaks down."
+        ],
+        "right": 1
+      },
+      "form": {
+        "q": "What is Form T-12?",
+        "answers": [
+          "A tax form.",
+          "Chuks's phone number.",
+          "Membership. Nine pages. In triplicate."
+        ],
+        "right": 2
+      },
+      "boss": {
+        "q": "Who is Number One Shell?",
+        "answers": [
+          "Nobody knows, and nobody asks.",
+          "Baba Ticket in disguise.",
+          "Chuks, after his promotion."
+        ],
+        "right": 0
+      }
+    }
+  },
+  "gst101": {
+    "title": "GST 101 exam",
+    "intro": "Use of English and Nigerian History. Fifty students, one invigilator, one fan.",
+    "questions": {
+      "q1": {
+        "q": "\"Which of these is a complete sentence?\"",
+        "answers": [
+          "\"Running to the bus stop.\"",
+          "\"The danfo left without me.\"",
+          "\"Because of the traffic.\""
+        ],
+        "right": 1
+      },
+      "q2": {
+        "q": "\"Nigeria became a republic in which year?\"",
+        "answers": [
+          "1960",
+          "1963",
+          "1970"
+        ],
+        "right": 1
+      },
+      "q3": {
+        "q": "\"Choose the correct spelling.\"",
+        "answers": [
+          "Accommodation",
+          "Acommodation",
+          "Accomodation"
+        ],
+        "right": 0
+      },
+      "q4": {
+        "q": "\"'Her words fell on deaf ears' means:\"",
+        "answers": [
+          "She shouted",
+          "Nobody listened",
+          "She whispered"
+        ],
+        "right": 1
+      },
+      "q5": {
+        "q": "\"The plural of 'criterion' is:\"",
+        "answers": [
+          "Criterions",
+          "Criteria",
+          "Criterias"
+        ],
+        "right": 1
+      },
+      "q6": {
+        "q": "\"Which is a figure of speech?\"",
+        "answers": [
+          "Metaphor",
+          "Paragraph",
+          "Syllabus"
+        ],
+        "right": 0
+      },
+      "q7": {
+        "q": "\"The capital of Nigeria moved to Abuja in:\"",
+        "answers": [
+          "1976",
+          "1991",
+          "1999"
+        ],
+        "right": 1
+      }
+    }
+  },
+  "econ201": {
+    "title": "ECO 201 final",
+    "intro": "Microeconomics. You either studied or you didn't.",
+    "questions": {
+      "q1": {
+        "q": "\"When price rises and demand falls, demand is:\"",
+        "answers": [
+          "Perfectly inelastic",
+          "Elastic",
+          "Imaginary"
+        ],
+        "right": 1
+      },
+      "q2": {
+        "q": "\"Opportunity cost is:\"",
+        "answers": [
+          "The price of a product",
+          "The next best alternative given up",
+          "The cost of opportunities"
+        ],
+        "right": 1
+      },
+      "q3": {
+        "q": "\"In perfect competition, firms are:\"",
+        "answers": [
+          "Price takers",
+          "Price makers",
+          "Price fixers"
+        ],
+        "right": 0
+      },
+      "q4": {
+        "q": "\"Inflation is:\"",
+        "answers": [
+          "A general rise in prices",
+          "A rise in one price",
+          "When Baba Radio is sad"
+        ],
+        "right": 0
+      },
+      "q5": {
+        "q": "\"GDP measures:\"",
+        "answers": [
+          "Total value of goods and services produced",
+          "Government debt",
+          "Population"
+        ],
+        "right": 0
+      },
+      "q6": {
+        "q": "\"A monopoly has:\"",
+        "answers": [
+          "Many sellers",
+          "One seller",
+          "No buyers"
+        ],
+        "right": 1
+      }
+    }
+  }
+}

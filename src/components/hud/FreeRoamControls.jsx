@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import MoveControls from './MoveControls.jsx'
 import { useWorldStore } from '../../game/world/worldState.js'
 import characters from '../../game/data/characters.json'
-import street from '../../game/data/world/iyanaWahala.json'
+import { worldJson } from '../../game/world/worlds.js'
 import { QUESTS } from '../../game/systems/quests.js'
 
 // On-screen controls while walking around: objective, joystick, RUN, TALK.
@@ -13,7 +13,7 @@ export default function FreeRoamControls({ view, onTalk, onShop, onActivity, onQ
   const nearVendor = useWorldStore((s) => s.nearVendor)
   const vendorName = nearVendor ? characters[nearVendor]?.name || nearVendor : null
   const nearActivity = useWorldStore((s) => s.nearActivity)
-  const activity = nearActivity ? (street.activities || []).find((a) => a.id === nearActivity) : null
+  const activity = nearActivity ? (worldJson(view.world).activities || []).find((a) => a.id === nearActivity) : null
   const nearQuest = useWorldStore((s) => s.nearQuest)
   const quest = !canTalk && nearQuest ? QUESTS.find((q) => q.id === nearQuest) : null
 

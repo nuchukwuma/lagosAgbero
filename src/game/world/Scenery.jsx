@@ -159,6 +159,7 @@ export function Ground({ bounds }) {
 /** Pavements and market floors with a paver texture. */
 export function Pavements({ list }) {
   const map = useMemo(() => paverTexture(), [])
+  const earth = useMemo(() => earthTexture(), [])
   const meshes = useMemo(
     () =>
       list.map((p, i) => {
@@ -168,13 +169,14 @@ export function Pavements({ list }) {
         const uv = g.attributes.uv
         for (let k = 0; k < uv.count; k++) uv.setXY(k, uv.getX(k) * (w / 3), uv.getY(k) * (d / 3))
         g.translate(x + w / 2, GROUND_Y + 0.005 + i * 0.001, z + d / 2)
-        return { g, color: p.color }
+        return { g, color: p.color, texture: p.texture }
       }),
     [list],
   )
+  // "texture": "earth" for grass fields and laterite paths, pavers otherwise
   return meshes.map((m, i) => (
     <mesh key={i} geometry={m.g}>
-      <meshLambertMaterial map={map} color={m.color} />
+      <meshLambertMaterial map={m.texture === 'earth' ? earth : map} color={m.color} />
     </mesh>
   ))
 }

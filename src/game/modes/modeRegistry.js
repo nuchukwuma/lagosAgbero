@@ -17,6 +17,7 @@ import BeggingMode from './begging/BeggingMode.jsx'
 import RallyMode from './rally/RallyMode.jsx'
 import InitiationMode from './initiation/InitiationMode.jsx'
 import DriveMode from './drive/DriveMode.jsx'
+import BluffMode from './bluff/BluffMode.jsx'
 
 export const MODES = {
   feeCollection: FeeCollectionMode,
@@ -28,12 +29,14 @@ export const MODES = {
   rally: RallyMode,
   initiation: InitiationMode,
   drive: DriveMode,
+  bluff: BluffMode,
+  exam: InitiationMode, // the same timed-question screen, with a question bank
 }
 
 // Modes played inside the 3D street (the player walks with joystick/keys).
 export const WORLD_MODES = new Set(['feeCollection', 'chase', 'fight', 'runner', 'conductor', 'drive'])
 
-export const PLANNED_MODES = ['chase', 'fight', 'runner', 'raid', 'conductor', 'feeCollection', 'begging', 'rally', 'initiation', 'drive', 'shop']
+export const PLANNED_MODES = ['chase', 'fight', 'runner', 'raid', 'conductor', 'feeCollection', 'begging', 'rally', 'initiation', 'drive', 'bluff', 'exam', 'shop']
 
 export function modeComponent(name) {
   return MODES[name] || StandInMode

@@ -1,0 +1,1138 @@
+{
+  "id": "royalCrest",
+  "name": "Royal Crest University",
+  "notes": "Fictional private university in Lagos. The campus ring road runs east-west along z=0; academic buildings north (z<0), hostels, buka, car park and field south.",
+  "bounds": {
+    "minX": -60,
+    "maxX": 60,
+    "minZ": -45,
+    "maxZ": 45
+  },
+  "spawn": {
+    "pos": [
+      -50,
+      -5
+    ],
+    "facing": 90
+  },
+  "traffic": {
+    "density": 1
+  },
+  "roads": [
+    {
+      "model": "roadStraight",
+      "rotation": 0,
+      "line": {
+        "from": [
+          -92,
+          0
+        ],
+        "to": [
+          92,
+          0
+        ],
+        "step": 8
+      }
+    },
+    {
+      "model": "pavedLot",
+      "rotation": 0,
+      "at": [
+        [
+          32,
+          13
+        ],
+        [
+          40,
+          13
+        ],
+        [
+          48,
+          13
+        ],
+        [
+          32,
+          21
+        ],
+        [
+          40,
+          21
+        ],
+        [
+          48,
+          21
+        ]
+      ]
+    }
+  ],
+  "pavements": [
+    {
+      "rect": [
+        -26,
+        -32,
+        58,
+        24
+      ],
+      "color": "#c9c3b8"
+    },
+    {
+      "rect": [
+        -60,
+        -8,
+        120,
+        4
+      ],
+      "color": "#a39d93"
+    },
+    {
+      "rect": [
+        -60,
+        4,
+        120,
+        4
+      ],
+      "color": "#a39d93"
+    },
+    {
+      "rect": [
+        -4,
+        8,
+        12,
+        26
+      ],
+      "color": "#b8b2a6"
+    },
+    {
+      "rect": [
+        -48,
+        10,
+        32,
+        24
+      ],
+      "color": "#4f8a3a",
+      "texture": "earth"
+    }
+  ],
+  "props": [
+    {
+      "model": "treeLarge",
+      "rotation": 0,
+      "at": [
+        [
+          -20,
+          -12
+        ],
+        [
+          30,
+          -12
+        ],
+        [
+          -8,
+          -26
+        ],
+        [
+          22,
+          -28
+        ],
+        [
+          -54,
+          12
+        ],
+        [
+          56,
+          -20
+        ],
+        [
+          -12,
+          40
+        ],
+        [
+          26,
+          40
+        ]
+      ]
+    },
+    {
+      "model": "treeSmall",
+      "rotation": 0,
+      "at": [
+        [
+          2,
+          -12
+        ],
+        [
+          -26,
+          -22
+        ],
+        [
+          12,
+          22
+        ],
+        [
+          -2,
+          30
+        ]
+      ]
+    },
+    {
+      "model": "streetLamp",
+      "scale": 1.2,
+      "rotation": 180,
+      "at": [
+        [
+          -40,
+          -4.6
+        ],
+        [
+          -10,
+          -4.6
+        ],
+        [
+          20,
+          -4.6
+        ],
+        [
+          48,
+          -4.6
+        ]
+      ]
+    },
+    {
+      "model": "streetLamp",
+      "scale": 1.2,
+      "rotation": 0,
+      "at": [
+        [
+          -30,
+          4.6
+        ],
+        [
+          0,
+          4.6
+        ],
+        [
+          30,
+          4.6
+        ]
+      ]
+    },
+    {
+      "model": "planter",
+      "rotation": 0,
+      "at": [
+        [
+          -6,
+          -9
+        ],
+        [
+          16,
+          -9
+        ]
+      ]
+    }
+  ],
+  "buildings": [
+    {
+      "model": "partySecretariat",
+      "rotation": 0,
+      "at": [
+        [
+          0,
+          -40
+        ]
+      ],
+      "solid": true
+    },
+    {
+      "model": "officeBlock",
+      "rotation": 0,
+      "at": [
+        [
+          -30,
+          -40
+        ]
+      ],
+      "solid": true
+    },
+    {
+      "model": "industrialBlock",
+      "rotation": 0,
+      "at": [
+        [
+          32,
+          -40
+        ]
+      ],
+      "solid": true
+    },
+    {
+      "model": "marketHall",
+      "rotation": 0,
+      "at": [
+        [
+          18,
+          -22
+        ]
+      ],
+      "solid": true
+    },
+    {
+      "model": "warehouseArched",
+      "rotation": 180,
+      "at": [
+        [
+          52,
+          38
+        ]
+      ],
+      "solid": true
+    }
+  ],
+  "vehicles": [
+    {
+      "model": "bigManSuv",
+      "rotation": 0,
+      "at": [
+        [
+          30,
+          15
+        ],
+        [
+          42,
+          15
+        ]
+      ],
+      "solid": true
+    },
+    {
+      "model": "privateCar",
+      "rotation": 0,
+      "at": [
+        [
+          36,
+          15
+        ],
+        [
+          48,
+          22
+        ]
+      ],
+      "solid": true
+    },
+    {
+      "model": "taxi",
+      "rotation": 180,
+      "at": [
+        [
+          34,
+          22
+        ]
+      ],
+      "solid": true
+    }
+  ],
+  "rows": [
+    {
+      "from": [
+        -58,
+        40
+      ],
+      "to": [
+        -16,
+        40
+      ],
+      "face": 180,
+      "set": "mixed",
+      "gap": 2,
+      "seed": 301,
+      "solid": true,
+      "jitter": 0.4
+    },
+    {
+      "from": [
+        12,
+        40
+      ],
+      "to": [
+        44,
+        40
+      ],
+      "face": 180,
+      "set": "houses",
+      "gap": 2,
+      "seed": 302,
+      "solid": true,
+      "jitter": 0.4
+    },
+    {
+      "from": [
+        40,
+        -14
+      ],
+      "to": [
+        58,
+        -14
+      ],
+      "face": 0,
+      "set": "mixed",
+      "gap": 1.4,
+      "seed": 303,
+      "solid": true,
+      "jitter": 0.6
+    },
+    {
+      "from": [
+        -58,
+        -14
+      ],
+      "to": [
+        -42,
+        -14
+      ],
+      "face": 0,
+      "set": "offices",
+      "gap": 3,
+      "seed": 304,
+      "solid": true,
+      "jitter": 0.3
+    },
+    {
+      "from": [
+        -104,
+        -56
+      ],
+      "to": [
+        104,
+        -56
+      ],
+      "face": 0,
+      "set": "offices",
+      "gap": 4,
+      "seed": 305,
+      "jitter": 3
+    },
+    {
+      "from": [
+        -104,
+        56
+      ],
+      "to": [
+        104,
+        56
+      ],
+      "face": 180,
+      "set": "mixed",
+      "gap": 4,
+      "seed": 306,
+      "jitter": 3
+    }
+  ],
+  "skyline": {
+    "rings": [
+      24,
+      46
+    ],
+    "seed": 21
+  },
+  "placed": [
+    {
+      "kind": "gatehouse",
+      "at": [
+        -52,
+        -8,
+        0
+      ]
+    },
+    {
+      "kind": "goalPost",
+      "at": [
+        -46,
+        22,
+        90
+      ]
+    },
+    {
+      "kind": "goalPost",
+      "at": [
+        -18,
+        22,
+        90
+      ]
+    },
+    {
+      "kind": "noticeBoard",
+      "at": [
+        8,
+        -10,
+        0
+      ]
+    },
+    {
+      "kind": "noticeBoard",
+      "at": [
+        -4,
+        10,
+        180
+      ],
+      "seed": 5
+    },
+    {
+      "kind": "bench",
+      "at": [
+        0,
+        -16,
+        0
+      ]
+    },
+    {
+      "kind": "bench",
+      "at": [
+        12,
+        -16,
+        0
+      ],
+      "seed": 3
+    },
+    {
+      "kind": "bench",
+      "at": [
+        -12,
+        -16,
+        0
+      ],
+      "seed": 6
+    }
+  ],
+  "noClutter": [
+    [
+      -60,
+      -4.2,
+      120,
+      8.4
+    ],
+    [
+      -48,
+      10,
+      32,
+      24
+    ],
+    [
+      28,
+      9,
+      24,
+      18
+    ],
+    [
+      -26,
+      -32,
+      58,
+      24
+    ]
+  ],
+  "clutter": [
+    {
+      "rect": [
+        -2,
+        6,
+        32,
+        3
+      ],
+      "count": 7,
+      "kinds": [
+        "kiosk",
+        "umbrella",
+        "kegs",
+        "bench"
+      ],
+      "seed": 71,
+      "face": 180,
+      "spin": 10
+    },
+    {
+      "rect": [
+        40,
+        -11,
+        18,
+        2.5
+      ],
+      "count": 7,
+      "kinds": [
+        "kiosk",
+        "umbrella",
+        "signboard",
+        "okada",
+        "generator",
+        "drums"
+      ],
+      "seed": 72,
+      "face": 0,
+      "spin": 12
+    },
+    {
+      "rect": [
+        -14,
+        10,
+        8,
+        24
+      ],
+      "count": 5,
+      "kinds": [
+        "bench",
+        "waterTank",
+        "clothesline",
+        "refuse"
+      ],
+      "seed": 73,
+      "face": 90,
+      "spin": 40
+    },
+    {
+      "rect": [
+        10,
+        26,
+        40,
+        8
+      ],
+      "count": 7,
+      "kinds": [
+        "clothesline",
+        "bench",
+        "waterTank",
+        "generator"
+      ],
+      "seed": 74,
+      "face": 180,
+      "spin": 30
+    }
+  ],
+  "stalls": [
+    {
+      "id": "buka",
+      "at": [
+        8,
+        10.5,
+        180
+      ],
+      "color": "#c0392b",
+      "goods": "food",
+      "small": true,
+      "sign": "CAMPUS BUKA"
+    },
+    {
+      "id": "bizCentre",
+      "at": [
+        44,
+        -9.5,
+        0
+      ],
+      "color": "#2980b9",
+      "goods": "phones",
+      "small": true,
+      "sign": "PRINT & BIND"
+    }
+  ],
+  "signs": [
+    {
+      "at": [
+        -58,
+        0,
+        90
+      ],
+      "y": 5.2,
+      "size": [
+        10,
+        1.4
+      ],
+      "post": true,
+      "bg": "#1a2a52",
+      "fg": "#f2c300",
+      "lines": [
+        "ROYAL CREST UNIVERSITY",
+        "Excellence · Elegance · Expense"
+      ]
+    },
+    {
+      "at": [
+        0,
+        -33.6,
+        0
+      ],
+      "y": 4,
+      "size": [
+        6,
+        0.9
+      ],
+      "bg": "#1a2a52",
+      "fg": "#ffffff",
+      "lines": [
+        "SENATE BUILDING"
+      ]
+    },
+    {
+      "at": [
+        -30,
+        -33.6,
+        0
+      ],
+      "y": 4,
+      "size": [
+        7,
+        0.9
+      ],
+      "bg": "#1a2a52",
+      "fg": "#ffffff",
+      "lines": [
+        "FACULTY OF SOCIAL SCIENCES"
+      ]
+    },
+    {
+      "at": [
+        32,
+        -33.6,
+        0
+      ],
+      "y": 4,
+      "size": [
+        5,
+        0.9
+      ],
+      "bg": "#1a2a52",
+      "fg": "#ffffff",
+      "lines": [
+        "LIBRARY"
+      ]
+    },
+    {
+      "at": [
+        18,
+        -17.8,
+        0
+      ],
+      "y": 3.6,
+      "size": [
+        6,
+        0.8
+      ],
+      "bg": "#f2c300",
+      "fg": "#1a1408",
+      "lines": [
+        "LECTURE THEATRE 1"
+      ]
+    },
+    {
+      "at": [
+        -36,
+        34.6,
+        180
+      ],
+      "y": 3.6,
+      "size": [
+        6,
+        0.8
+      ],
+      "bg": "#7f8c8d",
+      "fg": "#ffffff",
+      "lines": [
+        "PEARL HALL (BOYS)"
+      ]
+    },
+    {
+      "at": [
+        28,
+        34.6,
+        180
+      ],
+      "y": 3.6,
+      "size": [
+        6,
+        0.8
+      ],
+      "bg": "#7f8c8d",
+      "fg": "#ffffff",
+      "lines": [
+        "ONYX HALL"
+      ]
+    },
+    {
+      "at": [
+        52,
+        -6.5,
+        0
+      ],
+      "y": 3.4,
+      "size": [
+        4,
+        0.8
+      ],
+      "post": true,
+      "bg": "#c0392b",
+      "fg": "#ffffff",
+      "lines": [
+        "BACK GATE"
+      ]
+    },
+    {
+      "at": [
+        52,
+        31.6,
+        180
+      ],
+      "y": 3.4,
+      "size": [
+        5,
+        0.8
+      ],
+      "bg": "#f2f2f2",
+      "fg": "#1a1408",
+      "lines": [
+        "UNIVERSITY CHAPEL"
+      ]
+    }
+  ],
+  "shelters": [],
+  "spots": {
+    "gate": {
+      "pos": [
+        -50,
+        -5
+      ],
+      "facing": 90,
+      "radius": 3.5
+    },
+    "quad": {
+      "pos": [
+        6,
+        -14
+      ],
+      "facing": 0,
+      "radius": 4
+    },
+    "lectureTheatre": {
+      "pos": [
+        18,
+        -15.5
+      ],
+      "facing": 180,
+      "radius": 3.5
+    },
+    "library": {
+      "pos": [
+        32,
+        -30
+      ],
+      "facing": 180,
+      "radius": 3.5
+    },
+    "senate": {
+      "pos": [
+        0,
+        -30
+      ],
+      "facing": 180,
+      "radius": 3.5
+    },
+    "drOffice": {
+      "pos": [
+        -30,
+        -30
+      ],
+      "facing": 180,
+      "radius": 3.5
+    },
+    "hostel": {
+      "pos": [
+        -36,
+        31
+      ],
+      "facing": 180,
+      "radius": 3.5
+    },
+    "cafeteria": {
+      "pos": [
+        8,
+        13
+      ],
+      "facing": 0,
+      "radius": 3
+    },
+    "carPark": {
+      "pos": [
+        38,
+        9
+      ],
+      "facing": 0,
+      "radius": 4
+    },
+    "field": {
+      "pos": [
+        -30,
+        14
+      ],
+      "facing": 0,
+      "radius": 4
+    },
+    "backGate": {
+      "pos": [
+        52,
+        -5
+      ],
+      "facing": 180,
+      "radius": 3.5
+    },
+    "chapel": {
+      "pos": [
+        52,
+        30
+      ],
+      "facing": 180,
+      "radius": 3.5
+    }
+  },
+  "npcs": [
+    {
+      "id": "tamara",
+      "pos": [
+        40,
+        10.5
+      ],
+      "facing": 180,
+      "anim": "talk"
+    },
+    {
+      "id": "tobi",
+      "pos": [
+        42.5,
+        10
+      ],
+      "facing": 200,
+      "anim": "idle"
+    },
+    {
+      "id": "dubai",
+      "pos": [
+        -34,
+        31.5
+      ],
+      "facing": 180,
+      "anim": "idle"
+    },
+    {
+      "id": "drSorting",
+      "pos": [
+        -30,
+        -31.5
+      ],
+      "facing": 0,
+      "anim": "idle"
+    },
+    {
+      "id": "spike",
+      "pos": [
+        53,
+        -9
+      ],
+      "facing": 0,
+      "anim": "idle"
+    },
+    {
+      "id": "babaGate",
+      "pos": [
+        -49,
+        -7
+      ],
+      "facing": 90,
+      "anim": "idle"
+    },
+    {
+      "id": "ife",
+      "pos": [
+        4,
+        -12.5
+      ],
+      "facing": 0,
+      "anim": "idle"
+    },
+    {
+      "id": "vc",
+      "pos": [
+        0,
+        -31.5
+      ],
+      "facing": 0,
+      "anim": "idle",
+      "if": "vcAround"
+    },
+    {
+      "id": "mamaSomto",
+      "pos": [
+        60,
+        40
+      ],
+      "facing": 0,
+      "anim": "idle",
+      "if": "mamaSomtoAround"
+    }
+  ],
+  "extras": [
+    {
+      "seed": 401,
+      "pos": [
+        10,
+        -16
+      ],
+      "facing": 180,
+      "anim": "talk"
+    },
+    {
+      "seed": 403,
+      "pos": [
+        12,
+        -17
+      ],
+      "facing": 20,
+      "anim": "idle"
+    },
+    {
+      "seed": 405,
+      "pos": [
+        -6,
+        12
+      ],
+      "facing": 180,
+      "anim": "idle"
+    },
+    {
+      "seed": 407,
+      "pos": [
+        24,
+        -27
+      ],
+      "facing": 180,
+      "anim": "talk"
+    },
+    {
+      "seed": 409,
+      "pos": [
+        -24,
+        18
+      ],
+      "facing": 90,
+      "anim": "idle"
+    },
+    {
+      "seed": 411,
+      "pos": [
+        50,
+        -8.5
+      ],
+      "facing": 0,
+      "anim": "argue"
+    }
+  ],
+  "gatherings": [
+    {
+      "at": [
+        -2,
+        -20
+      ],
+      "n": 4
+    },
+    {
+      "at": [
+        26,
+        -14
+      ],
+      "n": 3
+    },
+    {
+      "at": [
+        4,
+        16
+      ],
+      "n": 3
+    },
+    {
+      "at": [
+        -40,
+        30
+      ],
+      "n": 2,
+      "r": 0.7
+    },
+    {
+      "at": [
+        46,
+        30
+      ],
+      "n": 3
+    },
+    {
+      "at": [
+        -34,
+        22
+      ],
+      "n": 2,
+      "r": 0.7
+    }
+  ],
+  "walkways": [
+    {
+      "from": [
+        -78,
+        -6
+      ],
+      "to": [
+        78,
+        -6
+      ],
+      "wrap": true,
+      "n": 6
+    },
+    {
+      "from": [
+        -78,
+        6
+      ],
+      "to": [
+        78,
+        6
+      ],
+      "wrap": true,
+      "n": 6
+    },
+    {
+      "from": [
+        2,
+        8
+      ],
+      "to": [
+        2,
+        34
+      ],
+      "n": 4
+    },
+    {
+      "from": [
+        -24,
+        -12
+      ],
+      "to": [
+        30,
+        -12
+      ],
+      "n": 5
+    },
+    {
+      "from": [
+        -24,
+        -28
+      ],
+      "to": [
+        30,
+        -28
+      ],
+      "n": 4
+    }
+  ],
+  "activities": []
+}

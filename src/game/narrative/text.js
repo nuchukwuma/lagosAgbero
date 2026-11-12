@@ -12,9 +12,9 @@
 // The first variant whose condition is true replaces the beat's text.
 
 import { checkCondition } from './conditions.js'
-import { formatNaira, RANK_NAMES } from './stats.js'
+import { formatNaira, RANK_NAMES, STAT_DEFS } from './stats.js'
 
-const MONEY_KEYS = new Set(['money', 'hustleMoney', 'cultMoney', 'debt', 'quota', 'stopFee', 'fairFee'])
+const MONEY_KEYS = new Set(['money', 'hustleMoney', 'cultMoney', 'debt', 'quota', 'stopFee', 'fairFee', 'villageDebt', 'schoolFees', 'loanDebt'])
 
 export function interpolate(text, state) {
   if (!text) return ''
@@ -22,7 +22,10 @@ export function interpolate(text, state) {
     if (key === 'name') return state.player.name
     if (key === 'nickname') return state.player.nickname
     if (key === 'rank') return RANK_NAMES[Math.max(0, Math.min(RANK_NAMES.length - 1, Math.round(state.stats.cultRank || 0)))]
-    if (key === 'stat' && arg) return String(Math.round(state.stats[arg] ?? 0))
+    if (key === 'stat' && arg) {
+      const v = state.stats[arg] ?? 0
+      return STAT_DEFS[arg]?.decimals ? v.toFixed(STAT_DEFS[arg].decimals) : String(Math.round(v))
+    }
     if (MONEY_KEYS.has(key)) return formatNaira(state.stats[key] ?? 0)
     return whole
   })

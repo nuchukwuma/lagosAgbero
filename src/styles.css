@@ -2012,3 +2012,217 @@ body,
   opacity: 0.75;
   margin-left: 4px;
 }
+
+/* ---------------- story map ---------------- */
+.story-map {
+  width: min(920px, calc(100vw - 16px));
+  max-height: calc(100vh - 24px);
+  display: flex;
+  flex-direction: column;
+}
+
+.story-map-scroll {
+  overflow: auto;
+  flex: 1;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.25);
+  padding: 8px;
+  min-height: 240px;
+}
+
+.story-map-explored {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #f0c400;
+  font-size: 0.9rem;
+  margin-bottom: 6px;
+}
+
+.story-map-svg {
+  display: block;
+  margin: 0 auto;
+}
+
+.story-map-svg .node rect {
+  fill: #2a2215;
+  stroke: #6b5a33;
+  stroke-width: 1.5;
+}
+
+.story-map-svg .node text {
+  fill: #a89b80;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.story-map-svg .node.seen rect {
+  fill: #f0c400;
+  stroke: #1a1408;
+}
+
+.story-map-svg .node.seen text {
+  fill: #1a1408;
+}
+
+.story-map-svg .node.end rect {
+  fill: #3b1f1a;
+}
+
+.story-map-svg .node.end.seen rect {
+  fill: #e2553a;
+}
+
+.story-map-svg .node.end.seen text {
+  fill: #fff;
+}
+
+.story-map-svg .node.current rect {
+  stroke: #fff;
+  stroke-width: 3;
+}
+
+.story-map-svg .edge path {
+  fill: none;
+  stroke: #5a4c30;
+  stroke-width: 1.5;
+  stroke-dasharray: 5 5;
+}
+
+.story-map-svg .edge.taken path {
+  stroke: #f0c400;
+  stroke-width: 3;
+  stroke-dasharray: none;
+}
+
+.story-map-svg .edge text {
+  fill: #c9bc9c;
+  font-size: 10px;
+  paint-order: stroke;
+  stroke: #15100a;
+  stroke-width: 3px;
+}
+
+.story-map-svg .edge.taken text {
+  fill: #f0c400;
+}
+
+.chapter-end .recap {
+  text-align: left;
+  margin: 10px 0;
+  max-height: 34vh;
+  overflow-y: auto;
+}
+
+.chapter-end .recap h3 {
+  font-size: 0.95rem;
+  color: #f0c400;
+  margin: 0 0 4px;
+}
+
+.chapter-end .recap li {
+  margin: 3px 0;
+  font-size: 0.9rem;
+}
+
+.hud-meter {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: #fff;
+}
+
+.hud-meter .meter-bar {
+  width: 70px;
+  height: 7px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.2);
+  overflow: hidden;
+}
+
+.hud-meter .meter-bar div {
+  height: 100%;
+}
+
+.hud-bar-value {
+  margin-left: 4px;
+  font-size: 11px;
+  color: #f0c400;
+}
+
+.story-cards {
+  display: grid;
+  gap: 10px;
+  width: min(560px, 100%);
+}
+
+.story-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: left;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 2px solid #f0c400;
+  background: rgba(26, 20, 8, 0.85);
+  color: #fff;
+  cursor: pointer;
+}
+
+.story-card strong {
+  font-size: 1.2rem;
+  color: #f0c400;
+}
+
+.story-card span {
+  font-size: 0.92rem;
+  opacity: 0.9;
+}
+
+.story-card small {
+  opacity: 0.65;
+}
+
+.story-card:hover,
+.story-card:focus-visible {
+  background: rgba(60, 46, 12, 0.95);
+}
+
+/* bluff */
+.bluff-meter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  margin: 4px 0 8px;
+}
+
+.bluff-meter .bar {
+  flex: 1;
+  height: 9px;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.15);
+  overflow: hidden;
+}
+
+.bluff-meter .bar div {
+  height: 100%;
+  background: linear-gradient(90deg, #f0c400, #e2553a);
+  transition: width 0.3s;
+}
+
+.bluff-note {
+  font-style: italic;
+  opacity: 0.9;
+}
+
+.bluff-note.contradiction,
+.bluff-note.hesitated {
+  color: #ff9c8a;
+}
+
+.bluff-note.consistent,
+.bluff-note.truth {
+  color: #8ff0a4;
+}

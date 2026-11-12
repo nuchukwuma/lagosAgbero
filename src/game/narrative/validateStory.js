@@ -22,7 +22,8 @@ function leavesScene(fx) {
 }
 
 // world (optional): { spots: [...ids], npcs: [...ids] } to check locations and goals
-export function validateStory({ chapters, characters = {}, callbacks = {}, endings = {}, modes = [], world = null }) {
+// worlds (optional): { iyanaWahala: { spots, npcs }, ... } — each scene is checked against its own world
+export function validateStory({ chapters, characters = {}, callbacks = {}, endings = {}, modes = [], world: singleWorld = null, worlds = null }) {
   const errors = []
   const warnings = []
   const checkSpeaker = (s, at) => {
@@ -60,8 +61,11 @@ export function validateStory({ chapters, characters = {}, callbacks = {}, endin
       for (const [outcome, r] of Object.entries(fx.results || {})) checkEffects(r, `${at} result "${outcome}"`)
     }
 
+    if (worlds && chapter.world && !worlds[chapter.world]) errors.push(`${chapterId}: world "${chapter.world}" does not exist`)
     for (const [sceneId, scene] of Object.entries(chapter.scenes || {})) {
       if (!Array.isArray(scene.beats)) { errors.push(`${where(sceneId)}: "beats" must be a list`); continue }
+      // common chapters (quests, events) can be reached from any world: skip world checks there
+      const world = worlds ? (chapter.common && !scene.world && !chapter.world ? null : worlds[scene.world || chapter.world || 'iyanaWahala'] || null) : singleWorld
       if (scene.next) checkTarget(scene.next, where(sceneId))
       if (scene.time && !TIMES.includes(scene.time)) errors.push(`${where(sceneId)}: time must be one of ${TIMES.join(', ')}`)
       if (world && scene.location && !world.spots.includes(scene.location)) errors.push(`${where(sceneId)}: location "${scene.location}" is not a spot in the world layout`)
@@ -131,6 +135,72 @@ export function validateStory({ chapters, characters = {}, callbacks = {}, endin
     for (const [value, lines] of Object.entries(values)) {
       for (const line of Array.isArray(lines) ? lines : [lines]) checkSpeaker(line.speaker, `callbacks.${key}.${value}`)
     }
+  }
+  return { errors, warnings }
+}
+
+// ---------- "every choice counts" audit ----------
+const LASTING = ['setFlag', 'clearFlag', 'changeStat', 'remember', 'goto', 'startMode', 'ending', 'payDebt', 'setTime']
+
+/** Does picking this option change anything that lasts? */
+export function optionMatters(option) {
+  const fx = option.effects || {}
+  if (option.cost) return true
+  return LASTING.some((k) => fx[k] !== undefined && !(Array.isArray(fx[k]) && !fx[k].length))
+}
+
+/**
+ * Finds choices that change nothing, and flags / memories that are set but
+ * never read again (a choice nobody will ever remember).
+ * @param readsText  every other place that can read a flag: data JSON + game code, as one string
+ * @param strict     chapter ids where these are errors (warnings elsewhere)
+ */
+export function auditConsequences(chapters, readsText, strict = new Set()) {
+  const errors = []
+  const warnings = []
+  const writes = new Map() // name -> { count, at, strict }
+  const storyText = JSON.stringify(chapters)
+  const note = (name, at, isStrict) => {
+    const w = writes.get(name) || { count: 0, at, strict: false }
+    w.count++
+    w.strict = w.strict || isStrict
+    writes.set(name, w)
+  }
+  const asList = (v) => (Array.isArray(v) ? v : v ? [v] : [])
+  const collect = (fx, at, isStrict) => {
+    if (!fx) return
+    for (const f of asList(fx.setFlag)) note(f, at, isStrict)
+    for (const k of Object.keys(fx.remember || {})) note(k, at, isStrict)
+    for (const r of Object.values(fx.results || {})) collect(r, at, isStrict)
+  }
+  for (const [chapterId, chapter] of Object.entries(chapters)) {
+    const isStrict = strict.has(chapterId)
+    for (const [sceneId, scene] of Object.entries(chapter.scenes || {})) {
+      scene.beats.forEach((beat, i) => {
+        const at = `${chapterId}/${sceneId}#${i}`
+        if (beat.type === 'setFlag') for (const f of [...asList(beat.flag), ...asList(beat.flags)]) note(f, at, isStrict)
+        collect(beat.effects, at, isStrict)
+        if (beat.type === 'startMode') collect({ results: beat.results }, at, isStrict)
+        for (const o of beat.outcomes || []) collect(o.effects, at, isStrict)
+        if (beat.type === 'choice') {
+          beat.options.forEach((o, j) => {
+            collect(o.effects, at, isStrict)
+            if (!optionMatters(o)) (isStrict ? errors : warnings).push(`${at} option ${j} ("${o.text.slice(0, 40)}"): this choice changes nothing — give it a flag, memory, stat or a different scene`)
+          })
+        }
+      })
+    }
+  }
+  // a name is read if it appears more often than it is written
+  const count = (text, name) => {
+    const re = new RegExp(`(?<![A-Za-z0-9_])!?${name.replace(/[$]/g, '\\$')}(?![A-Za-z0-9_])`, 'g')
+    return (text.match(re) || []).length
+  }
+  for (const [name, w] of writes) {
+    // in story JSON a write shows up as `"name"` (flag) or `"name":` (remember)
+    const inStory = count(storyText, name)
+    const elsewhere = count(readsText, name)
+    if (inStory + elsewhere <= w.count) (w.strict ? errors : warnings).push(`${w.at}: "${name}" is set but never read — nothing later remembers this choice`)
   }
   return { errors, warnings }
 }
