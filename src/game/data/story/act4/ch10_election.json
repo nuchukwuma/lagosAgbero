@@ -306,6 +306,36 @@
         {
           "type": "dialogue",
           "speaker": "ada",
+          "text": "You told me the truth about the Shell when you could have lied. That's why this door is still open.",
+          "if": "ada_knowsCult"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ada",
+          "text": "\"Yellow dey in season.\" (She doesn't laugh.) It's been in season for a year now.",
+          "if": "ada_liedCult"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ada",
+          "text": "You told me you were running from poverty. You were running from ₦850,000. I found out. Lagos is small.",
+          "if": "ada_lied"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ada",
+          "text": "You carried my cartons the first day without anybody asking. I keep forgetting that, then remembering.",
+          "if": "adaHelped"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ada",
+          "text": "First day, you bought bread and walked out without hello. Look at us now.",
+          "if": "ada_first"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ada",
           "text": "And {name}... whatever Settlement gave you, I can smell it from here. Be careful.",
           "if": "bigJob"
         },

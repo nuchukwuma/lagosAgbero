@@ -56,7 +56,12 @@ export default function StoryScreen() {
   if (!game || !view) return null
 
   if (view.type === 'ending') {
-    return <EndingScreen view={view} onTitle={quitToTitle} onLoad={() => goTo('load')} />
+    return (
+      <>
+        <EndingScreen view={view} onTitle={quitToTitle} onLoad={() => goTo('load')} onMap={() => setOverlay('map')} />
+        {overlay === 'map' && <StoryMap game={game} onClose={() => setOverlay(null)} />}
+      </>
+    )
   }
 
   const raining = Boolean(game.flags.raining)

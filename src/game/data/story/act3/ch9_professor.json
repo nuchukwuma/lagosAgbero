@@ -38,6 +38,30 @@
           "text": "I be Hyena. Since before I meet you. Na dem give me the conductor job. Na dem dey collect half my money. I no fit comot."
         },
         {
+          "type": "dialogue",
+          "speaker": "sunday",
+          "text": "You run from the Hyenas under the bridge. Them catch you. Them catch me too, long time ago. Na why I dey tell you now.",
+          "if": "beatenByHyenas"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "sunday",
+          "text": "You pay Tortoise to protect the co-op. Hyenas see am. Everybody see am.",
+          "if": "paidTortoises"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "sunday",
+          "text": "You tell both cults say the other one own you. Brother, both of them don find out.",
+          "if": "playedCults"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "sunday",
+          "text": "You refuse both cults. Na you be the only man for Iyana-Wahala wey no get colour. Them no know what to do with you.",
+          "if": "refusedCults"
+        },
+        {
           "type": "goto",
           "scene": "cultTest",
           "if": "cultPath"

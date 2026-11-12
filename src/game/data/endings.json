@@ -266,6 +266,275 @@
         }
       },
       "text": "Mama's debt: {debt} still owing. The voice notes continue."
+    },
+    {
+      "if": "ada_reconciled",
+      "text": "Ada: you said sorry properly, once. She still brings it up when she's winning an argument."
+    },
+    {
+      "if": {
+        "memory": {
+          "adaTruth": "told"
+        }
+      },
+      "text": "Ada: knows every naira of Mama's debt. She helped pay the last ₦20,000 and pretends she didn't."
+    },
+    {
+      "if": "mama_ch1",
+      "text": "Mama: still has your first voice note from Lagos. \"I reach, Mama.\" She plays it when NEPA takes the light."
+    },
+    {
+      "if": {
+        "memory": {
+          "basseyCell": "silent"
+        }
+      },
+      "text": "Commander Bassey: still remembers the boy who said nothing in his cell. \"Quiet ones,\" he says, \"na dem I watch.\""
+    },
+    {
+      "if": {
+        "flags": [
+          "basseyMet"
+        ],
+        "notFlags": [
+          "informant"
+        ]
+      },
+      "text": "Commander Bassey: still raids every rainy season. He greets you by name. That's not a good sign."
+    },
+    {
+      "if": "firstBribe",
+      "text": "Your first ₦2,000 to the Task Force is still in a file somewhere. Bassey keeps everything."
+    },
+    {
+      "if": {
+        "memory": {
+          "bassey_raid": "refusedBribe"
+        }
+      },
+      "text": "Bassey: refused your money, twice. He's the only officer on the junction you can't buy. You respect him for it, a little."
+    },
+    {
+      "if": "ch1_eager",
+      "text": "Professor: still tells people how you begged to meet Baba Ticket on day one. \"Eager like goat for yam.\""
+    },
+    {
+      "if": "professor_cut",
+      "text": "Professor: still remembers you asked about his cut on your first day. \"That boy go far,\" he says. He isn't sure it's a compliment."
+    },
+    {
+      "if": "knowsProfessorSon",
+      "text": "Kúnlé: Professor's son, the one called Giggles. You never told anyone whose laugh it was."
+    },
+    {
+      "if": "professorProtected",
+      "text": "Kpakpa: still tells people Professor saved you. Professor doesn't correct him."
+    },
+    {
+      "if": "beatKpakpa",
+      "text": "Kpakpa: you beat him on your first week. He sells phone chargers now, and avoids your eyes."
+    },
+    {
+      "if": "lostToKpakpa",
+      "text": "Kpakpa: beat you on your first week. He's mentioned it every day since."
+    },
+    {
+      "if": "ch1_acceptedQuota",
+      "text": "Baba Ticket: still tells new boys how you accepted ₦15,000 quota without blinking. \"Fool or lion. We never know.\""
+    },
+    {
+      "if": "ch1_shortQuota",
+      "text": "Baba Ticket's ledger: there's still one line from your first night. \"₦0 — tomorrow.\""
+    },
+    {
+      "if": "ch1_feeStandard",
+      "text": "Your first fee was ₦500, like everybody's. You stopped being like everybody later."
+    },
+    {
+      "if": {
+        "flags": [
+          "fuel_hike",
+          "splitHike"
+        ]
+      },
+      "text": "The drivers at Front Stop: they still remember the boy who explained the fuel hike instead of hiding it."
+    },
+    {
+      "if": "biodunLaughs",
+      "text": "Bíọ́dún: still laughs about the day you chased him for ₦500. He paid in the end. Mostly in jokes."
+    },
+    {
+      "if": {
+        "flags": [
+          "busDriverBiodun"
+        ],
+        "notFlags": [
+          "conductorDay"
+        ]
+      },
+      "text": "Bíọ́dún's danfo: still missing a conductor every Tuesday."
+    },
+    {
+      "if": "conductorDay",
+      "text": "Bíọ́dún's danfo: still has your slogan painted on the back. The paint is peeling. The slogan isn't."
+    },
+    {
+      "if": "first_drink",
+      "text": "Your first Red-Eye Tonic: still the worst ₦600 you ever spent. Your eyes remember."
+    },
+    {
+      "if": {
+        "flags": [
+          "scatterRival"
+        ],
+        "notFlags": [
+          "scatterAlly",
+          "scatterEnemy"
+        ]
+      },
+      "text": "Scatter: never forgot your first day. He is short. His memory is long."
+    },
+    {
+      "if": "lostToScatter",
+      "text": "Scatter: beat you under the bridge once. He has a photo. He shows it to people."
+    },
+    {
+      "if": "rallyWithScatter",
+      "text": "Scatter's boys: still say you were \"one of us\" at the rally. You weren't. Nobody believes you."
+    },
+    {
+      "if": "underBridgePlan",
+      "text": "Under-Bridge: you said you'd think about it when you got there. You did. Too late, but you did."
+    },
+    {
+      "if": "beatenAtRally",
+      "text": "The rally: you got beaten for ₦15,000. The candidate never learned your name."
+    },
+    {
+      "if": {
+        "flags": [
+          "tookRallyJob"
+        ],
+        "notFlags": [
+          "bargainedSettlement"
+        ]
+      },
+      "text": "Settlement: still has your number under \"Rally — cheap\"."
+    },
+    {
+      "if": "bargainedSettlement",
+      "text": "Settlement: still tells people you're the only boy who ever bargained with him. He raised his prices after you."
+    },
+    {
+      "if": "followedChuks",
+      "text": "Chuks: still remembers you followed him into the Shell without asking where you were going."
+    },
+    {
+      "if": "chuksAdvice",
+      "text": "Chuks's first lesson: some people you must not beg. Ever. You still remember the list."
+    },
+    {
+      "if": "zone5",
+      "text": "Zone 5: the beggars there still chase you away. You were bad at it. They were proud of you anyway."
+    },
+    {
+      "if": "nephewInsulted",
+      "text": "The Big Man's nephew: still angry. He has a lot of free time and a long memory."
+    },
+    {
+      "if": "independentPath",
+      "text": "You stood on your own two legs. Some days they shook. They held."
+    },
+    {
+      "if": {
+        "memory": {
+          "act2Choice": "tortoise"
+        }
+      },
+      "text": "The Shell: you chose them at the crossroads. They chose you back, with conditions."
+    },
+    {
+      "if": "askedBoss",
+      "text": "Number One Shell: you asked who he was, once. He still doesn't know your name. That's what saves you."
+    },
+    {
+      "if": "initiatedPerfect",
+      "text": "The Shell's initiation: you remember every answer. You'd rather not."
+    },
+    {
+      "if": "authorityTrouble",
+      "text": "The convoy: Owó Ńlá's outriders still have your face on a phone somewhere."
+    },
+    {
+      "if": {
+        "flags": [
+          "metConvoy"
+        ],
+        "notFlags": [
+          "authorityTrouble"
+        ]
+      },
+      "text": "The convoy: you stood aside for Owó Ńlá's sirens once. He waved. You didn't wave back."
+    },
+    {
+      "if": "paidLevy",
+      "text": "The ward levy: you paid it every time. Nobody knows where it went. Everybody knows."
+    },
+    {
+      "if": "foundLostChild",
+      "text": "The little girl you walked round the market: her mother sells you oranges for half price. Forever."
+    },
+    {
+      "if": "tookChildToNurse",
+      "text": "Nurse Rónkẹ́: still remembers the area boy who carried a sick child to her clinic. She gives you plasters for free."
+    },
+    {
+      "if": "brokeUpFight",
+      "text": "The two conductors you pulled apart: they're best friends now. They fight with each other's enemies."
+    },
+    {
+      "if": "owesHospital",
+      "text": "The hospital: still has your bill. And your name. And a photo."
+    },
+    {
+      "if": "escapedHospital",
+      "text": "The hospital window you climbed out of: they fitted bars. Your doing."
+    },
+    {
+      "if": {
+        "memory": {
+          "kelvinEnd": "faced"
+        }
+      },
+      "text": "Kelvin: paid back his debts, ₦500 at a time. He waves at you every morning."
+    },
+    {
+      "if": {
+        "memory": {
+          "kelvinEnd": "ran"
+        }
+      },
+      "text": "Kelvin: ran. Nobody knows where. His creditors ask you."
+    },
+    {
+      "if": "helpedMiracle",
+      "text": "Brother Taiwo: still \"healed\" every Sunday at the crusade. You helped with the first miracle."
+    },
+    {
+      "if": "exposedProphet",
+      "text": "The crusade: the prophet moved to another state after you exposed him. Same miracle, new crowd."
+    },
+    {
+      "if": "iyaKekePays",
+      "text": "Iya Keke: still pays you back for the stolen keke, ₦200 at a time, with interest she invented."
+    },
+    {
+      "if": "formulaOneOwes",
+      "text": "Formula One: still owes you for the impound run. He pays in free rides."
+    },
+    {
+      "if": "coopFairFee",
+      "text": "The co-op board: one fair fee, still written in chalk. Drivers touch it for luck."
     }
   ],
   "grace_grace": {

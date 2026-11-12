@@ -1,8 +1,9 @@
 import { useEffect } from 'react'
 import { recordEnding } from '../../game/store/saveSystem.js'
+import Icon from '../Icon.jsx'
 
 // Shown when the story reaches an ending. Only endings finish the game.
-export default function EndingScreen({ view, onTitle, onLoad }) {
+export default function EndingScreen({ view, onTitle, onLoad, onMap }) {
   useEffect(() => recordEnding(view.id), [view.id])
   const delay = (i) => ({ animationDelay: `${i * 0.9}s` })
   return (
@@ -27,6 +28,11 @@ export default function EndingScreen({ view, onTitle, onLoad }) {
         </div>
       )}
       <div className="menu">
+        {onMap && (
+          <button className="btn" onClick={onMap}>
+            <Icon name="dodge" size={18} /> See the road you took
+          </button>
+        )}
         <button className="btn" onClick={onLoad}>
           Load a save
         </button>

@@ -102,9 +102,6 @@
                   "tookRallyJob",
                   "bargainedSettlement"
                 ],
-                "remember": {
-                  "settlementDeal": "bargained"
-                },
                 "goto": "bargain"
               }
             },

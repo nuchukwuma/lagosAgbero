@@ -12,9 +12,7 @@
       "beats": [
         {
           "type": "setFlag",
-          "flags": [
-            "electionDay"
-          ],
+          "flags": [],
           "clear": [
             "dayLoop"
           ]
@@ -233,6 +231,40 @@
           }
         },
         {
+          "type": "dialogue",
+          "speaker": "babaRadio",
+          "text": "Special mention: one young man who stood in front of the ballot box like Super Eagles goalkeeper! Iyana-Wahala salutes you!",
+          "if": "protectedBox"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "babaRadio",
+          "text": "And to the boys who watched the box and did nothing: Wahala FM sees you. We no go call name. Yet.",
+          "if": "keptQuiet"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "babaRadio",
+          "text": "Rumour: somebody get Owó Ńlá's rally speech on tape. The part where he thanks 'Barrister Settlement and the boys'.",
+          "if": "evidenceOwoNla"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "babaRadio",
+          "text": "Rumour two: somebody get Settlement's voice on tape too. Settlement don change phone three times this week.",
+          "if": {
+            "memory": {
+              "settlementTape": "recorded"
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "babaRadio",
+          "text": "And one area boy refused Settlement's election job. In this economy! Call the newspapers!",
+          "if": "refusedBigJob"
+        },
+        {
           "type": "goto",
           "scene": "chair"
         }
@@ -270,6 +302,18 @@
               "chairmanTrust": ">= 45"
             }
           }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "babaTicket",
+          "text": "You told me make the co-op run this park. Fair fee, receipts. (He laughs.) The drivers like am. I no like am. Drivers win.",
+          "if": "coopProposal"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "babaTicket",
+          "text": "You yourself told me give am Scatter. Now you want am? Lagos dey turn people head.",
+          "if": "scatterHeir"
         },
         {
           "type": "dialogue",
@@ -356,6 +400,30 @@
           "type": "dialogue",
           "speaker": "narrator",
           "text": "Everything you did is still here: the debt ({debt}), the money ({money}), the people who remember you and the people who would rather not."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Iya Bọ́sẹ̀ sent the women's thanks. Mama has started smiling at the market again.",
+          "if": "deadlineMet"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Mama stood in front of the community meeting because you missed the deadline. She hasn't told you what they said.",
+          "if": "deadlineMissed"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Scatter tried to kill you in the Clean Sweep. He failed. He has been very polite since.",
+          "if": "survivedBetrayal"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Settlement's safe kept your savings through the Sweep. He has never let you forget it.",
+          "if": "savingsSafe"
         },
         {
           "type": "choice",

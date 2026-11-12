@@ -11,6 +11,20 @@ To look at the whole map, run `npm run dev` and open the game with `?cam=top`
 added to the URL, for example `http://localhost:5173/?cam=top`. Then use the
 "Dev: jump to chapter" menu and pick **Sandbox**.
 
+## More than one world
+
+There are three worlds, each a JSON file in `src/game/data/world/`:
+
+| World | File | Used by |
+|---|---|---|
+| Iyana-Wahala (Lagos bus stop) | `iyanaWahala.json` | Area Boy, the Lagos chapters of the other stories |
+| Nkwọ-Agụụ (village) | `nkwoAgu.json` | Grass to Grace |
+| Royal Crest University | `royalCrest.json` | Fake It Till You Graduate |
+
+They're registered in `src/game/world/worlds.js`. A new world needs its JSON,
+an entry there, and `"world": "<id>"` on the chapters (or scenes) that use
+it. A pavement can take `"texture": "earth"` for red-earth ground.
+
 ## Placing things
 
 Every list item takes either `at` (one or more spots) or `line` (a row of
@@ -44,6 +58,9 @@ copies):
 | `spots` | Named places the story uses: `location`, `goal.reach` |
 | `npcs` | Story characters. `"if": "flag"` controls when they appear. |
 | `extras` | Background people with a random look (`seed`) |
+| `placed` | Hand-placed props from the city palette (palm trees, yam barns, the shrine, goal posts, notice boards, the gatehouse…) |
+| `treeline` | Rings of trees round the edge, so the bush or the campus fades out instead of ending |
+| `traffic` | `{ "density": 3 }` for moving cars, or `false` for none (the village) |
 
 The layout test (`npm test`) checks that every spot is walkable and every
 model exists.

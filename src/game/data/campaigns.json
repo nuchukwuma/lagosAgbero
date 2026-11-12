@@ -7,6 +7,7 @@
       "hero": { "name": "", "nickname": "JJC", "placeholder": "e.g. Tunde, Emeka, Musa" },
       "firstChapter": "ch1_jjc",
       "world": "iyanaWahala",
+      "strict": true,
       "features": { "energy": true },
       "hud": { "meter": "redEyes", "bar": { "stat": "notoriety", "label": "Notoriety" } },
       "stats": ["money", "hustleMoney", "cultMoney", "debt", "energy", "notoriety", "chairmanTrust", "mentorBond", "friendBond", "communityGoodwill", "policeHeat", "cultLoyalty", "rivalCultHatred", "settlementTrust"]
@@ -33,7 +34,7 @@
       "world": "royalCrest",
       "strict": true,
       "features": { "energy": false },
-      "startStats": { "money": 3000, "debt": 0, "energy": 80, "notoriety": 0 },
+      "startStats": { "money": 3000, "debt": 0, "energy": 80, "notoriety": 0, "cgpa": 3.8 },
       "hud": { "meter": { "stat": "cover", "label": "Cover story", "icon": "shield" }, "bar": { "stat": "cgpa", "label": "CGPA" } },
       "stats": ["money", "schoolFees", "loanDebt", "cgpa", "cover", "conscience", "momBond", "tamaraBond", "dubaiBond", "campusRep", "donsHeat"]
     }

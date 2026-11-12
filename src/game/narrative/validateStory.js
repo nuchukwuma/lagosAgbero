@@ -199,7 +199,9 @@ export function auditConsequences(chapters, readsText, strict = new Set()) {
   for (const [name, w] of writes) {
     // in story JSON a write shows up as `"name"` (flag) or `"name":` (remember)
     const inStory = count(storyText, name)
-    const elsewhere = count(readsText, name)
+    // flags read through a template in code, e.g. game.flags[`quest_${q.id}_done`]
+    const templated = /^quest_.+_done$/.test(name) && readsText.includes('quest_${')
+    const elsewhere = templated ? Infinity : count(readsText, name)
     if (inStory + elsewhere <= w.count) (w.strict ? errors : warnings).push(`${w.at}: "${name}" is set but never read — nothing later remembers this choice`)
   }
   return { errors, warnings }

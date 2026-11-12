@@ -145,7 +145,7 @@
                 "setFlag": "tutor",
                 "changeStat": {
                   "money": 15000,
-                  "cgpa": 0.15,
+                  "cgpa": 0.3,
                   "campusRep": 3
                 }
               }

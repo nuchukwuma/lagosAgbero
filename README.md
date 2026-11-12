@@ -4,8 +4,24 @@ A story-driven 3D browser game about a Lagos agbero. It's built with Vite,
 React, three.js (@react-three/fiber and drei) and Zustand. It is satire:
 every person, party, cult, brand and drink is made up.
 
-The whole story is playable: 12 chapters over 4 acts, two Act 3 paths (cult
-or independent) and 9 endings (2 secret).
+It's a branching narrative game: choices are remembered, characters bring
+them up later, and they decide which endings you can reach. Three stories
+share the engine:
+
+- **Area Boy:** a JJC with ₦2,300 becomes the agbero of Iyana-Wahala. 12
+  chapters, two Act 3 paths (cult or independent), 9 endings (2 secret).
+- **Grass to Grace:** Emeka will do anything to leave the village for Lagos
+  money, including joining a fellowship that wants more than his soul.
+  6 chapters, 6 endings. Inspired by the premise of Nigerian classics about
+  money rituals; the characters and plot are original.
+- **Fake It Till You Graduate:** Somto, a pap seller's son on a scholarship,
+  pretends to be rich at Royal Crest University. Cults, sorting lecturers,
+  loan apps, yahoo boys and a girlfriend whose mother is running for office.
+  6 chapters, 10 endings. Inspired by the premise of campus coming-of-age
+  dramas; the characters and plot are original.
+
+After every chapter you see the choices you made, and a story map shows the
+paths you didn't take.
 
 ## Play on a phone or a computer
 
@@ -85,8 +101,8 @@ npm run assets:animations -- a1.zip a2.zip a3.zip a4.rar a5.zip "source-assets/m
 
 - `docs/asset-table.md`: every model, its file, size and planned use
 - `docs/story-outline.md`: cast, backstory, acts, endings and the Ada paths (approved)
-- `docs/story-format.md`: how to write story JSON (beats, choices, effects, callbacks, free roam)
-- `docs/world-format.md`: how the 3D street is laid out (and the `?cam=top` map view)
+- `docs/story-format.md`: how to write story JSON (beats, choices, effects, callbacks, free roam, campaigns, bluff and exam modes, the consequence audit)
+- `docs/world-format.md`: how the 3D worlds are laid out (Iyana-Wahala, the village, the campus) and the `?cam=top` map view
 
 ## Folder layout
 

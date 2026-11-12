@@ -186,7 +186,16 @@
               "text": "Try to bribe Bassey",
               "requires": "basseyRefuses",
               "showLocked": true,
-              "lockedText": "Bassey no dey collect from you again"
+              "lockedText": "Bassey no dey collect from you again",
+              "effects": {
+                "changeStat": {
+                  "policeHeat": 8
+                },
+                "remember": {
+                  "bassey_raid": "refusedBribe"
+                },
+                "toast": "Bassey laughs. \"You don forget? I no dey collect from you.\" He writes your name in another file."
+              }
             }
           ]
         },

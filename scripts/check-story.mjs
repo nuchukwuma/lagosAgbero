@@ -7,6 +7,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { validateStory, auditConsequences } from '../src/game/narrative/validateStory.js'
+import { applyEffects } from '../src/game/narrative/effects.js'
 import * as engine from '../src/game/narrative/storyEngine.js'
 
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..')
@@ -57,7 +58,9 @@ const strictCampaigns = new Set(campaigns.filter((c) => c.strict).map((c) => c.i
 const strict = new Set(Object.values(chapters).filter((c) => strictCampaigns.has(c.campaign || 'areaBoy')).map((c) => c.id))
 const otherData = walk(DATA).filter((f) => !f.includes(`${path.sep}story${path.sep}`)).map((f) => fs.readFileSync(f, 'utf8'))
 const code = walk2(path.join(ROOT, 'src'), /\.(js|jsx)$/).filter((f) => !f.includes('.test.')).map((f) => fs.readFileSync(f, 'utf8'))
-const audit = auditConsequences(chapters, [...otherData, ...code].join('\n'), strict)
+// test_run is the engine-test fixture, not part of any campaign
+const audited = Object.fromEntries(Object.entries(chapters).filter(([id]) => id !== 'test_run'))
+const audit = auditConsequences(audited, [...otherData, ...code].join('\n'), strict)
 for (const e of audit.errors) console.error(`✗ ${e}`)
 if (process.argv.includes('--audit')) for (const w of audit.warnings) console.warn(`~ ${w}`)
 else if (audit.warnings.length) console.warn(`~ ${audit.warnings.length} consequence warning(s) in non-strict chapters (run with --audit to list them)`)
@@ -119,6 +122,14 @@ if (!errors.length) {
     }
     const reached = new Map()
     const runs = 400
+    // Free roam is where an Area Boy player earns, pays Mama's debt and makes
+    // a name; the bot can't walk, so each run plays one style in free roam.
+    const STYLES = [
+      null, // does nothing but the story
+      { hustleMoney: 15000, money: 20000, debt: -70000, communityGoodwill: 3, friendBond: 3, mentorBond: 3 }, // hustler
+      { communityGoodwill: 7, friendBond: 5, mentorBond: 5, debt: -90000, hustleMoney: 6000 }, // good neighbour
+      { notoriety: 7, policeHeat: 8, money: 15000, rivalCultHatred: 4 }, // outlaw
+    ]
     for (let run = 0; run < runs; run++) {
       let state = engine.newGameState({ name: 'Tester', campaign: c.id, stats: c.startStats || {} })
       // random money, so choices that cost money get explored too
@@ -142,7 +153,11 @@ if (!errors.length) {
             // bluff results carry remembered claims, as the real mode does
             const remember = view.mode === 'bluff' ? { lie_loved: ['mother', 'chinwe', 'nobody'][Math.floor(Math.random() * 3)] } : undefined
             state = engine.receiveModeResult(ctx, state, { outcome, remember }).state
-          } else state = engine.advance(ctx, state).state
+          } else {
+            const style = STYLES[run % STYLES.length]
+            if (view.type === 'freeRoam' && style) state = { ...state, ...applyEffects(state, { changeStat: Object.fromEntries(Object.entries(style).filter(([k]) => k in state.stats)) }).state }
+            state = engine.advance(ctx, state).state
+          }
           if (step === 4999) throw new Error('campaign never reached an ending')
         }
       } catch (e) {

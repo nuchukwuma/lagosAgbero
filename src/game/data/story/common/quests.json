@@ -1089,7 +1089,12 @@
             },
             {
               "text": "\"Do Azonto! Old school!\"",
-              "effects": {}
+              "effects": {
+                "changeStat": {
+                  "notoriety": -1
+                },
+                "toast": "Azonto in this economy? The crowd boos. Sunday dances anyway."
+              }
             }
           ]
         },
@@ -1106,7 +1111,12 @@
             },
             {
               "text": "\"Freeze! Stand still! Confuse them!\"",
-              "effects": {}
+              "effects": {
+                "changeStat": {
+                  "notoriety": -1
+                },
+                "toast": "Sunday freezes. The crowd waits. The crowd gets bored."
+              }
             }
           ]
         },

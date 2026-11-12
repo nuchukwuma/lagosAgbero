@@ -97,7 +97,12 @@
             },
             {
               "text": "\"Ask that man.\" (point at nobody)",
-              "effects": {}
+              "effects": {
+                "changeStat": {
+                  "communityGoodwill": -1,
+                  "notoriety": 1
+                }
+              }
             }
           ]
         },
@@ -158,7 +163,12 @@
             },
             {
               "text": "Walk away. Na their wahala.",
-              "effects": {}
+              "effects": {
+                "changeStat": {
+                  "energy": 2
+                },
+                "toast": "You keep walking. Behind you, somebody loses a tooth and somebody wins ₦500."
+              }
             }
           ]
         },
@@ -185,10 +195,10 @@
         },
         {
           "type": "setFlag",
-          "flag": "seenStreetFight",
           "clear": [
             "betOnFight"
-          ]
+          ],
+          "flags": []
         },
         {
           "type": "goto",

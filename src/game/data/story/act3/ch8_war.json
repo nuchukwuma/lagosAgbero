@@ -14,8 +14,7 @@
           "type": "setFlag",
           "flags": [
             "dayLoop",
-            "canCollectFees",
-            "hyenaWar"
+            "canCollectFees"
           ]
         },
         {
@@ -196,6 +195,18 @@
         },
         {
           "type": "dialogue",
+          "speaker": "chuks",
+          "text": "(whispering) Hard Shell who fought his way up, stand in front. Bassey respects knuckles.",
+          "if": "promotedByFight"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "chuks",
+          "text": "(whispering) You paid for your promotion with Shell money. Pay attention now: it shows.",
+          "if": "promotedByMoney"
+        },
+        {
+          "type": "dialogue",
           "speaker": "shellLawyer",
           "text": "Commander. Barrister Shell, Esquire. My client is a registered member of a registered society with registered grievances. Here are four files. Here is a fifth file about the first four."
         },
@@ -237,6 +248,18 @@
           "type": "dialogue",
           "speaker": "narrator",
           "text": "That night, under the bridge, the laughter starts again. This time it is for you."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "You paid them ₦5,000 last time. They've come back for the receipt.",
+          "if": "paidHyenaTax"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "You laughed louder than them, once. They have been practising since.",
+          "if": "hyenaLaugh"
         },
         {
           "type": "startMode",
@@ -379,6 +402,24 @@
           "type": "dialogue",
           "speaker": "bassey",
           "text": "Co-operative. (He reads the board.) Three o's. (He almost smiles.) Still illegal collection. Run or talk."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "bassey",
+          "text": "\"One fair fee for everybody.\" (He taps the board.) Na the first honest thing I don read for this junction.",
+          "if": "coopFairFee"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "bassey",
+          "text": "\"Members pay half.\" So the non-members are paying for your friends. Even co-op get Big Man.",
+          "if": "coopMembersOnly"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "bassey",
+          "text": "\"Emergency savings, ₦200 a day.\" (He's quiet a moment.) My mother did esusu. It sent me to school.",
+          "if": "coopSavings"
         },
         {
           "type": "choice",

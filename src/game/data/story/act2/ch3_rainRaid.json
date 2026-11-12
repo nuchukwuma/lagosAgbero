@@ -294,7 +294,14 @@
             },
             {
               "text": "Say nothing",
-              "effects": {}
+              "effects": {
+                "remember": {
+                  "basseyCell": "silent"
+                },
+                "changeStat": {
+                  "policeHeat": 2
+                }
+              }
             },
             {
               "text": "\"Na why una dey rob us?\"",

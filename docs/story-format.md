@@ -7,8 +7,14 @@ touching code. After editing, run:
 npm run story:check
 ```
 
-It finds typos (unknown speakers, missing scenes, bad stat names). It also
-plays every chapter 200 times with random choices to catch dead ends.
+It finds typos (unknown speakers, missing scenes, bad stat names). It also:
+
+- plays every chapter 200 times with random choices to catch dead ends;
+- audits consequences: every choice must change something, and every flag
+  or memory key you set must be read somewhere later (see
+  [Every choice counts](#every-choice-counts-the-consequence-audit));
+- plays each whole campaign 400 times, from its first chapter to an ending,
+  and lists the endings nobody reached.
 
 ## Files
 
@@ -18,6 +24,9 @@ plays every chapter 200 times with random choices to catch dead ends.
 | `characters.json` | Speaker ids, display names, badge colours |
 | `callbacks.json` | Lines characters say about your past choices |
 | `endings.json` | Ending titles and epilogues |
+| `campaigns.json` | The stories you can pick on New Game (hero, first chapter, world, HUD) |
+| `bluffs.json` | Bluff scenarios: interrogations where your lies are remembered |
+| `quizzes.json` | Question banks for the initiation and exams |
 
 ## A chapter
 
@@ -568,3 +577,150 @@ started the mode.
 Losing never dead-ends the story: send `lost` to a hospital scene, a debt or
 a new branch. Modes that aren't built yet show a stand-in screen where you
 pick the outcome by hand.
+
+## Campaigns: three stories, one engine
+
+`campaigns.json` lists the stories on the New Game screen. Each one is a
+separate run with its own hero, chapters, world, HUD and endings.
+
+| Campaign | Hero | Chapters | First world |
+|---|---|---|---|
+| `areaBoy` — Area Boy | you name him | `story/act1`–`act4` (12) | Iyana-Wahala |
+| `grace` — Grass to Grace | Emeka | `story/grace` (6) | Nkwọ-Agụụ village |
+| `campus` — Fake It Till You Graduate | Somto | `story/campus` (6) | Royal Crest University |
+
+Grass to Grace and the campus story borrow only premises and themes from
+films (a village man chasing city money; a poor student among rich ones).
+Their characters, names and plots are original.
+
+```json
+{
+  "id": "campus",
+  "title": "Fake It Till You Graduate",
+  "tagline": "...",
+  "hero": { "name": "Somto", "nickname": "Scholar", "look": { ... } },
+  "firstChapter": "u1_admission",
+  "world": "royalCrest",
+  "strict": true,
+  "features": { "energy": false },
+  "startStats": { "money": 3000, "debt": 0, "cgpa": 3.8 },
+  "hud": { "meter": { "stat": "cover", "label": "Cover story", "icon": "shield" }, "bar": { "stat": "cgpa", "label": "CGPA" } },
+  "stats": ["money", "schoolFees", "cgpa", "cover", "momBond", "tamaraBond"]
+}
+```
+
+- A chapter says which campaign it belongs to with `"campaign": "grace"`.
+  Chapters without one belong to `areaBoy`. Common chapters (quests, events,
+  raids) only show up in Area Boy.
+- `features.energy: false` turns off red eyes, energy drain and collapsing.
+- `hud.meter` is the top meter: `"redEyes"` or any stat. `hud.bar` is the
+  smaller bar under it. `stats` is what the status panel shows.
+- Endings carry `"campaign": "grace"`. The "What became of them" list for a
+  campaign is `_fates_<campaign>` (Area Boy keeps `_fates`).
+
+### Worlds per chapter and scene
+
+A chapter's `"world"` picks the 3D place it plays in: `iyanaWahala`,
+`nkwoAgu` or `royalCrest` (registered in `src/game/world/worlds.js`). A
+scene can override it, for example a campus dinner in Lagos:
+
+```json
+"dinner": { "world": "iyanaWahala", "location": "richStreet", "beats": [ ... ] }
+```
+
+`location` then means a spot in that world. Moving between worlds puts the
+player at the scene's spot (or the world's spawn).
+
+## Every choice counts: the consequence audit
+
+The story checker treats a choice as wasted if nothing remembers it:
+
+1. **Every option must do something lasting**: set a flag, remember a
+   value, change a stat, start a mode, end the story, or go to a different
+   scene. An option with `"effects": {}` fails.
+2. **Every flag and memory key you set must be read later**: in a condition
+   (`if`, `requires`, `variants`), in an ending or a fate, in world JSON (an
+   NPC's `if`), or in code. A flag nobody reads is a choice the game forgets.
+
+In campaigns marked `"strict": true` (all three are) these are errors and
+`npm run story:check` fails. Run `node scripts/check-story.mjs --audit` to
+list them in non-strict content.
+
+The usual fixes, cheapest first:
+
+- a `"text"` line in `_fates` (or `_fates_<campaign>`) with `"if": "<flag>"`;
+- a dialogue line in a later scene with `"if": "<flag>"`, so a character
+  brings it up;
+- a `variants` entry on a line that is already there;
+- an option that `requires` the flag (a door the choice opened).
+
+Flags read through a template in code (`quest_<id>_done`) count as read.
+
+The campaign play-throughs can't walk around, so in free roam they play one
+of four styles (does nothing, hustler, good neighbour, outlaw). That earns
+money, pays debt and builds reputation the way a player would, so endings
+gated on free-roam progress get tested too.
+
+## Your story so far: history, recap and the story map
+
+The engine records where you've been:
+
+- `story.visited`: every `"chapter/scene"` you've seen;
+- `story.picks`: every choice, as `[chapter, scene, beat, option]`.
+
+At the end of each chapter, the card lists the choices you made and how much
+of the chapter you saw. **See your story map** (also in the pause menu and on
+the ending screen) draws each chapter as a graph. Your path is gold, the
+current scene is outlined, and scenes you missed are `???`. On a phone the
+map scrolls to your path. `src/game/narrative/storyGraph.js` builds the graph
+from the chapter JSON, so new scenes and choices show up on their own.
+
+## Bluff (`"mode": "bluff"`)
+
+An interrogation where your lies have to stay straight. Scenarios live in
+`bluffs.json`:
+
+```json
+"harvestCon": {
+  "title": "The harvest council",
+  "asker": "onyisi",
+  "coverStat": "villageStanding",
+  "doubtAt": 45,
+  "questions": [
+    { "id": "company", "fact": "company", "q": "\"Which company?\"",
+      "answers": [
+        { "text": "\"Mega Fortune Holdings.\"", "says": { "company": "mega" }, "risk": 12 },
+        { "text": "\"There is no company.\"", "says": { "company": "none" }, "truth": true, "core": true },
+        { "text": "\"These questions are deep o.\"", "deflect": true }
+      ] }
+  ]
+}
+```
+
+- Every claim (`says`) is remembered for the rest of the story as memory
+  `lie_<fact>`, so a later bluff, or any line with
+  `{ "memory": { "lie_company": "mega" } }`, can catch you out.
+- Saying something that contradicts an earlier claim adds a lot of
+  suspicion. "Stick to your story" repeats what you said before.
+- Risk adds suspicion, and so does running out of time.
+- `"truth": true, "core": true` answers end the bluff as `confessed`.
+- Outcomes: `convinced` (suspicion stays under `doubtAt`, default 55),
+  `doubted`, `caught` (suspicion hits 100) and `confessed`.
+
+```json
+{ "type": "startMode", "mode": "bluff", "params": { "scenario": "panel" },
+  "results": { "convinced": { ... }, "doubted": { ... }, "caught": { ... }, "confessed": { ... } } }
+```
+
+## Exam (`"mode": "exam"`)
+
+The initiation quiz screen with an exam bank from `quizzes.json`:
+
+```json
+{ "type": "startMode", "mode": "exam",
+  "params": { "bank": "econ201", "count": 5, "maxWrong": 2, "seconds": 12 },
+  "results": { "perfect": { "changeStat": { "cgpa": 0.5 } }, "passed": { ... }, "failed": { ... } } }
+```
+
+Questions are drawn at random from the bank. `maxWrong` wrong answers mean
+`failed`. The CGPA stat takes two decimals and is shown with `{stat:cgpa}`.

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { storyCtx } from '../../game/narrative/storyData.js'
 import { buildChapterGraph, layoutGraph, markGraph } from '../../game/narrative/storyGraph.js'
 import { campaignOf } from '../../game/narrative/campaigns.js'
@@ -29,8 +29,21 @@ function ChapterMap({ chapterId, story }) {
     return { ...m, pos, width, height: 20 + rows.length * (H + GY) }
   }, [chapter, chapterId, story])
 
+  // On a phone the map is wider than the screen: bring your path into view
+  // (where you are now, else the last scene you saw, else the start).
+  const scroller = useRef(null)
+  useEffect(() => {
+    const el = scroller.current
+    if (!el) return
+    const here = story.chapterId === chapterId ? story.sceneId : null
+    const seen = nodes.filter((n) => n.seen)
+    const focus = pos.get(here) || pos.get(seen[seen.length - 1]?.id) || pos.get(chapter.startScene)
+    if (!focus) return
+    el.scrollTo({ left: Math.max(0, focus.x + W / 2 - el.clientWidth / 2), top: Math.max(0, focus.y + H / 2 - el.clientHeight / 2) })
+  }, [chapterId]) // eslint-disable-line react-hooks/exhaustive-deps
+
   return (
-    <div className="story-map-scroll">
+    <div className="story-map-scroll" ref={scroller}>
       <div className="story-map-explored">
         <Icon name="star" size={16} /> {Math.round(explored * 100)}% of this chapter explored
       </div>
@@ -46,12 +59,17 @@ function ChapterMap({ chapterId, story }) {
           const back = y2 <= y1
           const d = back ? `M${x1},${y1} C${x1 + 90},${y1 + 40} ${x2 + 90},${y2 - 40} ${x2},${y2}` : `M${x1},${y1} C${x1},${(y1 + y2) / 2} ${x2},${(y1 + y2) / 2} ${x2},${y2}`
           const fromSeen = nodes.find((n) => n.id === e.from)?.seen
-          const showLabel = e.kind === 'choice' && fromSeen
+          // a big fan of choices (the final scene) only labels the one you took
+          const fan = edges.filter((o) => o.from === e.from && o.kind === 'choice').length
+          const showLabel = e.kind === 'choice' && fromSeen && (e.taken || fan <= 3)
+          // labels sit near the scene they lead to, so a fan of choices doesn't pile up
+          const lx = back ? (x1 + x2) / 2 : x1 + (x2 - x1) * 0.8
+          const ly = back ? (y1 + y2) / 2 - 4 : y1 + (y2 - y1) * 0.8 - 4
           return (
             <g key={i} className={`edge ${e.kind} ${e.taken ? 'taken' : ''}`}>
               <path d={d} />
               {showLabel && (
-                <text x={(x1 + x2) / 2} y={(y1 + y2) / 2 - 4} textAnchor="middle">
+                <text x={lx} y={ly} textAnchor="middle">
                   {e.label.length > 26 ? `${e.label.slice(0, 25)}…` : e.label}
                 </text>
               )}
