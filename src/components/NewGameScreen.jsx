@@ -3,6 +3,7 @@ import { SKIN_TONES } from '../game/characters/look.js'
 import { CAMPAIGNS } from '../game/narrative/campaigns.js'
 import { endingsFound } from '../game/store/saveSystem.js'
 import { storyCtx } from '../game/narrative/storyData.js'
+import { ASSET_ROOT } from '../assets/assetManifest.js'
 
 // Pick your name and a first look. The street gives you "JJC" until you earn
 // a real nickname. Full customisation (outfits, accessories) comes later.
@@ -24,7 +25,7 @@ function StorySelect({ onPick, onBack }) {
         {CAMPAIGNS.map((c) => {
           const endings = Object.entries(storyCtx.endings).filter(([k, e]) => !k.startsWith('_') && (e.campaign || 'areaBoy') === c.id)
           return (
-            <button key={c.id} className="story-card" onClick={() => onPick(c)}>
+            <button key={c.id} className="story-card" onClick={() => onPick(c)} style={c.art ? { '--art': `url(${ASSET_ROOT}/${c.art})` } : undefined}>
               <strong>{c.title}</strong>
               <span>{c.tagline}</span>
               <small>

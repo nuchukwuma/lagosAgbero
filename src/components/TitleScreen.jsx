@@ -26,8 +26,8 @@ export default function TitleScreen({ onNavigate, onContinue }) {
   return (
     <div className="screen title-screen">
       <div className="title-block">
-        <h1>AREA BOY</h1>
-        <p className="tagline">Owo da? Na street go teach you.</p>
+        <h1>NAIJAVICE</h1>
+        <p className="tagline">Three stories. Every choice counts. Naija go remember.</p>
       </div>
       {!webglSupport().ok && <WebGLHelp compact />}
       <div className="menu">

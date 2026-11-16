@@ -34,7 +34,7 @@ export default function WebGLHelp({ onBack, compact = false }) {
     <div className={compact ? 'webgl-help compact' : 'screen webgl-help'} role="alert">
       <h2>3D graphics are switched off</h2>
       <p>
-        Area Boy draws its streets in 3D, and {NAMES[browser]} won&apos;t start 3D graphics on this device right now. It&apos;s
+        NaijaVice draws its streets in 3D, and {NAMES[browser]} won&apos;t start 3D graphics on this device right now. It&apos;s
         usually one setting.
       </p>
       <ol>

@@ -1,6 +1,6 @@
-# Area Boy
+# NaijaVice
 
-A story-driven 3D browser game about a Lagos agbero. It's built with Vite,
+Three story-driven 3D browser games set in Nigeria. It's built with Vite,
 React, three.js (@react-three/fiber and drei) and Zustand. It is satire:
 every person, party, cult, brand and drink is made up.
 

@@ -2,6 +2,10 @@ import { useEffect, useState } from 'react'
 import { useProgress } from '@react-three/drei'
 import { webglSupport } from '../../game/world/webgl.js'
 import { trimCache } from '../../game/world/assetCache.js'
+import { useGameStore } from '../../game/store/gameStore.js'
+import { campaignById } from '../../game/narrative/campaigns.js'
+import { worldJson } from '../../game/world/worlds.js'
+import { ASSET_ROOT } from '../../assets/assetManifest.js'
 
 // drei's progress store updates on every single file the loader finishes,
 // sometimes several times within one React render. Reading it with the hook
@@ -32,48 +36,58 @@ function useLoadProgress() {
   return state
 }
 
-// Shown while the street's models download (first visit only; the browser
-// caches them afterwards). After the first load, later downloads (a new
-// mode's models, a bus stop's people) only show a small pill, never a
-// full-screen cover in the middle of play.
-let firstLoadDone = false
-const LINES = ['Packing danfo…', 'Hanging NEPA wires…', 'Waking up Baba Ticket…', 'Finding change for ₦1,000…', 'Sweeping under the bridge…']
+// Shown while a world's models download. Each story has its own loading
+// screen (its picture, place and lines, from campaigns.json "art" and
+// "loading"), shown the first time you start or load that story in a visit.
+// After that, later downloads (a new mode's models, a bus stop's people)
+// only show a small pill, never a full-screen cover in the middle of play.
+const shownFor = new Set() // stories whose full loading screen has been seen this visit
+const MIN_SHOW_MS = 1400 // long enough to see the picture, even when everything is cached
 
 export default function LoadingOverlay() {
   const { active, progress } = useLoadProgress()
+  const campaign = campaignById(useGameStore((s) => s.game?.campaign))
+  const world = useGameStore((s) => s.view?.world)
+  const lines = campaign.loading?.lines || ['Loading…']
   const [line, setLine] = useState(0)
-  const [visible, setVisible] = useState(!firstLoadDone)
-  const [small, setSmall] = useState(firstLoadDone)
+  const [full] = useState(() => !shownFor.has(campaign.id))
+  const [visible, setVisible] = useState(true)
+  const [shownAt] = useState(() => Date.now())
   useEffect(() => {
-    const id = setInterval(() => setLine((l) => (l + 1) % LINES.length), 1400)
+    const id = setInterval(() => setLine((l) => (l + 1) % lines.length), 1400)
     return () => clearInterval(id)
-  }, [])
+  }, [lines.length])
   useEffect(() => {
     if (!active && progress >= 100) {
       trimCache() // keep the shared images, drop the downloaded model files
+      const wait = full ? Math.max(300, MIN_SHOW_MS - (Date.now() - shownAt)) : 300
       const id = setTimeout(() => {
         setVisible(false)
-        firstLoadDone = true
-        setSmall(true)
-      }, 300)
+        shownFor.add(campaign.id)
+      }, wait)
       return () => clearTimeout(id)
     }
     setVisible(true)
-  }, [active, progress])
+  }, [active, progress, full, shownAt, campaign.id])
   if (!visible || !webglSupport().ok) return null // nothing will load: the help screen explains why
-  if (small)
+  if (!full || shownFor.has(campaign.id))
     return (
       <div className="loading-pill" aria-live="polite">
         <span className="spinner" /> {Math.round(progress)}%
       </div>
     )
+  const place = worldJson(world).name || campaign.loading?.place
   return (
-    <div className="loading-overlay">
-      <h2>IYANA-WAHALA</h2>
-      <div className="loading-bar">
-        <div className="loading-fill" style={{ width: `${Math.round(progress)}%` }} />
+    <div className="loading-overlay" style={campaign.art ? { '--art': `url(${ASSET_ROOT}/${campaign.art})` } : undefined}>
+      <div className="loading-art" aria-hidden="true" />
+      <div className="loading-content">
+        <small className="loading-place">{place}</small>
+        <h2>{campaign.title}</h2>
+        <div className="loading-bar">
+          <div className="loading-fill" style={{ width: `${Math.round(progress)}%` }} />
+        </div>
+        <p>{lines[line % lines.length]}</p>
       </div>
-      <p>{LINES[line]}</p>
     </div>
   )
 }

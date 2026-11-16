@@ -1,7 +1,7 @@
 {
-  "name": "area-boy",
+  "name": "naijavice",
   "version": "1.0.0",
-  "description": "Area Boy: a story-driven 3D agbero game",
+  "description": "NaijaVice: three story-driven 3D games set in Nigeria",
   "scripts": {
     "dev": "vite --host",
     "build": "vite build",

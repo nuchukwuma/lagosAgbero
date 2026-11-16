@@ -50,6 +50,17 @@ export default function CameraRig({ mode = 'follow', speaker = null, ceiling = n
     const portrait = size.height > size.width
     const npc = speaker ? npcRegistry.get(speaker) : null
 
+    // photo mode (dev / ?bench tools only): a fixed camera for the menu art
+    if (playerState.photo) {
+      const ph = playerState.photo
+      camera.position.set(...ph.pos)
+      camera.lookAt(...ph.target)
+      if (ph.fov && camera.fov !== ph.fov) {
+        camera.fov = ph.fov
+        camera.updateProjectionMatrix()
+      }
+      return
+    }
     if (TOP_VIEW) {
       camera.position.set(0, 135, 1)
       camera.lookAt(0, 0, 0)

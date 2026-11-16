@@ -1,7 +1,7 @@
-// Area Boy service worker: lets the game open offline after one visit.
+// NaijaVice service worker: lets the game open offline after one visit.
 // - page + code: network first, cached copy when offline
 // - models, textures, animation clips (/assets/...): cache first (they rarely change)
-const CACHE = 'area-boy-v1'
+const CACHE = 'naijavice-v1'
 
 self.addEventListener('install', () => self.skipWaiting())
 self.addEventListener('activate', (e) => {

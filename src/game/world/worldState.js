@@ -20,6 +20,7 @@ export const playerState = {
   viewFlipped: false, // the follow camera is filming from the north (controls flip with it)
   driveView: null, // { x, z, speed } the danfo you drive (drive mode camera)
   vehicleView: null, // { x, z } the conductor's danfo (camera)
+  photo: null, // { pos, target, fov } a fixed camera for the menu art (tools only)
 }
 
 /** id -> { position: Vector3 } for every NPC currently in the world */

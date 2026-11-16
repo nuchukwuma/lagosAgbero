@@ -7,7 +7,8 @@ export default function AboutScreen({ onBack }) {
       <div className="about-card">
         <h3>This is satire</h3>
         <p>
-          Area Boy is a comedy about hustling in Lagos. Every person, politician, party, cult, brand, agency and
+          NaijaVice is a comedy about hustling in Nigeria, in three stories: Area Boy, Grass to Grace and Fake It Till
+          You Graduate. Every person, politician, party, cult, brand, agency and
           drink in this game is made up. Any resemblance to real people or organisations is a coincidence, or
           Lagos being Lagos.
         </p>

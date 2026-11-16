@@ -271,4 +271,7 @@ export const useGameStore = create((set, get) => {
 bus.on('mode:result', (result) => useGameStore.getState().modeResult(result))
 
 // dev builds, or any build opened with ?bench: scripted play-throughs and memory checks
-if (typeof window !== 'undefined' && (import.meta.env.DEV || new URLSearchParams(window.location.search).has('bench'))) window.__gameStore = useGameStore
+if (typeof window !== 'undefined' && (import.meta.env.DEV || new URLSearchParams(window.location.search).has('bench'))) {
+  window.__gameStore = useGameStore
+  import('../world/worldState.js').then((w) => (window.__playerState = w.playerState))
+}
