@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useGameStore } from '../../game/store/gameStore.js'
 import GameCanvas from '../../game/world/GameCanvas.jsx'
+import CanvasGuard from '../help/CanvasGuard.jsx'
 import HUD from '../hud/HUD.jsx'
 import FreeRoamControls from '../hud/FreeRoamControls.jsx'
 import LoadingOverlay from '../hud/LoadingOverlay.jsx'
@@ -106,7 +107,7 @@ export default function StoryScreen() {
 
   return (
     <div className="story-screen">
-      <GameCanvas view={view} game={game} activity={activity} paused={Boolean(overlay)} onGoalReached={advance} />
+      <CanvasGuard onBack={quitToTitle}>{(safeGl) => <GameCanvas view={view} game={game} activity={activity} paused={Boolean(overlay)} onGoalReached={advance} safeGl={safeGl} />}</CanvasGuard>
       {raining && <div className="rain" aria-hidden="true" />}
       <HUD game={game} onStatus={() => setOverlay('status')} onMenu={() => setOverlay('menu')} />
       {view.chapterTitle && view.type !== 'cutscene' && <div className="chapter-chip">{view.chapterTitle}</div>}

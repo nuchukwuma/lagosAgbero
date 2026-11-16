@@ -1,6 +1,8 @@
 import { latestSave, endingsFound } from '../game/store/saveSystem.js'
 import { storyCtx } from '../game/narrative/storyData.js'
 import { useGameStore } from '../game/store/gameStore.js'
+import { webglSupport } from '../game/world/webgl.js'
+import WebGLHelp from './help/WebGLHelp.jsx'
 
 // Developer shortcut: jump into any chapter with a test player.
 function DevChapterPicker() {
@@ -27,6 +29,7 @@ export default function TitleScreen({ onNavigate, onContinue }) {
         <h1>AREA BOY</h1>
         <p className="tagline">Owo da? Na street go teach you.</p>
       </div>
+      {!webglSupport().ok && <WebGLHelp compact />}
       <div className="menu">
         {hasSave && (
           <button className="btn btn-primary" onClick={onContinue}>

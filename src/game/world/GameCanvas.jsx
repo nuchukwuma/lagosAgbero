@@ -72,7 +72,7 @@ function useSceneTeleport(view, layout) {
 // fallback pose into breathing/walking a second later.
 const COMMON_CLIPS = ['breathingIdle', 'walk', 'run', 'talk', 'argue', 'pickUp']
 
-export default function GameCanvas({ view, game, activity = null, paused = false, onGoalReached }) {
+export default function GameCanvas({ view, game, activity = null, paused = false, onGoalReached, safeGl = false }) {
   const layout = getLayout(view.world) // Iyana-Wahala, the village, the campus...
   useSceneTeleport(view, layout)
   useEffect(() => {
@@ -105,10 +105,11 @@ export default function GameCanvas({ view, game, activity = null, paused = false
 
   return (
     <Canvas
-      key={profile.antialias ? 'aa' : 'no-aa'} // antialiasing can only be chosen when the canvas is created
+      key={safeGl ? 'safe' : profile.antialias ? 'aa' : 'no-aa'} // these can only be chosen when the canvas is created
       className="game-canvas"
-      dpr={dpr}
-      gl={{ antialias: profile.antialias, powerPreference: 'high-performance', stencil: true }}
+      dpr={safeGl ? 1 : dpr}
+      // safeGl: the plainest settings, for machines where the normal ones fail (see CanvasGuard)
+      gl={safeGl ? { antialias: false, powerPreference: 'default', stencil: false } : { antialias: profile.antialias, powerPreference: 'high-performance', stencil: true }}
       camera={{ fov: 50, near: 0.3, far: profile.far, position: [0, 8, 12] }}
       onCreated={({ gl, scene, camera }) => {
         if (import.meta.env.DEV) Object.assign(window, { __gl: gl, __scene: scene, __cam: camera, __THREE: THREE }) // dev: perf checks

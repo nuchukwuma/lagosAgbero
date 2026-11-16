@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useProgress } from '@react-three/drei'
+import { webglSupport } from '../../game/world/webgl.js'
 
 // drei's progress store updates on every single file the loader finishes,
 // sometimes several times within one React render. Reading it with the hook
@@ -57,7 +58,7 @@ export default function LoadingOverlay() {
     }
     setVisible(true)
   }, [active, progress])
-  if (!visible) return null
+  if (!visible || !webglSupport().ok) return null // nothing will load: the help screen explains why
   if (small)
     return (
       <div className="loading-pill" aria-live="polite">
