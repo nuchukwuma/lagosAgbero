@@ -8,13 +8,20 @@ export default defineConfig({
     __APP_VERSION__: JSON.stringify(pkg.version),
   },
   build: {
-    // three.js is big; keep it in its own chunk so game code updates stay small.
-    chunkSizeWarningLimit: 800, // three.js alone is ~680 kB; it is split into its own chunk
+    // Split the download into parts that change at different speeds, so a
+    // returning player only re-downloads what changed:
+    //   three   three.js (~680 kB, changes only when we upgrade it)
+    //   r3f     React Three Fiber + drei
+    //   story   the story, world and character JSON in src/game/data
+    //   index   the game code itself
+    chunkSizeWarningLimit: 800, // three.js alone is ~680 kB
     rollupOptions: {
       output: {
-        manualChunks: {
-          three: ['three'],
-          r3f: ['@react-three/fiber', '@react-three/drei'],
+        manualChunks(id) {
+          if (id.includes('/node_modules/three/')) return 'three'
+          if (id.includes('/node_modules/@react-three/')) return 'r3f'
+          if (id.includes('/src/game/data/')) return 'story'
+          return undefined
         },
       },
     },

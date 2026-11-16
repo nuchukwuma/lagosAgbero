@@ -43,6 +43,9 @@ The game is one web page that adapts to the device:
 
 ## Run it
 
+You need Node.js 20 or newer to play (`node -v` to check). Running the
+tests (`npm test`) needs Node 22.12 or newer.
+
 ```bash
 npm install
 npm run dev
