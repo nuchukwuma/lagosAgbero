@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react'
 import { useSettings, fullscreenSupported, toggleFullscreen, deviceTier } from '../../game/store/settings.js'
 import { useDevice } from '../hud/useDevice.js'
+import { ORIENTATIONS, isPhone, applyOrientation } from '../../game/systems/orientation.js'
 import Icon from '../Icon.jsx'
 
 export default function SettingsPanel() {
   const quality = useSettings((s) => s.quality)
   const music = useSettings((s) => s.music !== false)
   const sound = useSettings((s) => s.sound !== false)
+  const orientation = useSettings((s) => s.orientation || 'landscape')
   const update = useSettings((s) => s.update)
   const { touch } = useDevice()
   const [full, setFull] = useState(Boolean(document.fullscreenElement))
@@ -30,6 +32,23 @@ export default function SettingsPanel() {
           </button>
         ))}
       </div>
+      {isPhone() && (
+        <div className="swatch-row">
+          <span>Screen</span>
+          {ORIENTATIONS.map(([id, label]) => (
+            <button
+              key={id}
+              className={`chip ${orientation === id ? 'on' : ''}`}
+              onClick={() => {
+                update({ orientation: id })
+                applyOrientation(id) // inside the tap, so the browser allows full screen + lock
+              }}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+      )}
       <div className="swatch-row">
         <span>Audio</span>
         <button className={`chip ${music ? 'on' : ''}`} onClick={() => update({ music: !music })} aria-pressed={music}>

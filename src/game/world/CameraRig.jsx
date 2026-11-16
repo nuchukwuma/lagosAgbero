@@ -39,11 +39,34 @@ function blockedHeight(p, cam, obstacles, samples = [0.45, 0.7, 1]) {
   return need
 }
 
+// How tall is whatever stands between a fight and a camera on that side?
+// Unlike the street camera, anything above waist height counts here: a
+// parked danfo is enough to hide two fighters.
+function fightSideBlock(c, side, dist, obstacles) { // side: 1 = south
+  let tallest = 0
+  for (const t of [0.25, 0.45, 0.65, 0.85]) {
+    for (const xOff of [-1.6, 0, 1.6]) {
+      const x = c.x + xOff
+      const z = c.z + side * dist * t
+      for (const o of obstacles) {
+        if (o.h < 1.2) continue
+        const dx = x - o.x
+        const dz = z - o.z
+        const co = Math.cos(o.angle)
+        const si = Math.sin(o.angle)
+        if (Math.abs(dx * co - dz * si) < o.hw + 0.3 && Math.abs(dx * si + dz * co) < o.hd + 0.3) tallest = Math.max(tallest, o.h)
+      }
+    }
+  }
+  return tallest
+}
+
 // `obstacles` (optional): [{ x, z, hw, hd, angle, h }] building footprints.
 export default function CameraRig({ mode = 'follow', speaker = null, ceiling = null, obstacles = null }) {
   const camera = useThree((s) => s.camera)
   const size = useThree((s) => s.size)
   const follow = useRef({ kind: 'south', clearSince: 0 })
+  const fightCam = useRef({ key: '', lift: 0 })
 
   useFrame((_, delta) => {
     const p = playerState.position
@@ -92,10 +115,20 @@ export default function CameraRig({ mode = 'follow', speaker = null, ceiling = n
       tmpLook.set(v.x + 1, 1.3, v.z)
       tmpPos.set(v.x - 3, portrait ? 6 : 4.5, v.z + (portrait ? 12 : 9.5))
     } else if (mode === 'fight' && playerState.fightView) {
-      // side-on, fighting-game style
+      // side-on, fighting-game style. Always from the south, so screen left and
+      // right match the move buttons; if something tall stands in between (a
+      // parked danfo), the camera rises to film over it.
       const c = playerState.fightView
+      const dist = portrait ? 9 : 6.5
+      const f = fightCam.current
+      const key = `${c.x.toFixed(1)},${c.z.toFixed(1)},${dist}`
+      if (f.key !== key) {
+        f.key = key
+        const block = obstacles ? fightSideBlock(c, 1, dist, obstacles) : 0
+        f.lift = block ? block + 1.4 : 0
+      }
       tmpLook.set(c.x, 1.05, c.z)
-      tmpPos.set(c.x, portrait ? 3.2 : 2.4, c.z + (portrait ? 9 : 6.5))
+      tmpPos.set(c.x, Math.max(portrait ? 3.2 : 2.4, f.lift), c.z + dist)
     } else if (mode === 'dialogue' && npc) {
       // Raised three-quarter shot from the street side (south), so poles and
       // parked danfos rarely block the faces.

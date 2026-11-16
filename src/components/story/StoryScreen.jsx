@@ -23,6 +23,9 @@ import Toasts from './Toasts.jsx'
 import ModeHost from './ModeHost.jsx'
 import FavourButton from '../hud/FavourButton.jsx'
 import StoryMap from './StoryMap.jsx'
+import RotateHint, { useTurnHint } from '../hud/RotateHint.jsx'
+import { applyOrientation } from '../../game/systems/orientation.js'
+import { useSettings } from '../../game/store/settings.js'
 
 // The story screen: the 3D street + HUD + whatever the engine says to show.
 // During a freeRoam beat the player walks; otherwise the story has the floor.
@@ -38,6 +41,12 @@ function ActivityHost({ activity, onFinish }) {
 export default function StoryScreen() {
   const { game, view, toasts, error, advance, choose, save, load, quitToTitle, dismissToast, goTo, activity, startActivity, finishActivity } = useGameStore()
   const [overlay, setOverlay] = useState(null) // 'status' | 'menu' | 'shop:<vendor>' | null
+  // phones: hold the screen the way the player chose (Settings → Screen)
+  const orientation = useSettings((s) => s.orientation)
+  useEffect(() => {
+    applyOrientation(orientation)
+  }, [orientation])
+  const turnTo = useTurnHint()
   const feeRunOn = useFeeRun((s) => s.active && s.started && !s.ended)
   const chaseOn = useChase((s) => s.active && s.started && !s.ended)
   const streetMode = feeRunOn || chaseOn
@@ -107,7 +116,7 @@ export default function StoryScreen() {
 
   return (
     <div className="story-screen">
-      <CanvasGuard onBack={quitToTitle}>{(safeGl) => <GameCanvas view={view} game={game} activity={activity} paused={Boolean(overlay)} onGoalReached={advance} safeGl={safeGl} />}</CanvasGuard>
+      <CanvasGuard onBack={quitToTitle}>{(safeGl) => <GameCanvas view={view} game={game} activity={activity} paused={Boolean(overlay || turnTo)} onGoalReached={advance} safeGl={safeGl} />}</CanvasGuard>
       {raining && <div className="rain" aria-hidden="true" />}
       <HUD game={game} onStatus={() => setOverlay('status')} onMenu={() => setOverlay('menu')} />
       {view.chapterTitle && view.type !== 'cutscene' && <div className="chapter-chip">{view.chapterTitle}</div>}
@@ -136,6 +145,7 @@ export default function StoryScreen() {
       )}
       <Toasts toasts={toasts} onDone={dismissToast} />
       <LoadingOverlay />
+      <RotateHint want={turnTo} />
       {overlay === 'status' && <StatusPanel game={game} onClose={() => setOverlay(null)} />}
       {overlay === 'map' && <StoryMap game={game} onClose={() => setOverlay(null)} />}
       {overlay?.startsWith('shop:') && <ShopPanel vendor={overlay.slice(5)} onClose={() => setOverlay(null)} />}
