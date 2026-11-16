@@ -15,6 +15,7 @@ import { smoothNormals } from './smoothNormals.js'
 //   animation  any clip name from clipIndex (walk, run, punch...); 'idle' = breathingIdle
 //   speed      animation playback speed
 //   onClipEnd  for non-looping clips: called with the clip name when it ends
+//   shadow     false for people outside the street (the customisation preview)
 // The outer group is forwarded as ref so controllers can move/turn it.
 
 const ALIASES = { idle: 'breathingIdle' }
@@ -26,7 +27,7 @@ const tmpSphere = new THREE.Sphere(new THREE.Vector3(), 1.2)
 // One material for every person: colours come from vertex colours.
 const PERSON_MATERIAL = new THREE.MeshLambertMaterial({ vertexColors: true })
 
-const Character = forwardRef(function Character({ look: lookInput, animation = 'idle', speed = 1, onClipEnd, ...groupProps }, ref) {
+const Character = forwardRef(function Character({ look: lookInput, animation = 'idle', speed = 1, onClipEnd, shadow = true, ...groupProps }, ref) {
   // compare looks by value, so passing a fresh object each render is harmless
   const lookKey = JSON.stringify(lookInput || {})
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -64,7 +65,7 @@ const Character = forwardRef(function Character({ look: lookInput, animation = '
 
   const mixer = useMemo(() => new THREE.AnimationMixer(object), [object])
   const inner = useRef()
-  useBlobShadow(inner, { radius: 0.42 })
+  useBlobShadow(inner, { radius: 0.42 }, shadow)
   const current = useRef(null)
   const [clip, setClip] = useState(idleClip)
   const endRef = useRef(onClipEnd)

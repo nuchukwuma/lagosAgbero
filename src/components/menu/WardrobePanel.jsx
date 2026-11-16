@@ -3,6 +3,7 @@ import { useGameStore } from '../../game/store/gameStore.js'
 import { WARDROBE, styleOf, costOf, earnedNicknames } from '../../game/systems/wardrobe.js'
 import { useCheckout } from '../../game/services/payments.js'
 import { formatNaira } from '../../game/narrative/stats.js'
+import CharacterPreview from '../CharacterPreview.jsx'
 
 // Outfits, colours, accessories and nicknames. Looks change reactions (see
 // wardrobe.json "styles"). New things cost pocket money; owned things are free.
@@ -30,6 +31,7 @@ export default function WardrobePanel({ onDone }) {
 
   return (
     <div className="wardrobe">
+      <CharacterPreview look={look} className="wardrobe-preview" />
       <div className="swatch-row">
         <span>Outfit</span>
         {outfits.map((o) => (

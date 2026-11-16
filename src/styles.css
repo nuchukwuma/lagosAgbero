@@ -2496,3 +2496,79 @@ body,
     margin: 4px 0 0;
   }
 }
+
+/* live 3D preview while customising (New Game, Wardrobe) */
+.character-preview {
+  position: relative;
+  touch-action: pan-y; /* horizontal drags spin the figure, vertical ones still scroll */
+  cursor: grab;
+  border-radius: 14px;
+  background: radial-gradient(ellipse at 50% 70%, rgba(242, 195, 0, 0.18), rgba(26, 20, 8, 0) 70%);
+}
+.character-preview:active {
+  cursor: grabbing;
+}
+.character-preview canvas {
+  display: block;
+}
+.character-preview-floor {
+  position: absolute;
+  left: 25%;
+  right: 25%;
+  bottom: 9%;
+  height: 7%;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0) 70%);
+  pointer-events: none;
+}
+.hero-screen {
+  overflow-y: auto;
+  justify-content: safe center;
+}
+.hero-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  width: min(420px, 100%);
+}
+.hero-preview {
+  width: min(240px, 60vw);
+  height: min(300px, 34vh);
+  flex: none;
+}
+/* wide screens (laptops, phones held sideways): figure on the left, form on the right */
+@media (min-aspect-ratio: 5/4) {
+  .hero-screen {
+    flex-direction: row;
+    justify-content: center;
+    gap: clamp(16px, 5vw, 64px);
+  }
+  .hero-preview {
+    width: min(320px, 34vw);
+    height: min(440px, 82vh);
+  }
+}
+.wardrobe-preview {
+  width: 100%;
+  height: min(240px, 30vh);
+  margin-bottom: 4px;
+}
+
+/* phones held sideways: a tighter hero form */
+@media (max-height: 520px) and (min-aspect-ratio: 5/4) {
+  .hero-form {
+    gap: 8px;
+  }
+  .hero-form h2 {
+    margin: 0;
+    font-size: 1.3rem;
+  }
+  .hero-form > .muted {
+    margin: 0;
+    font-size: 0.85rem;
+  }
+  .hero-form .btn {
+    min-height: 40px;
+  }
+}

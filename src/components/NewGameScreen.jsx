@@ -4,6 +4,7 @@ import { CAMPAIGNS } from '../game/narrative/campaigns.js'
 import { endingsFound } from '../game/store/saveSystem.js'
 import { storyCtx } from '../game/narrative/storyData.js'
 import { ASSET_ROOT } from '../assets/assetManifest.js'
+import CharacterPreview from './CharacterPreview.jsx'
 
 // Pick your name and a first look. The street gives you "JJC" until you earn
 // a real nickname. Full customisation (outfits, accessories) comes later.
@@ -58,9 +59,12 @@ function HeroScreen({ campaign, onStart, onBack }) {
   const [body, setBody] = useState(hero.look?.body || OUTFITS[0][0])
   const clean = name.trim().slice(0, 20)
   const areaBoy = campaign.id === 'areaBoy'
+  const look = { ...(hero.look || {}), body, skin, shirt, trousers: hero.look?.trousers || '#2c3e50', shoes: '#1e1e1e' }
 
   return (
-    <div className="screen new-game-screen">
+    <div className="screen new-game-screen hero-screen">
+      <CharacterPreview look={look} className="hero-preview" />
+      <div className="hero-form">
       <div className="chapter-tag">{campaign.title}</div>
       <h2>{areaBoy ? 'Who you be?' : `You are ${hero.name}`}</h2>
       <p className="muted">
@@ -76,7 +80,7 @@ function HeroScreen({ campaign, onStart, onBack }) {
         className="menu"
         onSubmit={(e) => {
           e.preventDefault()
-          if (clean) onStart({ name: clean, nickname: hero.nickname || 'JJC', campaign: campaign.id, look: { body, skin, shirt, trousers: hero.look?.trousers || '#2c3e50', shoes: '#1e1e1e' } })
+          if (clean) onStart({ name: clean, nickname: hero.nickname || 'JJC', campaign: campaign.id, look })
         }}
       >
         <input
@@ -115,6 +119,7 @@ function HeroScreen({ campaign, onStart, onBack }) {
           Choose another story
         </button>
       </form>
+      </div>
     </div>
   )
 }

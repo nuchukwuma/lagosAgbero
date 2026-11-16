@@ -113,13 +113,14 @@ export function FakeShadows({ boxes }) {
 // Anything that moves registers itself: { object, radius } or { object, size: [w, l] }
 export const shadowCasters = new Set()
 
-export function useBlobShadow(ref, options) {
+export function useBlobShadow(ref, options, enabled = true) {
   useEffect(() => {
+    if (!enabled) return undefined
     const entry = { ref, ...options }
     shadowCasters.add(entry)
     return () => shadowCasters.delete(entry)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ref])
+  }, [ref, enabled])
 }
 
 // The background crowd adds its own blobs: flat [x, z, x, z...] for walkers,
