@@ -4,7 +4,7 @@ import Character from '../../characters/Character.jsx'
 import { randomLook } from '../../characters/look.js'
 import { useFight, fightInput, opponentProfile } from './fightStore.js'
 import { createFight, stepFight, animOf, animSpeedOf } from './fightLogic.js'
-import { playerState } from '../../world/worldState.js'
+import { playerState, shake } from '../../world/worldState.js'
 import { GROUND_Y } from '../../world/layout.js'
 import { useGameStore } from '../../store/gameStore.js'
 import characters from '../../data/characters.json'
@@ -72,6 +72,8 @@ export default function FightDirector({ playerLook }) {
       stepFight(f, { ...fightInput }, dt)
       fightInput.punch = fightInput.kick = fightInput.special = fightInput.dodge = false
       for (const ev of f.events) {
+        // a jolt on every clean hit: bigger for kicks and the special
+        if (ev.type === 'hit') shake(ev.move === 'special' ? 0.32 : ev.move === 'kick' ? 0.16 : 0.09, ev.move === 'special' ? 0.45 : 0.18)
         if (ev.type === 'dodged') sfx('whoosh')
         else if (ev.type === 'blocked') sfx('block')
         else if (ev.move === 'special') sfx('special')
@@ -89,6 +91,7 @@ export default function FightDirector({ playerLook }) {
       if (f.over && !endScheduled.current) {
         endScheduled.current = true
         sfx('ko')
+        shake(0.4, 0.6)
         setTimeout(() => sfx(f.over === 'won' ? 'win' : 'lose'), 900)
         setTimeout(() => useFight.getState().end(f.over), 1600) // let the knock-out play
       }

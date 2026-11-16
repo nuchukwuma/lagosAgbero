@@ -1324,5 +1324,20 @@
       "n": 4
     }
   ],
-  "activities": []
+  "activities": [
+    {
+      "id": "gauntlet",
+      "label": "THE GAUNTLET",
+      "icon": "run",
+      "spot": "backGate",
+      "mode": "runner",
+      "minutes": 45,
+      "params": {
+        "endless": true,
+        "chaser": "dons",
+        "difficulty": 1
+      },
+      "where": "The back gate"
+    }
+  ]
 }

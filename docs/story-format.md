@@ -346,6 +346,15 @@ An endless-runner escape along a Lagos road.
   - `caught`: flag `caughtRun`
 - Three stumbles, or letting the pursuers catch up, gets you caught. With
   low energy you get only two stumbles.
+- Jumps are real arcs (launch speed and gravity): jump too late and the
+  carton still trips you. Sliding while in the air drops you straight down.
+  Stumbles shake the camera.
+- `"endless": true` is the **Gauntlet**: no finish line, the road keeps
+  being built ahead (and dropped behind, so memory stays flat), the pace
+  keeps rising. The outcome is always `done`, paying ₦100 per note plus ₦10
+  a metre past the first 100; the best distance is kept on the device. Each
+  world has it as a free-roam activity (`"id": "gauntlet"` in the world JSON,
+  with its own `chaser`).
 
 ### Bus conductor (`"mode": "conductor"`)
 
@@ -511,6 +520,11 @@ Crashes add damage (repairs come off the pay) and a hard crash can bring the
 other driver out (`roadRage`). At a Task Force checkpoint you settle, talk, or
 floor it, and driving through starts a **police chase**: escape by distance or
 get caught. Wrecking the bus mid-chase is `abandoned` (jump out and run).
+Handling (adapted from Sketchbook by swift502, MIT, without its physics
+engine): a 4-speed gearbox whose pull fades towards each gear's top and cuts
+for a moment at every shift (the engine note follows the revs); a steering
+wheel that eases in and out like a spring; gentler steering at speed; all in
+fixed 1/60 s steps, so it drives the same at 20 or 60 fps.
 Rules: `src/game/modes/drive/driveLogic.js` (tested).
 
 ### Chaining one event into another (activities)
@@ -739,3 +753,20 @@ Questions are drawn at random from the bank. `maxWrong` wrong answers mean
   bonus; their power already scales with `difficulty`.
 - **Favours** (the optional sponsor button in free roam) only offer energy
   in campaigns with `features.energy`.
+
+## Story art and loading screens
+
+Each campaign in `campaigns.json` can name a picture and loading text:
+
+```json
+"art": "art/story-grace.webp",
+"loading": { "place": "NKWỌ-AGỤỤ", "lines": ["Pounding yam…", "Counting the harvest money…"] }
+```
+
+The picture (in `public/assets/`) shows on the story's card and on its
+loading screen, which appears when you start or load that story. The home
+screen uses `public/assets/art/title.webp`. The current pictures are rendered
+from the game's own worlds (a fixed "photo mode" camera, dev and `?bench`
+only: `playerState.photo = { pos, target, fov }`). Replace any of them with
+your own art at the same path and size (16:9, about 1280×720, WebP or JPEG
+under ~150 KB).

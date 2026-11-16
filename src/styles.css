@@ -2637,3 +2637,26 @@ body,
     top: calc(max(8px, env(safe-area-inset-top)) + 112px);
   }
 }
+
+/* phones held sideways: runner buttons split between the thumbs (lane changes
+   left, jump and slide right) so nothing sits on top of the runner, and a
+   slimmer status box under the meters */
+@media (min-aspect-ratio: 5/4) and (pointer: coarse) {
+  .runner-pad {
+    display: grid;
+    grid-template-columns: auto auto 1fr auto;
+    align-items: end;
+    column-gap: 14px;
+  }
+  .runner-pad > :nth-child(1) { grid-column: 1; grid-row: 1; }
+  .runner-pad > :nth-child(3) { grid-column: 2; grid-row: 1; }
+  .runner-pad > .runner-pad-mid { grid-column: 4; grid-row: 1; }
+}
+@media (max-height: 520px) and (min-aspect-ratio: 5/4) {
+  .fee-hud {
+    top: calc(max(6px, env(safe-area-inset-top)) + 58px);
+    width: min(400px, 46vw);
+    padding: 5px 10px;
+    font-size: 12px;
+  }
+}

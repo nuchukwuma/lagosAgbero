@@ -218,6 +218,15 @@ export default function CameraRig({ mode = 'follow', speaker = null, ceiling = n
     camera.position.lerp(tmpPos, t)
     lookAt.lerp(tmpLook, t)
     camera.lookAt(lookAt)
+    // shake (hits, crashes): a small random offset that fades out. Applied
+    // after the smooth follow, and undone next frame by the follow itself.
+    const sh = playerState.shake
+    const now = performance.now()
+    if (sh.until > now) {
+      const k = sh.amp * ((sh.until - now) / (sh.until - sh.start))
+      camera.position.x += (Math.random() - 0.5) * 2 * k
+      camera.position.y += (Math.random() - 0.5) * 2 * k
+    }
   })
   return null
 }

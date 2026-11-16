@@ -1297,5 +1297,20 @@
       "n": 3
     }
   ],
-  "activities": []
+  "activities": [
+    {
+      "id": "gauntlet",
+      "label": "THE GAUNTLET",
+      "icon": "run",
+      "spot": "junction",
+      "mode": "runner",
+      "minutes": 45,
+      "params": {
+        "endless": true,
+        "chaser": "villagers",
+        "difficulty": 1
+      },
+      "where": "The junction"
+    }
+  ]
 }

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { createDrive, stepDrive, buyFuel, checkpointChoice, driveResult, placeAt, SHOULDER, LANES } from './driveLogic.js'
+import { createDrive, stepDrive, buyFuel, checkpointChoice, driveResult, placeAt, SHOULDER, LANES, GEARS } from './driveLogic.js'
 
 const run = (d, input, seconds, dt = 0.05) => {
   for (let t = 0; t < seconds && !d.over; t += dt) stepDrive(d, typeof input === 'function' ? input(d) : input, dt)
@@ -126,5 +126,46 @@ describe('danfo driving', () => {
       return { gas: ahead ? 0.2 : 0.8, brake: ahead && ahead.d - s.d < 9 ? 1 : 0, horn: Boolean(ahead), steer: (LANES[1] - s.x) * 0.5 }
     }, 240)
     expect(d.over).toBe('done')
+  })
+
+  it('the gearbox shifts up through the gears, with a pause in power each time', () => {
+    const d = createDrive({ seed: 1, police: false })
+    d.cars = []
+    d.spawnTimer = 999
+    const shifts = []
+    for (let t = 0; t < 25; t += 0.05) {
+      stepDrive(d, { gas: 1 }, 0.05)
+      for (const e of d.events) if (e.type === 'shift') shifts.push(e.gear)
+    }
+    expect(shifts.slice(0, 3)).toEqual([2, 3, 4])
+    expect(d.gear).toBe(GEARS.length - 1)
+    expect(d.speed).toBeGreaterThan(18)
+  })
+
+  it('the wheel eases in and out instead of snapping', () => {
+    const d = createDrive({ seed: 2, police: false })
+    d.cars = []
+    d.spawnTimer = 999
+    d.speed = 12
+    stepDrive(d, { steer: 1, gas: 0.3 }, 1 / 60)
+    expect(d.steer).toBeGreaterThan(0)
+    expect(d.steer).toBeLessThan(0.3)
+    for (let i = 0; i < 40; i++) stepDrive(d, { steer: 1, gas: 0.3 }, 1 / 60)
+    expect(d.steer).toBeGreaterThan(0.8)
+    for (let i = 0; i < 60; i++) stepDrive(d, { gas: 0.3 }, 1 / 60)
+    expect(Math.abs(d.steer)).toBeLessThan(0.1)
+  })
+
+  it('handles the same at 20 fps and 60 fps', () => {
+    const a = createDrive({ seed: 3, police: false })
+    const b = createDrive({ seed: 3, police: false })
+    for (const d of [a, b]) {
+      d.cars = []
+      d.spawnTimer = 999
+    }
+    for (let t = 0; t < 8; t += 1 / 20) stepDrive(a, { gas: 1 }, 1 / 20)
+    for (let t = 0; t < 8; t += 1 / 60) stepDrive(b, { gas: 1 }, 1 / 60)
+    expect(Math.abs(a.speed - b.speed)).toBeLessThan(0.6)
+    expect(Math.abs(a.d - b.d)).toBeLessThan(3)
   })
 })

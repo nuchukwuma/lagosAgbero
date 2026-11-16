@@ -1672,6 +1672,21 @@
           "toast": "You push the danfo to the next filling station. With your hands."
         }
       }
+    },
+    {
+      "id": "gauntlet",
+      "label": "THE GAUNTLET",
+      "icon": "run",
+      "spot": "underBridge",
+      "if": "canCollectFees",
+      "mode": "runner",
+      "minutes": 45,
+      "params": {
+        "endless": true,
+        "chaser": "taskForce",
+        "difficulty": 1
+      },
+      "where": "Under-Bridge"
     }
   ],
   "rows": [

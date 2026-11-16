@@ -41,6 +41,19 @@ The game is one web page that adapts to the device:
   screen. **Pause menu → Wardrobe** (during free roam): outfits, colours,
   accessories and earned street names. Looks change how people react.
 
+## Requirements
+
+- **Phones:** Android phones with 2 GB of RAM and up (Chrome), recent
+  iPhones (Safari). On phones that report 3 GB or less, the game picks the
+  **Light** version by itself: fewer background people, cars and props, and
+  lower resolution; the stories are the same. Players can switch it in
+  Settings.
+- **Landscape by default.** On Android the game goes full screen and turns
+  sideways when you start playing; elsewhere it asks you to turn the phone,
+  with a button to keep playing upright. Settings → Screen changes it.
+- **Computers:** any recent Chrome, Edge, Firefox or Safari with 3D graphics
+  (WebGL) switched on. If it's off, the game says how to turn it on.
+
 ## Run it
 
 You need Node.js 20 or newer to play (`node -v` to check). Running the
@@ -107,6 +120,14 @@ npm run assets:animations -- a1.zip a2.zip a3.zip a4.rar a5.zip "source-assets/m
 npm run assets:animations -- path/to/rpg-pack/FBX/Cleric.fbx   # add the Quaternius RPG pack clips (roll, cheer, preach, pickUp); other clips are kept
 npm run assets:nature -- path/to/nature-pack.zip   # bake trees, bushes, rocks and grass into the scenery
 ```
+
+## Credits
+
+- City, vehicles and props: Kenney (kenney.nl), CC0.
+- People, the bus, trees, bushes and rocks: Quaternius (quaternius.com), CC0.
+- Animations: Mixamo (Adobe) and Quaternius.
+- Driving handling (gearbox, spring steering) adapted from
+  [Sketchbook](https://github.com/swift502/Sketchbook) by swift502, MIT licence.
 
 ## Docs
 

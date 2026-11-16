@@ -14,6 +14,16 @@
 //   - police chase: escape by distance, or get caught
 // Outcomes: done | caught | outOfFuel | wrecked | abandoned | roadRage
 // Events this step are in d.events: [{ type, ... }]
+//
+// Handling ideas adapted from Sketchbook by swift502 (MIT licence,
+// https://github.com/swift502/Sketchbook), rewritten without a physics engine:
+//   - a 4-speed gearbox: pull is strongest at the bottom of each gear and
+//     fades towards its top speed; changing gear cuts the power for a moment
+//     (you feel and hear each shift);
+//   - the steering wheel is a spring: it eases towards where you point it
+//     and back to centre, instead of snapping;
+//   - steering is gentler at speed (less sideways per second at 80 km/h).
+// Updated in fixed 1/60 s steps, so it handles the same at 20 or 60 fps.
 
 export const LANES = [-3.4, 0, 3.4]
 export const SHOULDER = 6.6
@@ -25,6 +35,14 @@ const FUEL_PER_KM = 9 // % of the tank per km at full throttle
 const FUEL_PRICE = 120 // ₦ per % of tank
 
 export const kmh = (ms) => Math.round(ms * 3.6)
+
+// top speed of each gear, m/s (the 4th reaches MAX_SPEED)
+export const GEARS = [0, 7, 12.5, 17.5, MAX_SPEED]
+const SHIFT_TIME = 0.32 // s with no power while changing gear
+const STEP = 1 / 60
+// steering spring (mass, damping per step), in the style of Sketchbook's SpringSimulator
+const STEER_MASS = 8
+const STEER_DAMPING = 0.68
 
 export function mulberry(seed) {
   let a = seed >>> 0
@@ -65,6 +83,11 @@ export function createDrive({ seed = 1, length = 2400, stops = 5, fuel = 55, pol
     d: 0,
     x: LANES[1],
     speed: 0,
+    gear: 1,
+    shiftT: 0,
+    steer: 0, // the wheel, -1..1 (follows the input through a spring)
+    steerV: 0,
+    acc: 0, // left-over time for the fixed steps
     fuel,
     damage: 0,
     passengers: [], // { dest: index of a stop place }
@@ -101,6 +124,33 @@ function spawnCar(d) {
   d.cars.push({ id: d.nextCarId++, kind, x: LANES[lane], targetX: LANES[lane], d: dz, speed: ahead ? speed : speed + 8, w: carSize(kind)[0], l: carSize(kind)[1], honked: 0 })
 }
 
+// One fixed 1/60 s step of gearbox, speed and steering wheel.
+function stepHandling(d, input, gas, brake, engineOn, top) {
+  // gearbox
+  if (d.shiftT > 0) d.shiftT = Math.max(0, d.shiftT - STEP)
+  const g = d.gear
+  const lo = GEARS[g - 1]
+  const hi = Math.min(GEARS[g], top)
+  const inGear = Math.max(0, Math.min(1, (d.speed - lo) / Math.max(0.1, hi - lo)))
+  if (inGear > 0.92 && g < GEARS.length - 1 && gas > 0.2 && d.shiftT === 0) {
+    d.gear++
+    d.shiftT = SHIFT_TIME
+    d.events.push({ type: 'shift', gear: d.gear })
+  } else if (g > 1 && d.speed < GEARS[g - 1] * 0.85) {
+    d.gear--
+    d.events.push({ type: 'shift', gear: d.gear })
+  }
+  // pull: strong low in each gear, fading towards its top; lower gears pull harder
+  const pull = engineOn && d.shiftT === 0 ? gas * (5.6 - d.gear * 0.7) * (1 - inGear * 0.85) * (d.speed < top ? 1 : 0) : 0
+  const drag = brake * 9 + 0.35 + d.speed * 0.012 // brakes, rolling resistance, air
+  d.speed = Math.max(0, Math.min(top, d.speed + (pull - drag) * STEP))
+  d.d += d.speed * STEP
+  // steering wheel: a spring towards the input
+  const target = input.steer || 0
+  d.steerV = (d.steerV + (target - d.steer) / STEER_MASS) * STEER_DAMPING
+  d.steer = Math.max(-1, Math.min(1, d.steer + d.steerV))
+}
+
 /** The place the bus is inside (by distance), if any. */
 export function placeAt(d) {
   return d.places.find((p) => Math.abs(d.d - p.d) < (p.type === 'checkpoint' ? 14 : 18)) || null
@@ -118,23 +168,25 @@ export function stepDrive(d, input, dt) {
   const gas = input.gas || 0
   const brake = input.brake || 0
 
-  // ---- engine and fuel ----
+  // ---- engine, gearbox and steering, in fixed steps ----
   const engineOn = d.fuel > 0
   const top = MAX_SPEED * (1 - d.damage / 220)
-  let accel = engineOn ? gas * 4.2 * (1 - d.speed / top) : 0
-  accel -= brake * 9 + 0.35 + d.speed * 0.012 // brakes, rolling resistance, air
-  d.speed = Math.max(0, Math.min(top, d.speed + accel * dt))
-  const moved = d.speed * dt
-  d.d += moved
+  const before = d.d
+  d.acc = Math.min(d.acc + dt, 0.25)
+  while (d.acc >= STEP) {
+    d.acc -= STEP
+    stepHandling(d, input, gas, brake, engineOn, top)
+  }
+  const moved = d.d - before
   d.fuel = Math.max(0, d.fuel - (moved / 1000) * FUEL_PER_KM * (0.35 + gas * 0.75))
   if (d.fuel === 0 && d.speed < 0.2 && d.halted?.type !== 'fuel') {
     d.over = 'outOfFuel'
     return d
   }
 
-  // ---- steering (only while moving, like a real vehicle) ----
-  const grip = Math.min(1, d.speed / 4)
-  d.x = Math.max(ROAD_MIN + BUS.width / 2, Math.min(ROAD_MAX - BUS.width / 2, d.x + (input.steer || 0) * 5.5 * grip * dt))
+  // ---- steering (only while moving, like a real vehicle; gentler at speed) ----
+  const grip = Math.min(1, d.speed / 4) / (1 + Math.max(0, d.speed - 8) * 0.03)
+  d.x = Math.max(ROAD_MIN + BUS.width / 2, Math.min(ROAD_MAX - BUS.width / 2, d.x + d.steer * 5.8 * grip * dt))
 
   // ---- traffic ----
   d.spawnTimer -= dt
@@ -150,13 +202,16 @@ export function stepDrive(d, input, dt) {
     d.events.push({ type: 'horn' })
   }
   for (const c of d.cars) {
-    // slow down behind whatever is in front (including the bus)
+    // slow down behind whatever is in front (other cars, the bus). No arrays
+    // are built here: this runs for every car, every frame, on 2 GB phones.
     let limit = c.speed
-    const blockers = [...d.cars.filter((o) => o !== c), { x: d.x, d: d.d, speed: d.speed, l: BUS.length }]
-    for (const o of blockers) {
+    for (const o of d.cars) {
+      if (o === c) continue
       const gap = o.d - c.d - (o.l + c.l) / 2
       if (Math.abs(o.x - c.x) < 2 && gap > 0 && gap < 10) limit = Math.min(limit, o.speed * (gap / 10))
     }
+    const busGap = d.d - c.d - (BUS.length + c.l) / 2
+    if (Math.abs(d.x - c.x) < 2 && busGap > 0 && busGap < 10) limit = Math.min(limit, d.speed * (busGap / 10))
     // the horn: cars just ahead of the bus move over if they can
     if (honk && Math.abs(c.x - d.x) < 2 && c.d > d.d && c.d - d.d < 30) {
       const options = LANES.filter((lx) => Math.abs(lx - c.x) > 1 && lanesFree(d, lx, c.d, d.cars, c))

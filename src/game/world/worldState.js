@@ -21,6 +21,7 @@ export const playerState = {
   driveView: null, // { x, z, speed } the danfo you drive (drive mode camera)
   vehicleView: null, // { x, z } the conductor's danfo (camera)
   photo: null, // { pos, target, fov } a fixed camera for the menu art (tools only)
+  shake: { until: 0, amp: 0 }, // camera shake (hits, crashes); see shake()
 }
 
 /** id -> { position: Vector3 } for every NPC currently in the world */
@@ -42,4 +43,16 @@ export const useWorldStore = create((set) => ({
 /** Play a short one-shot animation on the player (they stand still for it). */
 export function playGesture(name, { speed = 1, seconds = 0.8 } = {}) {
   playerState.gesture = { name, speed, until: performance.now() + seconds * 1000 }
+}
+
+/** Shake the camera: amp in metres, for `seconds` (fades out). Hits, crashes, knock-outs. */
+export function shake(amp = 0.25, seconds = 0.3) {
+  const now = performance.now()
+  const s = playerState.shake
+  // a bigger shake replaces a smaller one; a small one never cuts a big one short
+  if (now > s.until || amp >= s.amp) {
+    s.amp = amp
+    s.start = now
+    s.until = now + seconds * 1000
+  }
 }

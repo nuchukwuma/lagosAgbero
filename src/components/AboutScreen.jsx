@@ -20,6 +20,7 @@ export default function AboutScreen({ onBack }) {
         <p>City, vehicles and props: Kenney (kenney.nl), CC0.</p>
         <p>People, the bus, trees, bushes and rocks: Quaternius (quaternius.com), CC0.</p>
         <p>Animations: Mixamo (Adobe) and Quaternius.</p>
+        <p>Driving handling ideas: Sketchbook by swift502 (MIT licence).</p>
       </div>
       <SupportBlock />
       <button className="btn" onClick={onBack}>

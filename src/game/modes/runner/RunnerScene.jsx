@@ -7,7 +7,7 @@ import { randomLook } from '../../characters/look.js'
 import Sign from '../../world/Sign.jsx'
 import { useRunner, runnerInput } from './runnerStore.js'
 import { createRun, stepRun } from './runnerLogic.js'
-import { playerState } from '../../world/worldState.js'
+import { playerState, shake } from '../../world/worldState.js'
 import { useGameStore } from '../../store/gameStore.js'
 import characters from '../../data/characters.json'
 import { sfx } from '../../audio/audio.js'
@@ -32,45 +32,49 @@ const bannerMat = new THREE.MeshLambertMaterial({ color: '#c0392b' })
 const poleMat = new THREE.MeshLambertMaterial({ color: '#3c3f44' })
 const noteMat = new THREE.MeshBasicMaterial({ color: '#2ecc71', side: THREE.DoubleSide })
 
-function Course({ run }) {
+// The course is drawn for the stretch [from, to): the whole run for a normal
+// escape; for an endless run, the current two stretches only (it is rebuilt,
+// with a new key, every time the run builds more road).
+function Course({ run, from, to }) {
   const goal = run.goal
   const road = useMemo(() => {
     const items = []
-    for (let d = -24; d < goal + 60; d += 8) items.push({ position: [0, 0, -d], rotation: 90 })
+    for (let d = Math.floor(from / 8) * 8; d < to; d += 8) items.push({ position: [0, 0, -d], rotation: 90 })
     return items
-  }, [goal])
+  }, [from, to])
   const buildings = useMemo(() => {
     const byModel = {}
-    let i = 0
-    for (let d = -10; d < goal + 60; d += 13) {
+    let i = Math.floor(from / 13) * 2
+    for (let d = Math.floor(from / 13) * 13 + 3; d < to; d += 13) {
       for (const side of [-1, 1]) {
-        const m = BUILDINGS[(i++ * 7) % BUILDINGS.length]
+        const m = BUILDINGS[(((i++ * 7) % BUILDINGS.length) + BUILDINGS.length) % BUILDINGS.length] // i can start below zero
         ;(byModel[m] ||= []).push({ position: [side * 13, Y, -d], rotation: side > 0 ? 270 : 90 })
       }
     }
     return byModel
-  }, [goal])
+  }, [from, to])
   const poles = useMemo(() => {
     const items = []
-    for (let d = 0; d < goal + 60; d += 16) for (const side of [-1, 1]) items.push({ position: [side * 5.6, Y, -d], rotation: 0, scale: 1.5 })
+    for (let d = Math.max(0, Math.ceil(from / 16) * 16); d < to; d += 16) for (const side of [-1, 1]) items.push({ position: [side * 5.6, Y, -d], rotation: 0, scale: 1.5 })
     return items
-  }, [goal])
+  }, [from, to])
   const groups = useMemo(() => {
     const block = []
     const low = []
     const cones = []
     for (const it of run.items) {
+      if (it.d < from || it.d >= to) continue
       const x = it.lane * LANE_W
       if (it.kind === 'block') block.push({ position: [x, Y, -it.d], rotation: (it.d * 37) % 2 > 1 ? 0 : 180 })
       if (it.kind === 'low') ((it.d * 13) % 2 > 1 ? low : cones).push({ position: [x, Y, -it.d], rotation: it.d * 40 })
     }
     return { block, low, cones }
-  }, [run])
-  const banners = run.items.filter((it) => it.kind === 'high')
+  }, [run, from, to])
+  const banners = run.items.filter((it) => it.kind === 'high' && it.d >= from && it.d < to)
   return (
     <group>
-      <mesh rotation-x={-Math.PI / 2} position={[0, -0.04, -goal / 2]}>
-        <planeGeometry args={[80, goal + 140]} />
+      <mesh rotation-x={-Math.PI / 2} position={[0, -0.04, -(from + to) / 2]}>
+        <planeGeometry args={[80, to - from + 80]} />
         <meshLambertMaterial color="#9c6b43" />
       </mesh>
       <ModelInstances name="roadStraight" items={road} />
@@ -93,14 +97,14 @@ function Course({ run }) {
           ))}
         </group>
       ))}
-      <Sign at={[0, -goal - 4, 0]} y={4} size={[8, 1.4]} lines={['YOU DON ESCAPE!']} bg="#2f8f5b" fg="#fff" post />
+      {!run.endless && <Sign at={[0, -goal - 4, 0]} y={4} size={[8, 1.4]} lines={['YOU DON ESCAPE!']} bg="#2f8f5b" fg="#fff" post />}
     </group>
   )
 }
 
-function Notes({ run }) {
+function Notes({ run, from, to }) {
   const refs = useRef([])
-  const notes = useMemo(() => run.items.filter((it) => it.kind === 'note'), [run])
+  const notes = useMemo(() => run.items.filter((it) => it.kind === 'note' && it.d >= from && it.d < to), [run, from, to])
   useFrame((state) => {
     notes.forEach((n, i) => {
       const m = refs.current[i]
@@ -120,7 +124,8 @@ export default function RunnerScene({ playerLook }) {
   const params = useRunner((s) => s.params)
   const started = useRunner((s) => s.started)
   const energy = useGameStore((s) => s.game?.stats.energy ?? 70)
-  const run = useMemo(() => createRun({ goal: params.goal ?? 320, seed: params.seed ?? Math.floor(Math.random() * 1000), difficulty: params.difficulty ?? 1, energy }), [params]) // eslint-disable-line react-hooks/exhaustive-deps
+  const run = useMemo(() => createRun({ goal: params.goal ?? 320, seed: params.seed ?? Math.floor(Math.random() * 1000), difficulty: params.difficulty ?? 1, energy, endless: Boolean(params.endless) }), [params]) // eslint-disable-line react-hooks/exhaustive-deps
+  const [builtTo, setBuiltTo] = useState(run.builtTo) // endless runs: redraw the road when more is built
   const player = useRef()
   const chasers = useRef()
   const [anim, setAnim] = useState('run')
@@ -132,16 +137,17 @@ export default function RunnerScene({ playerLook }) {
   useFrame((_, raw) => {
     const dt = Math.min(raw, 0.05)
     if (started && !run.over) {
-      if (runnerInput.jump) sfx('jump')
       if (runnerInput.slide) sfx('slide')
       stepRun(run, { ...runnerInput }, dt)
-      for (const ev of run.events) sfx(ev.type === 'note' ? 'coin' : 'bump')
+      for (const ev of run.events) sfx(ev.type === 'note' ? 'coin' : ev.type === 'jump' ? 'jump' : 'bump')
       runnerInput.left = runnerInput.right = runnerInput.jump = runnerInput.slide = false
       hudTimer.current -= dt
       if (hudTimer.current <= 0 || run.events.length) {
         hudTimer.current = 0.15
-        useRunner.setState({ hud: { distance: run.distance, goal: run.goal, hits: run.hits, maxHits: run.maxHits, notes: run.notes, pursuer: run.pursuer } })
+        useRunner.setState({ hud: { distance: run.distance, goal: run.goal, hits: run.hits, maxHits: run.maxHits, notes: run.notes, pursuer: run.pursuer, endless: run.endless } })
       }
+      if (run.builtTo !== builtTo) setBuiltTo(run.builtTo)
+      for (const ev of run.events) if (ev.type === 'hit') shake(0.35, 0.3)
     }
     if (run.over && !ended.current) {
       ended.current = true
@@ -149,7 +155,7 @@ export default function RunnerScene({ playerLook }) {
     }
     const x = run.laneX * LANE_W
     const z = -run.distance
-    const jumpY = run.jumpT > 0 ? Math.sin((1 - run.jumpT / 0.6) * Math.PI) * 1.3 : 0
+    const jumpY = run.y
     if (player.current) {
       player.current.position.set(x, Y + jumpY, z)
       player.current.rotation.y = Math.PI // facing -Z
@@ -162,8 +168,17 @@ export default function RunnerScene({ playerLook }) {
 
   return (
     <group>
-      <Course run={run} />
-      <Notes run={run} />
+      {run.endless ? (
+        <>
+          <Course key={builtTo} run={run} from={Math.max(-24, builtTo - 480)} to={builtTo + 40} />
+          <Notes key={`n${builtTo}`} run={run} from={Math.max(0, builtTo - 480)} to={builtTo + 40} />
+        </>
+      ) : (
+        <>
+          <Course run={run} from={-24} to={run.goal + 60} />
+          <Notes run={run} from={0} to={run.goal + 60} />
+        </>
+      )}
       <Suspense fallback={null}>
         <Character ref={player} look={playerLook} animation={anim} speed={anim === 'run' ? 1.2 : anim === 'roll' ? 1.6 : 1.4} />
         <group ref={chasers}>

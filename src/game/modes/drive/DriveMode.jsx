@@ -148,7 +148,7 @@ export default function DriveMode({ params, onFinish }) {
         <div className="drive-hud">
           <div className="drive-speed">
             <strong>{h.kmh}</strong>
-            <small>km/h</small>
+            <small>km/h · gear {h.gear || 1}</small>
           </div>
           <div className="drive-meters">
             <div className={`drive-meter ${h.fuel < 15 ? 'low' : ''}`} title="Fuel">

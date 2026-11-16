@@ -15,8 +15,8 @@ import { getAsset } from '../../../assets/assetManifest.js'
 import { randomLook } from '../../characters/look.js'
 import characters from '../../data/characters.json'
 import { useDrive, readDriveInput, driveInput } from './driveStore.js'
-import { createDrive, stepDrive, placeAt, driveResult, SHOULDER, MAX_SPEED, kmh, upcoming } from './driveLogic.js'
-import { playerState } from '../../world/worldState.js'
+import { createDrive, stepDrive, placeAt, driveResult, SHOULDER, kmh, upcoming, GEARS } from './driveLogic.js'
+import { playerState, shake } from '../../world/worldState.js'
 import { sfx, engine } from '../../audio/audio.js'
 import { useDisposable } from '../../world/useDisposable.js'
 
@@ -382,7 +382,10 @@ export default function DriveScene() {
       stepDrive(drive, input, dt)
       for (const ev of drive.events) {
         if (ev.type === 'horn') sfx('horn', 0.9)
-        else if (ev.type === 'crash') sfx('crash')
+        else if (ev.type === 'crash') {
+          sfx('crash')
+          shake(Math.min(0.5, 0.15 + ev.hit / 60), 0.4)
+        } else if (ev.type === 'shift') sfx('click')
         else if (ev.type === 'scrape') sfx('bump')
         else if (ev.type === 'board') sfx('coin')
         else if (ev.type === 'siren') sfx('siren')
@@ -398,7 +401,10 @@ export default function DriveScene() {
       engineTimer.current -= dt
       if (engineTimer.current <= 0) {
         engineTimer.current = 0.1
-        engine(drive.fuel > 0 ? 0.08 + (drive.speed / MAX_SPEED) * 0.9 + input.gas * 0.1 : 0)
+        // the note climbs through each gear and drops at every shift
+        const lo = GEARS[drive.gear - 1]
+        const rev = Math.max(0, Math.min(1, (drive.speed - lo) / (GEARS[drive.gear] - lo)))
+        engine(drive.fuel > 0 ? 0.1 + rev * 0.55 + drive.gear * 0.06 + input.gas * 0.08 - (drive.shiftT > 0 ? 0.12 : 0) : 0)
       }
       // what the HUD needs, ten times a second
       hudTimer.current -= dt
@@ -414,6 +420,7 @@ export default function DriveScene() {
           prompt,
           hud: {
             kmh: kmh(drive.speed),
+            gear: drive.gear,
             fuel: drive.fuel,
             damage: drive.damage,
             passengers: drive.passengers.length,
@@ -437,7 +444,7 @@ export default function DriveScene() {
     // bus + camera target
     if (bus.current) {
       bus.current.position.set(drive.x, Y, -drive.d)
-      const lean = readDriveInput().steer * Math.min(1, drive.speed / 8)
+      const lean = drive.steer * Math.min(1, drive.speed / 8) // the wheel, not the raw input: it eases in
       bus.current.rotation.y = Math.PI - lean * 0.08
       bus.current.rotation.z = lean * 0.02
     }

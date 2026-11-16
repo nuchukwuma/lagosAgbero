@@ -38,4 +38,48 @@ describe('runner', () => {
     }
     expect(r.over).toBe('caught')
   })
+
+  it('a jump is an arc: too late and the carton still gets you', () => {
+    const r = createRun({ goal: 200, seed: 3 })
+    r.items = [{ d: 20, lane: 0, kind: 'low' }]
+    r.speed = 10
+    while (r.distance < 19.6) stepRun(r, {}, 1 / 60) // jump with no time to rise
+    stepRun(r, { jump: true }, 1 / 60)
+    for (let i = 0; i < 30; i++) stepRun(r, {}, 1 / 60)
+    expect(r.hits).toBe(1)
+    const ok = createRun({ goal: 200, seed: 3 })
+    ok.items = [{ d: 20, lane: 0, kind: 'low' }]
+    ok.speed = 10
+    while (ok.distance < 17.5) stepRun(ok, {}, 1 / 60)
+    stepRun(ok, { jump: true }, 1 / 60)
+    for (let i = 0; i < 60; i++) stepRun(ok, {}, 1 / 60)
+    expect(ok.hits).toBe(0)
+    expect(ok.y).toBe(0) // landed
+  })
+
+  it('sliding in the air drops you straight down', () => {
+    const r = createRun({ goal: 200, seed: 3 })
+    r.items = []
+    stepRun(r, { jump: true }, 1 / 60)
+    for (let i = 0; i < 8; i++) stepRun(r, {}, 1 / 60)
+    const high = r.y
+    stepRun(r, { slide: true }, 1 / 60)
+    for (let i = 0; i < 6 && r.y > 0; i++) stepRun(r, {}, 1 / 60)
+    expect(high).toBeGreaterThan(0.5)
+    expect(r.y).toBe(0)
+  })
+
+  it('an endless run keeps building road and never finishes on its own', () => {
+    const r = createRun({ endless: true, seed: 5 })
+    r.maxHits = Infinity
+    for (let i = 0; i < 60 * 120 && !r.over; i++) {
+      stepRun(r, {}, 1 / 60)
+      r.pursuer = 18 // keep the chasers off for the test
+    }
+    expect(r.over).toBe(null)
+    expect(r.distance).toBeGreaterThan(1500)
+    expect(r.items.some((it) => it.d > r.distance)).toBe(true) // road ahead
+    expect(r.items.every((it) => it.d > r.distance - 400)).toBe(true) // old rows dropped
+    expect(r.speed).toBeGreaterThan(18)
+  })
 })

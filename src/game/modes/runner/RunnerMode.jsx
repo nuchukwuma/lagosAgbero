@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { useRunner, runnerInput } from './runnerStore.js'
+import { useRunner, runnerInput, bestDistance } from './runnerStore.js'
 import { useDevice } from '../../../components/hud/useDevice.js'
 import Icon from '../../../components/Icon.jsx'
 import { CHASERS } from './RunnerScene.jsx'
@@ -39,8 +39,15 @@ export default function RunnerMode({ params, onFinish }) {
   if (!runner.started)
     return (
       <div className="fee-intro">
-        <h2>RUN!</h2>
-        <p>{(CHASERS[params.chaser] || CHASERS.taskForce).text} Reach {params.goal ?? 320} m to escape. Grab naira notes on the way.</p>
+        <h2>{params.endless ? 'THE GAUNTLET' : 'RUN!'}</h2>
+        {params.endless ? (
+          <p>
+            {(CHASERS[params.chaser] || CHASERS.taskForce).text} There's no finish line: the road keeps coming and the pace keeps rising. Go as far as you can.
+            {bestDistance() > 0 && <> Your best: <strong>{bestDistance()} m</strong>.</>}
+          </p>
+        ) : (
+          <p>{(CHASERS[params.chaser] || CHASERS.taskForce).text} Reach {params.goal ?? 320} m to escape. Grab naira notes on the way.</p>
+        )}
         <p className="muted">{touch ? 'Swipe, or tap the arrows: left/right change lane, up jumps cartons, down slides under banners.' : '←/→ or A/D change lane · ↑/W/Space jump · ↓/S slide'}</p>
         <button className="btn btn-primary" onClick={runner.begin}>
           Go!
@@ -50,17 +57,24 @@ export default function RunnerMode({ params, onFinish }) {
   if (runner.ended && result)
     return (
       <div className="fee-intro">
-        <h2>{result.outcome === 'escaped' ? 'You don escape!' : 'Dem catch you!'}</h2>
-        <p className="muted">
-          Distance {Math.round(runner.hud.distance)} m · Naira notes {runner.hud.notes} (₦{(runner.hud.notes * 100).toLocaleString('en-NG')})
-        </p>
+        <h2>{result.outcome === 'escaped' ? 'You don escape!' : result.metres != null ? (result.newBest ? 'New best!' : 'Dem catch you!') : 'Dem catch you!'}</h2>
+        {result.metres != null && (
+          <p>
+            <strong>{result.metres} m</strong> · best {result.best} m · earned ₦{(result.moneyChange || 0).toLocaleString('en-NG')}
+          </p>
+        )}
+        {result.metres == null && (
+          <p className="muted">
+            Distance {Math.round(runner.hud.distance)} m · Naira notes {runner.hud.notes} (₦{(runner.hud.notes * 100).toLocaleString('en-NG')})
+          </p>
+        )}
         <button className="btn btn-primary" onClick={() => onFinish(result)}>
           Continue
         </button>
       </div>
     )
 
-  const { distance, goal, hits, maxHits, notes, pursuer } = runner.hud
+  const { distance, goal, hits, maxHits, notes, pursuer, endless } = runner.hud
   return (
     <>
       <div
@@ -79,14 +93,14 @@ export default function RunnerMode({ params, onFinish }) {
       />
       <div className="fee-hud">
         <div className="fee-row">
-          <strong>ESCAPE</strong>
-          <span>
-            {Math.round(distance)} / {goal} m
-          </span>
+          <strong>{endless ? 'GAUNTLET' : 'ESCAPE'}</strong>
+          <span>{endless ? `${Math.round(distance)} m · best ${bestDistance()} m` : `${Math.round(distance)} / ${goal} m`}</span>
         </div>
-        <div className="fee-quota">
-          <div style={{ width: `${(distance / goal) * 100}%` }} />
-        </div>
+        {!endless && (
+          <div className="fee-quota">
+            <div style={{ width: `${(distance / goal) * 100}%` }} />
+          </div>
+        )}
         <div className="fee-row">
           <span>Stumbles {hits}/{maxHits} · ₦ notes {notes}</span>
           <span className={pursuer < 6 ? 'warn' : 'muted'}>They're {Math.max(0, Math.round(pursuer))} m behind</span>

@@ -14,7 +14,7 @@ import { TIME_SCALE, EVENING_AT, parseTime } from '../systems/clock.js'
 import { pickEvent, ROLL_EVERY } from '../systems/events.js'
 import { applyEffects, resultToEffects } from '../narrative/effects.js'
 import { checkCondition } from '../narrative/conditions.js'
-import { useWorldStore } from '../world/worldState.js'
+import { useWorldStore, playerState } from '../world/worldState.js'
 import { styleOf, styleFlags, costOf, ownedAfter } from '../systems/wardrobe.js'
 import { campaignById, campaignOf, chapterCampaign } from '../narrative/campaigns.js'
 import { collectFind } from '../systems/finds.js'
@@ -273,5 +273,5 @@ bus.on('mode:result', (result) => useGameStore.getState().modeResult(result))
 // dev builds, or any build opened with ?bench: scripted play-throughs and memory checks
 if (typeof window !== 'undefined' && (import.meta.env.DEV || new URLSearchParams(window.location.search).has('bench'))) {
   window.__gameStore = useGameStore
-  import('../world/worldState.js').then((w) => (window.__playerState = w.playerState))
+  window.__playerState = playerState
 }
