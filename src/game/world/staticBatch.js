@@ -3,9 +3,13 @@
 // per 48 m chunk. A street of ~300 objects becomes ~20 draw calls, and each
 // chunk is skipped entirely when it is off screen. This is the main reason the
 // game runs on budget phones.
+//
+// Memory (2 GB phones): each chunk is written straight into one pre-sized
+// buffer, without a temporary copy per object. No normals are stored: the
+// materials shade each face flat on the GPU (the models are flat-shaded
+// low-poly anyway), and the baked colours are 1 byte per channel.
 
 import * as THREE from 'three'
-import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js'
 import { getAsset, ATLASES } from '../../assets/assetManifest.js'
 import { prototypeFor, placementMatrix, atlasTexture } from './models.js'
 
@@ -15,13 +19,23 @@ const sharedMaterials = new Map()
 /** One Lambert material per pack + atlas variant + weathering (one GPU texture each). */
 function sharedMaterial(asset, src) {
   const tweak = asset.tweak || {}
-  if (!ATLASES[asset.pack]) return src
+  if (!ATLASES[asset.pack]) {
+    // the model's own material, made to shade flat and use the baked colours
+    const key = `own|${src.uuid}`
+    if (!sharedMaterials.has(key)) {
+      const own = src.clone()
+      own.flatShading = true
+      own.vertexColors = true
+      sharedMaterials.set(key, own)
+    }
+    return sharedMaterials.get(key)
+  }
   const key = `${asset.pack}|${tweak.atlas || 'base'}|${tweak.weathering || 0}`
   if (!sharedMaterials.has(key)) {
     const fade = 1 - 0.3 * (tweak.weathering || 0)
     sharedMaterials.set(
       key,
-      new THREE.MeshLambertMaterial({ map: atlasTexture(asset.pack, tweak.atlas || 'base', src.map), color: new THREE.Color(fade, fade, fade), side: src.side, vertexColors: true }),
+      new THREE.MeshLambertMaterial({ map: atlasTexture(asset.pack, tweak.atlas || 'base', src.map), color: new THREE.Color(fade, fade, fade), side: src.side, vertexColors: true, flatShading: true }),
     )
   }
   return sharedMaterials.get(key)
@@ -32,19 +46,8 @@ function sharedMaterial(asset, src) {
 //    so buildings sit on the street instead of floating on it
 //  - a small per-object tint, so the same house model repeated down a street
 //    doesn't look copy-pasted
-function bakeColours(g, { ao, tint }) {
-  const pos = g.attributes.position
-  const col = new Float32Array(pos.count * 3)
-  for (let i = 0; i < pos.count; i++) {
-    const y = pos.getY(i)
-    const k = ao ? 0.62 + 0.38 * Math.min(1, Math.max(0, y / 2.2)) : 1
-    col[i * 3] = k * tint[0]
-    col[i * 3 + 1] = k * tint[1]
-    col[i * 3 + 2] = k * tint[2]
-  }
-  g.setAttribute('color', new THREE.BufferAttribute(col, 3))
-  return g
-}
+const aoAt = (y) => 0.62 + 0.38 * Math.min(1, Math.max(0, y / 2.2))
+const byte = (x) => (x >= 1 ? 255 : x <= 0 ? 0 : Math.round(x * 255))
 
 function tintFor(item, category) {
   if (category === 'road' || category === 'street') return [1, 1, 1]
@@ -56,16 +59,34 @@ function tintFor(item, category) {
   return [bright * (1 + warm), bright, bright * (1 - warm)]
 }
 
-function clean(geometry, matrix) {
-  const g = new THREE.BufferGeometry()
-  const src = geometry
-  g.setAttribute('position', src.attributes.position.clone())
-  g.setAttribute('normal', src.attributes.normal ? src.attributes.normal.clone() : new THREE.Float32BufferAttribute(new Float32Array(src.attributes.position.count * 3), 3))
-  g.setAttribute('uv', src.attributes.uv ? src.attributes.uv.clone() : new THREE.Float32BufferAttribute(new Float32Array(src.attributes.position.count * 2), 2))
-  if (src.index) g.setIndex(src.index.clone())
-  else g.setIndex([...Array(src.attributes.position.count).keys()])
-  g.applyMatrix4(matrix)
-  return g
+// one object part, written into the chunk buffers at vAt / iAt
+function writePart(src, matrix, ao, tint, out, vAt, iAt) {
+  const pos = src.attributes.position
+  const uv = src.attributes.uv
+  const el = matrix.elements
+  for (let i = 0; i < pos.count; i++) {
+    const x = pos.getX(i)
+    const y = pos.getY(i)
+    const z = pos.getZ(i)
+    const wy = el[1] * x + el[5] * y + el[9] * z + el[13]
+    const o = (vAt + i) * 3
+    out.pos[o] = el[0] * x + el[4] * y + el[8] * z + el[12]
+    out.pos[o + 1] = wy
+    out.pos[o + 2] = el[2] * x + el[6] * y + el[10] * z + el[14]
+    // world y comes from the placement, so the AO band follows the ground
+    const k = ao ? aoAt(wy) : 1
+    out.col[o] = byte(k * tint[0])
+    out.col[o + 1] = byte(k * tint[1])
+    out.col[o + 2] = byte(k * tint[2])
+    if (uv) {
+      out.uv[(vAt + i) * 2] = uv.getX(i)
+      out.uv[(vAt + i) * 2 + 1] = uv.getY(i)
+    }
+  }
+  if (src.index) {
+    const idx = src.index.array
+    for (let i = 0; i < idx.length; i++) out.idx[iAt + i] = idx[i] + vAt
+  } else for (let i = 0; i < pos.count; i++) out.idx[iAt + i] = vAt + i
 }
 
 /**
@@ -74,8 +95,8 @@ function clean(geometry, matrix) {
  * @returns [{ geometry, material }] ready to draw
  */
 export function buildStaticBatches(groups, gltfs) {
-  const buckets = new Map() // key -> { material, list }
-  const m = new THREE.Matrix4()
+  // pass 1: sort every object part into its chunk (by material) and count
+  const buckets = new Map() // key -> { material, parts: [{ src, matrix, ao, tint }], verts, indices }
   for (const g of groups) {
     const gltf = gltfs.get(g.model)
     if (!gltf) continue
@@ -84,22 +105,36 @@ export function buildStaticBatches(groups, gltfs) {
     for (const item of g.items) {
       const cell = `${Math.floor(item.position[0] / CHUNK)},${Math.floor(item.position[2] / CHUNK)}`
       const place = placementMatrix(item)
+      const tint = tintFor(item, asset.category)
       for (const part of proto.parts) {
         const material = sharedMaterial(asset, part.material)
         const key = `${material.uuid}|${cell}`
-        if (!buckets.has(key)) buckets.set(key, { material, list: [] })
-        const g = clean(part.geometry, m.multiplyMatrices(place, part.matrix))
-        // world y is from the placement, so the AO band follows the ground
-        bakeColours(g, { ao: asset.category !== 'road', tint: tintFor(item, asset.category) })
-        buckets.get(key).list.push(g)
+        if (!buckets.has(key)) buckets.set(key, { material, parts: [], verts: 0, indices: 0 })
+        const b = buckets.get(key)
+        const src = part.geometry
+        b.parts.push({ src, matrix: new THREE.Matrix4().multiplyMatrices(place, part.matrix), ao: asset.category !== 'road', tint })
+        b.verts += src.attributes.position.count
+        b.indices += src.index ? src.index.count : src.attributes.position.count
       }
     }
   }
+  // pass 2: one buffer per chunk, written in place
   const out = []
-  for (const { material, list } of buckets.values()) {
-    const geometry = mergeGeometries(list, false)
-    for (const g of list) g.dispose()
-    if (!geometry) continue
+  for (const { material, parts, verts, indices } of buckets.values()) {
+    if (!verts) continue
+    const buf = { pos: new Float32Array(verts * 3), col: new Uint8Array(verts * 3), uv: new Float32Array(verts * 2), idx: verts > 65535 ? new Uint32Array(indices) : new Uint16Array(indices) }
+    let vAt = 0
+    let iAt = 0
+    for (const p of parts) {
+      writePart(p.src, p.matrix, p.ao, p.tint, buf, vAt, iAt)
+      vAt += p.src.attributes.position.count
+      iAt += p.src.index ? p.src.index.count : p.src.attributes.position.count
+    }
+    const geometry = new THREE.BufferGeometry()
+    geometry.setAttribute('position', new THREE.BufferAttribute(buf.pos, 3))
+    geometry.setAttribute('uv', new THREE.BufferAttribute(buf.uv, 2))
+    geometry.setAttribute('color', new THREE.BufferAttribute(buf.col, 3, true))
+    geometry.setIndex(new THREE.BufferAttribute(buf.idx, 1))
     geometry.computeBoundingSphere()
     out.push({ geometry, material })
   }

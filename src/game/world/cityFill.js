@@ -360,8 +360,10 @@ function hitsBox(x, z, r, c) {
  * @param json      world layout JSON
  * @param existing  colliders already in the world (hand-placed things)
  * @param reserved  [[x, z], ...] places the story uses (NPC marks, spots)
+ * @param options   { lite }: for 2 GB phones, half the street clutter and only
+ *                  the nearest ring of far buildings and trees
  */
-export function generateFill(json, existing = [], reserved = []) {
+export function generateFill(json, existing = [], reserved = [], { lite = false } = {}) {
   const groupsByModel = new Map()
   const colliders = []
   const shadows = [] // { x, z, hw, hd, angle, h }
@@ -403,7 +405,8 @@ export function generateFill(json, existing = [], reserved = []) {
     const rng = mulberry32(zone.seed ?? 7)
     const [zx, zz, zw, zd] = zone.rect
     let placed = 0
-    for (let attempt = 0; attempt < zone.count * 12 && placed < zone.count; attempt++) {
+    const target = lite ? Math.ceil(zone.count / 2) : zone.count
+    for (let attempt = 0; attempt < target * 12 && placed < target; attempt++) {
       const kind = zone.kinds[Math.floor(rng() * zone.kinds.length)]
       const make = PROPS[kind]
       if (!make) continue
@@ -459,7 +462,7 @@ export function generateFill(json, existing = [], reserved = []) {
     const b = json.bounds
     const cx = (b.minX + b.maxX) / 2
     const cz = (b.minZ + b.maxZ) / 2
-    sky.rings.forEach((ring, ri) => {
+    sky.rings.slice(0, lite ? 1 : undefined).forEach((ring, ri) => {
       // a rounded rectangle around the play area, `ring` metres beyond it
       const hx = (b.maxX - b.minX) / 2 + ring
       const hz = (b.maxZ - b.minZ) / 2 + ring
@@ -491,7 +494,7 @@ export function generateFill(json, existing = [], reserved = []) {
   if (tl) {
     const rng = mulberry32(tl.seed ?? 5)
     const b = json.bounds
-    tl.rings.forEach((ring) => {
+    tl.rings.slice(0, lite ? 1 : undefined).forEach((ring) => {
       const hx = (b.maxX - b.minX) / 2 + ring
       const hz = (b.maxZ - b.minZ) / 2 + ring
       const cx = (b.minX + b.maxX) / 2

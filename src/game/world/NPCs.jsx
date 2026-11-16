@@ -49,7 +49,7 @@ function NPC({ id, look, pos, facing, anim, speaking, mood }) {
   return <Character ref={ref} look={look} animation={animation} speed={animation === 'preach' ? 0.55 : 1} position={[pos[0], GROUND_Y, pos[1]]} />
 }
 
-export default function NPCs({ layout, flags, positions = {}, speaker, mood, hidden = [] }) {
+export default function NPCs({ layout, flags, positions = {}, speaker, mood, hidden = [], lite = false }) {
   const state = { flags, stats: {}, memory: {} }
   const npcs = (layout.raw.npcs || []).filter((n) => (positions[n.id] || checkCondition(n.if, state)) && !hidden.includes(n.id))
   return (
@@ -64,7 +64,8 @@ export default function NPCs({ layout, flags, positions = {}, speaker, mood, hid
           </Suspense>
         )
       })}
-      {(layout.raw.extras || []).map((e) => (
+      {/* background extras are full animated people: skipped on 2 GB phones (the crowd still fills the street) */}
+      {!lite && (layout.raw.extras || []).map((e) => (
         <Suspense key={`extra-${e.seed}`} fallback={null}>
           <Character look={randomLook(e.seed)} animation={e.anim || 'idle'} position={[e.pos[0], GROUND_Y, e.pos[1]]} rotation-y={(e.facing || 0) * DEG} />
         </Suspense>

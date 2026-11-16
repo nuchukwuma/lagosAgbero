@@ -21,8 +21,9 @@ import { GROUND_Y } from './layout.js'
 const LOOK_SEEDS = [5, 12, 19, 26, 33, 41]
 const FRAMES = 8
 const NEAR = 55 // metres: people further than this are not drawn
-export const CROWD_SIZE = { low: 12, auto: 26, high: 40 }
+export const CROWD_SIZE = { low: 8, auto: 26, high: 40 } // low = the light mode for 2 GB phones
 const MATERIAL = new THREE.MeshLambertMaterial({ vertexColors: true })
+let bakedCrowd = null // [{ walk, idle, talk }] per look, shared by every world
 
 const v = new THREE.Vector3()
 
@@ -220,10 +221,13 @@ function Walkers({ baked, walkways, count, paused }) {
 export default function Crowd({ layout, quality = 'auto', paused = false }) {
   const looks = useMemo(() => LOOK_SEEDS.map((s, i) => ({ ...randomLook(s, i % 3 === 2 ? 'female' : 'male'), accessories: [] })), [])
   const gltfs = useGLTF(looks.map((l) => `${ASSET_ROOT}/${bodyInfo(l.body).file}`))
-  const [baked, setBaked] = useState(null)
+  const [baked, setBaked] = useState(bakedCrowd)
 
-  // bake after the street is on screen, one look per tick, so nothing freezes
+  // bake after the street is on screen, one look per tick, so nothing freezes.
+  // The looks are the same in every world, so they are baked once per visit
+  // to the site and shared (rebaking per world only piled up memory).
   useEffect(() => {
+    if (bakedCrowd) return undefined
     let cancelled = false
     const out = []
     Promise.all([
@@ -235,7 +239,10 @@ export default function Crowd({ layout, quality = 'auto', paused = false }) {
       .then(([walk, breathingIdle, talk, lod]) => {
         const step = (i) => {
           if (cancelled) return
-          if (i >= looks.length) return setBaked(out)
+          if (i >= looks.length) {
+            bakedCrowd = out
+            return setBaked(out)
+          }
           out.push(bakeLook(gltfs[i], { walk, breathingIdle, talk }, looks[i], lod[looks[i].body]))
           setTimeout(() => step(i + 1), 30)
         }

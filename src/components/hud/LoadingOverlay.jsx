@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useProgress } from '@react-three/drei'
 import { webglSupport } from '../../game/world/webgl.js'
+import { trimCache } from '../../game/world/assetCache.js'
 
 // drei's progress store updates on every single file the loader finishes,
 // sometimes several times within one React render. Reading it with the hook
@@ -49,6 +50,7 @@ export default function LoadingOverlay() {
   }, [])
   useEffect(() => {
     if (!active && progress >= 100) {
+      trimCache() // keep the shared images, drop the downloaded model files
       const id = setTimeout(() => {
         setVisible(false)
         firstLoadDone = true

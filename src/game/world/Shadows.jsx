@@ -1,8 +1,9 @@
-import { useEffect, useMemo, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
 import * as THREE from 'three'
 import { env } from './env.js'
 import { blobTexture } from './textures.js'
+import { useDisposable } from './useDisposable.js'
 
 // Cheap shadows for budget phones (no shadow maps):
 //  - FakeShadows: every building / stall / kiosk footprint is extruded along
@@ -28,7 +29,7 @@ function rotate(x, z, angle) {
 
 export function FakeShadows({ boxes }) {
   const scene = useThree((s) => s.scene)
-  const geometry = useMemo(() => {
+  const geometry = useDisposable(() => {
     const pos = []
     const lift = []
     const add = (p, l) => {
@@ -62,7 +63,7 @@ export function FakeShadows({ boxes }) {
     return g
   }, [boxes])
 
-  const material = useMemo(
+  const material = useDisposable(
     () =>
       new THREE.ShaderMaterial({
         transparent: true,
@@ -135,7 +136,7 @@ const qw = new THREE.Quaternion()
 
 export function BlobShadows() {
   const mesh = useRef()
-  const material = useMemo(
+  const material = useDisposable(
     () =>
       new THREE.MeshBasicMaterial({
         map: blobTexture(),
@@ -149,7 +150,7 @@ export function BlobShadows() {
       }),
     [],
   )
-  const geometry = useMemo(() => {
+  const geometry = useDisposable(() => {
     const g = new THREE.PlaneGeometry(1, 1)
     g.rotateX(-Math.PI / 2)
     return g

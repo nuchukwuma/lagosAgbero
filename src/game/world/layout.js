@@ -60,7 +60,7 @@ export const STALL_SIZE = { big: [6.6, 4.6], small: [2.4, 1.6] }
  * @param options  { reserved: [[x, z, radius?], ...] } places the story uses,
  *                 so generated street clutter never lands on them
  */
-export function parseLayout(json, { reserved = [] } = {}) {
+export function parseLayout(json, { reserved = [], lite = false } = {}) {
   const groups = []
   const colliders = []
   const shadows = [] // footprints + heights, for the fake sun shadows
@@ -103,7 +103,7 @@ export function parseLayout(json, { reserved = [] } = {}) {
     ...(json.extras || []).map((n) => [n.pos[0], n.pos[1]]),
     [json.spawn.pos[0], json.spawn.pos[1], 3],
   ]
-  const fill = generateFill(json, colliders, marks)
+  const fill = generateFill(json, colliders, marks, { lite })
   groups.push(...fill.groups)
   // market stalls: containers join the batched models, the rest the props
   const stalls = buildStalls(json.stalls)

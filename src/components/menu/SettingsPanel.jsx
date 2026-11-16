@@ -22,7 +22,7 @@ export default function SettingsPanel() {
         <span>Graphics</span>
         {[
           ['auto', 'Auto'],
-          ['low', 'Battery saver'],
+          ['low', 'Light'],
           ['high', 'Sharp'],
         ].map(([id, label]) => (
           <button key={id} className={`chip ${quality === id ? 'on' : ''}`} onClick={() => update({ quality: id })}>
@@ -39,7 +39,8 @@ export default function SettingsPanel() {
           <Icon name={sound ? 'sound' : 'mute'} size={16} /> Sound
         </button>
       </div>
-      {quality === 'auto' && <p className="footnote">Auto: {deviceTier() === 'low' ? 'this device gets the battery-saver look.' : 'resolution adapts to how fast this device runs.'}</p>}
+      {quality === 'auto' && <p className="footnote">Auto: {deviceTier() === 'low' ? 'this phone gets the Light version (fewer people, cars and props), so it runs smoothly.' : 'resolution adapts to how fast this device runs.'}</p>}
+      {quality === 'low' && <p className="footnote">Light: made for 2 GB phones. Fewer background people, cars and props, lower resolution; the story is the same.</p>}
       {fullscreenSupported() ? (
         <button className="btn" onClick={toggleFullscreen}>
           {full ? 'Exit full screen' : 'Full screen'}

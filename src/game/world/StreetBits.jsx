@@ -1,6 +1,6 @@
-import { useMemo } from 'react'
 import * as THREE from 'three'
 import { GROUND_Y } from './layout.js'
+import { useDisposable } from './useDisposable.js'
 
 // Simple shapes for things the Kenney packs don't have: the flyover, sagging electricity wires and the bus shelter.
 
@@ -36,7 +36,7 @@ export function Flyover({ f }) {
 
 /** Sagging cables: a curve per span, all merged into one line object. */
 export function Wires({ poleGroups }) {
-  const geometry = useMemo(() => {
+  const geometry = useDisposable(() => {
     const points = []
     const HEIGHTS = [5.9, 6.25, 5.9]
     const OFFSETS = [-0.9, 0, 0.9]

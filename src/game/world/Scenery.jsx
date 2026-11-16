@@ -10,6 +10,7 @@ import { earthTexture, paverTexture, facadeTextures, blobTexture } from './textu
 import { mulberry32 } from './cityFill.js'
 import { GROUND_Y } from './layout.js'
 import { env } from './env.js'
+import { useDisposable } from './useDisposable.js'
 
 // The static street, drawn in as few draw calls as possible.
 
@@ -17,13 +18,13 @@ import { env } from './env.js'
 export function StaticWorld({ groups }) {
   const names = useMemo(() => [...new Set(groups.map((g) => g.model))].filter((n) => getAsset(n).available), [groups])
   const gltfs = useGLTF(names.map((n) => getAsset(n).url))
-  const batches = useMemo(() => buildStaticBatches(groups, new Map(names.map((n, i) => [n, gltfs[i]]))), [groups, names, gltfs])
+  const batches = useDisposable(() => buildStaticBatches(groups, new Map(names.map((n, i) => [n, gltfs[i]]))), [groups, names, gltfs])
   return batches.map((b, i) => <mesh key={i} geometry={b.geometry} material={b.material} matrixAutoUpdate={false} />)
 }
 
 /** Kiosks, umbrellas, drums, kegs, goats... (shapes with vertex colours). */
 export function Props({ prims }) {
-  const geometries = useMemo(() => mergePrims(prims), [prims])
+  const geometries = useDisposable(() => mergePrims(prims), [prims])
   return geometries.map((g, i) => <mesh key={i} geometry={g} material={PRIM_MATERIAL} matrixAutoUpdate={false} />)
 }
 
@@ -33,7 +34,7 @@ const ROOFS = ['#7b4a2b', '#8a8f93', '#5f6b70', '#94623d', '#3f6b52']
 /** Far buildings: plain blocks with a window texture; windows glow at night. */
 export function Skyline({ blocks }) {
   const material = useRef()
-  const geometry = useMemo(() => {
+  const geometry = useDisposable(() => {
     const rng = mulberry32(77)
     const list = []
     const c = new THREE.Color()
@@ -79,8 +80,8 @@ export function Skyline({ blocks }) {
 /** Warm glows at kiosks and lamps after dark (one instanced, additive mesh). */
 export function NightGlows({ lights }) {
   const mesh = useRef()
-  const material = useMemo(() => new THREE.MeshBasicMaterial({ map: blobTexture(), color: '#ffb347', transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, opacity: 0, fog: false }), [])
-  const geometry = useMemo(() => new THREE.PlaneGeometry(1, 1), [])
+  const material = useDisposable(() => new THREE.MeshBasicMaterial({ map: blobTexture(), color: '#ffb347', transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, opacity: 0, fog: false }), [])
+  const geometry = useDisposable(() => new THREE.PlaneGeometry(1, 1), [])
   const m = useMemo(() => new THREE.Matrix4(), [])
   useFrame(({ camera }) => {
     const im = mesh.current
@@ -110,7 +111,7 @@ const WEED = new THREE.Color('#6f7f3a')
 /** Red earth with patches (vertex colours) and grain (texture). */
 export function Ground({ bounds }) {
   const size = 420
-  const geometry = useMemo(() => {
+  const geometry = useDisposable(() => {
     const seg = 56
     const g = new THREE.PlaneGeometry(size, size, seg, seg)
     g.rotateX(-Math.PI / 2)
@@ -160,7 +161,7 @@ export function Ground({ bounds }) {
 export function Pavements({ list }) {
   const map = useMemo(() => paverTexture(), [])
   const earth = useMemo(() => earthTexture(), [])
-  const meshes = useMemo(
+  const meshes = useDisposable(
     () =>
       list.map((p, i) => {
         const [x, z, w, d] = p.rect
@@ -183,7 +184,7 @@ export function Pavements({ list }) {
 
 /** Open gutters with broken slabs, weeds, stones, oil stains: the small stuff. */
 export function GroundDetail({ layout }) {
-  const { geometries, stains } = useMemo(() => {
+  const { geometries, stains } = useDisposable(() => {
     const rng = mulberry32(19)
     const b = layout.bounds
     const prims = []
@@ -216,8 +217,8 @@ export function GroundDetail({ layout }) {
   }, [layout])
 
   const stainMesh = useRef()
-  const stainMat = useMemo(() => new THREE.MeshBasicMaterial({ map: blobTexture(), color: '#0d0b0a', transparent: true, depthWrite: false, opacity: 0.3, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 }), [])
-  const stainGeo = useMemo(() => {
+  const stainMat = useDisposable(() => new THREE.MeshBasicMaterial({ map: blobTexture(), color: '#0d0b0a', transparent: true, depthWrite: false, opacity: 0.3, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 }), [])
+  const stainGeo = useDisposable(() => {
     const g = new THREE.PlaneGeometry(1, 1)
     g.rotateX(-Math.PI / 2)
     return g

@@ -59,6 +59,9 @@ const Character = forwardRef(function Character({ look: lookInput, animation = '
   const paintKey = JSON.stringify([look.body, look.skin, look.hair, look.shirt, look.shirt2, look.trousers, look.shoes, look.socks, look.accent, Math.round((look.eyeRed || 0) * 10)])
   useMemo(() => mesh && paintGeometry(mesh.geometry, look), [mesh, paintKey]) // eslint-disable-line react-hooks/exhaustive-deps
 
+  // this person's own copy of the body: freed on the graphics card when they leave
+  useEffect(() => () => object.traverse((c) => c.isMesh && c.geometry.dispose()), [object])
+
   const mixer = useMemo(() => new THREE.AnimationMixer(object), [object])
   const inner = useRef()
   useBlobShadow(inner, { radius: 0.42 })

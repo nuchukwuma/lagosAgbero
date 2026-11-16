@@ -18,6 +18,7 @@ import { useDrive, readDriveInput, driveInput } from './driveStore.js'
 import { createDrive, stepDrive, placeAt, driveResult, SHOULDER, MAX_SPEED, kmh, upcoming } from './driveLogic.js'
 import { playerState } from '../../world/worldState.js'
 import { sfx, engine } from '../../audio/audio.js'
+import { useDisposable } from '../../world/useDisposable.js'
 
 // The drive: a Lagos expressway that never ends. The bus goes towards -Z
 // (world z = -distance). Roadside scenery is two 120 m segments built once
@@ -151,7 +152,7 @@ function useSegments() {
   const groups = useMemo(() => fills.map((f) => [...f.groups, ...segmentPoles()]), [fills])
   const names = useMemo(() => [...new Set(groups.flat().map((g) => g.model))].filter((n) => getAsset(n).available), [groups])
   const gltfs = useGLTF(names.map((n) => getAsset(n).url))
-  return useMemo(() => {
+  return useDisposable(() => {
     const map = new Map(names.map((n, i) => [n, gltfs[i]]))
     return groups.map((g, i) => ({ batches: buildStaticBatches(g, map), props: mergePrims(fills[i].prims, 0) }))
   }, [groups, names, gltfs, fills])

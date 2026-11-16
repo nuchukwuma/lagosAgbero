@@ -43,7 +43,8 @@ import { getLayout } from './worlds.js'
 //   speaker    who the camera frames and who plays "talk"
 //   freeRoam   player control + goal marker
 
-export const STREET_LAYOUT = getLayout('iyanaWahala') // kept for tools and tests
+// dev builds, or any build opened with ?bench: expose the renderer for perf and memory checks
+const BENCH = import.meta.env.DEV || (typeof location !== 'undefined' && new URLSearchParams(location.search).has('bench'))
 const DIALOGUE_VIEWS = new Set(['dialogue', 'choice', 'news'])
 const DEG = Math.PI / 180
 
@@ -112,7 +113,7 @@ export default function GameCanvas({ view, game, activity = null, paused = false
       gl={safeGl ? { antialias: false, powerPreference: 'default', stencil: false } : { antialias: profile.antialias, powerPreference: 'high-performance', stencil: true }}
       camera={{ fov: 50, near: 0.3, far: profile.far, position: [0, 8, 12] }}
       onCreated={({ gl, scene, camera }) => {
-        if (import.meta.env.DEV) Object.assign(window, { __gl: gl, __scene: scene, __cam: camera, __THREE: THREE }) // dev: perf checks
+        if (BENCH) Object.assign(window, { __gl: gl, __scene: scene, __cam: camera, __THREE: THREE }) // dev / ?bench: perf and memory checks
       }}
     >
       <PerformanceMonitor onDecline={() => setDpr(range.min)} onIncline={() => setDpr(range.max)} flipflops={3} onFallback={() => setDpr(range.min)} />
@@ -131,7 +132,7 @@ export default function GameCanvas({ view, game, activity = null, paused = false
       <Suspense fallback={null}>
           <StreetScene key={`scene-${layout.id}`} layout={layout} />
           <group userData={{ tag: 'npcs' }}>
-          <NPCs layout={layout} flags={game.flags} positions={view.positions} speaker={speaker} mood={view.mood} hidden={fightOpponent ? [fightOpponent] : []} />
+          <NPCs layout={layout} flags={game.flags} positions={view.positions} speaker={speaker} mood={view.mood} hidden={fightOpponent ? [fightOpponent] : []} lite={quality === 'low'} />
           </group>
           {!(fightOn && modeName === 'fight') && !busOn && <PlayerController layout={layout} look={look} enabled={(freeRoam || feeRunActive || chaseActive) && !paused} eyeRed={eyeRed} tired={game.stats.energy < LOW_ENERGY} />}
           {freeRoam && <VendorTracker />}
@@ -139,7 +140,7 @@ export default function GameCanvas({ view, game, activity = null, paused = false
           {freeRoam && <QuestTracker key={`quests-${layout.id}`} game={game} />}
           {freeRoam && <Pickups layout={layout} game={game} />}
           <group userData={{ tag: 'traffic' }}>
-            {layout.raw.traffic !== false && <Traffic key={`traffic-${layout.id}`} density={layout.raw.traffic?.density ?? 3} paused={paused} raining={Boolean(game.flags.raining)} />}
+            {layout.raw.traffic !== false && <Traffic key={`traffic-${layout.id}`} density={Math.min(layout.raw.traffic?.density ?? 3, quality === 'low' ? 2 : 9)} paused={paused} raining={Boolean(game.flags.raining)} />}
           </group>
           <Suspense fallback={null}>
             <group userData={{ tag: 'crowd' }}>

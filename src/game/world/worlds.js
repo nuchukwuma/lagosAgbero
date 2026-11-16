@@ -1,11 +1,15 @@
 // Every 3D place a story can happen in (data: src/game/data/world/*.json).
 // A chapter (or a single scene) says "world": "nkwoAgu"; Iyana-Wahala is the
-// default. Layouts are built on first use and cached.
+// default. Layouts are built on first use. Only the world you're in stays
+// cached: a layout holds thousands of generated props, and keeping every
+// world you've visited cost tens of MB on 2 GB phones. Coming back rebuilds
+// it (a fraction of a second; it's generated from a seed, so it's identical).
 import iyanaWahala from '../data/world/iyanaWahala.json'
 import nkwoAgu from '../data/world/nkwoAgu.json'
 import royalCrest from '../data/world/royalCrest.json'
 import { parseLayout } from './layout.js'
 import { storyCtx } from '../narrative/storyData.js'
+import { useSettings, effectiveQuality } from '../store/settings.js'
 
 export const WORLDS = { iyanaWahala, nkwoAgu, royalCrest }
 export const DEFAULT_WORLD = 'iyanaWahala'
@@ -26,8 +30,15 @@ function storyMarks(id) {
   return marks
 }
 
-export function getLayout(id = DEFAULT_WORLD) {
-  const key = WORLDS[id] ? id : DEFAULT_WORLD
-  if (!cache.has(key)) cache.set(key, parseLayout(WORLDS[key], { reserved: storyMarks(key) }))
+/** Is the light version of the worlds in use (2 GB phones, or chosen in Settings)? */
+export const liteWorlds = () => effectiveQuality(useSettings.getState().quality) === 'low'
+
+export function getLayout(id = DEFAULT_WORLD, lite = liteWorlds()) {
+  const name = WORLDS[id] ? id : DEFAULT_WORLD
+  const key = `${name}|${lite ? 'lite' : 'full'}`
+  if (!cache.has(key)) {
+    cache.clear()
+    cache.set(key, parseLayout(WORLDS[name], { reserved: storyMarks(name), lite }))
+  }
   return cache.get(key)
 }
