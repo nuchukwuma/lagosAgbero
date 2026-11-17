@@ -391,8 +391,90 @@ function nativeClip(anim, loop) {
   return { fps: FPS, duration: Number(duration.toFixed(3)), loop, bones: KENNEY_BONES, quaternions, hipBone: 'root', hipsPosition, positions: {}, source: `kenney:${anim.getName()}` }
 }
 
+// Kenney's own animations are toy-like: short, snappy, big swings and a bouncy
+// step. The game's other clips were recorded from real people, so on the way
+// over they get the same treatment ("cartoonify"):
+const CARTOON = {
+  swing: 1.3, // how much bigger each bone's movement gets (around its average pose)
+  maxExtra: 35, // degrees: never more than this much extra swing
+  bounce: 1.4, // how much bigger the up-and-down of the hips gets
+  tempo: 1.2, // gestures play this much quicker (not walks and runs: feet must match the ground)
+  headTilt: 18, // degrees: the big heads never tip further than this (chin down, ear to shoulder), so faces stay in view
+}
+// clips whose timing the game relies on (feet on the ground, runner moves)
+const KEEP_TEMPO = new Set(['startWalk', 'sneak', 'crouchWalk', 'drunkWalk', 'goofyRun', 'roll', 'slide', 'crouchDown'])
+// tumbles: the head goes where the body goes
+const HEAD_FREE = new Set(['roll', 'slide', 'fallFlail', 'stunned'])
+// clips that turn on purpose (the rest are turned to face ahead, see faceAhead)
+const TURNS = new Set(['turnLeft', ...HEAD_FREE])
+
+/** Each bone's average pose over the clip (quaternions lined up on one side first). */
+function meanPose(frames) {
+  const sum = new THREE.Vector4()
+  const first = frames[0]
+  for (const q of frames) {
+    const s = q.dot(first) < 0 ? -1 : 1
+    sum.x += q.x * s
+    sum.y += q.y * s
+    sum.z += q.z * s
+    sum.w += q.w * s
+  }
+  return new THREE.Quaternion(sum.x, sum.y, sum.z, sum.w).normalize()
+}
+
+/** Bigger swings: each pose is pushed further from the bone's average pose. */
+function exaggerate(frames) {
+  const mean = meanPose(frames)
+  const inv = mean.clone().invert()
+  const axis = new THREE.Vector3()
+  for (const q of frames) {
+    const d = inv.clone().multiply(q)
+    if (d.w < 0) d.set(-d.x, -d.y, -d.z, -d.w)
+    const angle = 2 * Math.acos(Math.min(1, d.w))
+    if (angle < 1e-4) continue
+    axis.set(d.x, d.y, d.z).normalize()
+    const bigger = angle + Math.min(angle * (CARTOON.swing - 1), (CARTOON.maxExtra * Math.PI) / 180)
+    q.copy(mean).multiply(new THREE.Quaternion().setFromAxisAngle(axis, bigger))
+  }
+}
+
+/**
+ * Turn the whole clip so the face looks ahead on average. Real people stand
+ * side-on (a boxer's stance, a shrug to one side) and on a chibi that shows
+ * the side of the head to whoever they're facing: an opponent, the camera.
+ */
+function faceAhead(world, hips) {
+  let x = 0
+  let z = 0
+  for (const q of world.head) {
+    const f = new THREE.Vector3(0, 0, 1).applyQuaternion(q)
+    x += f.x
+    z += f.z
+  }
+  const yaw = Math.atan2(x, z)
+  if (Math.abs(yaw) < (8 * Math.PI) / 180) return
+  const turn = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), -yaw)
+  for (const k of KENNEY_BONES) for (const q of world[k]) q.premultiply(turn)
+  for (const h of hips) h.applyQuaternion(turn)
+}
+
+const UP = new THREE.Vector3(0, 1, 0)
+/**
+ * Keep a big head nearly level: real people tip their heads (chin down, ear to
+ * shoulder) and on a chibi, whose head is half its body, that hides the face.
+ */
+function levelHead(head) {
+  const u = UP.clone().applyQuaternion(head)
+  const tilt = Math.acos(Math.min(1, u.y))
+  const limit = (CARTOON.headTilt * Math.PI) / 180
+  if (tilt <= limit) return
+  const side = Math.hypot(u.x, u.z)
+  const to = new THREE.Vector3((u.x / side) * Math.sin(limit), Math.cos(limit), (u.z / side) * Math.sin(limit))
+  head.premultiply(new THREE.Quaternion().setFromUnitVectors(u, to))
+}
+
 // one of the game's clips, turned to drive Kenney's bones
-function convertClip(data, ref, refRest, kRest, legRatio) {
+function convertClip(name, data, ref, refRest, kRest, legRatio) {
   const bones = new Map()
   ref.traverse((o) => o.isBone && bones.set(o.name, o))
   const frames = data.hipsPosition.length / 3
@@ -400,37 +482,52 @@ function convertClip(data, ref, refRest, kRest, legRatio) {
   ref.updateMatrixWorld(true)
   const restHips = bones.get('Body').getWorldPosition(new THREE.Vector3())
   for (const [, ours] of Object.entries(FROM_OURS)) restWorld[ours] = bones.get(ours).getWorldQuaternion(new THREE.Quaternion())
-  const quaternions = KENNEY_BONES.map(() => [])
-  const hipsPosition = []
+  const world = Object.fromEntries(KENNEY_BONES.map((k) => [k, []]))
+  const hips = []
   for (let f = 0; f < frames; f++) {
     // pose our skeleton
-    for (const [name, rest] of refRest) {
-      const b = bones.get(name)
+    for (const [n, rest] of refRest) {
+      const b = bones.get(n)
       b.quaternion.copy(rest.q)
       b.position.copy(rest.p)
     }
-    data.bones.forEach((name, i) => bones.get(name)?.quaternion.fromArray(data.quaternions[i], f * 4))
+    data.bones.forEach((n, i) => bones.get(n)?.quaternion.fromArray(data.quaternions[i], f * 4))
     bones.get(data.hipBone || 'Body')?.position.fromArray(data.hipsPosition, f * 3)
     ref.updateMatrixWorld(true)
     // each Kenney bone turns (in the world) the way its partner of ours does
-    const world = {}
-    for (const [k, ours] of Object.entries(FROM_OURS)) world[k] = bones.get(ours).getWorldQuaternion(new THREE.Quaternion()).multiply(restWorld[ours].clone().invert())
+    for (const [k, ours] of Object.entries(FROM_OURS)) world[k].push(bones.get(ours).getWorldQuaternion(new THREE.Quaternion()).multiply(restWorld[ours].clone().invert()))
+    // the hips' movement, scaled to the short legs
+    hips.push(bones.get('Body').getWorldPosition(new THREE.Vector3()).sub(restHips).multiplyScalar(legRatio))
+  }
+
+  // the cartoon treatment
+  if (!TURNS.has(name)) faceAhead(world, hips)
+  for (const k of KENNEY_BONES) exaggerate(world[k])
+  if (!HEAD_FREE.has(name)) world.head.forEach(levelHead)
+  const meanY = hips.reduce((s, h) => s + h.y, 0) / frames
+  for (const h of hips) h.y = meanY + (h.y - meanY) * CARTOON.bounce
+
+  const quaternions = KENNEY_BONES.map(() => [])
+  const hipsPosition = []
+  for (let f = 0; f < frames; f++) {
+    const w = Object.fromEntries(KENNEY_BONES.map((k) => [k, world[k][f]]))
     const local = {
-      root: world.root,
-      'leg-left': world.root.clone().invert().multiply(world['leg-left']),
-      'leg-right': world.root.clone().invert().multiply(world['leg-right']),
-      torso: world.root.clone().invert().multiply(world.torso),
-      'arm-left': world.torso.clone().invert().multiply(world['arm-left']),
-      'arm-right': world.torso.clone().invert().multiply(world['arm-right']),
-      head: world.torso.clone().invert().multiply(world.head),
+      root: w.root,
+      'leg-left': w.root.clone().invert().multiply(w['leg-left']),
+      'leg-right': w.root.clone().invert().multiply(w['leg-right']),
+      torso: w.root.clone().invert().multiply(w.torso),
+      'arm-left': w.torso.clone().invert().multiply(w['arm-left']),
+      'arm-right': w.torso.clone().invert().multiply(w['arm-right']),
+      head: w.torso.clone().invert().multiply(w.head),
     }
     KENNEY_BONES.forEach((b, i) => quaternions[i].push(...local[b].toArray().map((x) => Number(x.toFixed(4)))))
-    // the hips' movement, scaled to the short legs; never sinking far into the ground
-    const d = bones.get('Body').getWorldPosition(new THREE.Vector3()).sub(restHips).multiplyScalar(legRatio)
+    // never sinking far into the ground
+    const d = hips[f]
     d.y = Math.max(d.y, -kRest.torso[1] * 0.35)
     hipsPosition.push(...[d.x, d.y, d.z].map((x) => Number(x.toFixed(4))))
   }
-  return { fps: data.fps, duration: data.duration, loop: data.loop, bones: KENNEY_BONES, quaternions, hipBone: 'root', hipsPosition, positions: {}, source: 'converted' }
+  const tempo = KEEP_TEMPO.has(name) ? 1 : CARTOON.tempo
+  return { fps: data.fps * tempo, duration: Number((data.duration / tempo).toFixed(3)), loop: data.loop, bones: KENNEY_BONES, quaternions, hipBone: 'root', hipsPosition, positions: {}, source: 'converted (cartoon)' }
 }
 
 async function main() {
@@ -496,7 +593,7 @@ async function main() {
       native++
     } else {
       const data = JSON.parse(fs.readFileSync(path.join(ROOT, 'public/assets', info.file), 'utf8'))
-      clip = convertClip(data, ref, refRest, kRest, legRatio)
+      clip = convertClip(name, data, ref, refRest, kRest, legRatio)
       converted++
     }
     fs.writeFileSync(path.join(CLIP_OUT, `${name}.json`), JSON.stringify(clip))

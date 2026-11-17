@@ -148,7 +148,7 @@ npm test                 # engine unit tests
 npm run assets:animations -- a1.zip a2.zip a3.zip a4.rar a5.zip "source-assets/mixamo/Breathing Idle.fbx" source-assets/mixamo/Walking.fbx   # re-import Mixamo clips
 npm run assets:animations -- path/to/rpg-pack/FBX/Cleric.fbx   # add the Quaternius RPG pack clips (roll, cheer, preach, pickUp); other clips are kept
 npm run assets:nature -- path/to/nature-pack.zip   # bake trees, bushes, rocks and grass into the scenery
-npm run assets:minis -- path/to/kenney_mini-characters.zip   # the people: Kenney Mini Characters (palette colours become paintable parts; the game's animations converted to their 7-bone skeleton, Kenney's own used where it has them)
+npm run assets:minis -- path/to/kenney_mini-characters.zip   # the people: Kenney Mini Characters (palette colours become paintable parts; the game's animations converted to their 7-bone skeleton, Kenney's own used where it has them; the converted ones get a cartoon pass: bigger swings, quicker gestures, more bounce, heads kept level and facing ahead — see CARTOON in the script)
 npm run assets:rpg -- path/to/rpg-pack.zip   # the RPG-pack people (Cleric, Monk, Ranger, Rogue, Warrior, Wizard), re-fitted to our skeleton so every animation works on them
 npm run assets:faces     # draw eyes, eyebrows and mouths onto the people's faces (after any people import)
 npm run assets:crowd     # rebuild the simplified bodies (background crowd, far-away people)
