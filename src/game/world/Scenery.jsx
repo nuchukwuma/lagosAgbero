@@ -77,6 +77,9 @@ export function Skyline({ blocks }) {
   )
 }
 
+const glowAt = new THREE.Vector3()
+const glowSize = new THREE.Vector3()
+
 /** Warm glows at kiosks and lamps after dark (one instanced, additive mesh). */
 export function NightGlows({ lights }) {
   const mesh = useRef()
@@ -90,12 +93,11 @@ export function NightGlows({ lights }) {
     im.visible = env.night > 0.03
     if (!im.visible) return
     const q = camera.quaternion
-    const s = new THREE.Vector3()
-    const p = new THREE.Vector3()
-    lights.forEach((l, i) => {
+    for (let i = 0; i < lights.length; i++) {
+      const l = lights[i]
       const size = l.size || 2.6
-      im.setMatrixAt(i, m.compose(p.set(l.x, l.y, l.z), q, s.set(size, size, size)))
-    })
+      im.setMatrixAt(i, m.compose(glowAt.set(l.x, l.y, l.z), q, glowSize.set(size, size, size)))
+    }
     im.instanceMatrix.needsUpdate = true
   })
   if (!lights.length) return null

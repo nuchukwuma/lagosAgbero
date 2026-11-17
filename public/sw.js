@@ -1,7 +1,7 @@
 // NaijaVice service worker: lets the game open offline after one visit.
 // - page + code: network first, cached copy when offline
 // - models, textures, animation clips (/assets/...): cache first (they rarely change)
-const CACHE = 'naijavice-v1'
+const CACHE = 'naijavice-v2' // v2: slimmer models (scripts/slim-models.mjs)
 
 self.addEventListener('install', () => self.skipWaiting())
 self.addEventListener('activate', (e) => {

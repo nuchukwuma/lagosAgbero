@@ -21,8 +21,13 @@ export function smoothNormals(geometry, creaseDegrees = 72) {
     if (!groups.has(key)) groups.set(key, [])
     groups.get(key).push(i)
   }
-  const original = nor.array.slice()
-  const out = nor.array
+  // read through the attribute: normals may be stored as bytes (see scripts/slim-models.mjs)
+  const original = new Float32Array(nor.count * 3)
+  for (let i = 0; i < nor.count; i++) {
+    original[i * 3] = nor.getX(i)
+    original[i * 3 + 1] = nor.getY(i)
+    original[i * 3 + 2] = nor.getZ(i)
+  }
   for (const list of groups.values()) {
     if (list.length < 2) continue
     for (const i of list) {
@@ -38,9 +43,7 @@ export function smoothNormals(geometry, creaseDegrees = 72) {
         z += b.z
       }
       const len = Math.hypot(x, y, z) || 1
-      out[i * 3] = x / len
-      out[i * 3 + 1] = y / len
-      out[i * 3 + 2] = z / len
+      nor.setXYZ(i, x / len, y / len, z / len) // stored back in the attribute's own type
     }
   }
   nor.needsUpdate = true

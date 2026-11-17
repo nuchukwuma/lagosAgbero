@@ -6,6 +6,7 @@ import { useGameStore } from '../../game/store/gameStore.js'
 import { campaignById } from '../../game/narrative/campaigns.js'
 import { worldJson } from '../../game/world/worlds.js'
 import { ASSET_ROOT } from '../../assets/assetManifest.js'
+import { useWarmup } from '../../game/world/ShaderWarmup.jsx'
 
 // drei's progress store updates on every single file the loader finishes,
 // sometimes several times within one React render. Reading it with the hook
@@ -46,6 +47,7 @@ const MIN_SHOW_MS = 1400 // long enough to see the picture, even when everything
 
 export default function LoadingOverlay() {
   const { active, progress } = useLoadProgress()
+  const warmed = useWarmup((s) => s.warmed) // the world's GPU programs are ready
   const campaign = campaignById(useGameStore((s) => s.game?.campaign))
   const world = useGameStore((s) => s.view?.world)
   const lines = campaign.loading?.lines || ['Loading…']
@@ -58,7 +60,7 @@ export default function LoadingOverlay() {
     return () => clearInterval(id)
   }, [lines.length])
   useEffect(() => {
-    if (!active && progress >= 100) {
+    if (!active && progress >= 100 && warmed) {
       trimCache() // keep the shared images, drop the downloaded model files
       const wait = full ? Math.max(300, MIN_SHOW_MS - (Date.now() - shownAt)) : 300
       const id = setTimeout(() => {
@@ -68,7 +70,12 @@ export default function LoadingOverlay() {
       return () => clearTimeout(id)
     }
     setVisible(true)
-  }, [active, progress, full, shownAt, campaign.id])
+  }, [active, progress, warmed, full, shownAt, campaign.id])
+  const cover = visible && full && !shownFor.has(campaign.id)
+  useEffect(() => {
+    useWarmup.setState({ cover })
+    return () => useWarmup.setState({ cover: false })
+  }, [cover])
   if (!visible || !webglSupport().ok) return null // nothing will load: the help screen explains why
   if (!full || shownFor.has(campaign.id))
     return (

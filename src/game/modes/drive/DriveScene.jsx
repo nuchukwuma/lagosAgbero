@@ -267,11 +267,11 @@ function Checkpoint({ place }) {
 function Places({ drive }) {
   const [, rerender] = useReducer((n) => n + 1, 0)
   const near = useRef('')
+  const tick = useRef(0)
   useFrame(() => {
-    const key = drive.places
-      .filter((p) => Math.abs(p.d - drive.d) < 220)
-      .map((p) => `${p.d}:${p.served ? 1 : 0}:${p.waiting}:${p.state || ''}`)
-      .join('|')
+    if (++tick.current % 4) return // a few checks a second is plenty
+    let key = ''
+    for (const p of drive.places) if (Math.abs(p.d - drive.d) < 220) key += `${p.d}:${p.served ? 1 : 0}:${p.waiting}:${p.state || ''}|`
     if (key !== near.current) {
       near.current = key
       rerender()
@@ -300,7 +300,8 @@ function Traffic({ drive }) {
   const [, rerender] = useReducer((n) => n + 1, 0)
   const ids = useRef('')
   useFrame(() => {
-    const k = drive.cars.map((c) => c.id).join(',')
+    let k = ''
+    for (const c of drive.cars) k += `${c.id},`
     if (k !== ids.current) {
       ids.current = k
       rerender()

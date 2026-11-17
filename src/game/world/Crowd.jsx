@@ -160,12 +160,14 @@ function Walkers({ baked, walkways, count, paused }) {
     return c
   }, [walkers, groups])
   const clock = useRef(0)
+  const usedRef = useRef(null)
 
   useFrame((_, raw) => {
     const dt = paused ? 0 : Math.min(raw, 0.05)
     clock.current += dt
     const player = playerState.position
-    const used = new Array(groups).fill(0)
+    if (!usedRef.current || usedRef.current.length !== groups) usedRef.current = new Array(groups)
+    const used = usedRef.current.fill(0) // reused every frame: no garbage
     const blobs = crowdBlobs.walkers
     blobs.length = 0
     for (const w of walkers) {

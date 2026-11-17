@@ -46,8 +46,11 @@ The game is one web page that adapts to the device:
 - **Phones:** Android phones with 2 GB of RAM and up (Chrome), recent
   iPhones (Safari). On phones that report 3 GB or less, the game picks the
   **Light** version by itself: fewer background people, cars and props, and
-  lower resolution; the stories are the same. Players can switch it in
-  Settings.
+  lower resolution, and a steady 30 frames a second (smoother than a frame
+  rate that jumps around, and kinder to the battery); the stories are the
+  same. Players can switch it in Settings.
+- **Download:** about 5.5 MB for the first street (code, models, clips),
+  then models are shared between worlds and cached for later visits.
 - **Landscape by default.** On Android the game goes full screen and turns
   sideways when you start playing; elsewhere it asks you to turn the phone,
   with a button to keep playing upright. Settings → Screen changes it.
@@ -119,6 +122,7 @@ npm test                 # engine unit tests
 npm run assets:animations -- a1.zip a2.zip a3.zip a4.rar a5.zip "source-assets/mixamo/Breathing Idle.fbx" source-assets/mixamo/Walking.fbx   # re-import Mixamo clips
 npm run assets:animations -- path/to/rpg-pack/FBX/Cleric.fbx   # add the Quaternius RPG pack clips (roll, cheer, preach, pickUp); other clips are kept
 npm run assets:nature -- path/to/nature-pack.zip   # bake trees, bushes, rocks and grass into the scenery
+npm run assets:slim      # shrink the .glb models (1-byte normals and skin weights, no unused tangents); run after any import
 ```
 
 ## Credits

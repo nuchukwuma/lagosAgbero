@@ -36,6 +36,8 @@ import ActivityTracker from './ActivityTracker.jsx'
 import QuestTracker from './QuestTracker.jsx'
 import Pickups from './Pickups.jsx'
 import { getLayout } from './worlds.js'
+import ShaderWarmup, { useWarmup } from './ShaderWarmup.jsx'
+import FrameCap from './FrameCap.jsx'
 
 // The 3D street behind the story. The story view decides:
 //   location   where the player stands when a scene starts
@@ -103,20 +105,36 @@ export default function GameCanvas({ view, game, activity = null, paused = false
   const range = profile.dpr
   const [dpr, setDpr] = useState(range.max)
   useEffect(() => setDpr(range.max), [quality]) // eslint-disable-line react-hooks/exhaustive-deps
+  // Only judge the frame rate once the world is loaded and has settled: the
+  // stalls while loading would otherwise drop the resolution for nothing, and
+  // changing it resizes the whole drawing surface (itself a long freeze).
+  const warmed = useWarmup((s) => s.warmed)
+  const capped = quality === 'low' // Light mode: a steady 30 frames a second
+  const [settled, setSettled] = useState(false)
+  useEffect(() => {
+    if (!warmed || settled) return undefined // once it is watching, it keeps watching
+    const id = setTimeout(() => setSettled(true), 3000)
+    return () => clearTimeout(id)
+  }, [warmed, settled])
 
   return (
     <Canvas
       key={safeGl ? 'safe' : profile.antialias ? 'aa' : 'no-aa'} // these can only be chosen when the canvas is created
       className="game-canvas"
       dpr={safeGl ? 1 : dpr}
+      frameloop={capped ? 'never' : 'always'}
       // safeGl: the plainest settings, for machines where the normal ones fail (see CanvasGuard)
       gl={safeGl ? { antialias: false, powerPreference: 'default', stencil: false } : { antialias: profile.antialias, powerPreference: 'high-performance', stencil: true }}
       camera={{ fov: 50, near: 0.3, far: profile.far, position: [0, 8, 12] }}
       onCreated={({ gl, scene, camera }) => {
+        // reading back the compile logs makes the browser wait for every shader; only useful while developing
+        gl.debug.checkShaderErrors = import.meta.env.DEV
         if (BENCH) Object.assign(window, { __gl: gl, __scene: scene, __cam: camera, __THREE: THREE }) // dev / ?bench: perf and memory checks
       }}
     >
-      <PerformanceMonitor onDecline={() => setDpr(range.min)} onIncline={() => setDpr(range.max)} flipflops={3} onFallback={() => setDpr(range.min)} />
+      <ShaderWarmup />
+      {capped && <FrameCap fps={30} />}
+      {settled && profile.dpr.min !== profile.dpr.max && <PerformanceMonitor onDecline={() => setDpr(range.min)} onIncline={() => setDpr(range.max)} flipflops={3} bounds={capped ? () => [22, 29] : undefined} onFallback={() => setDpr(range.min)} />}
       <Lighting time={view.time} raining={Boolean(game.flags.raining)} />
       <Sky />
       <BlobShadows />

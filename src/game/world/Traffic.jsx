@@ -36,7 +36,8 @@ export default function Traffic({ density = 3, paused = false, raining = false }
       const want = jam ? density + 3 : density
       for (const lane of ['west', 'east']) {
         timers.current[lane] -= dt
-        const ambient = traffic.vehicles.filter((v) => v.lane === lane && v.tag.ambient).length
+        let ambient = 0
+        for (const v of traffic.vehicles) if (v.lane === lane && v.tag.ambient) ambient++
         if (timers.current[lane] <= 0 && ambient < want) {
           const kind = randomKind()
           const seed = traffic.nextId * 13 + 7

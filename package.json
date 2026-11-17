@@ -15,7 +15,8 @@
     "assets:characters": "node scripts/import-characters.mjs",
     "assets:clean": "node scripts/clean-assets.mjs",
     "assets:crowd": "node scripts/make-crowd-lod.mjs",
-    "assets:nature": "node scripts/import-nature.mjs"
+    "assets:nature": "node scripts/import-nature.mjs",
+    "assets:slim": "node scripts/slim-models.mjs"
   },
   "engines": {
     "node": ">=20"
@@ -40,6 +41,8 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.5",
+    "@gltf-transform/core": "^4.5.1",
+    "@gltf-transform/extensions": "^4.5.1",
     "@vitejs/plugin-react": "^4.7.0",
     "eslint": "^9.39.5",
     "eslint-plugin-react": "^7.37.5",
