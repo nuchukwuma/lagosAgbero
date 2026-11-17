@@ -13,6 +13,7 @@ import CameraRig from './CameraRig.jsx'
 import GoalTracker from './GoalTracker.jsx'
 import PlayerController from '../player/PlayerController.jsx'
 import { playerState, perf } from './worldState.js'
+import { traffic } from '../systems/traffic.js'
 import { loadClips } from '../characters/clipLoader.js'
 import Traffic from './Traffic.jsx'
 import FeeRunDirector from '../modes/feeCollection/FeeRunDirector.jsx'
@@ -39,6 +40,7 @@ import { getLayout } from './worlds.js'
 import ShaderWarmup, { useWarmup } from './ShaderWarmup.jsx'
 import FrameCap from './FrameCap.jsx'
 import PortraitStudio from '../characters/PortraitStudio.jsx'
+import ReactionDirector from './ReactionDirector.jsx'
 
 // The 3D street behind the story. The story view decides:
 //   location   where the player stands when a scene starts
@@ -133,11 +135,12 @@ export default function GameCanvas({ view, game, activity = null, paused = false
       onCreated={({ gl, scene, camera }) => {
         // reading back the compile logs makes the browser wait for every shader; only useful while developing
         gl.debug.checkShaderErrors = import.meta.env.DEV
-        if (BENCH) Object.assign(window, { __gl: gl, __scene: scene, __cam: camera, __THREE: THREE }) // dev / ?bench: perf and memory checks
+        if (BENCH) Object.assign(window, { __gl: gl, __scene: scene, __cam: camera, __THREE: THREE, __traffic: traffic }) // dev / ?bench: perf and memory checks
       }}
     >
       <ShaderWarmup />
       <PortraitStudio />
+      <ReactionDirector enabled={freeRoam && !paused} />
       {capped && <FrameCap fps={30} />}
       {settled && profile.dpr.min !== profile.dpr.max && <PerformanceMonitor onDecline={() => setDpr(range.min)} onIncline={() => setDpr(range.max)} flipflops={3} bounds={capped ? () => [22, 29] : undefined} onFallback={() => setDpr(range.min)} />}
       <Lighting time={view.time} raining={Boolean(game.flags.raining)} />

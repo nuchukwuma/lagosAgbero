@@ -1,0 +1,101 @@
+{
+  "_about": "How the street reacts to what the player does in free roam (src/game/systems/reactions.js, ReactionDirector.jsx). 'standing' and 'heat' are replaced by each story's own stats. Lines: per story, picked at random; {name} is the player's name, {nick} their street name.",
+  "stats": {
+    "areaBoy": { "standing": "communityGoodwill", "heat": "policeHeat", "fear": "notoriety" },
+    "grace": { "standing": "villageStanding", "heat": "policeHeat", "fear": "hold" },
+    "campus": { "standing": "campusRep", "heat": "donsHeat", "fear": "donsHeat" }
+  },
+  "effects": {
+    "apologise": { "standing": 1 },
+    "walkAway": { "standing": -1 },
+    "argueWon": { "standing": -2, "fear": 2, "money": 200 },
+    "argueLost": { "standing": -2 },
+    "roadFightWon": { "standing": -3, "heat": 4 },
+    "roadFightLost": { "standing": -1, "money": -500 },
+    "bumpedTooMuch": { "standing": -2 }
+  },
+  "lines": {
+    "honk": {
+      "areaBoy": ["Oga, comot for road!", "You wan die? Shift!", "Agbero, move your leg!", "Who born you? Comot!", "PEEEP! Clear road!"],
+      "grace": ["Bros, the road is not your father's own!", "Move, abeg! Some of us have places to be!", "Shift! This road no be your compound!"],
+      "campus": ["Fresher, shift!", "Na road you wan read for? Move!", "Bro, I get 8 a.m. Clear road!"]
+    },
+    "driverOut": {
+      "areaBoy": ["You don block my motor reach two minutes. You think say I dey play?", "Na you be the boy wey dey stand for road like statue? Talk am now!", "My passengers dey waste. Who go pay me?"],
+      "grace": ["Young man, are you mad? You are holding up the whole road!", "Is it because you came from the village? Road is for motor!", "You want me to jam you? Then my wahala starts."],
+      "campus": ["Guy, you sabi say I fit lose my lecture because of you?", "This your shoe-on-tar levels, na mumu levels.", "Fresher, I go report you for SUG o!"]
+    },
+    "driverOutAgain": {
+      "areaBoy": ["Na you again?! The whole road don know you. You dey find trouble?", "This boy again! Today you go hear am."],
+      "grace": ["You again! Every day you stand for road like goat!", "Is this your hobby? Blocking motor?"],
+      "campus": ["Na this same fresher again! You wan make dem expel you?", "Again?! I go snap your face send am to the Dons."]
+    },
+    "apologised": {
+      "areaBoy": ["Ehen. Next time, look road.", "Shey you see as e easy? Sorry is not hard.", "No wahala. Make you dey careful."],
+      "grace": ["Hmm. Go and sin no more.", "Okay. Be careful, my brother."],
+      "campus": ["Fine. Next time, use the pavement like a scholar.", "Okay o. Respect yourself."]
+    },
+    "argueWon": {
+      "areaBoy": ["...Okay, okay. Take ₦200, just leave my motor alone.", "Abeg, no vex. Na you be oga here. Take small change."],
+      "grace": ["...Fine. Take this ₦200 and let me go.", "You are lucky I'm in a hurry. Take."],
+      "campus": ["Okay boss, no vex. Take ₦200 for pure water.", "...You get backing, abi? Take this one."]
+    },
+    "argueLost": {
+      "areaBoy": ["Na mouth you get? Make you go siddon.", "You no fit shout pass engine. Comot!"],
+      "grace": ["Keep talking. Your mates are making money while you shout.", "Small boy with big mouth."],
+      "campus": ["Na this mouth you go use pass exam?", "You dey shout like person wey carry over."]
+    },
+    "walkedAway": {
+      "areaBoy": ["Yes, run! Coward!", "Next time I go jam you, I swear!"],
+      "grace": ["Better run, village boy!", "Go! Waste of time."],
+      "campus": ["Waka! Jambite!", "Run, fresher, run!"]
+    },
+    "bump": {
+      "areaBoy": ["Ehn! You dey blind?", "Watch where you dey go!", "Oya, say sorry now!", "Na push you dey push me?"],
+      "grace": ["Ah! Look where you are going!", "Is it a race? Mind yourself!"],
+      "campus": ["Bro, chill!", "Who dey pursue you?", "My phone almost fall o!"]
+    },
+    "bumpTooMuch": {
+      "areaBoy": ["This boy dey knock everybody. Na drugs?", "People don dey talk about you o."],
+      "grace": ["Everybody is talking about how you push people.", "You have no manners at all."],
+      "campus": ["This guy dey bounce everybody like bumper car.", "Na this rude guy again."]
+    },
+    "greetWarm": {
+      "areaBoy": ["{nick}! My person!", "Ehen, {nick}! How body?", "Na my guy be this!"],
+      "grace": ["{name}! You are welcome!", "Ah, {name}, my son!", "{name}! Come and greet me well."],
+      "campus": ["{name}! Big man on campus!", "Ah, my G {name}!", "{name}, you dey shine!"]
+    },
+    "greetCold": {
+      "areaBoy": ["Hmm. You again.", "I dey watch you.", "Make you no come near me today."],
+      "grace": ["Hmm. {name}.", "We are watching you, {name}.", "Go your way."],
+      "campus": ["Oh. It's you.", "Hmm. Na you be that one.", "Keep walking, abeg."]
+    },
+    "crowdCheer": {
+      "areaBoy": ["Ehen! Who send am?!", "Area no dey carry last!", "Show am pepper!"],
+      "grace": ["Ah! He can fight o!", "Who taught him that?"],
+      "campus": ["Na who dey hold the crown!", "Campus don see something today!"]
+    },
+    "crowdJeer": {
+      "areaBoy": ["Dem don beat am finish!", "Who send you?!", "E don pafuka!"],
+      "grace": ["Hmm! He has collected!", "Pride goes before a fall."],
+      "campus": ["Dem don shame you finish!", "Fresher don collect!"]
+    }
+  },
+  "greet": {
+    "babaTicket": "chairmanTrust",
+    "professor": "mentorBond",
+    "ada": "friendBond",
+    "settlement": "settlementTrust",
+    "bassey": "policeHeat:inverse",
+    "chuks": "cultLoyalty",
+    "nneEmeka": "motherBond",
+    "chinwe": "chinweBond",
+    "ike": "ikeTrust",
+    "chiefOdu": "chiefFavour",
+    "onyisi": "villageStanding",
+    "mamaSomto": "momBond",
+    "tamara": "tamaraBond",
+    "dubai": "dubaiBond",
+    "spike": "donsHeat"
+  }
+}

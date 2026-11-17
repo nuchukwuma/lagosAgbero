@@ -2742,3 +2742,38 @@ body,
   .map-list { width: auto; flex-direction: row; flex-wrap: wrap; max-height: 30%; }
   .map-list .chip { width: auto; }
 }
+
+/* ---------- speech bubbles and street confrontations (ReactionDirector) ---------- */
+.speech-layer { position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 5; }
+.speech-bubble {
+  position: absolute; left: 0; top: 0; max-width: 220px;
+  background: #fffaf0; color: #20160b; font-size: 13px; font-weight: 700; line-height: 1.25;
+  padding: 6px 10px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+  will-change: transform; white-space: normal; text-align: center;
+}
+.speech-bubble::after {
+  content: ''; position: absolute; left: 50%; bottom: -7px; transform: translateX(-50%);
+  border: 7px solid transparent; border-bottom: 0; border-top-color: #fffaf0;
+}
+.speech-bubble.is-angry { background: #ffe1d6; color: #7a1408; }
+.speech-bubble.is-angry::after { border-top-color: #ffe1d6; }
+.speech-bubble.is-warm { background: #e3f7d9; color: #1d4d12; }
+.speech-bubble.is-warm::after { border-top-color: #e3f7d9; }
+
+.confront {
+  position: absolute; left: 50%; bottom: max(14px, env(safe-area-inset-bottom)); transform: translateX(-50%);
+  width: min(560px, calc(100% - 24px)); z-index: 20;
+  background: rgba(24, 10, 6, 0.94); color: #f5ead6; border: 2px solid #c0392b; border-radius: 16px;
+  padding: 12px 14px; box-shadow: 0 6px 24px rgba(0, 0, 0, 0.55);
+}
+.confront-who { display: flex; align-items: center; gap: 10px; font-size: 16px; }
+.confront-tag { background: #c0392b; color: #fff; font-size: 11px; font-weight: 800; border-radius: 8px; padding: 2px 7px; text-transform: uppercase; }
+.confront-line { margin: 8px 0 10px; font-size: 16px; line-height: 1.35; }
+.confront-choices { display: flex; gap: 8px; flex-wrap: wrap; }
+.confront-choices .btn { flex: 1 1 140px; }
+.confront-choices kbd { font-size: 11px; opacity: 0.7; margin-right: 4px; border: 1px solid currentColor; border-radius: 4px; padding: 0 4px; }
+/* the favour button moves left of the minimap while the minimap is up */
+.story-screen:has(.minimap) .favour-btn { right: calc(max(10px, env(safe-area-inset-right)) + 134px); }
+@media (max-height: 420px) {
+  .story-screen:has(.minimap) .favour-btn { right: calc(max(10px, env(safe-area-inset-right)) + 106px); }
+}

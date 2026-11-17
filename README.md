@@ -37,6 +37,16 @@ The game is one web page that adapts to the device:
   lets it open offline after the first visit (PWA + service worker).
 - **Computer:** WASD / arrows to move, Shift to run, E or Enter to talk or
   act, mouse for menus.
+- **Map:** a small map in the corner while you walk shows where you are,
+  where the story wants you (and how far, which way) and any place you
+  marked; tap it, the map button or **M** for the full map with every named
+  place.
+- **The street reacts:** stand in front of a moving car and the driver honks,
+  then gets out (say sorry, argue, or fight; drivers who've heard of you
+  lose patience faster). Barge into people and they shout; keep doing it and
+  your standing drops. People you have history with greet you warmly or
+  coldly. The crowd cheers or jeers your fights. Lines and effects live in
+  `src/game/data/reactions.json`.
 - **Pause menu → Settings:** graphics (Auto / Battery saver / Sharp) and full
   screen. **Pause menu → Wardrobe** (during free roam): outfits, colours,
   accessories and earned street names. Looks change how people react.

@@ -18,6 +18,8 @@ import { useWorldStore, playerState } from '../world/worldState.js'
 import { styleOf, styleFlags, costOf, ownedAfter } from '../systems/wardrobe.js'
 import { campaignById, campaignOf, chapterCampaign } from '../narrative/campaigns.js'
 import { collectFind } from '../systems/finds.js'
+import { effectsFor } from '../systems/reactions.js'
+import { useStreet } from '../world/streetState.js'
 
 let toastId = 0
 
@@ -145,6 +147,24 @@ export const useGameStore = create((set, get) => {
       return undefined
     },
 
+    /**
+     * The street reacts to something the player did (reactions.json "effects":
+     * "apologise", "argueWon", "bumpedTooMuch"...). `count` bumps the
+     * street's memory of you (e.g. { roadRage: 1 }): drivers who've heard of
+     * you lose patience sooner.
+     */
+    react: (action, { toast = null, count = null } = {}) => {
+      const { game } = get()
+      if (!game) return
+      const changeStat = effectsFor(action, campaignOf(game).id)
+      const r = applyEffects(game, { changeStat, noticedBy: [] })
+      const street = { ...(game.street || {}) }
+      for (const [k, n] of Object.entries(count || {})) street[k] = (street[k] || 0) + n
+      const next = { ...r.state, street }
+      const notes = [toast, ...r.notices].filter(Boolean)
+      set((s) => ({ game: next, toasts: [...s.toasts, ...notes.map((text) => ({ id: ++toastId, text }))].slice(-4) }))
+    },
+
     /** Free-roam activities the player starts (e.g. a fee run at the Back Side). */
     activity: null,
     startActivity: (activity) => set({ activity }),
@@ -161,6 +181,7 @@ export const useGameStore = create((set, get) => {
       }
       const minutes = activity.minutes ?? 120
       const next = { ...r.state, time: Math.min((r.state.time ?? 0) + minutes, EVENING_AT - 1) }
+      if (activity.mode === 'fight') useStreet.setState({ lastFight: { outcome: result.outcome, at: performance.now() } })
       const m = result.moneyChange || 0
       const summary = m > 0 ? `+₦${m.toLocaleString('en-NG')}` : m < 0 ? `−₦${(-m).toLocaleString('en-NG')}` : 'No money this time'
       // one event can lead straight into another: a crash into a fight, a

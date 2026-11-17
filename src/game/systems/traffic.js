@@ -9,6 +9,8 @@
 //              stopAt: null | { x, wait }, state, waited, hold, tag }
 //   stopAt.x  where the FRONT of the vehicle should stop
 //   hold      true while the player is dealing with it (it won't leave)
+//   blockedFor seconds the player has stood in front of it, keeping it waiting
+//   frozen    true while its driver is out arguing with the player
 
 import vehicleData from '../data/vehicles.json'
 
@@ -120,11 +122,20 @@ export function updateTraffic(dt, player, speedScale = 1) {
         }
       }
 
-      // never run anybody over: stop for the player standing in the lane
+      // never run anybody over: stop for the player standing in the lane.
+      // blockedFor counts how long the player has kept this one waiting
+      // (drivers honk, then get out: see ReactionDirector.jsx)
+      let blocked = false
       if (player && Math.abs(player.z - L.z) < v.width / 2 + 0.6) {
         const d = (player.x - v.x) * L.dir - v.length / 2
-        if (d > -0.5 && d < 3.5 + v.speed * 0.5) target = 0
+        if (d > -0.5 && d < 3.5 + v.speed * 0.5) {
+          target = 0
+          blocked = d < 4.2 && v.speed < 1.5 // stopped (or nearly) because of you
+        }
       }
+      v.blockedFor = blocked ? (v.blockedFor || 0) + dt : 0
+      // a driver who got out to argue doesn't drive off mid-sentence
+      if (v.frozen) target = 0
 
       const a = target > v.speed ? ACCEL : BRAKE
       v.speed += Math.sign(target - v.speed) * Math.min(Math.abs(target - v.speed), a * dt)

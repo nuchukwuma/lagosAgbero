@@ -12,6 +12,7 @@ import { useChase } from '../../game/modes/chase/chaseStore.js'
 import { modeComponent } from '../../game/modes/modeRegistry.js'
 import { worldJson, getLayout } from '../../game/world/worlds.js'
 import { MiniMap, MapScreen, useMapStore } from '../hud/WorldMap.jsx'
+import Confrontation from '../hud/Confrontation.jsx'
 import DialogueBox from './DialogueBox.jsx'
 import ChoiceMenu from './ChoiceMenu.jsx'
 import NewsBroadcast from './NewsBroadcast.jsx'
@@ -132,6 +133,7 @@ export default function StoryScreen() {
     <div className="story-screen">
       <CanvasGuard onBack={quitToTitle}>{(safeGl) => <GameCanvas view={view} game={game} activity={activity} paused={Boolean(overlay || turnTo)} onGoalReached={advance} safeGl={safeGl} />}</CanvasGuard>
       {raining && <div className="rain" aria-hidden="true" />}
+      <div id="speech-layer" className="speech-layer" aria-live="polite" />
       <HUD game={game} onStatus={() => setOverlay('status')} onMenu={() => setOverlay('menu')} onMap={view.world ? () => setOverlay('worldMap') : null} />
       {canMap && !overlay && view.world && <MiniMap layout={getLayout(view.world)} goal={view.goal} onOpen={() => setOverlay('worldMap')} />}
       {view.chapterTitle && view.type !== 'cutscene' && <div className="chapter-chip">{view.chapterTitle}</div>}
@@ -148,6 +150,7 @@ export default function StoryScreen() {
         />
       )}
       {activity && <ActivityHost activity={activity} onFinish={finishActivity} />}
+      {view.type === 'freeRoam' && !overlay && <Confrontation />}
       <EnergyTicker active={(view.type === 'freeRoam' || streetMode) && !overlay} />
       <FavourButton view={view} activity={activity} overlay={overlay} />
       <div className="story-content">{content}</div>
