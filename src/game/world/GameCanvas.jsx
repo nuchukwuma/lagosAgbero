@@ -82,7 +82,7 @@ export default function GameCanvas({ view, game, activity = null, paused = false
   const layout = getLayout(view.world) // Iyana-Wahala, the village, the campus...
   useSceneTeleport(view, layout)
   useEffect(() => {
-    loadClips(COMMON_CLIPS).catch(() => {})
+    loadClips(COMMON_CLIPS, 'kenney').catch(() => {}) // everyone wears a Kenney Mini body (clipSets.json)
   }, [])
 
   const freeRoam = view.type === 'freeRoam' && !activity

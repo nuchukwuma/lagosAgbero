@@ -9,9 +9,18 @@ import { checkCondition } from '../narrative/conditions.js'
 export const WARDROBE = data
 const STYLE_RANK = { plain: 0, sharp: 1, flashy: 2 }
 
+// older saves name the bodies used before the Kenney Mini Characters
+const LEGACY = {
+  male_casual: 'mini_male_f', male_shirt: 'mini_male_e', male_longsleeve: 'mini_soldier', male_suit: 'mini_male_d',
+  female_casual: 'mini_female_a', female_dress: 'mini_female_f', female_tanktop: 'mini_female_c', female_alternative: 'mini_female_e',
+  rpg_cleric: 'mini_male_d', rpg_monk: 'mini_male_b', rpg_ranger: 'mini_soldier', rpg_rogue: 'mini_raider', rpg_warrior: 'mini_male_c', rpg_wizard: 'mini_male_g',
+}
+const bodyOf = (look) => LEGACY[look?.body] || look?.body
+const ownedList = (owned) => owned.map((o) => (o.startsWith('outfit:') && LEGACY[o.slice(7)] ? `outfit:${LEGACY[o.slice(7)]}` : o))
+
 export function styleOf(look) {
   look = look || {}
-  let best = data.outfits.find((o) => o.id === look.body)?.style || 'plain'
+  let best = data.outfits.find((o) => o.id === bodyOf(look))?.style || 'plain'
   for (const a of look.accessories || []) {
     const s = data.accessories.find((x) => x.type === a.type && (!x.id || x.id === a.id))?.style || 'plain'
     if (STYLE_RANK[s] > STYLE_RANK[best]) best = s
@@ -28,8 +37,10 @@ export function feeBonus(style) {
 export function costOf(before, after, owned = []) {
   before = before || {}
   after = after || {}
+  owned = ownedList(owned)
   let cost = 0
-  if (after.body !== before.body && !owned.includes(`outfit:${after.body}`)) cost += data.outfits.find((o) => o.id === after.body)?.price || 0
+  const body = bodyOf(after)
+  if (body !== bodyOf(before) && !owned.includes(`outfit:${body}`)) cost += data.outfits.find((o) => o.id === body)?.price || 0
   for (const a of after.accessories || []) {
     const key = `acc:${a.id || a.type}`
     const def = data.accessories.find((x) => x.type === a.type && (!x.id || x.id === a.id))
@@ -40,8 +51,8 @@ export function costOf(before, after, owned = []) {
 
 /** Items newly owned after buying `after`. */
 export function ownedAfter(after = {}, owned = []) {
-  const set = new Set(owned)
-  set.add(`outfit:${after.body}`)
+  const set = new Set(ownedList(owned))
+  set.add(`outfit:${bodyOf(after)}`)
   for (const a of after.accessories || []) set.add(`acc:${a.id || a.type}`)
   return [...set]
 }

@@ -50,7 +50,8 @@ export function renderProfile(quality) {
   const max = typeof window !== 'undefined' ? window.devicePixelRatio || 1 : 1
   if (q === 'low') return { quality: q, dpr: { min: 0.7, max: Math.min(1, max) }, antialias: false, far: 150 }
   if (q === 'high') return { quality: q, dpr: { min: Math.min(2, max), max: Math.min(2, max) }, antialias: true, far: 240 }
-  return { quality: q, dpr: { min: 1, max: Math.min(1.5, max) }, antialias: max < 2, far: 220 }
+  // Normal: edges smoothed too (at up to 1.5x resolution it's affordable on mid-range phones)
+  return { quality: q, dpr: { min: 1, max: Math.min(1.5, max) }, antialias: true, far: 220 }
 }
 
 /** Device pixel ratio range for a quality setting. */

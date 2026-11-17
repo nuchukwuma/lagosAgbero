@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { SKIN_TONES } from '../game/characters/look.js'
+import { SKIN_TONES, LEGACY_BODIES } from '../game/characters/look.js'
 import { CAMPAIGNS } from '../game/narrative/campaigns.js'
 import { endingsFound } from '../game/store/saveSystem.js'
 import { storyCtx } from '../game/narrative/storyData.js'
@@ -11,11 +11,11 @@ import CharacterPreview from './CharacterPreview.jsx'
 
 const SHIRTS = ['#d8d2c4', '#c0392b', '#2c5aa0', '#2f8f5b', '#e0b400', '#1a1a1a']
 const OUTFITS = [
-  ['male_casual', 'T-shirt'],
-  ['male_shirt', 'Shirt'],
-  ['male_longsleeve', 'Long sleeve'],
-  ['rpg_rogue', 'Hoodie'], // the stockier RPG-pack people (see scripts/import-rpg-characters.mjs)
-  ['rpg_ranger', 'Tunic'],
+  ['mini_male_f', 'T-shirt'],
+  ['mini_male_e', 'Overalls'],
+  ['mini_soldier', 'Beanie'],
+  ['mini_raider', 'Ponytail'],
+  ['mini_male_a', 'Glasses'],
 ]
 
 // Step 1: pick a story. Each campaign is its own branching story.
@@ -58,7 +58,7 @@ function HeroScreen({ campaign, onStart, onBack }) {
   const [name, setName] = useState(hero.name || '')
   const [skin, setSkin] = useState(hero.look?.skin || SKIN_TONES[2])
   const [shirt, setShirt] = useState(hero.look?.shirt || SHIRTS[0])
-  const [body, setBody] = useState(hero.look?.body || OUTFITS[0][0])
+  const [body, setBody] = useState(LEGACY_BODIES[hero.look?.body] || hero.look?.body || OUTFITS[0][0])
   const clean = name.trim().slice(0, 20)
   const areaBoy = campaign.id === 'areaBoy'
   const look = { ...(hero.look || {}), body, skin, shirt, trousers: hero.look?.trousers || '#2c3e50', shoes: '#1e1e1e' }

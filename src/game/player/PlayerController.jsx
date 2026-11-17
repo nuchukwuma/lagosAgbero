@@ -4,7 +4,8 @@ import Character from '../characters/Character.jsx'
 import { input, readMove, attachKeyboard } from './input.js'
 import { playerState } from '../world/worldState.js'
 import { resolveCollisions, GROUND_Y } from '../world/layout.js'
-import { CHARACTER } from '../../assets/assetManifest.js'
+import { clipSpeed } from '../characters/clipLoader.js'
+import { bodyInfo, normalizeLook } from '../characters/look.js'
 import { vehicleColliders } from '../systems/traffic.js'
 
 // Moves the player around the street. "Up" on the joystick / W walks away
@@ -23,12 +24,13 @@ const ease = (k, dt) => 1 - Math.exp(-k * dt)
 
 // Play locomotion clips at the speed that matches how fast we move, so feet
 // don't slide. The chibi body has short legs, hence the extra factor.
-const clipRate = (clip, speed) => {
-  const natural = CHARACTER.clips[clip]?.rootMotion?.speed || 1
+const clipRate = (clip, speed, set) => {
+  const natural = clipSpeed(clip, set)
   return Math.min(2.2, Math.max(0.6, (speed / natural) * 0.85))
 }
 
 export default function PlayerController({ layout, look, enabled, eyeRed = 0, tired = false }) {
+  const clipSet = bodyInfo(normalizeLook(look).body).clipSet || null
   const ref = useRef()
   const [anim, setAnim] = useState({ name: 'idle', speed: 1 })
   const animRef = useRef(anim)
@@ -100,7 +102,7 @@ export default function PlayerController({ layout, look, enabled, eyeRed = 0, ti
     if (!stunned && !gesture && moving > 0.35) {
       playerState.moving = true
       const clip = moving > WALK_SPEED * 1.25 && playerState.running ? 'run' : tired ? 'drunkWalk' : 'walk'
-      next = { name: clip, speed: Math.round(clipRate(clip, moving) * 10) / 10 }
+      next = { name: clip, speed: Math.round(clipRate(clip, moving, clipSet) * 10) / 10 }
     }
 
     if (m.len <= 0.08) basis.current = playerState.viewFlipped

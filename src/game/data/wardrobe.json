@@ -1,20 +1,22 @@
 {
   "outfits": [
-    { "id": "male_casual", "label": "T-shirt", "price": 0, "style": "plain" },
-    { "id": "male_shirt", "label": "Shirt", "price": 0, "style": "plain" },
-    { "id": "male_longsleeve", "label": "Long sleeve", "price": 2000, "style": "sharp" },
-    { "id": "male_suit", "label": "Owambe suit", "price": 15000, "style": "flashy" },
-    { "id": "female_casual", "label": "Tee (women's)", "price": 0, "style": "plain" },
-    { "id": "female_tanktop", "label": "Tank top", "price": 0, "style": "plain" },
-    { "id": "female_dress", "label": "Ankara dress", "price": 3000, "style": "sharp" },
-    { "id": "female_alternative", "label": "Jacket", "price": 8000, "style": "flashy" },
-    { "id": "rpg_rogue", "label": "Hoodie & mask", "price": 1500, "style": "plain", "anyone": true },
-    { "id": "rpg_monk", "label": "Herbalist wrap", "price": 2500, "style": "plain", "anyone": true },
-    { "id": "rpg_ranger", "label": "Hunter's tunic", "price": 4000, "style": "sharp", "anyone": true },
-    { "id": "rpg_cleric", "label": "White garment", "price": 5000, "style": "sharp", "anyone": true },
-    { "id": "rpg_warrior", "label": "Bouncer kit", "price": 9000, "style": "flashy", "anyone": true },
-    { "id": "rpg_wizard", "label": "Prophet's robe", "price": 12000, "style": "flashy", "anyone": true }
+    { "id": "mini_male_f", "label": "T-shirt", "price": 0, "style": "plain" },
+    { "id": "mini_male_e", "label": "Overalls", "price": 0, "style": "plain" },
+    { "id": "mini_soldier", "label": "Beanie", "price": 1000, "style": "plain" },
+    { "id": "mini_raider", "label": "Ponytail", "price": 1500, "style": "plain" },
+    { "id": "mini_worker", "label": "Hard hat", "price": 2000, "style": "sharp" },
+    { "id": "mini_male_a", "label": "Glasses", "price": 2500, "style": "sharp" },
+    { "id": "mini_male_c", "label": "Uniform cap", "price": 6000, "style": "sharp" },
+    { "id": "mini_male_g", "label": "Eyepatch", "price": 9000, "style": "flashy" },
+    { "id": "mini_male_d", "label": "Owambe suit", "price": 15000, "style": "flashy" },
+    { "id": "mini_female_a", "label": "Top", "price": 0, "style": "plain" },
+    { "id": "mini_female_c", "label": "Cap", "price": 0, "style": "plain" },
+    { "id": "mini_female_b", "label": "Headband", "price": 1500, "style": "plain" },
+    { "id": "mini_female_f", "label": "Long hair", "price": 3000, "style": "sharp" },
+    { "id": "mini_female_e", "label": "Lab coat", "price": 6000, "style": "sharp" },
+    { "id": "mini_female_d", "label": "Suit", "price": 12000, "style": "flashy" }
   ],
+
   "colours": ["#d8d2c4", "#c0392b", "#2c5aa0", "#2f8f5b", "#e0b400", "#1a1a1a", "#e67e22", "#8e44ad", "#ffffff", "#5d4037"],
   "accessories": [
     { "type": "cap", "label": "Cap", "price": 500, "style": "plain" },

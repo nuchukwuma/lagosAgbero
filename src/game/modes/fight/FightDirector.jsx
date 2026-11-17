@@ -51,7 +51,7 @@ export default function FightDirector({ playerLook }) {
   const endScheduled = useRef(false)
 
   useEffect(() => {
-    loadClips(FIGHT_CLIPS).catch(() => {})
+    loadClips(FIGHT_CLIPS, 'kenney').catch(() => {})
   }, [])
 
   useEffect(() => {

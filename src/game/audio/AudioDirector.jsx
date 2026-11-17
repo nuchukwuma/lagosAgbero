@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { isFemale } from '../characters/look.js'
 import { useGameStore } from '../store/gameStore.js'
 import { useSettings } from '../store/settings.js'
 import { unlock, sfx, setMusic, setAmbience, setVolumes, suspend } from './audio.js'
@@ -15,7 +16,7 @@ function voicePitch(speaker) {
   if (!speaker || speaker === 'narrator') return 0
   let h = 0
   for (const c of speaker) h = (h * 31 + c.charCodeAt(0)) % 997
-  const female = characters[speaker]?.look?.body?.startsWith('female')
+  const female = isFemale(characters[speaker]?.look?.body)
   return (female ? 1.45 : 0.8) + (h % 40) / 100
 }
 

@@ -108,15 +108,24 @@ export function attachAccessories(root, accessories, rootScale, body = {}) {
     const build = BUILDERS[acc.type]
     if (!build || (body.hood && HATS.has(acc.type))) continue
     const { bone: boneName, object, alongBone } = build(acc)
-    const bone = root.getObjectByName(boneName)
+    const bone = root.getObjectByName(body.bones?.[boneName] || boneName) // other skeletons name bones their own way
     if (!bone) continue
     const holder = new THREE.Group()
     holder.name = `acc-${acc.type}`
     // undo the bone's own scale and rotation so the accessory is built in
     // plain metres, facing the character's forward
     const boneScale = bone.getWorldScale(new THREE.Vector3()).x
-    const grow = boneName === 'Head' ? head : boneName === 'Neck' ? (1 + head) / 2 : 1
-    holder.scale.setScalar(grow / (boneScale * rootScale))
+    if (body.head && boneName === 'Head') {
+      // a measured head box (Kenney Mini Characters): fit the hat to it.
+      // Accessories are built for a head 0.21 m wide, 0.23 m from the head
+      // bone to the top, 0.25 m deep, centred on the bone.
+      const native = body.nativeHeight // the model's own units, before rootScale
+      holder.scale.set((body.head.w * native) / 0.21, (body.head.top * native) / 0.23, (body.head.d * native) / 0.25).divideScalar(boneScale)
+      holder.position.z = (body.head.cz * native) / boneScale
+    } else {
+      const grow = boneName === 'Head' ? head : boneName === 'Neck' ? (1 + head) / 2 : 1
+      holder.scale.setScalar(grow / (boneScale * rootScale))
+    }
     if (!alongBone) holder.quaternion.copy(bone.getWorldQuaternion(new THREE.Quaternion()).invert().multiply(rootQuat))
     holder.add(object)
     bone.add(holder)

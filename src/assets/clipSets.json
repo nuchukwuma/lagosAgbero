@@ -1,0 +1,14 @@
+{
+ "kenney": {
+  "dir": "characters/clips/kenney",
+  "speeds": {
+   "walk": 1.35,
+   "run": 3.3,
+   "startWalk": 1.35,
+   "sneak": 0.9,
+   "crouchWalk": 0.9,
+   "drunkWalk": 1.1,
+   "goofyRun": 3
+  }
+ }
+}

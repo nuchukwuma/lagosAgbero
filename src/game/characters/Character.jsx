@@ -41,9 +41,10 @@ const Character = forwardRef(function Character({ look: lookInput, animation = '
   const look = useMemo(() => normalizeLook(lookInput), [lookKey])
   const info = bodyInfo(look.body)
   const gltf = useGLTF(`${ASSET_ROOT}/${info.file}`)
-  const idleClip = readClip('breathingIdle') // suspends until the idle is loaded: no T-pose flash
+  const clipSet = info.clipSet || null // which skeleton's version of the clips
+  const idleClip = readClip('breathingIdle', clipSet) // suspends until the idle is loaded: no T-pose flash
 
-  const rootScale = CHARACTER.targetHeight / info.nativeHeight
+  const rootScale = (CHARACTER.targetHeight * (info.heightScale || 1)) / info.nativeHeight
   const accessoriesKey = JSON.stringify(look.accessories)
 
   // Clone the body once per outfit/accessory set...
@@ -98,13 +99,13 @@ const Character = forwardRef(function Character({ look: lookInput, animation = '
   useEffect(() => {
     let cancelled = false
     const name = ALIASES[animation] || animation
-    loadClip(name)
+    loadClip(name, clipSet)
       .then((c) => !cancelled && setClip(c))
       .catch((e) => console.warn(`[anim] "${name}" failed to load`, e))
     return () => {
       cancelled = true
     }
-  }, [animation])
+  }, [animation, clipSet])
 
   useEffect(() => {
     if (!clip) return

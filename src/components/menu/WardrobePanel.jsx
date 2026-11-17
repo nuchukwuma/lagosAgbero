@@ -4,6 +4,7 @@ import { WARDROBE, styleOf, costOf, earnedNicknames } from '../../game/systems/w
 import { useCheckout } from '../../game/services/payments.js'
 import { formatNaira } from '../../game/narrative/stats.js'
 import CharacterPreview from '../CharacterPreview.jsx'
+import { isFemale } from '../../game/characters/look.js'
 
 // Outfits, colours, accessories and nicknames. Looks change reactions (see
 // wardrobe.json "styles"). New things cost pocket money; owned things are free.
@@ -15,8 +16,8 @@ export default function WardrobePanel({ onDone }) {
   const [look, setLook] = useState(() => ({ ...current, accessories: [...(current.accessories || [])] }))
   const [nickname, setNickname] = useState(game.player.nickname)
   const [error, setError] = useState(null)
-  const female = (look.body || '').startsWith('female')
-  const outfits = WARDROBE.outfits.filter((o) => o.anyone || o.id.startsWith(female ? 'female' : 'male'))
+  const female = isFemale(look.body)
+  const outfits = WARDROBE.outfits.filter((o) => o.anyone || isFemale(o.id) === female)
   const nicknames = useMemo(() => earnedNicknames(game, entitlements), [game, entitlements])
   const cost = costOf(current, look, game.owned || [])
   const style = styleOf(look)

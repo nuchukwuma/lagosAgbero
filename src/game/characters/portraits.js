@@ -101,7 +101,8 @@ export async function drawPortrait(gl, lookInput) {
   person.updateMatrixWorld(true)
 
   // frame the head: from the bottom of the neck to the top of the head
-  const neck = person.getObjectByName('Neck') || person.getObjectByName('Head')
+  const bone = (name) => person.getObjectByName(info.bones?.[name] || name)
+  const neck = (info.clipSet ? bone('Head') : bone('Neck')) || bone('Head')
   const top = new THREE.Box3().setFromObject(person).max.y
   const neckY = neck.getWorldPosition(new THREE.Vector3()).y
   const span = Math.max(0.3, (top - neckY) * 1.3)

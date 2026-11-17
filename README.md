@@ -54,16 +54,16 @@ The game is one web page that adapts to the device:
 - **Pause menu → Settings:** graphics (Auto / Battery saver / Sharp) and full
   screen. **Pause menu → Wardrobe** (during free roam): outfits, colours,
   accessories and earned street names. Looks change how people react.
-  Besides the everyday clothes there are six outfits on a stockier,
-  big-headed body anyone can wear (hoodie and mask, herbalist wrap, hunter's
-  tunic, white garment, bouncer kit, prophet's robe); a few of the cast wear
-  them too (Prophet Fire-Fire, Dibia, Reverend Uzo, Papa Ngwo, Spike, Baba Gate).
+  Outfits are Kenney Mini Characters (T-shirt, overalls, beanie, hard hat,
+  glasses, uniform cap, Owambe suit, top, headband, lab coat...), coloured in
+  your own colours.
 
 ## Look
 
 Cartoon style, in the spirit of cosy stylised mobile games: light falls in
-soft bands (light, half light, shade) instead of a smooth fade, people have a
-dark outline and the everyday bodies have bigger heads. All of it is set in
+soft bands (light, half light, shade) instead of a smooth fade, the colours
+are bright, and people are Kenney's blocky Mini Characters with a dark
+outline, dressed in each character's own colours and skin tone. All of it is set in
 `src/game/world/style.js` (band edges, outline width and distance, head size),
 so it can be tuned in one place. Outlines are off in Light mode.
 
@@ -148,6 +148,7 @@ npm test                 # engine unit tests
 npm run assets:animations -- a1.zip a2.zip a3.zip a4.rar a5.zip "source-assets/mixamo/Breathing Idle.fbx" source-assets/mixamo/Walking.fbx   # re-import Mixamo clips
 npm run assets:animations -- path/to/rpg-pack/FBX/Cleric.fbx   # add the Quaternius RPG pack clips (roll, cheer, preach, pickUp); other clips are kept
 npm run assets:nature -- path/to/nature-pack.zip   # bake trees, bushes, rocks and grass into the scenery
+npm run assets:minis -- path/to/kenney_mini-characters.zip   # the people: Kenney Mini Characters (palette colours become paintable parts; the game's animations converted to their 7-bone skeleton, Kenney's own used where it has them)
 npm run assets:rpg -- path/to/rpg-pack.zip   # the RPG-pack people (Cleric, Monk, Ranger, Rogue, Warrior, Wizard), re-fitted to our skeleton so every animation works on them
 npm run assets:faces     # draw eyes, eyebrows and mouths onto the people's faces (after any people import)
 npm run assets:crowd     # rebuild the simplified bodies (background crowd, far-away people)
@@ -156,7 +157,7 @@ npm run assets:slim      # shrink the .glb models (1-byte normals and skin weigh
 
 ## Credits
 
-- City, vehicles and props: Kenney (kenney.nl), CC0.
+- City, vehicles, props and the people (Mini Characters): Kenney (kenney.nl), CC0.
 - People (Men / Women packs and the RPG character pack), the bus, trees, bushes
   and rocks: Quaternius (quaternius.com), CC0.
 - Animations: Mixamo (Adobe) and Quaternius.

@@ -1,1024 +1,1650 @@
 {
  "bodies": {
-  "male_casual": {
-   "file": "characters/people/male_casual.glb",
-   "source": "Male_Casual.fbx",
+  "mini_male_a": {
+   "file": "characters/people/mini_male_a.glb",
+   "source": "character-male-a.glb (Kenney Mini Characters)",
+   "label": "Glasses",
+   "sex": "male",
    "parts": [
     {
-     "name": "Skin",
-     "slot": "skin",
-     "color": "#7f512a"
-    },
-    {
-     "name": "Eyes",
-     "slot": "eyes",
-     "color": "#060606"
-    },
-    {
-     "name": "Hair",
-     "slot": "hair",
-     "color": "#0d0909"
-    },
-    {
-     "name": "Shirt",
-     "slot": "shirt",
-     "color": "#2a373b"
-    },
-    {
-     "name": "Pants",
+     "name": "strip17-body",
      "slot": "trousers",
-     "color": "#0f0e0e"
+     "color": "#5f76cb"
     },
     {
-     "name": "Socks",
-     "slot": "socks",
-     "color": "#816f6f"
-    },
-    {
-     "name": "Shoes",
-     "slot": "shoes",
-     "color": "#060606"
-    },
-    {
-     "name": "Mouth",
-     "slot": "mouth",
-     "color": "#3a1a14"
-    }
-   ],
-   "nativeHeight": 482.68,
-   "face": {
-    "from": 3940,
-    "parts": 7
-   }
-  },
-  "male_shirt": {
-   "file": "characters/people/male_shirt.glb",
-   "source": "Male_Shirt.fbx",
-   "parts": [
-    {
-     "name": "Skin",
+     "name": "strip35-body",
      "slot": "skin",
-     "color": "#7f512a"
+     "color": "#975941"
     },
     {
-     "name": "Eyes",
-     "slot": "eyes",
-     "color": "#050505"
-    },
-    {
-     "name": "Hair",
-     "slot": "hair",
-     "color": "#59430f"
-    },
-    {
-     "name": "Hair2",
-     "slot": "hair",
-     "color": "#594820"
-    },
-    {
-     "name": "Shirt",
-     "slot": "shirt",
-     "color": "#22030a"
-    },
-    {
-     "name": "Shirt2",
+     "name": "strip34-body",
      "slot": "shirt2",
-     "color": "#1e1615"
+     "color": "#b06041"
     },
     {
-     "name": "Pants",
-     "slot": "trousers",
-     "color": "#0c0f0b"
-    },
-    {
-     "name": "Socks",
-     "slot": "socks",
-     "color": "#161413"
-    },
-    {
-     "name": "Shoes",
+     "name": "strip49-body",
      "slot": "shoes",
-     "color": "#060606"
+     "color": "#e6b86d"
     },
     {
-     "name": "Mouth",
-     "slot": "mouth",
-     "color": "#3a1a14"
-    }
-   ],
-   "nativeHeight": 484.33,
-   "face": {
-    "from": 3954,
-    "parts": 9
-   }
-  },
-  "male_longsleeve": {
-   "file": "characters/people/male_longsleeve.glb",
-   "source": "Male_LongSleeve.fbx",
-   "parts": [
-    {
-     "name": "Skin",
-     "slot": "skin",
-     "color": "#231812"
-    },
-    {
-     "name": "Eyes",
-     "slot": "eyes",
-     "color": "#060606"
-    },
-    {
-     "name": "Hair",
-     "slot": "hair",
-     "color": "#0d0909"
-    },
-    {
-     "name": "Shirt",
-     "slot": "shirt",
-     "color": "#252f1c"
-    },
-    {
-     "name": "Pants",
-     "slot": "trousers",
-     "color": "#101728"
-    },
-    {
-     "name": "Socks",
-     "slot": "socks",
-     "color": "#816f6f"
-    },
-    {
-     "name": "Shoes",
+     "name": "strip63-body",
      "slot": "shoes",
-     "color": "#060606"
+     "color": "#d8d8e7"
     },
     {
-     "name": "Mouth",
-     "slot": "mouth",
-     "color": "#3a1a14"
-    }
-   ],
-   "nativeHeight": 481.2,
-   "face": {
-    "from": 4172,
-    "parts": 7
-   }
-  },
-  "male_suit": {
-   "file": "characters/people/male_suit.glb",
-   "source": "Male_Suit.fbx",
-   "parts": [
-    {
-     "name": "Skin",
-     "slot": "skin",
-     "color": "#3f280d"
-    },
-    {
-     "name": "TieTexture",
-     "slot": "accent",
-     "color": "#ffffff"
-    },
-    {
-     "name": "Eyes",
-     "slot": "eyes",
-     "color": "#060606"
-    },
-    {
-     "name": "Hair",
-     "slot": "hair",
-     "color": "#4a474d"
-    },
-    {
-     "name": "Shirt",
+     "name": "strip33-body",
      "slot": "shirt",
-     "color": "#060506"
+     "color": "#d07b57"
     },
     {
-     "name": "Pants",
-     "slot": "trousers",
-     "color": "#060506"
-    },
-    {
-     "name": "Details",
-     "slot": "accent",
-     "color": "#d6d6d6"
-    },
-    {
-     "name": "Shoes",
-     "slot": "shoes",
-     "color": "#060606"
-    },
-    {
-     "name": "Mouth",
-     "slot": "mouth",
-     "color": "#3a1a14"
-    }
-   ],
-   "nativeHeight": 482.83,
-   "face": {
-    "from": 4364,
-    "parts": 8
-   }
-  },
-  "female_casual": {
-   "file": "characters/people/female_casual.glb",
-   "source": "Female_Casual.fbx",
-   "parts": [
-    {
-     "name": "Skin",
-     "slot": "skin",
-     "color": "#2d1d10"
-    },
-    {
-     "name": "Eyes",
-     "slot": "eyes",
-     "color": "#060606"
-    },
-    {
-     "name": "Hair",
-     "slot": "hair",
-     "color": "#080403"
-    },
-    {
-     "name": "Shirt",
-     "slot": "shirt",
-     "color": "#2f3b27"
-    },
-    {
-     "name": "Pants",
-     "slot": "trousers",
-     "color": "#0f0e0e"
-    },
-    {
-     "name": "Socks",
-     "slot": "socks",
-     "color": "#0b0a0a"
-    },
-    {
-     "name": "Shoes",
-     "slot": "shoes",
-     "color": "#060606"
-    },
-    {
-     "name": "HairBase",
-     "slot": "hair",
-     "color": "#161616"
-    },
-    {
-     "name": "Mouth",
-     "slot": "mouth",
-     "color": "#3a1a14"
-    }
-   ],
-   "nativeHeight": 463.63,
-   "face": {
-    "from": 5782,
-    "parts": 8
-   }
-  },
-  "female_dress": {
-   "file": "characters/people/female_dress.glb",
-   "source": "Female_Dress.fbx",
-   "parts": [
-    {
-     "name": "Skin",
-     "slot": "skin",
-     "color": "#5c4624"
-    },
-    {
-     "name": "Eyes",
-     "slot": "eyes",
-     "color": "#060606"
-    },
-    {
-     "name": "Hair",
-     "slot": "hair",
-     "color": "#372a08"
-    },
-    {
-     "name": "Dress",
-     "slot": "shirt",
-     "color": "#200504"
-    },
-    {
-     "name": "Shoes",
-     "slot": "shoes",
-     "color": "#170906"
-    },
-    {
-     "name": "Mouth",
-     "slot": "mouth",
-     "color": "#3a1a14"
-    }
-   ],
-   "nativeHeight": 465.48,
-   "face": {
-    "from": 3816,
-    "parts": 5
-   }
-  },
-  "female_tanktop": {
-   "file": "characters/people/female_tanktop.glb",
-   "source": "Female_TankTop.fbx",
-   "parts": [
-    {
-     "name": "Skin",
-     "slot": "skin",
-     "color": "#281a0e"
-    },
-    {
-     "name": "Eyes",
-     "slot": "eyes",
-     "color": "#060606"
-    },
-    {
-     "name": "Hair",
-     "slot": "hair",
-     "color": "#070604"
-    },
-    {
-     "name": "Shirt",
-     "slot": "shirt",
-     "color": "#2a373b"
-    },
-    {
-     "name": "Pants",
-     "slot": "trousers",
-     "color": "#0f0e0e"
-    },
-    {
-     "name": "Socks",
-     "slot": "socks",
-     "color": "#816f6f"
-    },
-    {
-     "name": "Shoes",
-     "slot": "shoes",
-     "color": "#060606"
-    },
-    {
-     "name": "HairBase",
-     "slot": "hair",
-     "color": "#161616"
-    },
-    {
-     "name": "Mouth",
-     "slot": "mouth",
-     "color": "#3a1a14"
-    }
-   ],
-   "nativeHeight": 465.48,
-   "face": {
-    "from": 4227,
-    "parts": 8
-   }
-  },
-  "female_alternative": {
-   "file": "characters/people/female_alternative.glb",
-   "source": "Female_Alternative.fbx",
-   "parts": [
-    {
-     "name": "Skin",
-     "slot": "skin",
-     "color": "#7f512a"
-    },
-    {
-     "name": "Eyes",
-     "slot": "eyes",
-     "color": "#060606"
-    },
-    {
-     "name": "Eyebrows",
-     "slot": "hair",
-     "color": "#0c0c0c"
-    },
-    {
-     "name": "Shirt",
-     "slot": "shirt",
-     "color": "#070707"
-    },
-    {
-     "name": "Pants",
-     "slot": "trousers",
-     "color": "#090c17"
-    },
-    {
-     "name": "Socks",
-     "slot": "socks",
-     "color": "#816f6f"
-    },
-    {
-     "name": "Shoes",
-     "slot": "shoes",
-     "color": "#060606"
-    },
-    {
-     "name": "HairBase",
-     "slot": "hair",
-     "color": "#161616"
-    },
-    {
-     "name": "Jacket",
-     "slot": "shirt",
-     "color": "#2f0710"
-    },
-    {
-     "name": "LightJacket",
+     "name": "strip41-body",
      "slot": "shirt2",
-     "color": "#460e10"
+     "color": "#3ca579"
     },
     {
-     "name": "Hair",
+     "name": "strip55-face",
      "slot": "hair",
-     "color": "#380a1f"
+     "color": "#3c3c43"
     },
     {
-     "name": "Mouth",
-     "slot": "mouth",
-     "color": "#3a1a14"
+     "name": "strip55-cheeks",
+     "slot": "eyes",
+     "color": "#43434c"
+    },
+    {
+     "name": "strip55-head",
+     "slot": "hair",
+     "color": "#42424b"
+    },
+    {
+     "name": "strip55-hairline",
+     "slot": "hair",
+     "color": "#37373c"
+    },
+    {
+     "name": "strip35-head",
+     "slot": "skin",
+     "color": "#a95e41"
+    },
+    {
+     "name": "strip35-hairline",
+     "slot": "hair",
+     "color": "#895642"
+    },
+    {
+     "name": "strip35-cheeks",
+     "slot": "skin",
+     "color": "#a35c41"
+    },
+    {
+     "name": "strip53-hairline",
+     "slot": "hair",
+     "color": "#8e8cbd"
+    },
+    {
+     "name": "strip53-head",
+     "slot": "hair",
+     "color": "#a6a4cf"
+    },
+    {
+     "name": "strip53-cheeks",
+     "slot": "accent",
+     "color": "#9f9dca"
+    },
+    {
+     "name": "strip63-cheeks",
+     "slot": "accent",
+     "color": "#ddddea"
     }
    ],
-   "nativeHeight": 465.28,
-   "face": {
-    "from": 4242,
-    "parts": 11
-   }
+   "nativeHeight": 0.6713,
+   "clipSet": "kenney",
+   "heightScale": 0.85,
+   "bones": {
+    "Head": "head",
+    "Neck": "torso",
+    "PalmL": "arm-left",
+    "PalmR": "arm-right",
+    "Body": "root"
+   },
+   "headScale": 5.629,
+   "head": {
+    "w": 0.6755,
+    "top": 0.4887,
+    "d": 0.5065,
+    "cz": 0
+   },
+   "hasFace": true
   },
-  "rpg_cleric": {
-   "file": "characters/people/rpg_cleric.glb",
-   "source": "Cleric.fbx (Quaternius RPG pack)",
-   "label": "Robed",
+  "mini_male_b": {
+   "file": "characters/people/mini_male_b.glb",
+   "source": "character-male-b.glb (Kenney Mini Characters)",
+   "label": "Beard",
+   "sex": "male",
    "parts": [
     {
-     "name": "Skin",
+     "name": "strip17-body",
+     "slot": "trousers",
+     "color": "#6077cc"
+    },
+    {
+     "name": "strip33-body",
+     "slot": "shoes",
+     "color": "#cf7a56"
+    },
+    {
+     "name": "strip37-body",
      "slot": "skin",
-     "color": "#6e4329"
+     "color": "#db9d76"
     },
     {
-     "name": "Hair",
-     "slot": "hair",
-     "color": "#161110"
-    },
-    {
-     "name": "Shirt",
-     "slot": "shirt",
-     "color": "#d8d2c4"
-    },
-    {
-     "name": "Shirt2",
+     "name": "strip36-body",
      "slot": "shirt2",
-     "color": "#8d6e4f"
+     "color": "#f2bf99"
     },
     {
-     "name": "Pants",
-     "slot": "trousers",
-     "color": "#2c3e50"
+     "name": "strip47-body",
+     "slot": "shirt",
+     "color": "#e66048"
     },
     {
-     "name": "Shoes",
-     "slot": "shoes",
-     "color": "#1e1e1e"
-    },
-    {
-     "name": "Eyes",
+     "name": "strip55-face",
      "slot": "eyes",
-     "color": "#0a0606"
+     "color": "#3d3d44"
     },
     {
-     "name": "EyeShine",
-     "slot": "shine",
-     "color": "#ffffff"
+     "name": "strip55-cheeks",
+     "slot": "eyes",
+     "color": "#43434b"
     },
     {
-     "name": "Mouth",
-     "slot": "mouth",
-     "color": "#3a1a14"
-    }
-   ],
-   "nativeHeight": 294.89,
-   "rig": {
-    "k": 0.5331,
-    "from": {
-     "Body": [
-      0.0065,
-      2.0907,
-      0.2919
-     ],
-     "FootL": [
-      0.4259,
-      0.0601,
-      -0.1305
-     ],
-     "FootR": [
-      -0.4476,
-      0.0601,
-      -0.0857
-     ]
-    },
-    "to": {
-     "Body": [
-      0.0022,
-      1.1139,
-      0.0752
-     ],
-     "FootL": [
-      0.2078,
-      0.0247,
-      -0.0451
-     ],
-     "FootR": [
-      -0.2121,
-      0.0247,
-      -0.0451
-     ]
-    }
-   },
-   "headScale": 1.894,
-   "face": {
-    "from": 3987,
-    "parts": 6
-   }
-  },
-  "rpg_monk": {
-   "file": "characters/people/rpg_monk.glb",
-   "source": "Monk.fbx (Quaternius RPG pack)",
-   "label": "Elder",
-   "parts": [
-    {
-     "name": "Skin",
-     "slot": "skin",
-     "color": "#6e4329"
-    },
-    {
-     "name": "Hair",
+     "name": "strip55-head",
      "slot": "hair",
-     "color": "#161110"
+     "color": "#45454f"
     },
     {
-     "name": "Shirt",
-     "slot": "shirt",
-     "color": "#d8d2c4"
+     "name": "strip37-hairline",
+     "slot": "hair",
+     "color": "#ebb48e"
     },
     {
-     "name": "Pants",
-     "slot": "trousers",
-     "color": "#2c3e50"
+     "name": "strip37-head",
+     "slot": "skin",
+     "color": "#ce8a63"
     },
     {
-     "name": "Shoes",
-     "slot": "shoes",
-     "color": "#1e1e1e"
+     "name": "strip37-cheeks",
+     "slot": "skin",
+     "color": "#d3916a"
     },
     {
-     "name": "Details",
-     "slot": "accent",
-     "color": "#a0522d"
+     "name": "strip33-head",
+     "slot": "skin",
+     "color": "#bf6d4b"
     },
     {
-     "name": "Eyes",
-     "slot": "eyes",
-     "color": "#0a0606"
+     "name": "strip33-cheeks",
+     "slot": "skin",
+     "color": "#c16f4c"
     },
     {
-     "name": "EyeShine",
-     "slot": "shine",
-     "color": "#ffffff"
-    },
-    {
-     "name": "Mouth",
-     "slot": "mouth",
-     "color": "#3a1a14"
+     "name": "strip35-head",
+     "slot": "hair",
+     "color": "#8c5641"
     }
    ],
-   "nativeHeight": 291.83,
-   "rig": {
-    "k": 0.5295,
-    "from": {
-     "Body": [
-      0.0065,
-      2.0907,
-      0.2919
-     ],
-     "FootL": [
-      0.4259,
-      0.0601,
-      -0.1305
-     ],
-     "FootR": [
-      -0.4476,
-      0.0601,
-      -0.0857
-     ]
-    },
-    "to": {
-     "Body": [
-      0.0022,
-      1.1063,
-      0.0752
-     ],
-     "FootL": [
-      0.2078,
-      0.0247,
-      -0.0451
-     ],
-     "FootR": [
-      -0.2121,
-      0.0247,
-      -0.0451
-     ]
-    }
+   "nativeHeight": 0.6613,
+   "clipSet": "kenney",
+   "heightScale": 0.85,
+   "bones": {
+    "Head": "head",
+    "Neck": "torso",
+    "PalmL": "arm-left",
+    "PalmR": "arm-right",
+    "Body": "root"
    },
-   "headScale": 1.908,
-   "face": {
-    "from": 4916,
-    "parts": 6
-   }
+   "headScale": 5.715,
+   "head": {
+    "w": 0.6857,
+    "top": 0.481,
+    "d": 0.5882,
+    "cz": 0.0521
+   },
+   "hasFace": true
   },
-  "rpg_ranger": {
-   "file": "characters/people/rpg_ranger.glb",
-   "source": "Ranger.fbx (Quaternius RPG pack)",
-   "label": "Hunter",
+  "mini_male_c": {
+   "file": "characters/people/mini_male_c.glb",
+   "source": "character-male-c.glb (Kenney Mini Characters)",
+   "label": "Uniform cap",
+   "sex": "male",
    "parts": [
     {
-     "name": "Skin",
-     "slot": "skin",
-     "color": "#6e4329"
-    },
-    {
-     "name": "Shirt",
+     "name": "strip55-body",
      "slot": "shirt",
-     "color": "#d8d2c4"
+     "color": "#3e3e45"
     },
     {
-     "name": "Shirt2",
+     "name": "strip49-body",
      "slot": "shirt2",
-     "color": "#8d6e4f"
+     "color": "#e8bb72"
     },
     {
-     "name": "Pants",
-     "slot": "trousers",
-     "color": "#2c3e50"
-    },
-    {
-     "name": "Shoes",
-     "slot": "shoes",
-     "color": "#1e1e1e"
-    },
-    {
-     "name": "Details",
-     "slot": "accent",
-     "color": "#a0522d"
-    },
-    {
-     "name": "Eyes",
-     "slot": "eyes",
-     "color": "#0a0606"
-    },
-    {
-     "name": "EyeShine",
-     "slot": "shine",
-     "color": "#ffffff"
-    },
-    {
-     "name": "Brows",
-     "slot": "hair",
-     "color": "#161110"
-    },
-    {
-     "name": "Mouth",
-     "slot": "mouth",
-     "color": "#3a1a14"
-    }
-   ],
-   "nativeHeight": 293.68,
-   "rig": {
-    "k": 0.5312,
-    "from": {
-     "Body": [
-      0.0065,
-      2.0907,
-      0.2919
-     ],
-     "FootL": [
-      0.4259,
-      0.0601,
-      -0.1305
-     ],
-     "FootR": [
-      -0.4476,
-      0.0601,
-      -0.0857
-     ]
-    },
-    "to": {
-     "Body": [
-      0.0022,
-      1.11,
-      0.0752
-     ],
-     "FootL": [
-      0.2078,
-      0.0247,
-      -0.0451
-     ],
-     "FootR": [
-      -0.2121,
-      0.0247,
-      -0.0451
-     ]
-    }
-   },
-   "headScale": 1.624,
-   "hood": true,
-   "face": {
-    "from": 3301,
-    "parts": 6
-   }
-  },
-  "rpg_rogue": {
-   "file": "characters/people/rpg_rogue.glb",
-   "source": "Rogue.fbx (Quaternius RPG pack)",
-   "label": "Hooded",
-   "parts": [
-    {
-     "name": "Skin",
-     "slot": "skin",
-     "color": "#6e4329"
-    },
-    {
-     "name": "Hair",
-     "slot": "hair",
-     "color": "#161110"
-    },
-    {
-     "name": "Shirt",
-     "slot": "shirt",
-     "color": "#d8d2c4"
-    },
-    {
-     "name": "Pants",
-     "slot": "trousers",
-     "color": "#2c3e50"
-    },
-    {
-     "name": "Shoes",
-     "slot": "shoes",
-     "color": "#1e1e1e"
-    },
-    {
-     "name": "Details",
-     "slot": "accent",
-     "color": "#a0522d"
-    },
-    {
-     "name": "Eyes",
-     "slot": "eyes",
-     "color": "#0a0606"
-    },
-    {
-     "name": "EyeShine",
-     "slot": "shine",
-     "color": "#ffffff"
-    },
-    {
-     "name": "Mouth",
-     "slot": "mouth",
-     "color": "#3a1a14"
-    }
-   ],
-   "nativeHeight": 297.92,
-   "rig": {
-    "k": 0.5295,
-    "from": {
-     "Body": [
-      0.0065,
-      2.0907,
-      0.2919
-     ],
-     "FootL": [
-      0.4259,
-      0.0601,
-      -0.1305
-     ],
-     "FootR": [
-      -0.4476,
-      0.0601,
-      -0.0857
-     ]
-    },
-    "to": {
-     "Body": [
-      0.0022,
-      1.1063,
-      0.0752
-     ],
-     "FootL": [
-      0.2078,
-      0.0247,
-      -0.0451
-     ],
-     "FootR": [
-      -0.2121,
-      0.0247,
-      -0.0451
-     ]
-    }
-   },
-   "headScale": 1.873,
-   "hood": true,
-   "face": {
-    "from": 1364,
-    "parts": 6
-   }
-  },
-  "rpg_warrior": {
-   "file": "characters/people/rpg_warrior.glb",
-   "source": "Warrior.fbx (Quaternius RPG pack)",
-   "label": "Guard",
-   "parts": [
-    {
-     "name": "Skin",
-     "slot": "skin",
-     "color": "#6e4329"
-    },
-    {
-     "name": "Hair",
-     "slot": "hair",
-     "color": "#161110"
-    },
-    {
-     "name": "Shirt",
-     "slot": "shirt",
-     "color": "#d8d2c4"
-    },
-    {
-     "name": "Shirt2",
+     "name": "strip17-body",
      "slot": "shirt2",
-     "color": "#8d6e4f"
+     "color": "#5f74ca"
     },
     {
-     "name": "Pants",
-     "slot": "trousers",
-     "color": "#2c3e50"
+     "name": "strip37-body",
+     "slot": "skin",
+     "color": "#da9c75"
     },
     {
-     "name": "Shoes",
+     "name": "strip51-body",
      "slot": "shoes",
-     "color": "#1e1e1e"
+     "color": "#646289"
     },
     {
-     "name": "Eyes",
+     "name": "strip33-head",
+     "slot": "skin",
+     "color": "#c77450"
+    },
+    {
+     "name": "strip33-hairline",
+     "slot": "hair",
+     "color": "#d9835c"
+    },
+    {
+     "name": "strip33-cheeks",
+     "slot": "skin",
+     "color": "#ca7652"
+    },
+    {
+     "name": "strip55-face",
      "slot": "eyes",
-     "color": "#0a0606"
+     "color": "#3d3d44"
     },
     {
-     "name": "EyeShine",
-     "slot": "shine",
-     "color": "#ffffff"
+     "name": "strip55-cheeks",
+     "slot": "eyes",
+     "color": "#43434c"
     },
     {
-     "name": "Mouth",
-     "slot": "mouth",
-     "color": "#3a1a14"
+     "name": "strip55-hairline",
+     "slot": "hair",
+     "color": "#37373c"
+    },
+    {
+     "name": "strip55-head",
+     "slot": "hair",
+     "color": "#3c3c42"
+    },
+    {
+     "name": "strip37-hairline",
+     "slot": "hair",
+     "color": "#dfa37c"
+    },
+    {
+     "name": "strip37-cheeks",
+     "slot": "skin",
+     "color": "#dc9f78"
+    },
+    {
+     "name": "strip17-head",
+     "slot": "hair",
+     "color": "#617bce"
+    },
+    {
+     "name": "strip49-head",
+     "slot": "hair",
+     "color": "#e9be74"
     }
    ],
-   "nativeHeight": 288.63,
-   "rig": {
-    "k": 0.5334,
-    "from": {
-     "Body": [
-      0.0065,
-      2.0907,
-      0.2919
-     ],
-     "FootL": [
-      0.4259,
-      0.0601,
-      -0.1305
-     ],
-     "FootR": [
-      -0.4476,
-      0.0601,
-      -0.0857
-     ]
-    },
-    "to": {
-     "Body": [
-      0.0022,
-      1.1145,
-      0.0752
-     ],
-     "FootL": [
-      0.2078,
-      0.0247,
-      -0.0451
-     ],
-     "FootR": [
-      -0.2121,
-      0.0247,
-      -0.0451
-     ]
-    }
+   "nativeHeight": 0.7928,
+   "clipSet": "kenney",
+   "heightScale": 0.85,
+   "bones": {
+    "Head": "head",
+    "Neck": "torso",
+    "PalmL": "arm-left",
+    "PalmR": "arm-right",
+    "Body": "root"
    },
-   "headScale": 1.65,
-   "face": {
-    "from": 4254,
-    "parts": 6
-   }
+   "headScale": 4.767,
+   "head": {
+    "w": 0.572,
+    "top": 0.567,
+    "d": 0.5811,
+    "cz": 0.0563
+   },
+   "hasFace": true
   },
-  "rpg_wizard": {
-   "file": "characters/people/rpg_wizard.glb",
-   "source": "Wizard.fbx (Quaternius RPG pack)",
-   "label": "Prophet",
+  "mini_male_d": {
+   "file": "characters/people/mini_male_d.glb",
+   "source": "character-male-d.glb (Kenney Mini Characters)",
+   "label": "Suit",
+   "sex": "male",
    "parts": [
     {
-     "name": "Skin",
-     "slot": "skin",
-     "color": "#6e4329"
-    },
-    {
-     "name": "Hair",
-     "slot": "hair",
-     "color": "#161110"
-    },
-    {
-     "name": "Shirt",
+     "name": "strip55-body",
      "slot": "shirt",
-     "color": "#d8d2c4"
+     "color": "#3e3e44"
     },
     {
-     "name": "Pants",
-     "slot": "trousers",
-     "color": "#2c3e50"
+     "name": "strip37-body",
+     "slot": "skin",
+     "color": "#da9c75"
     },
     {
-     "name": "Shoes",
-     "slot": "shoes",
-     "color": "#1e1e1e"
+     "name": "strip63-body",
+     "slot": "shirt2",
+     "color": "#dfdfeb"
     },
     {
-     "name": "Details",
-     "slot": "accent",
-     "color": "#a0522d"
+     "name": "strip47-body",
+     "slot": "shirt2",
+     "color": "#ef6545"
     },
     {
-     "name": "Eyes",
+     "name": "strip37-hairline",
+     "slot": "hair",
+     "color": "#d99a73"
+    },
+    {
+     "name": "strip37-head",
+     "slot": "skin",
+     "color": "#e9b28c"
+    },
+    {
+     "name": "strip37-cheeks",
+     "slot": "skin",
+     "color": "#e5ad86"
+    },
+    {
+     "name": "strip55-face",
      "slot": "eyes",
-     "color": "#0a0606"
+     "color": "#3d3d44"
     },
     {
-     "name": "EyeShine",
-     "slot": "shine",
+     "name": "strip55-cheeks",
+     "slot": "hair",
+     "color": "#43434c"
+    },
+    {
+     "name": "strip33-head",
+     "slot": "skin",
+     "color": "#c87551"
+    },
+    {
+     "name": "strip33-hairline",
+     "slot": "hair",
+     "color": "#d7815b"
+    },
+    {
+     "name": "strip33-cheeks",
+     "slot": "skin",
+     "color": "#c97552"
+    }
+   ],
+   "nativeHeight": 0.7218,
+   "clipSet": "kenney",
+   "heightScale": 0.85,
+   "bones": {
+    "Head": "head",
+    "Neck": "torso",
+    "PalmL": "arm-left",
+    "PalmR": "arm-right",
+    "Body": "root"
+   },
+   "headScale": 5.236,
+   "head": {
+    "w": 0.6283,
+    "top": 0.5244,
+    "d": 0.4711,
+    "cz": 0
+   },
+   "hasFace": true
+  },
+  "mini_male_e": {
+   "file": "characters/people/mini_male_e.glb",
+   "source": "character-male-e.glb (Kenney Mini Characters)",
+   "label": "Overalls",
+   "sex": "male",
+   "parts": [
+    {
+     "name": "strip63-body",
+     "slot": "shirt2",
+     "color": "#dddde9"
+    },
+    {
+     "name": "strip49-body",
+     "slot": "shirt",
+     "color": "#e7b96f"
+    },
+    {
+     "name": "strip55-body",
+     "slot": "trousers",
+     "color": "#3d3d43"
+    },
+    {
+     "name": "strip51-body",
+     "slot": "shoes",
+     "color": "#646289"
+    },
+    {
+     "name": "strip55-face",
+     "slot": "eyes",
+     "color": "#3d3d44"
+    },
+    {
+     "name": "strip55-cheeks",
+     "slot": "eyes",
+     "color": "#43434c"
+    },
+    {
+     "name": "strip37-hairline",
+     "slot": "hair",
+     "color": "#d99a73"
+    },
+    {
+     "name": "strip37-head",
+     "slot": "skin",
+     "color": "#e9b28c"
+    },
+    {
+     "name": "strip37-cheeks",
+     "slot": "skin",
+     "color": "#e5ad86"
+    },
+    {
+     "name": "strip35-head",
+     "slot": "skin",
+     "color": "#945841"
+    },
+    {
+     "name": "strip35-hairline",
+     "slot": "hair",
+     "color": "#a85e41"
+    },
+    {
+     "name": "strip35-cheeks",
+     "slot": "skin",
+     "color": "#925841"
+    },
+    {
+     "name": "strip53-hairline",
+     "slot": "hair",
+     "color": "#8e8cbd"
+    },
+    {
+     "name": "strip53-head",
+     "slot": "hair",
+     "color": "#a6a4cf"
+    },
+    {
+     "name": "strip53-cheeks",
+     "slot": "accent",
+     "color": "#9f9dca"
+    },
+    {
+     "name": "strip63-cheeks",
+     "slot": "accent",
+     "color": "#ddddea"
+    }
+   ],
+   "nativeHeight": 0.676,
+   "clipSet": "kenney",
+   "heightScale": 0.85,
+   "bones": {
+    "Head": "head",
+    "Neck": "torso",
+    "PalmL": "arm-left",
+    "PalmR": "arm-right",
+    "Body": "root"
+   },
+   "headScale": 5.591,
+   "head": {
+    "w": 0.6709,
+    "top": 0.4922,
+    "d": 0.5059,
+    "cz": 0.0015
+   },
+   "hasFace": true
+  },
+  "mini_male_f": {
+   "file": "characters/people/mini_male_f.glb",
+   "source": "character-male-f.glb (Kenney Mini Characters)",
+   "label": "T-shirt",
+   "sex": "male",
+   "parts": [
+    {
+     "name": "strip33-body",
+     "slot": "skin",
+     "color": "#ce7a55"
+    },
+    {
+     "name": "strip41-body",
+     "slot": "shirt2",
+     "color": "#3ba578"
+    },
+    {
+     "name": "strip55-body",
+     "slot": "shirt",
+     "color": "#3e3e45"
+    },
+    {
+     "name": "strip51-body",
+     "slot": "trousers",
+     "color": "#65628a"
+    },
+    {
+     "name": "strip37-body",
+     "slot": "skin",
+     "color": "#dea27b"
+    },
+    {
+     "name": "strip55-head",
+     "slot": "hair",
+     "color": "#42424a"
+    },
+    {
+     "name": "strip55-hairline",
+     "slot": "hair",
+     "color": "#36363a"
+    },
+    {
+     "name": "strip55-face",
+     "slot": "hair",
+     "color": "#3c3c43"
+    },
+    {
+     "name": "strip55-cheeks",
+     "slot": "eyes",
+     "color": "#42424b"
+    },
+    {
+     "name": "strip33-hairline",
+     "slot": "hair",
+     "color": "#ca7653"
+    },
+    {
+     "name": "strip33-head",
+     "slot": "skin",
+     "color": "#e38c63"
+    },
+    {
+     "name": "strip33-cheeks",
+     "slot": "skin",
+     "color": "#de875f"
+    }
+   ],
+   "nativeHeight": 0.6713,
+   "clipSet": "kenney",
+   "heightScale": 0.85,
+   "bones": {
+    "Head": "head",
+    "Neck": "torso",
+    "PalmL": "arm-left",
+    "PalmR": "arm-right",
+    "Body": "root"
+   },
+   "headScale": 5.629,
+   "head": {
+    "w": 0.6755,
+    "top": 0.4887,
+    "d": 0.5065,
+    "cz": 0
+   },
+   "hasFace": true
+  },
+  "mini_male_g": {
+   "file": "characters/people/mini_male_g.glb",
+   "source": "character-male-g.glb (Kenney Mini Characters)",
+   "label": "Eyepatch",
+   "sex": "male",
+   "parts": [
+    {
+     "name": "strip37-body",
+     "slot": "skin",
+     "color": "#dda07a"
+    },
+    {
+     "name": "strip33-body",
+     "slot": "skin",
+     "color": "#cf7b56"
+    },
+    {
+     "name": "strip51-body",
+     "slot": "trousers",
+     "color": "#646289"
+    },
+    {
+     "name": "strip53-body",
+     "slot": "shirt",
+     "color": "#9391c1"
+    },
+    {
+     "name": "strip55-face",
+     "slot": "eyes",
+     "color": "#3b3b41"
+    },
+    {
+     "name": "strip55-cheeks",
+     "slot": "eyes",
+     "color": "#43434c"
+    },
+    {
+     "name": "strip55-head",
+     "slot": "hair",
+     "color": "#45454e"
+    },
+    {
+     "name": "strip55-hairline",
+     "slot": "hair",
+     "color": "#36363a"
+    },
+    {
+     "name": "strip37-hairline",
+     "slot": "hair",
+     "color": "#ebb48e"
+    },
+    {
+     "name": "strip37-head",
+     "slot": "skin",
+     "color": "#ce8a63"
+    },
+    {
+     "name": "strip37-cheeks",
+     "slot": "skin",
+     "color": "#d3916a"
+    },
+    {
+     "name": "strip51-hairline",
+     "slot": "hair",
+     "color": "#706d9a"
+    },
+    {
+     "name": "strip51-head",
+     "slot": "hair",
+     "color": "#5a597a"
+    },
+    {
+     "name": "strip51-cheeks",
+     "slot": "accent",
+     "color": "#5c5a7d"
+    },
+    {
+     "name": "strip53-head",
+     "slot": "hair",
+     "color": "#9492c1"
+    }
+   ],
+   "nativeHeight": 0.6713,
+   "clipSet": "kenney",
+   "heightScale": 0.85,
+   "bones": {
+    "Head": "head",
+    "Neck": "torso",
+    "PalmL": "arm-left",
+    "PalmR": "arm-right",
+    "Body": "root"
+   },
+   "headScale": 5.629,
+   "head": {
+    "w": 0.6755,
+    "top": 0.4887,
+    "d": 0.5943,
+    "cz": 0.0439
+   },
+   "hasFace": true
+  },
+  "mini_worker": {
+   "file": "characters/people/mini_worker.glb",
+   "source": "character-worker.glb (Kenney Mini Characters)",
+   "label": "Hard hat",
+   "sex": "male",
+   "parts": [
+    {
+     "name": "strip33-body",
+     "slot": "shirt2",
+     "color": "#d07b57"
+    },
+    {
+     "name": "strip17-body",
+     "slot": "shirt",
+     "color": "#5f74ca"
+    },
+    {
+     "name": "strip53-body",
+     "slot": "shirt2",
+     "color": "#9a98c6"
+    },
+    {
+     "name": "strip35-body",
+     "slot": "skin",
+     "color": "#965942"
+    },
+    {
+     "name": "strip62-body",
+     "slot": "shirt2",
      "color": "#ffffff"
     },
     {
-     "name": "Mouth",
-     "slot": "mouth",
-     "color": "#3a1a14"
+     "name": "strip63-body",
+     "slot": "shoes",
+     "color": "#d8d8e7"
+    },
+    {
+     "name": "strip49-body",
+     "slot": "shoes",
+     "color": "#e6b86d"
+    },
+    {
+     "name": "strip55-face",
+     "slot": "hair",
+     "color": "#3d3d44"
+    },
+    {
+     "name": "strip55-cheeks",
+     "slot": "hair",
+     "color": "#43434c"
+    },
+    {
+     "name": "strip55-head",
+     "slot": "hair",
+     "color": "#404049"
+    },
+    {
+     "name": "strip55-hairline",
+     "slot": "hair",
+     "color": "#36363a"
+    },
+    {
+     "name": "strip35-hairline",
+     "slot": "hair",
+     "color": "#9c5b41"
+    },
+    {
+     "name": "strip35-head",
+     "slot": "skin",
+     "color": "#995a41"
+    },
+    {
+     "name": "strip35-cheeks",
+     "slot": "skin",
+     "color": "#995941"
+    },
+    {
+     "name": "strip48-head",
+     "slot": "hair",
+     "color": "#e6b96e"
+    },
+    {
+     "name": "strip49-head",
+     "slot": "hair",
+     "color": "#e1af64"
+    },
+    {
+     "name": "strip49-hairline",
+     "slot": "hair",
+     "color": "#ebc177"
+    },
+    {
+     "name": "strip49-cheeks",
+     "slot": "accent",
+     "color": "#e1af64"
     }
    ],
-   "nativeHeight": 302.55,
-   "rig": {
-    "k": 0.5328,
-    "from": {
-     "Body": [
-      0.0065,
-      2.0907,
-      0.2919
-     ],
-     "FootL": [
-      0.4259,
-      0.0601,
-      -0.1305
-     ],
-     "FootR": [
-      -0.4476,
-      0.0601,
-      -0.0857
-     ]
-    },
-    "to": {
-     "Body": [
-      0.0022,
-      1.1133,
-      0.0752
-     ],
-     "FootL": [
-      0.2078,
-      0.0247,
-      -0.0451
-     ],
-     "FootR": [
-      -0.2121,
-      0.0247,
-      -0.0451
-     ]
-    }
+   "nativeHeight": 0.8241,
+   "clipSet": "kenney",
+   "heightScale": 0.85,
+   "bones": {
+    "Head": "head",
+    "Neck": "torso",
+    "PalmL": "arm-left",
+    "PalmR": "arm-right",
+    "Body": "root"
    },
-   "headScale": 1.868,
-   "face": {
-    "from": 3640,
-    "parts": 6
-   }
+   "headScale": 4.586,
+   "head": {
+    "w": 0.5503,
+    "top": 0.5835,
+    "d": 0.563,
+    "cz": 0.0445
+   },
+   "hasFace": true
+  },
+  "mini_soldier": {
+   "file": "characters/people/mini_soldier.glb",
+   "source": "character-soldier.glb (Kenney Mini Characters)",
+   "label": "Beanie",
+   "sex": "male",
+   "parts": [
+    {
+     "name": "strip41-body",
+     "slot": "shirt",
+     "color": "#3ea77a"
+    },
+    {
+     "name": "strip55-body",
+     "slot": "shoes",
+     "color": "#3d3d44"
+    },
+    {
+     "name": "strip37-body",
+     "slot": "shoes",
+     "color": "#db9d76"
+    },
+    {
+     "name": "strip36-body",
+     "slot": "shirt2",
+     "color": "#f2bf99"
+    },
+    {
+     "name": "strip33-body",
+     "slot": "skin",
+     "color": "#ce7955"
+    },
+    {
+     "name": "strip53-body",
+     "slot": "shirt2",
+     "color": "#9a98c6"
+    },
+    {
+     "name": "strip35-head",
+     "slot": "skin",
+     "color": "#9f5b41"
+    },
+    {
+     "name": "strip35-hairline",
+     "slot": "hair",
+     "color": "#865542"
+    },
+    {
+     "name": "strip35-cheeks",
+     "slot": "skin",
+     "color": "#9a5a41"
+    },
+    {
+     "name": "strip55-face",
+     "slot": "eyes",
+     "color": "#3e3e45"
+    },
+    {
+     "name": "strip55-cheeks",
+     "slot": "eyes",
+     "color": "#43434c"
+    },
+    {
+     "name": "strip41-hairline",
+     "slot": "hair",
+     "color": "#43ac7c"
+    },
+    {
+     "name": "strip41-head",
+     "slot": "hair",
+     "color": "#369f76"
+    },
+    {
+     "name": "strip41-cheeks",
+     "slot": "accent",
+     "color": "#309973"
+    },
+    {
+     "name": "strip33-head",
+     "slot": "skin",
+     "color": "#d5805a"
+    },
+    {
+     "name": "strip33-hairline",
+     "slot": "hair",
+     "color": "#e78f66"
+    },
+    {
+     "name": "strip33-cheeks",
+     "slot": "skin",
+     "color": "#d5805a"
+    },
+    {
+     "name": "strip37-hairline",
+     "slot": "hair",
+     "color": "#cf8b64"
+    },
+    {
+     "name": "strip37-head",
+     "slot": "skin",
+     "color": "#ebb58f"
+    },
+    {
+     "name": "strip37-cheeks",
+     "slot": "skin",
+     "color": "#ebb58f"
+    }
+   ],
+   "nativeHeight": 0.7549,
+   "clipSet": "kenney",
+   "heightScale": 0.85,
+   "bones": {
+    "Head": "head",
+    "Neck": "torso",
+    "PalmL": "arm-left",
+    "PalmR": "arm-right",
+    "Body": "root"
+   },
+   "headScale": 5.028,
+   "head": {
+    "w": 0.6034,
+    "top": 0.5453,
+    "d": 0.7838,
+    "cz": 0.016
+   },
+   "hasFace": true
+  },
+  "mini_raider": {
+   "file": "characters/people/mini_raider.glb",
+   "source": "character-raider.glb (Kenney Mini Characters)",
+   "label": "Ponytail",
+   "sex": "male",
+   "parts": [
+    {
+     "name": "strip17-body",
+     "slot": "accent",
+     "color": "#617bcd"
+    },
+    {
+     "name": "strip35-body",
+     "slot": "shirt",
+     "color": "#985a41"
+    },
+    {
+     "name": "strip33-body",
+     "slot": "skin",
+     "color": "#cf7a56"
+    },
+    {
+     "name": "strip41-body",
+     "slot": "shirt2",
+     "color": "#3ca579"
+    },
+    {
+     "name": "strip53-body",
+     "slot": "shirt2",
+     "color": "#9492c2"
+    },
+    {
+     "name": "strip37-body",
+     "slot": "skin",
+     "color": "#da9c75"
+    },
+    {
+     "name": "strip55-hairline",
+     "slot": "hair",
+     "color": "#37373b"
+    },
+    {
+     "name": "strip55-face",
+     "slot": "hair",
+     "color": "#3a3a3f"
+    },
+    {
+     "name": "strip55-head",
+     "slot": "hair",
+     "color": "#42424a"
+    },
+    {
+     "name": "strip55-cheeks",
+     "slot": "eyes",
+     "color": "#43434b"
+    },
+    {
+     "name": "strip37-hairline",
+     "slot": "hair",
+     "color": "#d99a73"
+    },
+    {
+     "name": "strip37-head",
+     "slot": "skin",
+     "color": "#e9b28c"
+    },
+    {
+     "name": "strip37-cheeks",
+     "slot": "skin",
+     "color": "#e5ad86"
+    }
+   ],
+   "nativeHeight": 0.7165,
+   "clipSet": "kenney",
+   "heightScale": 0.85,
+   "bones": {
+    "Head": "head",
+    "Neck": "torso",
+    "PalmL": "arm-left",
+    "PalmR": "arm-right",
+    "Body": "root"
+   },
+   "headScale": 5.275,
+   "head": {
+    "w": 0.633,
+    "top": 0.5209,
+    "d": 0.7356,
+    "cz": -0.0747
+   },
+   "hasFace": true
+  },
+  "mini_female_a": {
+   "file": "characters/people/mini_female_a.glb",
+   "source": "character-female-a.glb (Kenney Mini Characters)",
+   "label": "Top",
+   "sex": "female",
+   "parts": [
+    {
+     "name": "strip17-body",
+     "slot": "trousers",
+     "color": "#5f73ca"
+    },
+    {
+     "name": "strip37-body",
+     "slot": "shoes",
+     "color": "#dda07a"
+    },
+    {
+     "name": "strip63-body",
+     "slot": "shoes",
+     "color": "#d8d8e7"
+    },
+    {
+     "name": "strip33-body",
+     "slot": "shirt",
+     "color": "#d07b57"
+    },
+    {
+     "name": "strip21-body",
+     "slot": "shirt2",
+     "color": "#8259d0"
+    },
+    {
+     "name": "strip35-body",
+     "slot": "skin",
+     "color": "#995a41"
+    },
+    {
+     "name": "strip34-body",
+     "slot": "shirt2",
+     "color": "#b06041"
+    },
+    {
+     "name": "strip53-body",
+     "slot": "shirt2",
+     "color": "#9492c2"
+    },
+    {
+     "name": "strip55-head",
+     "slot": "hair",
+     "color": "#42424b"
+    },
+    {
+     "name": "strip55-hairline",
+     "slot": "hair",
+     "color": "#36363a"
+    },
+    {
+     "name": "strip55-face",
+     "slot": "hair",
+     "color": "#3b3b41"
+    },
+    {
+     "name": "strip55-cheeks",
+     "slot": "hair",
+     "color": "#43434c"
+    },
+    {
+     "name": "strip35-head",
+     "slot": "skin",
+     "color": "#a95e41"
+    },
+    {
+     "name": "strip35-hairline",
+     "slot": "hair",
+     "color": "#895642"
+    },
+    {
+     "name": "strip35-cheeks",
+     "slot": "skin",
+     "color": "#a35c41"
+    }
+   ],
+   "nativeHeight": 0.7755,
+   "clipSet": "kenney",
+   "heightScale": 0.85,
+   "bones": {
+    "Head": "head",
+    "Neck": "torso",
+    "PalmL": "arm-left",
+    "PalmR": "arm-right",
+    "Body": "root"
+   },
+   "headScale": 4.873,
+   "head": {
+    "w": 0.5848,
+    "top": 0.5574,
+    "d": 0.6441,
+    "cz": -0.0513
+   },
+   "hasFace": true
+  },
+  "mini_female_b": {
+   "file": "characters/people/mini_female_b.glb",
+   "source": "character-female-b.glb (Kenney Mini Characters)",
+   "label": "Headband",
+   "sex": "female",
+   "parts": [
+    {
+     "name": "strip21-body",
+     "slot": "shirt",
+     "color": "#845ad1"
+    },
+    {
+     "name": "strip55-body",
+     "slot": "shoes",
+     "color": "#3d3d44"
+    },
+    {
+     "name": "strip63-body",
+     "slot": "shoes",
+     "color": "#d8d8e7"
+    },
+    {
+     "name": "strip37-body",
+     "slot": "skin",
+     "color": "#dc9e77"
+    },
+    {
+     "name": "strip36-body",
+     "slot": "shirt2",
+     "color": "#f2bf99"
+    },
+    {
+     "name": "strip49-body",
+     "slot": "shirt2",
+     "color": "#e7b96f"
+    },
+    {
+     "name": "strip33-hairline",
+     "slot": "hair",
+     "color": "#d8825c"
+    },
+    {
+     "name": "strip33-cheeks",
+     "slot": "skin",
+     "color": "#c67350"
+    },
+    {
+     "name": "strip33-head",
+     "slot": "skin",
+     "color": "#c77451"
+    },
+    {
+     "name": "strip55-face",
+     "slot": "eyes",
+     "color": "#3d3d44"
+    },
+    {
+     "name": "strip55-cheeks",
+     "slot": "eyes",
+     "color": "#43434c"
+    },
+    {
+     "name": "strip49-head",
+     "slot": "hair",
+     "color": "#e8bc73"
+    },
+    {
+     "name": "strip37-hairline",
+     "slot": "hair",
+     "color": "#dc9f78"
+    },
+    {
+     "name": "strip37-head",
+     "slot": "skin",
+     "color": "#e7af89"
+    },
+    {
+     "name": "strip37-cheeks",
+     "slot": "skin",
+     "color": "#e3a983"
+    }
+   ],
+   "nativeHeight": 0.7234,
+   "clipSet": "kenney",
+   "heightScale": 0.85,
+   "bones": {
+    "Head": "head",
+    "Neck": "torso",
+    "PalmL": "arm-left",
+    "PalmR": "arm-right",
+    "Body": "root"
+   },
+   "headScale": 5.472,
+   "head": {
+    "w": 0.6566,
+    "top": 0.5255,
+    "d": 0.5786,
+    "cz": 0.001
+   },
+   "hasFace": true
+  },
+  "mini_female_c": {
+   "file": "characters/people/mini_female_c.glb",
+   "source": "character-female-c.glb (Kenney Mini Characters)",
+   "label": "Cap",
+   "sex": "female",
+   "parts": [
+    {
+     "name": "strip47-body",
+     "slot": "shirt2",
+     "color": "#e76148"
+    },
+    {
+     "name": "strip17-body",
+     "slot": "shirt2",
+     "color": "#5f73ca"
+    },
+    {
+     "name": "strip32-body",
+     "slot": "shirt2",
+     "color": "#f1976c"
+    },
+    {
+     "name": "strip33-body",
+     "slot": "skin",
+     "color": "#cd7955"
+    },
+    {
+     "name": "strip63-body",
+     "slot": "shirt",
+     "color": "#dadae8"
+    },
+    {
+     "name": "strip37-body",
+     "slot": "shoes",
+     "color": "#db9d76"
+    },
+    {
+     "name": "strip51-body",
+     "slot": "trousers",
+     "color": "#6a6792"
+    },
+    {
+     "name": "strip51-hairline",
+     "slot": "hair",
+     "color": "#6b6893"
+    },
+    {
+     "name": "strip51-head",
+     "slot": "hair",
+     "color": "#65628a"
+    },
+    {
+     "name": "strip51-cheeks",
+     "slot": "accent",
+     "color": "#5f5e82"
+    },
+    {
+     "name": "strip55-face",
+     "slot": "eyes",
+     "color": "#3d3d44"
+    },
+    {
+     "name": "strip55-cheeks",
+     "slot": "hair",
+     "color": "#43434c"
+    },
+    {
+     "name": "strip47-head",
+     "slot": "hair",
+     "color": "#ea6247"
+    },
+    {
+     "name": "strip33-hairline",
+     "slot": "hair",
+     "color": "#ca7653"
+    },
+    {
+     "name": "strip33-head",
+     "slot": "skin",
+     "color": "#e38c63"
+    },
+    {
+     "name": "strip33-cheeks",
+     "slot": "skin",
+     "color": "#de875f"
+    }
+   ],
+   "nativeHeight": 0.7755,
+   "clipSet": "kenney",
+   "heightScale": 0.85,
+   "bones": {
+    "Head": "head",
+    "Neck": "torso",
+    "PalmL": "arm-left",
+    "PalmR": "arm-right",
+    "Body": "root"
+   },
+   "headScale": 4.873,
+   "head": {
+    "w": 0.5848,
+    "top": 0.5574,
+    "d": 0.6441,
+    "cz": -0.0513
+   },
+   "hasFace": true
+  },
+  "mini_female_d": {
+   "file": "characters/people/mini_female_d.glb",
+   "source": "character-female-d.glb (Kenney Mini Characters)",
+   "label": "Suit",
+   "sex": "female",
+   "parts": [
+    {
+     "name": "strip51-body",
+     "slot": "shirt",
+     "color": "#66648c"
+    },
+    {
+     "name": "strip55-body",
+     "slot": "shoes",
+     "color": "#3d3d44"
+    },
+    {
+     "name": "strip37-body",
+     "slot": "skin",
+     "color": "#da9c75"
+    },
+    {
+     "name": "strip63-body",
+     "slot": "shirt2",
+     "color": "#ddddea"
+    },
+    {
+     "name": "strip55-face",
+     "slot": "eyes",
+     "color": "#3d3d44"
+    },
+    {
+     "name": "strip55-cheeks",
+     "slot": "hair",
+     "color": "#43434c"
+    },
+    {
+     "name": "strip33-hairline",
+     "slot": "hair",
+     "color": "#d8825c"
+    },
+    {
+     "name": "strip33-cheeks",
+     "slot": "skin",
+     "color": "#c67350"
+    },
+    {
+     "name": "strip33-head",
+     "slot": "skin",
+     "color": "#cc7854"
+    },
+    {
+     "name": "strip37-hairline",
+     "slot": "hair",
+     "color": "#d99a73"
+    },
+    {
+     "name": "strip37-head",
+     "slot": "skin",
+     "color": "#e9b28c"
+    },
+    {
+     "name": "strip37-cheeks",
+     "slot": "skin",
+     "color": "#e5ad86"
+    },
+    {
+     "name": "strip63-head",
+     "slot": "hair",
+     "color": "#ddddea"
+    }
+   ],
+   "nativeHeight": 0.7755,
+   "clipSet": "kenney",
+   "heightScale": 0.85,
+   "bones": {
+    "Head": "head",
+    "Neck": "torso",
+    "PalmL": "arm-left",
+    "PalmR": "arm-right",
+    "Body": "root"
+   },
+   "headScale": 4.873,
+   "head": {
+    "w": 0.5848,
+    "top": 0.5574,
+    "d": 0.6441,
+    "cz": -0.0513
+   },
+   "hasFace": true
+  },
+  "mini_female_e": {
+   "file": "characters/people/mini_female_e.glb",
+   "source": "character-female-e.glb (Kenney Mini Characters)",
+   "label": "Lab coat",
+   "sex": "female",
+   "parts": [
+    {
+     "name": "strip55-body",
+     "slot": "trousers",
+     "color": "#3b3b42"
+    },
+    {
+     "name": "strip63-body",
+     "slot": "shirt",
+     "color": "#dcdce9"
+    },
+    {
+     "name": "strip53-body",
+     "slot": "shoes",
+     "color": "#9290c0"
+    },
+    {
+     "name": "strip33-body",
+     "slot": "shirt2",
+     "color": "#d07b57"
+    },
+    {
+     "name": "strip17-body",
+     "slot": "shirt2",
+     "color": "#5e70c8"
+    },
+    {
+     "name": "strip55-hairline",
+     "slot": "hair",
+     "color": "#37373b"
+    },
+    {
+     "name": "strip55-face",
+     "slot": "hair",
+     "color": "#39393f"
+    },
+    {
+     "name": "strip55-head",
+     "slot": "hair",
+     "color": "#42424a"
+    },
+    {
+     "name": "strip55-cheeks",
+     "slot": "hair",
+     "color": "#43434c"
+    },
+    {
+     "name": "strip37-hairline",
+     "slot": "hair",
+     "color": "#d99a73"
+    },
+    {
+     "name": "strip37-head",
+     "slot": "skin",
+     "color": "#e9b28c"
+    },
+    {
+     "name": "strip37-cheeks",
+     "slot": "skin",
+     "color": "#e5ad86"
+    }
+   ],
+   "nativeHeight": 0.7165,
+   "clipSet": "kenney",
+   "heightScale": 0.85,
+   "bones": {
+    "Head": "head",
+    "Neck": "torso",
+    "PalmL": "arm-left",
+    "PalmR": "arm-right",
+    "Body": "root"
+   },
+   "headScale": 5.275,
+   "head": {
+    "w": 0.633,
+    "top": 0.5209,
+    "d": 0.7356,
+    "cz": -0.0747
+   },
+   "hasFace": true
+  },
+  "mini_female_f": {
+   "file": "characters/people/mini_female_f.glb",
+   "source": "character-female-f.glb (Kenney Mini Characters)",
+   "label": "Long hair",
+   "sex": "female",
+   "parts": [
+    {
+     "name": "strip51-body",
+     "slot": "shirt2",
+     "color": "#66648b"
+    },
+    {
+     "name": "strip49-body",
+     "slot": "shirt",
+     "color": "#e5b76d"
+    },
+    {
+     "name": "strip55-body",
+     "slot": "shirt2",
+     "color": "#3d3d44"
+    },
+    {
+     "name": "strip36-body",
+     "slot": "shirt2",
+     "color": "#f2bf99"
+    },
+    {
+     "name": "strip37-body",
+     "slot": "skin",
+     "color": "#da9c75"
+    },
+    {
+     "name": "strip53-body",
+     "slot": "shirt2",
+     "color": "#9492c2"
+    },
+    {
+     "name": "strip17-body",
+     "slot": "trousers",
+     "color": "#6077cc"
+    },
+    {
+     "name": "strip21-body",
+     "slot": "shoes",
+     "color": "#7f56ce"
+    },
+    {
+     "name": "strip63-body",
+     "slot": "shoes",
+     "color": "#d8d8e7"
+    },
+    {
+     "name": "strip37-hairline",
+     "slot": "hair",
+     "color": "#dea17b"
+    },
+    {
+     "name": "strip37-head",
+     "slot": "skin",
+     "color": "#e5ac86"
+    },
+    {
+     "name": "strip37-cheeks",
+     "slot": "skin",
+     "color": "#e1a67f"
+    },
+    {
+     "name": "strip35-hairline",
+     "slot": "hair",
+     "color": "#a95e41"
+    },
+    {
+     "name": "strip35-head",
+     "slot": "skin",
+     "color": "#8c5742"
+    },
+    {
+     "name": "strip35-cheeks",
+     "slot": "skin",
+     "color": "#8d5741"
+    },
+    {
+     "name": "strip33-hairline",
+     "slot": "hair",
+     "color": "#ea9168"
+    },
+    {
+     "name": "strip33-head",
+     "slot": "skin",
+     "color": "#dd875f"
+    },
+    {
+     "name": "strip33-cheeks",
+     "slot": "skin",
+     "color": "#d5805a"
+    },
+    {
+     "name": "strip55-face",
+     "slot": "eyes",
+     "color": "#3d3d44"
+    },
+    {
+     "name": "strip55-cheeks",
+     "slot": "eyes",
+     "color": "#43434c"
+    },
+    {
+     "name": "strip21-cheeks",
+     "slot": "accent",
+     "color": "#865dd3"
+    }
+   ],
+   "nativeHeight": 0.6713,
+   "clipSet": "kenney",
+   "heightScale": 0.85,
+   "bones": {
+    "Head": "head",
+    "Neck": "torso",
+    "PalmL": "arm-left",
+    "PalmR": "arm-right",
+    "Body": "root"
+   },
+   "headScale": 7.324,
+   "head": {
+    "w": 0.8789,
+    "top": 0.4887,
+    "d": 0.566,
+    "cz": 0.0298
+   },
+   "hasFace": true
   }
  },
  "extras": {

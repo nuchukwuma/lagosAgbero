@@ -1,8 +1,8 @@
 // Character looks: a few bodies (outfits), many people.
 // A "look" is plain data (characters.json for the cast, the save for the player):
 //
-//   { body: "male_casual" | "male_shirt" | "male_longsleeve" | "male_suit" |
-//           "female_casual" | "female_dress" | "female_tanktop" | "female_alternative",
+//   { body: "mini_male_a".."mini_male_g" | "mini_worker" | "mini_soldier" | "mini_raider" |
+//           "mini_female_a".."mini_female_f"  (Kenney Mini Characters; older ids map across),
 //     skin, hair, shirt, shirt2, trousers, shoes, socks, accent: "#rrggbb",
 //     height: 1.0, width: 1.0, eyeRed: 0..1,
 //     accessories: [ { type: "cap", color: "#..." }, { type: "glasses" }, ... ] }
@@ -16,10 +16,37 @@ import * as THREE from 'three'
 import people from '../../assets/peopleIndex.json'
 
 export const BODIES = Object.keys(people.bodies)
+
+// Everyone is a Kenney Mini Character now (scripts/import-kenney-minis.mjs).
+// Older looks (saves, story data) name the bodies used before: each maps to
+// the closest mini.
+export const LEGACY_BODIES = {
+  male_casual: 'mini_male_f',
+  male_shirt: 'mini_male_e',
+  male_longsleeve: 'mini_soldier',
+  male_suit: 'mini_male_d',
+  female_casual: 'mini_female_a',
+  female_dress: 'mini_female_f',
+  female_tanktop: 'mini_female_c',
+  female_alternative: 'mini_female_e',
+  rpg_cleric: 'mini_male_d',
+  rpg_monk: 'mini_male_b',
+  rpg_ranger: 'mini_soldier',
+  rpg_rogue: 'mini_raider',
+  rpg_warrior: 'mini_male_c',
+  rpg_wizard: 'mini_male_g',
+}
+export const MALE_BODIES = BODIES.filter((b) => people.bodies[b].sex === 'male')
+export const FEMALE_BODIES = BODIES.filter((b) => people.bodies[b].sex === 'female')
+/** Is this a woman's body? (any body id, old or new) */
+export function isFemale(body = '') {
+  const id = LEGACY_BODIES[body] || body
+  return people.bodies[id]?.sex === 'female' || id.startsWith('female') || id.includes('_female')
+}
 export const SKIN_TONES = ['#3d2516', '#4e2f1d', '#5c3a24', '#6e4329', '#7d4c2e', '#8d5524']
 
 export const DEFAULT_LOOK = {
-  body: 'male_casual',
+  body: 'mini_male_f',
   skin: '#5c3a24',
   hair: '#161110',
   shirt: '#d8d2c4',
@@ -34,12 +61,13 @@ export const DEFAULT_LOOK = {
 export function normalizeLook(look = {}) {
   const l = { ...DEFAULT_LOOK, ...look, accessories: look.accessories || [] }
   if (!look.body && look.base) l.body = `${look.base}_${look.outfit || 'casual'}`
-  if (!people.bodies[l.body]) l.body = l.body?.startsWith('female') ? 'female_casual' : 'male_casual'
+  if (LEGACY_BODIES[l.body]) l.body = LEGACY_BODIES[l.body]
+  if (!people.bodies[l.body]) l.body = isFemale(l.body) ? 'mini_female_a' : DEFAULT_LOOK.body
   return l
 }
 
 export function bodyInfo(body) {
-  return people.bodies[body] || people.bodies.male_casual
+  return people.bodies[LEGACY_BODIES[body] || body] || people.bodies[DEFAULT_LOOK.body]
 }
 
 const EYES_REST = new THREE.Color('#0a0606')
@@ -78,9 +106,13 @@ export function paintGeometry(geometry, lookInput) {
     geometry.setAttribute('color', color)
   }
   const palette = parts.map((p) => partColor(p, look)) // THREE.Color is linear, as vertex colours expect
+  // Kenney Mini Characters keep their palette's soft gradient as a per-corner
+  // "shade" (stored / 1.5), so recoloured clothes keep the toy look
+  const shade = geometry.attributes.shade || geometry.attributes._shade
   for (let i = 0; i < n; i++) {
     const c = palette[ids ? Math.round(ids.getX(i)) : 0] || palette[0]
-    color.setXYZ(i, c.r, c.g, c.b)
+    const k = shade ? shade.getX(i) * 1.5 : 1
+    color.setXYZ(i, c.r * k, c.g * k, c.b * k)
   }
   color.needsUpdate = true
 }
@@ -94,7 +126,7 @@ export function randomLook(seed, sex) {
   const shirts = ['#c0392b', '#2f8f5b', '#2c5aa0', '#e0b400', '#8e44ad', '#e67e22', '#ecf0f1', '#1abc9c', '#7f8c8d', '#d35400']
   const trousers = ['#2c3e50', '#1a1a1a', '#5d4037', '#34495e', '#6d6d6d', '#3e2723']
   return normalizeLook({
-    body: female ? pick(['female_casual', 'female_dress', 'female_tanktop']) : pick(['male_casual', 'male_shirt', 'male_longsleeve']),
+    body: female ? pick(['mini_female_a', 'mini_female_b', 'mini_female_c', 'mini_female_f']) : pick(['mini_male_a', 'mini_male_e', 'mini_male_f', 'mini_worker', 'mini_soldier', 'mini_raider']),
     skin: pick(SKIN_TONES),
     hair: '#161110',
     shirt: pick(shirts),

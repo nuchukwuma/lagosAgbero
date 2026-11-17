@@ -10,9 +10,10 @@ import { env } from './env.js'
 // seconds; rain greys the sky and dims everything.
 
 export const TIMES = {
-  dawn: { sky: '#f4b183', zenith: '#6f8fc0', hemiSky: '#ffe2c4', hemiGround: '#6b4f3a', hemi: 0.95, sun: '#ffb27a', sunI: 1.9, sunPos: [60, 24, 14], fog: [40, 125], shadow: 0.26, night: 0.15 },
-  day: { sky: '#cfe8f5', zenith: '#3d8bd9', hemiSky: '#eaf4ff', hemiGround: '#8a6f4f', hemi: 0.95, sun: '#fff1d6', sunI: 2.4, sunPos: [45, 52, 24], fog: [55, 150], shadow: 0.36, night: 0 },
-  dusk: { sky: '#f08a5d', zenith: '#3f4a8a', hemiSky: '#ffc49b', hemiGround: '#4d3426', hemi: 0.85, sun: '#ff9a6a', sunI: 1.6, sunPos: [-60, 20, 16], fog: [40, 120], shadow: 0.24, night: 0.55 },
+  // (brighter and more saturated for the cartoon look: see style.js)
+  dawn: { sky: '#f7c08f', zenith: '#6f9ad6', hemiSky: '#ffeedd', hemiGround: '#7a5d44', hemi: 1.2, sun: '#ffc08a', sunI: 2.2, sunPos: [60, 24, 14], fog: [55, 145], shadow: 0.26, night: 0.1 },
+  day: { sky: '#a9dcf7', zenith: '#2f86e0', hemiSky: '#f4f9ff', hemiGround: '#9a7c55', hemi: 1.2, sun: '#fff5df', sunI: 2.6, sunPos: [45, 52, 24], fog: [75, 175], shadow: 0.36, night: 0 },
+  dusk: { sky: '#f59a68', zenith: '#4652a0', hemiSky: '#ffd0aa', hemiGround: '#5a3e2c', hemi: 1.05, sun: '#ffa676', sunI: 1.85, sunPos: [-60, 20, 16], fog: [50, 135], shadow: 0.24, night: 0.5 },
   night: { sky: '#1a2244', zenith: '#060a1a', hemiSky: '#7d8fd0', hemiGround: '#3a2e24', hemi: 1.15, sun: '#b4c3ff', sunI: 0.8, sunPos: [-25, 50, 22], fog: [28, 95], shadow: 0.12, night: 1 },
 }
 const RAIN = { sky: new THREE.Color('#6f7a86'), dim: 0.7, fog: [20, 70] }

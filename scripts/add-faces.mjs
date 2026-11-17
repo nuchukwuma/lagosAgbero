@@ -259,6 +259,7 @@ async function addFace(id, entry) {
 
 const index = JSON.parse(fs.readFileSync(INDEX, 'utf8'))
 for (const [id, entry] of Object.entries(index.bodies)) {
+  if (entry.hasFace) continue // Kenney Mini Characters come with their own faces
   const r = await addFace(id, entry)
   index.bodies[id] = { ...entry, parts: r.parts, face: r.face }
   console.log(`  ✓ ${id.padEnd(20)} ${r.placed.join(', ') || 'nothing placed'}  (+${r.tris} triangles)`)

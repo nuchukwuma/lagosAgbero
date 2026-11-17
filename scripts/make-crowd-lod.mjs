@@ -44,7 +44,10 @@ function readGlb(file) {
 }
 
 const result = {}
-for (const file of fs.readdirSync(DIR).filter((f) => f.endsWith('.glb')).sort()) {
+// only the bodies the game uses (male_casual.glb also sits here: it's the
+// skeleton the animations are made for, see import-animations.mjs)
+const bodies = JSON.parse(fs.readFileSync(path.join(ROOT, 'src/assets/peopleIndex.json'), 'utf8')).bodies
+for (const file of Object.values(bodies).map((b) => path.basename(b.file)).sort()) {
   const body = file.replace('.glb', '')
   const { position, index } = readGlb(path.join(DIR, file))
   const g = new THREE.BufferGeometry()

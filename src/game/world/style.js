@@ -106,7 +106,7 @@ export const BIG_HEAD = 1.35 // the Men / Women pack bodies
 
 /** Scale up the head of an everyday body (call after attaching hats). */
 export function applyHeadSize(object, info) {
-  if (info.rig) return // RPG-pack bodies are already big-headed
+  if (info.rig || info.clipSet) return // RPG-pack and Mini Characters bodies are already big-headed
   const head = object.getObjectByName('Head')
   if (head) head.scale.setScalar(BIG_HEAD)
 }

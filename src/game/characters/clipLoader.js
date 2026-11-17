@@ -4,6 +4,7 @@
 
 import * as THREE from 'three'
 import { ASSET_ROOT, CHARACTER } from '../../assets/assetManifest.js'
+import CLIP_SETS from '../../assets/clipSets.json'
 
 const cache = new Map() // name -> Promise<AnimationClip>
 const ready = new Map() // name -> AnimationClip (once loaded)
@@ -21,38 +22,50 @@ function buildClip(name, data) {
   return new THREE.AnimationClip(name, duration, tracks)
 }
 
-/** Load one clip by game name, e.g. loadClip('punch'). */
-export function loadClip(name) {
-  if (cache.has(name)) return cache.get(name)
+/**
+ * Load one clip by game name, e.g. loadClip('punch'). `set` picks the
+ * version made for another skeleton (bodyInfo(...).clipSet, e.g. "kenney"
+ * for the Mini Characters; src/assets/clipSets.json); none = the game's own.
+ */
+export function loadClip(name, set = null) {
+  const key = set ? `${set}/${name}` : name
+  if (cache.has(key)) return cache.get(key)
   const info = CHARACTER.clips[name]
   if (!info) return Promise.reject(new Error(`Unknown animation clip "${name}"`))
-  const promise = fetch(`${ASSET_ROOT}/${info.file}`)
+  const file = set ? `${CLIP_SETS[set].dir}/${name}.json` : info.file
+  const promise = fetch(`${ASSET_ROOT}/${file}`)
     .then((r) => {
-      if (!r.ok) throw new Error(`HTTP ${r.status} for ${info.file}`)
+      if (!r.ok) throw new Error(`HTTP ${r.status} for ${file}`)
       return r.json()
     })
     .then((data) => {
       const clip = buildClip(name, data)
-      ready.set(name, clip)
+      ready.set(key, clip)
       return clip
     })
     .catch((err) => {
-      cache.delete(name) // allow a retry later
+      cache.delete(key) // allow a retry later
       throw err
     })
-  cache.set(name, promise)
+  cache.set(key, promise)
   return promise
 }
 
 /** For React Suspense: returns the clip, or suspends until it has loaded. */
-export function readClip(name) {
-  if (ready.has(name)) return ready.get(name)
-  throw loadClip(name)
+export function readClip(name, set = null) {
+  const key = set ? `${set}/${name}` : name
+  if (ready.has(key)) return ready.get(key)
+  throw loadClip(name, set)
 }
 
 /** Load several clips at once (e.g. all fight moves before a fight starts). */
-export function loadClips(names) {
-  return Promise.all(names.map(loadClip))
+export function loadClips(names, set = null) {
+  return Promise.all(names.map((n) => loadClip(n, set)))
+}
+
+/** Natural speed (m/s) of a walk / run clip for a skeleton: to keep feet from sliding. */
+export function clipSpeed(name, set = null) {
+  return (set && CLIP_SETS[set]?.speeds?.[name]) || CHARACTER.clips[name]?.rootMotion?.speed || 1
 }
 
 export function clipInfo(name) {

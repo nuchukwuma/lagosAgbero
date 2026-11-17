@@ -4,7 +4,7 @@ import { useGLTF } from '@react-three/drei'
 import * as THREE from 'three'
 import { clone as cloneSkinned } from 'three/examples/jsm/utils/SkeletonUtils.js'
 import { ASSET_ROOT, CHARACTER } from '../../assets/assetManifest.js'
-import { loadClip } from '../characters/clipLoader.js'
+import { loadClips, clipSpeed } from '../characters/clipLoader.js'
 import { bodyInfo, paintGeometry, randomLook } from '../characters/look.js'
 import { mulberry32 } from './cityFill.js'
 import { playerState, npcRegistry } from './worldState.js'
@@ -68,7 +68,7 @@ function bakeLook(gltf, clips, look, lod) {
   const colour = new THREE.BufferAttribute(colours, 3)
   const index = lod ? new THREE.BufferAttribute(new Uint16Array(lod.index), 1) : skinned.geometry.index
   painted.dispose()
-  const k = CHARACTER.targetHeight / info.nativeHeight
+  const k = (CHARACTER.targetHeight * (info.heightScale || 1)) / info.nativeHeight
   const scale = [k * look.width, k * look.height]
   applyHeadSize(root, info)
   const mixer = new THREE.AnimationMixer(root)
@@ -217,7 +217,7 @@ function Walkers({ baked, walkways, count, paused }) {
       im.instanceMatrix.needsUpdate = true
       // flip-book: every group steps through the baked walk at its own pace
       const speed = 1.25 + (g % 5) * 0.09
-      const cycles = (clock.current * speed) / (CHARACTER.clips.walk.rootMotion.metres || 1.56) + g * 0.37
+      const cycles = (clock.current * speed) / (baked[Math.floor(g / 2)].metres || CHARACTER.clips.walk.rootMotion.metres || 1.56) + g * 0.37
       im.geometry = baked[Math.floor(g / 2)].walk[Math.floor((cycles % 1) * FRAMES)]
     }
   })
@@ -239,18 +239,21 @@ export default function Crowd({ layout, quality = 'auto', paused = false }) {
     if (bakedCrowd) return undefined
     let cancelled = false
     const out = []
-    Promise.all([
-      ...['walk', 'breathingIdle', 'talk'].map(loadClip),
-      loadBodyLods(),
-    ])
-      .then(([walk, breathingIdle, talk, lod]) => {
+    // each skeleton has its own version of the clips (clipSets.json)
+    const sets = [...new Set(looks.map((l) => bodyInfo(l.body).clipSet || null))]
+    Promise.all([Promise.all(sets.map((set) => loadClips(['walk', 'breathingIdle', 'talk'], set))), loadBodyLods()])
+      .then(([perSet, lod]) => {
+        const clipsFor = new Map(sets.map((set, i) => [set, { walk: perSet[i][0], breathingIdle: perSet[i][1], talk: perSet[i][2] }]))
         const step = (i) => {
           if (cancelled) return
           if (i >= looks.length) {
             bakedCrowd = out
             return setBaked(out)
           }
-          out.push(bakeLook(gltfs[i], { walk, breathingIdle, talk }, looks[i], lod[looks[i].body]))
+          const set = bodyInfo(looks[i].body).clipSet || null
+          const clips = clipsFor.get(set)
+          // metres one walk cycle covers, so the feet keep pace with the ground
+          out.push({ ...bakeLook(gltfs[i], clips, looks[i], lod[looks[i].body]), metres: clipSpeed('walk', set) * clips.walk.duration })
           setTimeout(() => step(i + 1), 30)
         }
         setTimeout(() => step(0), 400)
