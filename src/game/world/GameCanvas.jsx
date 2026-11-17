@@ -38,6 +38,7 @@ import Pickups from './Pickups.jsx'
 import { getLayout } from './worlds.js'
 import ShaderWarmup, { useWarmup } from './ShaderWarmup.jsx'
 import FrameCap from './FrameCap.jsx'
+import PortraitStudio from '../characters/PortraitStudio.jsx'
 
 // The 3D street behind the story. The story view decides:
 //   location   where the player stands when a scene starts
@@ -136,6 +137,7 @@ export default function GameCanvas({ view, game, activity = null, paused = false
       }}
     >
       <ShaderWarmup />
+      <PortraitStudio />
       {capped && <FrameCap fps={30} />}
       {settled && profile.dpr.min !== profile.dpr.max && <PerformanceMonitor onDecline={() => setDpr(range.min)} onIncline={() => setDpr(range.max)} flipflops={3} bounds={capped ? () => [22, 29] : undefined} onFallback={() => setDpr(range.min)} />}
       <Lighting time={view.time} raining={Boolean(game.flags.raining)} />

@@ -6,7 +6,7 @@ import { campaignOf } from '../../game/narrative/campaigns.js'
 import { STAT_DEFS } from '../../game/narrative/stats.js'
 
 // Always-visible status: who you are, money, energy (red eyes), notoriety.
-export default function HUD({ game, onStatus, onMenu }) {
+export default function HUD({ game, onStatus, onMenu, onMap }) {
   const { stats, player } = game
   const { meter = 'redEyes', bar = { stat: 'notoriety', label: 'Notoriety' } } = campaignOf(game).hud || {}
   const pct = (k) => Math.max(0, Math.min(100, ((stats[k] ?? 0) / (STAT_DEFS[k]?.max || 100)) * 100))
@@ -48,6 +48,11 @@ export default function HUD({ game, onStatus, onMenu }) {
         )}
       </div>
       <div className="hud-right">
+        {onMap && (
+          <button className="icon-btn" onClick={onMap} aria-label="Map" title="Map (M)">
+            <Icon name="map" size={22} />
+          </button>
+        )}
         <button className="icon-btn" onClick={onStatus} aria-label="Status" title="Status">
           <Icon name="stats" size={22} />
         </button>

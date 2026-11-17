@@ -2406,5 +2406,20 @@
       ],
       "seed": 46
     }
-  ]
+  ],
+  "mapLabels": {
+    "frontStop": "Front Stop",
+    "backSide": "Back Side",
+    "underBridge": "Under the Bridge",
+    "teaTable": "Mallam Garba's tea",
+    "motorPark": "Motor Park",
+    "babaTicketOffice": "Baba Ticket's office",
+    "market": "Market",
+    "adaShop": "Ada's shop",
+    "mamaPut": "Mama Put",
+    "southStreet": "South Street",
+    "richStreet": "Rich people's street",
+    "paraga": "Baba Paraga's",
+    "shellHouse": "Shell House"
+  }
 }

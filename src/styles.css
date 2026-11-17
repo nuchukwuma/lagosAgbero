@@ -376,6 +376,7 @@ body,
   width: 34px;
   height: 34px;
   border-radius: 50%;
+  overflow: hidden;
   display: grid;
   place-items: center;
   font-weight: 800;
@@ -384,6 +385,20 @@ body,
   text-shadow: 0 1px 2px #000;
   border: 2px solid rgba(255, 255, 255, 0.6);
   flex: none;
+}
+/* a rendered face: bigger, on a soft disc of the character's colour */
+.portrait.has-face {
+  width: 52px;
+  height: 52px;
+  border: 2px solid var(--ring);
+  background: radial-gradient(circle at 50% 38%, #f3e6cf 0%, color-mix(in srgb, var(--ring) 55%, #2a2118) 100%);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
+}
+.portrait.has-face img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  pointer-events: none;
 }
 
 .speaker-name {
@@ -2659,4 +2674,71 @@ body,
     padding: 5px 10px;
     font-size: 12px;
   }
+}
+
+/* ---------- the map (WorldMap.jsx) ---------- */
+.map-ground { fill: #d9c49f; }
+.map-pavement { fill: #b9b0a2; }
+.map-road { fill: #55534f; }
+.map-block { fill: #9c7b58; stroke: #6e5338; stroke-width: 0.25; }
+.map-place circle { fill: #f2c300; stroke: #3a2a10; stroke-width: 0.35; }
+.map-place.has-activity circle { fill: #ff8a3d; }
+.map-place.is-marked circle { fill: #3ddc84; }
+.map-place text { fill: #20160b; font-weight: 800; paint-order: stroke; stroke: #f5ead6; stroke-width: 0.5; font-family: inherit; }
+.map-screen .map-place { cursor: pointer; }
+.map-me path { fill: #1e88e5; stroke: #fff; stroke-width: 0.5; }
+.map-goal circle { fill: #e53935; stroke: #fff; stroke-width: 0.4; }
+.map-goal .map-goal-ring { fill: none; stroke: #f2c300; stroke-width: 0.8; animation: map-pulse 1.4s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+.map-mark circle { fill: #3ddc84; stroke: #0c4022; stroke-width: 0.5; }
+.is-off circle { opacity: 0.9; }
+@keyframes map-pulse { 50% { transform: scale(1.5); opacity: 0.4; } }
+
+.minimap {
+  position: absolute;
+  top: calc(max(8px, env(safe-area-inset-top)) + 54px);
+  right: max(10px, env(safe-area-inset-right));
+  width: 124px;
+  height: 124px;
+  padding: 0;
+  border-radius: 50%;
+  border: 3px solid rgba(255, 255, 255, 0.85);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5);
+  overflow: visible;
+  background: #d9c49f;
+  z-index: 6;
+  cursor: pointer;
+}
+.minimap svg { width: 100%; height: 100%; border-radius: 50%; display: block; }
+.minimap-n {
+  position: absolute; top: -9px; left: 50%; transform: translateX(-50%);
+  background: #20160b; color: #fff; font-size: 10px; font-weight: 800; border-radius: 8px; padding: 1px 5px;
+}
+.minimap-goal {
+  position: absolute; top: 100%; right: 0; margin-top: 6px; white-space: nowrap;
+  background: rgba(10, 8, 4, 0.78); color: #ffe48a; font-size: 12px; font-weight: 700; border-radius: 10px; padding: 2px 8px;
+}
+.minimap-goal:empty { display: none; }
+@media (max-height: 420px) {
+  .minimap { width: 96px; height: 96px; top: calc(max(6px, env(safe-area-inset-top)) + 48px); }
+}
+
+.map-screen {
+  position: absolute; inset: 0; z-index: 40;
+  display: flex; flex-direction: column;
+  background: rgba(16, 12, 6, 0.94); color: #f5ead6;
+  padding: max(10px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(10px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+}
+.map-head { display: flex; align-items: center; gap: 10px; font-size: 17px; }
+.map-head .map-goal-text { flex: 1; color: #ffe48a; font-size: 14px; font-weight: 700; }
+.map-body { flex: 1; min-height: 0; display: flex; gap: 10px; margin-top: 8px; }
+.map-body svg { flex: 1; min-width: 0; height: 100%; border-radius: 12px; background: #d9c49f; }
+.map-list { list-style: none; margin: 0; padding: 0; width: 210px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; }
+.map-list .chip { width: 100%; text-align: left; display: flex; align-items: center; gap: 6px; padding: 6px 10px; font-size: 13px; line-height: 1.2; min-height: 0; }
+.map-list .chip svg { flex: none; }
+.map-list .chip small { opacity: 0.8; }
+.map-hint { margin: 6px 0 0; font-size: 12px; opacity: 0.75; }
+@media (orientation: portrait) {
+  .map-body { flex-direction: column; }
+  .map-list { width: auto; flex-direction: row; flex-wrap: wrap; max-height: 30%; }
+  .map-list .chip { width: auto; }
 }

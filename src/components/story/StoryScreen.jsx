@@ -10,7 +10,8 @@ import ShopPanel from '../hud/ShopPanel.jsx'
 import { useFeeRun } from '../../game/modes/feeCollection/feeRunStore.js'
 import { useChase } from '../../game/modes/chase/chaseStore.js'
 import { modeComponent } from '../../game/modes/modeRegistry.js'
-import { worldJson } from '../../game/world/worlds.js'
+import { worldJson, getLayout } from '../../game/world/worlds.js'
+import { MiniMap, MapScreen, useMapStore } from '../hud/WorldMap.jsx'
 import DialogueBox from './DialogueBox.jsx'
 import ChoiceMenu from './ChoiceMenu.jsx'
 import NewsBroadcast from './NewsBroadcast.jsx'
@@ -61,6 +62,19 @@ export default function StoryScreen() {
       window.removeEventListener('pagehide', onHide)
     }
   }, [])
+
+  // the map: M opens it during free roam; a marked place belongs to its world
+  const world = view?.world
+  useEffect(() => useMapStore.getState().setWaypoint(null), [world])
+  const canMap = view?.type === 'freeRoam' && !activity
+  useEffect(() => {
+    if (!canMap) return undefined
+    const onKey = (e) => {
+      if ((e.key === 'm' || e.key === 'M') && !overlay && !e.target.closest?.('input, textarea')) setOverlay('worldMap')
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [canMap, overlay])
 
   if (!game || !view) return null
 
@@ -118,7 +132,8 @@ export default function StoryScreen() {
     <div className="story-screen">
       <CanvasGuard onBack={quitToTitle}>{(safeGl) => <GameCanvas view={view} game={game} activity={activity} paused={Boolean(overlay || turnTo)} onGoalReached={advance} safeGl={safeGl} />}</CanvasGuard>
       {raining && <div className="rain" aria-hidden="true" />}
-      <HUD game={game} onStatus={() => setOverlay('status')} onMenu={() => setOverlay('menu')} />
+      <HUD game={game} onStatus={() => setOverlay('status')} onMenu={() => setOverlay('menu')} onMap={view.world ? () => setOverlay('worldMap') : null} />
+      {canMap && !overlay && view.world && <MiniMap layout={getLayout(view.world)} goal={view.goal} onOpen={() => setOverlay('worldMap')} />}
       {view.chapterTitle && view.type !== 'cutscene' && <div className="chapter-chip">{view.chapterTitle}</div>}
       {view.type === 'freeRoam' && !overlay && !activity && (
         <FreeRoamControls
@@ -148,6 +163,7 @@ export default function StoryScreen() {
       <RotateHint want={turnTo} />
       {overlay === 'status' && <StatusPanel game={game} onClose={() => setOverlay(null)} />}
       {overlay === 'map' && <StoryMap game={game} onClose={() => setOverlay(null)} />}
+      {overlay === 'worldMap' && view.world && <MapScreen layout={getLayout(view.world)} goal={view.type === 'freeRoam' ? view.goal : null} onClose={() => setOverlay(null)} />}
       {overlay?.startsWith('shop:') && <ShopPanel vendor={overlay.slice(5)} onClose={() => setOverlay(null)} />}
       {overlay === 'menu' && (
         <GameMenu

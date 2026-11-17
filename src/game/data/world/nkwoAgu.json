@@ -1312,5 +1312,17 @@
       },
       "where": "The junction"
     }
-  ]
+  ],
+  "mapLabels": {
+    "junction": "Junction (road to Lagos)",
+    "emekaHome": "Home",
+    "square": "Village square",
+    "church": "Church",
+    "chinweHouse": "Chinwe's house",
+    "obi": "The Obi",
+    "ikeHouse": "Ike's house",
+    "shrine": "Shrine",
+    "farm": "Farm",
+    "palmwine": "Palm-wine spot"
+  }
 }

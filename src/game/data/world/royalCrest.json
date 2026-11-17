@@ -1339,5 +1339,19 @@
       },
       "where": "The back gate"
     }
-  ]
+  ],
+  "mapLabels": {
+    "gate": "Main Gate",
+    "quad": "The Quad",
+    "lectureTheatre": "Lecture Theatre",
+    "library": "Library",
+    "senate": "Senate Building",
+    "drOffice": "Lecturer's office",
+    "hostel": "Hostel",
+    "cafeteria": "Cafeteria",
+    "carPark": "Car Park",
+    "field": "Sports Field",
+    "backGate": "Back Gate",
+    "chapel": "Chapel"
+  }
 }

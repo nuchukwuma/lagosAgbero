@@ -56,6 +56,7 @@ copies):
 | `signs` | Painted signboards with your own text: billboards, shop names |
 | `shelters` | Bus stop shelters |
 | `spots` | Named places the story uses: `location`, `goal.reach` |
+| `mapLabels` | The names the in-game map shows for spots: `{ "frontStop": "Front Stop" }`. Spots without one stay off the map's list. |
 | `npcs` | Story characters. `"if": "flag"` controls when they appear. |
 | `extras` | Background people with a random look (`seed`) |
 | `placed` | Hand-placed props from the city palette: `{ "kind": "tree", "at": [x, z, rotation], "seed": 4 }`. Kinds include `tree`, `bush`, `rock`, `grassTuft`, `palmTree`, `yamBarn`, `shrine`, `goalPost`, `noticeBoard`, `gatehouse`. |
