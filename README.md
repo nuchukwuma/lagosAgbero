@@ -59,6 +59,14 @@ The game is one web page that adapts to the device:
   tunic, white garment, bouncer kit, prophet's robe); a few of the cast wear
   them too (Prophet Fire-Fire, Dibia, Reverend Uzo, Papa Ngwo, Spike, Baba Gate).
 
+## Look
+
+Cartoon style, in the spirit of cosy stylised mobile games: light falls in
+soft bands (light, half light, shade) instead of a smooth fade, people have a
+dark outline and the everyday bodies have bigger heads. All of it is set in
+`src/game/world/style.js` (band edges, outline width and distance, head size),
+so it can be tuned in one place. Outlines are off in Light mode.
+
 ## Requirements
 
 - **Phones:** Android phones with 2 GB of RAM and up (Chrome), recent

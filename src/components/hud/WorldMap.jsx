@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef } from 'react'
 import { create } from 'zustand'
-import { buildMap, goalPoint, compass } from '../../game/world/mapData.js'
+import { buildMap, goalPoint, compass, mapPicture } from '../../game/world/mapData.js'
 import { playerState, npcRegistry } from '../../game/world/worldState.js'
 import characters from '../../game/data/characters.json'
 import { traffic, LANES } from '../../game/systems/traffic.js'
@@ -183,19 +183,121 @@ const useRefs = () => {
   return useMemo(() => ({ svg, me, goal, mark, text, extra }), [])
 }
 
-/** The small map in the corner. Tap to open the big one. */
+// ---- the small map in the corner ----
+// The map is one picture (mapPicture) slid under a fixed arrow with a CSS
+// transform: the phone's compositor moves it, nothing is redrawn. The few
+// markers (goal, marked place, fee vehicles, the chase) are small dots
+// updated ten times a second.
+const MINI_RADIUS = 32 // metres from the centre to the edge
+const pictures = new Map() // layout id -> { url, x0, z0, w, h }
+function usePicture(map) {
+  return useMemo(() => {
+    if (!pictures.has(map.id)) {
+      const pic = mapPicture(map)
+      pictures.set(map.id, { ...pic, url: URL.createObjectURL(new Blob([pic.svg], { type: 'image/svg+xml' })) })
+    }
+    return pictures.get(map.id)
+  }, [map])
+}
+
+/** The small map in the corner. Tap to open the big one (outside street modes). */
 export function MiniMap({ layout, goal, onOpen }) {
   const map = useMap(layout)
-  const refs = useRefs()
-  useLiveMarkers(refs, { goal, layout, radius: 32 })
+  const pic = usePicture(map)
+  const box = useRef()
+  const img = useRef()
+  const arrow = useRef()
+  const dots = useRef()
+  const text = useRef()
+  useEffect(() => {
+    let raf = 0
+    let last = 0
+    let size = 0
+    let seen = ''
+    const tick = (now) => {
+      raf = requestAnimationFrame(tick)
+      const el = box.current
+      if (!el || !img.current) return
+      // size only when the box changes (reading and setting it every frame
+      // makes the browser lay the page out again)
+      if (!size || now - last >= 100) {
+        const w = el.clientWidth
+        if (w !== size) {
+          size = w
+          img.current.style.width = `${(pic.w * (size / (MINI_RADIUS * 2))).toFixed(1)}px`
+        }
+      }
+      const s = size / (MINI_RADIUS * 2) // CSS pixels per metre
+      const p = playerState.position
+      // slide the map and turn the arrow only when you've moved
+      const key = `${p.x.toFixed(2)},${p.z.toFixed(2)},${playerState.facing.toFixed(2)}`
+      if (key !== seen) {
+        seen = key
+        img.current.style.transform = `translate(${(size / 2 - (p.x - pic.x0) * s).toFixed(1)}px, ${(size / 2 - (p.z - pic.z0) * s).toFixed(1)}px)`
+        arrow.current.style.transform = `translate(-50%, -50%) rotate(${((-playerState.facing * 180) / Math.PI).toFixed(1)}deg)`
+      }
+      if (now - last < 100) return
+      last = now
+      const targets = []
+      const g = goalPoint(goal, layout, npcRegistry)
+      if (g) targets.push(['is-goal', g])
+      const w = useMapStore.getState().waypoint
+      if (w) targets.push(['is-mark', w])
+      let chase = null
+      for (const v of traffic.vehicles) {
+        const kind = v.tag.chaseTarget ? 'is-chase' : v.tag.feeRun && !v.tag.done && v.state === 'stopped' ? 'is-fee' : null
+        if (!kind) continue
+        const t = { x: v.x, z: LANES[v.lane].z }
+        if (kind === 'is-chase') chase = { ...t, label: 'Runaway driver' }
+        targets.push([kind, t])
+      }
+      const kids = dots.current.children
+      for (let i = 0; i < kids.length; i++) {
+        const d = kids[i]
+        const t = targets[i]
+        if (!t) {
+          d.style.display = 'none'
+          continue
+        }
+        let dx = (t[1].x - p.x) * s
+        let dz = (t[1].z - p.z) * s
+        const len = Math.hypot(dx, dz)
+        const edge = size / 2 - 7
+        const off = len > edge
+        if (off) {
+          dx *= edge / len
+          dz *= edge / len
+        }
+        d.className = `minimap-dot ${t[0]} ${off ? 'is-off' : ''}`
+        d.style.display = 'block'
+        d.style.transform = `translate(${(size / 2 + dx).toFixed(1)}px, ${(size / 2 + dz).toFixed(1)}px) translate(-50%, -50%)`
+      }
+      const t = g || chase || w
+      if (text.current) {
+        if (!t) text.current.textContent = ''
+        else {
+          const d = Math.round(Math.hypot(t.x - p.x, t.z - p.z))
+          const who = t.who ? characters[t.who]?.name : t.label || t.name
+          text.current.textContent = d < 4 ? `${who || 'Goal'}: here` : `${who ? `${who} · ` : ''}${d} m ${compass(p.x, p.z, t.x, t.z)}`
+        }
+      }
+    }
+    raf = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(raf)
+  }, [goal, layout, pic])
   return (
     <button className={`minimap ${onOpen ? '' : 'is-passive'}`} onClick={onOpen || undefined} aria-label={onOpen ? 'Open the map' : 'Map'} title="Map">
-      <svg ref={refs.svg} viewBox="-32 -32 64 64" preserveAspectRatio="xMidYMid slice">
-        <Ground map={map} />
-        <Markers refs={refs} size={2.2} />
-      </svg>
+      <span ref={box} className="minimap-view">
+        <img ref={img} src={pic.url} alt="" draggable={false} />
+        <span ref={dots} className="minimap-dots">
+          {Array.from({ length: 10 }, (_, i) => (
+            <span key={i} className="minimap-dot" />
+          ))}
+        </span>
+        <span ref={arrow} className="minimap-me" />
+      </span>
       <span className="minimap-n">N</span>
-      <span ref={refs.text} className="minimap-goal" />
+      <span ref={text} className="minimap-goal" />
     </button>
   )
 }

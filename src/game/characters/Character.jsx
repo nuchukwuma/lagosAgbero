@@ -12,6 +12,7 @@ import { smoothNormals } from './smoothNormals.js'
 import { rigFixer } from './rigFix.js'
 import { lodIndexFor } from './bodyLod.js'
 import { perf } from '../world/worldState.js'
+import { addOutlineNormals, addOutline, applyHeadSize, OUTLINE } from '../world/style.js'
 
 // One person in the 3D world. Everyone (player, NPCs, crowd) uses this.
 //   look       see look.js (body/outfit, colours, size, accessories)
@@ -46,19 +47,21 @@ const Character = forwardRef(function Character({ look: lookInput, animation = '
   const accessoriesKey = JSON.stringify(look.accessories)
 
   // Clone the body once per outfit/accessory set...
-  const { object, mesh } = useMemo(() => {
+  const { object, mesh, outline } = useMemo(() => {
     const o = cloneSkinned(gltf.scene)
     let skinned = null
     o.traverse((child) => {
       if (child.isMesh) {
-        child.geometry = smoothNormals(child.geometry).clone() // own vertex colours per person
+        child.geometry = addOutlineNormals(smoothNormals(child.geometry)).clone() // own vertex colours per person
         child.material = PERSON_MATERIAL
         child.frustumCulled = false // skinned bounds are unreliable when animated
         if (child.isSkinnedMesh) skinned = child
       }
     })
     attachAccessories(o, look.accessories, rootScale, info)
-    return { object: o, mesh: skinned }
+    applyHeadSize(o, info) // after the hats, so they grow with the head
+    const outline = skinned ? addOutline(skinned, info.nativeHeight) : null
+    return { object: o, mesh: skinned, outline }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gltf, accessoriesKey, rootScale])
 
@@ -152,6 +155,7 @@ const Character = forwardRef(function Character({ look: lookInput, animation = '
       const onScreen = tmpFrustum.intersectsSphere(tmpSphere)
       object.visible = onScreen
       const light = perf.light
+      if (outline) outline.visible = d < (light ? OUTLINE.lightDistance : OUTLINE.maxDistance)
       every = !onScreen ? (light ? 12 : 8) : d > (light ? 30 : 40) ? 4 : d > (light ? 15 : 22) ? 2 : 1
       // swap the body's triangle list (the corners and the paint stay the same)
       if (mesh && detail.full && onScreen) {

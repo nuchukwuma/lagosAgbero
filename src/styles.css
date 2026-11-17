@@ -2780,3 +2780,17 @@ body,
 .minimap.is-passive { cursor: default; }
 svg .is-fee { fill: #3ddc84; stroke: #0c4022; stroke-width: 0.5; }
 svg .is-chase { fill: #e53935; stroke: #fff; stroke-width: 0.6; animation: map-pulse 0.9s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+/* the corner map: a picture slid under a fixed arrow (WorldMap.jsx MiniMap) */
+.minimap-view { position: absolute; inset: 0; border-radius: 50%; overflow: hidden; display: block; }
+.minimap-view img { position: absolute; left: 0; top: 0; max-width: none; will-change: transform; image-rendering: auto; pointer-events: none; }
+.minimap-dots { position: absolute; inset: 0; }
+.minimap-dot { position: absolute; left: 0; top: 0; width: 9px; height: 9px; border-radius: 50%; display: none; }
+.minimap-dot.is-goal { width: 12px; height: 12px; background: #e53935; border: 2px solid #fff; box-shadow: 0 0 0 3px rgba(242, 195, 0, 0.7); }
+.minimap-dot.is-mark { background: #3ddc84; border: 2px solid #0c4022; }
+.minimap-dot.is-fee { background: #3ddc84; border: 1px solid #0c4022; }
+.minimap-dot.is-chase { width: 11px; height: 11px; background: #e53935; border: 2px solid #fff; }
+.minimap-me {
+  position: absolute; left: 50%; top: 50%; width: 0; height: 0;
+  border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 14px solid #1e88e5;
+  filter: drop-shadow(0 0 1px #fff) drop-shadow(0 0 1px #fff);
+}

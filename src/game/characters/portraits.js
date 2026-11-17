@@ -18,6 +18,7 @@ import { ASSET_ROOT } from '../../assets/assetManifest.js'
 import { bodyInfo, normalizeLook, paintGeometry } from './look.js'
 import { attachAccessories } from './accessories.js'
 import { smoothNormals } from './smoothNormals.js'
+import { addOutlineNormals, addOutline, applyHeadSize } from '../world/style.js'
 
 const SIZE = 128 // pixels; shown at up to 64 CSS px
 
@@ -83,7 +84,7 @@ export async function drawPortrait(gl, lookInput) {
   let mesh = null
   person.traverse((c) => {
     if (c.isMesh) {
-      c.geometry = smoothNormals(c.geometry).clone()
+      c.geometry = addOutlineNormals(smoothNormals(c.geometry)).clone()
       c.material = material
       c.frustumCulled = false
       if (c.isSkinnedMesh) mesh = c
@@ -92,6 +93,8 @@ export async function drawPortrait(gl, lookInput) {
   if (mesh) paintGeometry(mesh.geometry, look)
   // hats first, then the size (as Character.jsx does), so they aren't scaled twice
   attachAccessories(person, look.accessories, k, info)
+  applyHeadSize(person, info)
+  if (mesh) addOutline(mesh, info.nativeHeight)
   person.scale.set(k * look.width, k * look.height, k * look.width)
   person.rotation.y = -0.4 // a three-quarter view
   scene.add(person)

@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 import './styles.css'
 import './game/world/assetCache.js' // share decoded model images (before anything loads)
+import './game/world/style.js' // cartoon shading (before any shader compiles)
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>

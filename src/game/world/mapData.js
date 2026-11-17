@@ -63,3 +63,29 @@ export function compass(x, z, tx, tz) {
   const names = ['north', 'north-east', 'east', 'south-east', 'south', 'south-west', 'west', 'north-west']
   return names[Math.round(((a / (Math.PI * 2)) * 8 + 8)) % 8]
 }
+
+const deg = (a) => ((-a * 180) / Math.PI).toFixed(1)
+
+/**
+ * The map as one picture (an SVG file), for the corner map: drawn once per
+ * world, then slid around under the player's arrow, which costs the phone
+ * almost nothing (redrawing the map every frame cost ~3 ms a frame).
+ * Same colours as the full map (styles.css .map-*). Units: world metres.
+ */
+export function mapPicture(map, margin = 40) {
+  const b = map.bounds
+  const x0 = b.minX - margin
+  const z0 = b.minZ - margin
+  const w = b.maxX - b.minX + margin * 2
+  const h = b.maxZ - b.minZ + margin * 2
+  const rect = (r, fill, extra = '') => `<rect x="${(-r.w / 2).toFixed(2)}" y="${(-r.d / 2).toFixed(2)}" width="${r.w.toFixed(2)}" height="${r.d.toFixed(2)}" transform="translate(${r.x.toFixed(2)} ${r.z.toFixed(2)}) rotate(${deg(r.angle)})" fill="${fill}"${extra}/>`
+  const parts = [
+    `<rect x="${x0}" y="${z0}" width="${w}" height="${h}" fill="#d9c49f"/>`,
+    ...map.pavements.map((p) => `<rect x="${p.x}" y="${p.z}" width="${p.w}" height="${p.d}" fill="#b9b0a2"/>`),
+    ...map.roads.map((r) => rect({ ...r, w: r.w + 0.1, d: r.d + 0.1 }, '#55534f')),
+    ...map.blocks.map((r) => rect(r, '#9c7b58', ' stroke="#6e5338" stroke-width="0.25"')),
+    ...map.places.map((p) => `<circle cx="${p.x}" cy="${p.z}" r="1.3" fill="${p.activity ? '#ff8a3d' : '#f2c300'}" stroke="#3a2a10" stroke-width="0.35"/>`),
+  ]
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${x0} ${z0} ${w} ${h}" width="${Math.round(w * 4)}" height="${Math.round(h * 4)}">${parts.join('')}</svg>`
+  return { svg, x0, z0, w, h }
+}

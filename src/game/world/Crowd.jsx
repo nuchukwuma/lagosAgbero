@@ -12,6 +12,7 @@ import { crowdBlobs } from './Shadows.jsx'
 import { GROUND_Y } from './layout.js'
 import { rigFixer } from '../characters/rigFix.js'
 import { loadBodyLods } from '../characters/bodyLod.js'
+import { applyHeadSize } from './style.js'
 
 // The background crowd: dozens of people for the price of a few draw calls.
 // A normal Character is a skinned mesh with its own skeleton and animation
@@ -69,6 +70,7 @@ function bakeLook(gltf, clips, look, lod) {
   painted.dispose()
   const k = CHARACTER.targetHeight / info.nativeHeight
   const scale = [k * look.width, k * look.height]
+  applyHeadSize(root, info)
   const mixer = new THREE.AnimationMixer(root)
   const fix = rigFixer(root, info.rig)
   const make = (clip, t) => {
