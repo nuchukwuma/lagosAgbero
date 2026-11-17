@@ -37,9 +37,13 @@ The game is one web page that adapts to the device:
   lets it open offline after the first visit (PWA + service worker).
 - **Computer:** WASD / arrows to move, Shift to run, E or Enter to talk or
   act, mouse for menus.
-- **Map:** a small map in the corner while you walk shows where you are,
-  where the story wants you (and how far, which way) and any place you
-  marked; tap it, the map button or **M** for the full map with every named
+- **Fee runs:** stand in front of a vehicle that's trying to leave and it
+  can't: a driver who refused gives in and pays, one that got tired of
+  waiting stops so you can collect.
+- **Map:** a small map in the corner while you're on the street (walking,
+  talking, fee runs, chases, fights) shows where you are,
+  where the story wants you (and how far, which way), any place you
+  marked, fee vehicles still waiting to pay and the vehicle you're chasing; tap it, the map button or **M** for the full map with every named
   place.
 - **The street reacts:** stand in front of a moving car and the driver honks,
   then gets out (say sorry, argue, or fight; drivers who've heard of you

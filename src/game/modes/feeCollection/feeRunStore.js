@@ -13,7 +13,7 @@
 //   rememberAs memory key to store how the run went ("metQuota" | "half" | "poor")
 
 import { create } from 'zustand'
-import { traffic, releaseVehicle, kindInfo } from '../../systems/traffic.js'
+import { traffic, releaseVehicle, kindInfo, LANES } from '../../systems/traffic.js'
 import { feeFor, driverResponse, insist, threaten, reaction, pickLine, randomDriver, namedDriver, BASE_FAIR_FEE } from '../../systems/fees.js'
 
 export const STOPS = {
@@ -222,6 +222,36 @@ export const useFeeRun = create((set, get) => {
         default:
           return set({ popup: null })
       }
+    },
+
+    /**
+     * The player is standing in front of a vehicle that's trying to leave.
+     * A driver who refused (or wouldn't pay after a threat) gives in and pays;
+     * one that simply got tired of waiting stops again so you can collect.
+     * A defaulter still won't pay: he jumps out and legs it.
+     */
+    cornered(v) {
+      const s = get()
+      if (s.ended || v.tag.cornered) return
+      const driver = v.tag.driver
+      v.tag.cornered = true
+      // stop right where it is
+      v.state = 'stopped'
+      v.stopAt = { x: v.x + LANES[v.lane].dir * (v.length / 2), wait: 10 }
+      v.waited = 0
+      if (driver.defaulter) {
+        set({ popup: { vehicleId: v.id, name: driver.name, line: pickLine('corneredDefaulter', {}, driver), options: [] } })
+        return
+      }
+      if (v.tag.done) {
+        v.tag.done = false // finishWith marks it done again
+        finishWith(v, pickLine('cornered', {}, driver), { amount: feeFor(v.kind, s.stopFee), effect: 'cornered' })
+        return
+      }
+      v.tag.cornered = false // it may try to leave again later
+      log(`Blocked · ${driver.name}: collect now`, 0)
+      set({ popup: { vehicleId: v.id, name: driver.name, line: pickLine('corneredWait', {}, driver), options: [] } })
+      setTimeout(() => get().popup?.vehicleId === v.id && !get().popup.options.length && set({ popup: null }), 1600)
     },
 
     /** A fee vehicle drove away without being dealt with. */

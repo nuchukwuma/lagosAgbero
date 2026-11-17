@@ -2777,3 +2777,6 @@ body,
 @media (max-height: 420px) {
   .story-screen:has(.minimap) .favour-btn { right: calc(max(10px, env(safe-area-inset-right)) + 106px); }
 }
+.minimap.is-passive { cursor: default; }
+svg .is-fee { fill: #3ddc84; stroke: #0c4022; stroke-width: 0.5; }
+svg .is-chase { fill: #e53935; stroke: #fff; stroke-width: 0.6; animation: map-pulse 0.9s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }

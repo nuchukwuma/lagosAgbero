@@ -16,6 +16,9 @@
     "threatenPay": ["Okay! Okay! No vex. Take am.", "Ehn ehn, I don hear. Take. No touch my mirror."],
     "threatenRefuse": ["You wan fight? Me wey carry eighteen passengers since 5 a.m.?", "Touch me make you see. My conductor na boxer."],
     "letGo": ["God bless you, my brother!", "You get good heart. Rare thing for this Lagos.", "I no go forget this one."],
-    "default": ["I go pay tomorrow! Tomorrow by God's grace!"]
+    "default": ["I go pay tomorrow! Tomorrow by God's grace!"],
+    "cornered": ["Ah! You don block my road! Okay, okay, take am!", "This agbero no dey joke. Oya collect, make I go.", "You wan make I jam you? ...Fine! Take your money!", "Na wa o. Take am, abeg shift!"],
+    "corneredWait": ["Okay, I hear. Come collect quick, I no get all day.", "You don block me. Oya come collect your money."],
+    "corneredDefaulter": ["You think say you go hold me? I dey comot!"]
   }
 }

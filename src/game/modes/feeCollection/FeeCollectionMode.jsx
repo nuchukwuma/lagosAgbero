@@ -23,6 +23,9 @@ function Intro({ store, onStart }) {
         <li>Keke {formatNaira(feeFor('keke', fee))} · Okada {formatNaira(feeFor('okada', fee))} · Lorry {formatNaira(feeFor('lorry', fee))}</li>
       </ul>
       <p className="muted">Baba Ticket's share today: {formatNaira(store.quota)}. If a vehicle waits too long, e go drive off without paying.</p>
+      <p>
+        <strong>Block am:</strong> stand in front of a vehicle wey wan run (even one wey refuse to pay) and e no fit move. Refusers go pay; others go wait make you collect.
+      </p>
       <button className="btn btn-primary" onClick={onStart}>
         Oya, start
       </button>
@@ -38,7 +41,7 @@ function Summary({ store, result, onDone }) {
         You collected <strong>{formatNaira(store.collected)}</strong> of Baba Ticket's {formatNaira(store.quota)}.
       </p>
       <p className="muted">
-        Paid: {(store.counts.paidFair || 0) + (store.counts.paidOver || 0) + (store.counts.acceptedLess || 0)} · Let go: {store.counts.letGo || 0} · Threatened: {store.counts.threatened || 0} · Missed: {store.counts.missed || 0}
+        Paid: {(store.counts.paidFair || 0) + (store.counts.paidOver || 0) + (store.counts.acceptedLess || 0)} · Let go: {store.counts.letGo || 0} · Threatened: {store.counts.threatened || 0} · Blocked: {store.counts.cornered || 0} · Missed: {store.counts.missed || 0}
       </p>
       <button className="btn btn-primary" onClick={onDone}>
         Continue

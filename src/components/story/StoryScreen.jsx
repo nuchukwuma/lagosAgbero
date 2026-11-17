@@ -29,6 +29,8 @@ import RotateHint, { useTurnHint } from '../hud/RotateHint.jsx'
 import { applyOrientation } from '../../game/systems/orientation.js'
 import { useSettings } from '../../game/store/settings.js'
 
+const MAP_MODES = new Set(['feeCollection', 'chase', 'fight'])
+
 // The story screen: the 3D street + HUD + whatever the engine says to show.
 // During a freeRoam beat the player walks; otherwise the story has the floor.
 function ActivityHost({ activity, onFinish }) {
@@ -68,6 +70,11 @@ export default function StoryScreen() {
   const world = view?.world
   useEffect(() => useMapStore.getState().setWaypoint(null), [world])
   const canMap = view?.type === 'freeRoam' && !activity
+  // the small map stays up while you're out on the street: walking around,
+  // talking, and in the street modes that happen on this map (not the drive
+  // or the escape run, which have their own roads)
+  const modeName = activity ? activity.mode : view?.type === 'mode' ? view.mode : null
+  const showMini = Boolean(view?.world) && (modeName ? MAP_MODES.has(modeName) : ['freeRoam', 'dialogue', 'choice'].includes(view?.type))
   useEffect(() => {
     if (!canMap) return undefined
     const onKey = (e) => {
@@ -135,7 +142,7 @@ export default function StoryScreen() {
       {raining && <div className="rain" aria-hidden="true" />}
       <div id="speech-layer" className="speech-layer" aria-live="polite" />
       <HUD game={game} onStatus={() => setOverlay('status')} onMenu={() => setOverlay('menu')} onMap={view.world ? () => setOverlay('worldMap') : null} />
-      {canMap && !overlay && view.world && <MiniMap layout={getLayout(view.world)} goal={view.goal} onOpen={() => setOverlay('worldMap')} />}
+      {showMini && !overlay && <MiniMap layout={getLayout(view.world)} goal={view.type === 'freeRoam' ? view.goal : null} onOpen={modeName ? null : () => setOverlay('worldMap')} />}
       {view.chapterTitle && view.type !== 'cutscene' && <div className="chapter-chip">{view.chapterTitle}</div>}
       {view.type === 'freeRoam' && !overlay && !activity && (
         <FreeRoamControls

@@ -3,6 +3,7 @@ import { create } from 'zustand'
 import { buildMap, goalPoint, compass } from '../../game/world/mapData.js'
 import { playerState, npcRegistry } from '../../game/world/worldState.js'
 import characters from '../../game/data/characters.json'
+import { traffic, LANES } from '../../game/systems/traffic.js'
 import Icon from '../Icon.jsx'
 
 // The map of the world you're in: a small one in the corner while you walk
@@ -118,8 +119,25 @@ function useLiveMarkers(refs, { goal, layout, radius }) {
         el.setAttribute('transform', `translate(${x} ${z})`)
         el.classList.toggle('is-off', off)
       }
+      // what the current street mode is about: fee vehicles still waiting to
+      // pay (green), the vehicle you're chasing (red)
+      const extra = refs.extra.current
+      let chase = null
+      if (extra) {
+        let i = 0
+        for (const v of traffic.vehicles) {
+          const wanted = v.tag.chaseTarget ? 'is-chase' : v.tag.feeRun && !v.tag.done && v.state === 'stopped' ? 'is-fee' : null
+          if (!wanted || i >= extra.children.length) continue
+          const el = extra.children[i++]
+          el.setAttribute('transform', `translate(${v.x} ${LANES[v.lane].z})`)
+          el.setAttribute('class', wanted)
+          el.setAttribute('visibility', 'visible')
+          if (wanted === 'is-chase') chase = { x: v.x, z: LANES[v.lane].z, label: 'Runaway driver' }
+        }
+        for (; i < extra.children.length; i++) extra.children[i].setAttribute('visibility', 'hidden')
+      }
       if (refs.text.current) {
-        const t = goalPoint(goal, layout, npcRegistry) || useMapStore.getState().waypoint
+        const t = goalPoint(goal, layout, npcRegistry) || chase || useMapStore.getState().waypoint
         if (!t) refs.text.current.textContent = ''
         else {
           const d = Math.round(Math.hypot(t.x - p.x, t.z - p.z))
@@ -136,6 +154,11 @@ function useLiveMarkers(refs, { goal, layout, radius }) {
 function Markers({ refs, size }) {
   return (
     <>
+      <g ref={refs.extra}>
+        {Array.from({ length: 8 }, (_, i) => (
+          <circle key={i} r={size * 0.8} visibility="hidden" />
+        ))}
+      </g>
       <g ref={refs.mark} className="map-mark" visibility="hidden">
         <circle r={size * 0.9} />
       </g>
@@ -156,7 +179,8 @@ const useRefs = () => {
   const goal = useRef()
   const mark = useRef()
   const text = useRef()
-  return useMemo(() => ({ svg, me, goal, mark, text }), [])
+  const extra = useRef()
+  return useMemo(() => ({ svg, me, goal, mark, text, extra }), [])
 }
 
 /** The small map in the corner. Tap to open the big one. */
@@ -165,7 +189,7 @@ export function MiniMap({ layout, goal, onOpen }) {
   const refs = useRefs()
   useLiveMarkers(refs, { goal, layout, radius: 32 })
   return (
-    <button className="minimap" onClick={onOpen} aria-label="Open the map" title="Map">
+    <button className={`minimap ${onOpen ? '' : 'is-passive'}`} onClick={onOpen || undefined} aria-label={onOpen ? 'Open the map' : 'Map'} title="Map">
       <svg ref={refs.svg} viewBox="-32 -32 64 64" preserveAspectRatio="xMidYMid slice">
         <Ground map={map} />
         <Markers refs={refs} size={2.2} />

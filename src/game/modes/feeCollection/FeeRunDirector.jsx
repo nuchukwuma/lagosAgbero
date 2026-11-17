@@ -11,7 +11,8 @@ import { randomSlogan } from '../../systems/traffic.js'
 // Lives inside the 3D canvas during a fee run:
 //   - sends the scheduled vehicles down the west lane to stop at the spot
 //   - finds the stopped vehicle the player is close enough to collect from
-//   - notices vehicles that leave without paying
+//   - notices vehicles that leave without paying, and ones you block from
+//     leaving by standing in front of them (they stop; refusers pay up)
 //   - draws a bobbing "₦" marker over vehicles still waiting to be collected
 
 const REACH = 1.8 // metres from the vehicle's side
@@ -85,6 +86,11 @@ export default function FeeRunDirector() {
     let bestD = REACH
     for (const v of traffic.vehicles) {
       if (!v.tag.feeRun) continue
+      // standing in front of a vehicle stops it getting away (feeRunStore.cornered)
+      if (v.state === 'leaving' && v.blockedFor > 0.3 && !v.tag.cornered) {
+        run.cornered(v)
+        continue
+      }
       if (v.state === 'leaving' && !v.tag.done) run.missed(v)
       if (v.tag.done || v.state !== 'stopped') continue
       const d = distanceToVehicle(playerState.position, v)

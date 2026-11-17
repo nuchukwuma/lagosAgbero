@@ -59,6 +59,8 @@ export function reaction(kind) {
       return { communityGoodwill: 0.8 }
     case 'threatened':
       return { communityGoodwill: -1.2, notoriety: 1 }
+    case 'cornered': // you stood in front of the bus until they paid
+      return { communityGoodwill: -0.8, notoriety: 0.8 }
     default:
       return {}
   }
