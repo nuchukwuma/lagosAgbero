@@ -40,6 +40,10 @@ The game is one web page that adapts to the device:
 - **Pause menu → Settings:** graphics (Auto / Battery saver / Sharp) and full
   screen. **Pause menu → Wardrobe** (during free roam): outfits, colours,
   accessories and earned street names. Looks change how people react.
+  Besides the everyday clothes there are six outfits on a stockier,
+  big-headed body anyone can wear (hoodie and mask, herbalist wrap, hunter's
+  tunic, white garment, bouncer kit, prophet's robe); a few of the cast wear
+  them too (Prophet Fire-Fire, Dibia, Reverend Uzo, Papa Ngwo, Spike, Baba Gate).
 
 ## Requirements
 
@@ -122,13 +126,16 @@ npm test                 # engine unit tests
 npm run assets:animations -- a1.zip a2.zip a3.zip a4.rar a5.zip "source-assets/mixamo/Breathing Idle.fbx" source-assets/mixamo/Walking.fbx   # re-import Mixamo clips
 npm run assets:animations -- path/to/rpg-pack/FBX/Cleric.fbx   # add the Quaternius RPG pack clips (roll, cheer, preach, pickUp); other clips are kept
 npm run assets:nature -- path/to/nature-pack.zip   # bake trees, bushes, rocks and grass into the scenery
+npm run assets:rpg -- path/to/rpg-pack.zip   # the RPG-pack people (Cleric, Monk, Ranger, Rogue, Warrior, Wizard), re-fitted to our skeleton so every animation works on them
+npm run assets:crowd     # rebuild the simplified bodies (background crowd, far-away people)
 npm run assets:slim      # shrink the .glb models (1-byte normals and skin weights, no unused tangents); run after any import
 ```
 
 ## Credits
 
 - City, vehicles and props: Kenney (kenney.nl), CC0.
-- People, the bus, trees, bushes and rocks: Quaternius (quaternius.com), CC0.
+- People (Men / Women packs and the RPG character pack), the bus, trees, bushes
+  and rocks: Quaternius (quaternius.com), CC0.
 - Animations: Mixamo (Adobe) and Quaternius.
 - Driving handling (gearbox, spring steering) adapted from
   [Sketchbook](https://github.com/swift502/Sketchbook) by swift502, MIT licence.

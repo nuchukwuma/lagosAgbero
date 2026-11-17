@@ -93,14 +93,20 @@ export const ACCESSORY_TYPES = Object.keys(BUILDERS)
 
 /**
  * Attach accessories to a freshly cloned (rest-pose) character.
- * `root` is the model, `rootScale` the scale its parent group applies.
+ * `root` is the model, `rootScale` the scale its parent group applies,
+ * `body` its entry in peopleIndex.json (headScale, hood).
  */
-export function attachAccessories(root, accessories, rootScale) {
+const HATS = new Set(['cap', 'fila', 'beanie', 'bandana', 'gele'])
+
+export function attachAccessories(root, accessories, rootScale, body = {}) {
   root.updateMatrixWorld(true)
   const rootQuat = root.getWorldQuaternion(new THREE.Quaternion())
+  // bodies with bigger heads (the RPG-pack people) get bigger hats and glasses;
+  // hooded ones wear no hat over the hood
+  const head = body.headScale || 1
   for (const acc of accessories || []) {
     const build = BUILDERS[acc.type]
-    if (!build) continue
+    if (!build || (body.hood && HATS.has(acc.type))) continue
     const { bone: boneName, object, alongBone } = build(acc)
     const bone = root.getObjectByName(boneName)
     if (!bone) continue
@@ -109,7 +115,8 @@ export function attachAccessories(root, accessories, rootScale) {
     // undo the bone's own scale and rotation so the accessory is built in
     // plain metres, facing the character's forward
     const boneScale = bone.getWorldScale(new THREE.Vector3()).x
-    holder.scale.setScalar(1 / (boneScale * rootScale))
+    const grow = boneName === 'Head' ? head : boneName === 'Neck' ? (1 + head) / 2 : 1
+    holder.scale.setScalar(grow / (boneScale * rootScale))
     if (!alongBone) holder.quaternion.copy(bone.getWorldQuaternion(new THREE.Quaternion()).invert().multiply(rootQuat))
     holder.add(object)
     bone.add(holder)

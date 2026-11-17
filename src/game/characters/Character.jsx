@@ -9,6 +9,9 @@ import { bodyInfo, normalizeLook, paintGeometry } from './look.js'
 import { attachAccessories } from './accessories.js'
 import { useBlobShadow } from '../world/Shadows.jsx'
 import { smoothNormals } from './smoothNormals.js'
+import { rigFixer } from './rigFix.js'
+import { lodIndexFor } from './bodyLod.js'
+import { perf } from '../world/worldState.js'
 
 // One person in the 3D world. Everyone (player, NPCs, crowd) uses this.
 //   look       see look.js (body/outfit, colours, size, accessories)
@@ -22,7 +25,10 @@ const ALIASES = { idle: 'breathingIdle' }
 const tmpPos = new THREE.Vector3()
 const tmpMat = new THREE.Matrix4()
 const tmpFrustum = new THREE.Frustum()
-const tmpSphere = new THREE.Sphere(new THREE.Vector3(), 1.2)
+const tmpSphere = new THREE.Sphere(new THREE.Vector3(), 1.4) // around the middle of a person
+// simpler body beyond FAR_LOD metres from the camera, full body again inside NEAR_LOD
+const FAR_LOD = 16
+const NEAR_LOD = 13
 
 // One material for every person: colours come from vertex colours.
 const PERSON_MATERIAL = new THREE.MeshLambertMaterial({ vertexColors: true })
@@ -51,7 +57,7 @@ const Character = forwardRef(function Character({ look: lookInput, animation = '
         if (child.isSkinnedMesh) skinned = child
       }
     })
-    attachAccessories(o, look.accessories, rootScale)
+    attachAccessories(o, look.accessories, rootScale, info)
     return { object: o, mesh: skinned }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gltf, accessoriesKey, rootScale])
@@ -60,10 +66,20 @@ const Character = forwardRef(function Character({ look: lookInput, animation = '
   const paintKey = JSON.stringify([look.body, look.skin, look.hair, look.shirt, look.shirt2, look.trousers, look.shoes, look.socks, look.accent, Math.round((look.eyeRed || 0) * 10)])
   useMemo(() => mesh && paintGeometry(mesh.geometry, look), [mesh, paintKey]) // eslint-disable-line react-hooks/exhaustive-deps
 
+  // the simplified body for when they're far away: their own corners, fewer triangles
+  const detail = useMemo(() => ({ full: mesh?.geometry.index || null, far: false }), [mesh])
   // this person's own copy of the body: freed on the graphics card when they leave
-  useEffect(() => () => object.traverse((c) => c.isMesh && c.geometry.dispose()), [object])
+  // (the shared far-away triangle list is put back first: other people still use it)
+  useEffect(
+    () => () => {
+      if (mesh && detail.full) mesh.geometry.setIndex(detail.full)
+      object.traverse((c) => c.isMesh && c.geometry.dispose())
+    },
+    [object, mesh, detail],
+  )
 
   const mixer = useMemo(() => new THREE.AnimationMixer(object), [object])
+  const fix = useMemo(() => rigFixer(object, info.rig), [object]) // eslint-disable-line react-hooks/exhaustive-deps
   const inner = useRef()
   useBlobShadow(inner, { radius: 0.42 }, shadow)
   const current = useRef(null)
@@ -114,8 +130,13 @@ const Character = forwardRef(function Character({ look: lookInput, animation = '
     }
   }, [mixer])
 
-  // Animation LOD: people far away or off screen update less often (the
-  // skeleton maths is the most expensive thing a crowd does on a phone).
+  // Level of detail. The skeleton maths and drawing are the most expensive
+  // things people cost on a phone, so:
+  //  - off screen: not drawn at all, and the animation ticks only now and then
+  //    (often enough that "when this move ends" story moments still happen);
+  //  - far away: the animation updates every 2nd or 4th frame, and the body
+  //    switches to the simplified one (about a third of the triangles);
+  //  - Light mode starts thinning out sooner.
   const lod = useRef({ acc: 0, n: Math.floor(Math.random() * 4) })
   useFrame(({ camera }, delta) => {
     const l = lod.current
@@ -126,13 +147,28 @@ const Character = forwardRef(function Character({ look: lookInput, animation = '
     if (g) {
       g.getWorldPosition(tmpPos)
       const d = tmpPos.distanceTo(camera.position)
-      tmpSphere.center.copy(tmpPos)
+      tmpSphere.center.copy(tmpPos).y += 0.9
       tmpFrustum.setFromProjectionMatrix(tmpMat.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse))
       const onScreen = tmpFrustum.intersectsSphere(tmpSphere)
-      every = !onScreen ? 8 : d > 40 ? 4 : d > 22 ? 2 : 1
+      object.visible = onScreen
+      const light = perf.light
+      every = !onScreen ? (light ? 12 : 8) : d > (light ? 30 : 40) ? 4 : d > (light ? 15 : 22) ? 2 : 1
+      // swap the body's triangle list (the corners and the paint stay the same)
+      if (mesh && detail.full && onScreen) {
+        const far = detail.far ? d > NEAR_LOD : d > FAR_LOD
+        if (far !== detail.far) {
+          const simple = far ? lodIndexFor(look.body) : detail.full
+          if (simple) {
+            mesh.geometry.setIndex(simple)
+            detail.far = far
+          }
+        }
+      }
     }
     if (l.n % every !== 0) return
+    fix?.before()
     mixer.update(Math.min(l.acc, 0.25))
+    fix?.after()
     l.acc = 0
   })
 

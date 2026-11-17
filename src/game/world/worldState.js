@@ -24,6 +24,9 @@ export const playerState = {
   shake: { until: 0, amp: 0 }, // camera shake (hits, crashes); see shake()
 }
 
+// Light mode (budget phones): set by GameCanvas, read by the people's animation loop
+export const perf = { light: false }
+
 /** id -> { position: Vector3 } for every NPC currently in the world */
 export const npcRegistry = new Map()
 

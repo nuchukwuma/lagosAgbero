@@ -306,7 +306,8 @@
     "color": "#e74c3c",
     "role": "preacher",
     "look": {
-      "body": "male_longsleeve",
+      "body": "rpg_wizard",
+      "accent": "#e74c3c",
       "skin": "#3d2516",
       "shirt": "#ffffff",
       "trousers": "#ffffff",
@@ -658,7 +659,8 @@
     "color": "#1a1a1a",
     "role": "priest",
     "look": {
-      "body": "male_longsleeve",
+      "body": "rpg_cleric",
+      "shirt2": "#5b2c6f",
       "skin": "#4e2f1d",
       "shirt": "#1a1a1a",
       "trousers": "#1a1a1a",
@@ -676,7 +678,10 @@
     "color": "#c0392b",
     "role": "seer",
     "look": {
-      "body": "male_shirt",
+      "body": "rpg_monk",
+      "hair": "#e8e2d4",
+      "shoes": "#3e2723",
+      "accent": "#c0392b",
       "skin": "#3d2516",
       "shirt": "#c0392b",
       "trousers": "#7b241c",
@@ -714,7 +719,9 @@
     "color": "#d4ac0d",
     "role": "tapper",
     "look": {
-      "body": "male_casual",
+      "body": "rpg_ranger",
+      "shirt2": "#6d4c33",
+      "accent": "#3e2723",
       "skin": "#5c3a24",
       "shirt": "#d8d2c4",
       "trousers": "#5d4037",
@@ -837,9 +844,11 @@
     "color": "#c0392b",
     "role": "cultist",
     "look": {
-      "body": "male_longsleeve",
+      "body": "rpg_rogue",
+      "hair": "#8e1b1b",
+      "accent": "#c0392b",
       "skin": "#3d2516",
-      "shirt": "#c0392b",
+      "shirt": "#1a1a1a",
       "trousers": "#1a1a1a",
       "accessories": [
         {
@@ -855,7 +864,9 @@
     "color": "#1e6b43",
     "role": "security",
     "look": {
-      "body": "male_longsleeve",
+      "body": "rpg_warrior",
+      "shirt2": "#7f8c8d",
+      "hair": "#bdbdbd",
       "skin": "#4e2f1d",
       "shirt": "#1e6b43",
       "trousers": "#1e6b43",

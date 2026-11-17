@@ -10,6 +10,8 @@ import { mulberry32 } from './cityFill.js'
 import { playerState, npcRegistry } from './worldState.js'
 import { crowdBlobs } from './Shadows.jsx'
 import { GROUND_Y } from './layout.js'
+import { rigFixer } from '../characters/rigFix.js'
+import { loadBodyLods } from '../characters/bodyLod.js'
 
 // The background crowd: dozens of people for the price of a few draw calls.
 // A normal Character is a skinned mesh with its own skeleton and animation
@@ -68,11 +70,14 @@ function bakeLook(gltf, clips, look, lod) {
   const k = CHARACTER.targetHeight / info.nativeHeight
   const scale = [k * look.width, k * look.height]
   const mixer = new THREE.AnimationMixer(root)
+  const fix = rigFixer(root, info.rig)
   const make = (clip, t) => {
     mixer.stopAllAction()
     const action = mixer.clipAction(clip)
     action.play()
+    fix?.before()
     mixer.setTime(t)
+    fix?.after()
     const g = new THREE.BufferGeometry()
     g.setAttribute('position', new THREE.BufferAttribute(bakePose(skinned, root, scale, keep), 3))
     g.setAttribute('color', colour)
@@ -234,9 +239,7 @@ export default function Crowd({ layout, quality = 'auto', paused = false }) {
     const out = []
     Promise.all([
       ...['walk', 'breathingIdle', 'talk'].map(loadClip),
-      fetch(`${ASSET_ROOT}/characters/crowd-lod.json`)
-        .then((r) => (r.ok ? r.json() : {}))
-        .catch(() => ({})),
+      loadBodyLods(),
     ])
       .then(([walk, breathingIdle, talk, lod]) => {
         const step = (i) => {

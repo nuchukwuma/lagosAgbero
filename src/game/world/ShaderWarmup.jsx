@@ -22,6 +22,29 @@ export const useWarmup = create(() => ({ warmed: false, cover: false }))
 
 const MAX_WAIT_MS = 4000 // never hold the cover longer than this for compiling
 
+// Like three's renderer.compileAsync, but safe when the world changes while it
+// waits: a material freed in the meantime has no program any more, and
+// compileAsync would crash on it. Resolves when every program is ready.
+function compileInBackground(gl, scene, camera) {
+  let materials
+  try {
+    materials = gl.compile(scene, camera)
+  } catch {
+    return Promise.resolve()
+  }
+  return new Promise((resolve) => {
+    const check = () => {
+      for (const m of materials) {
+        const program = gl.properties.get(m).currentProgram
+        if (!program || program.isReady()) materials.delete(m)
+      }
+      if (materials.size === 0) resolve()
+      else setTimeout(check, 10)
+    }
+    check()
+  })
+}
+
 export default function ShaderWarmup() {
   const gl = useThree((s) => s.gl)
   const scene = useThree((s) => s.scene)
@@ -55,12 +78,7 @@ export default function ShaderWarmup() {
       }
       busy = true
       const before = count()
-      let compiling
-      try {
-        compiling = gl.compileAsync(scene, camera)
-      } catch {
-        compiling = Promise.resolve()
-      }
+      const compiling = compileInBackground(gl, scene, camera)
       const giveUp = new Promise((resolve) => setTimeout(resolve, MAX_WAIT_MS))
       Promise.race([compiling, giveUp]).then(() => {
         busy = false

@@ -14,6 +14,8 @@ const OUTFITS = [
   ['male_casual', 'T-shirt'],
   ['male_shirt', 'Shirt'],
   ['male_longsleeve', 'Long sleeve'],
+  ['rpg_rogue', 'Hoodie'], // the stockier RPG-pack people (see scripts/import-rpg-characters.mjs)
+  ['rpg_ranger', 'Tunic'],
 ]
 
 // Step 1: pick a story. Each campaign is its own branching story.

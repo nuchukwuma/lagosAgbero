@@ -16,7 +16,7 @@ export default function WardrobePanel({ onDone }) {
   const [nickname, setNickname] = useState(game.player.nickname)
   const [error, setError] = useState(null)
   const female = (look.body || '').startsWith('female')
-  const outfits = WARDROBE.outfits.filter((o) => o.id.startsWith(female ? 'female' : 'male'))
+  const outfits = WARDROBE.outfits.filter((o) => o.anyone || o.id.startsWith(female ? 'female' : 'male'))
   const nicknames = useMemo(() => earnedNicknames(game, entitlements), [game, entitlements])
   const cost = costOf(current, look, game.owned || [])
   const style = styleOf(look)

@@ -12,7 +12,7 @@ import NPCs from './NPCs.jsx'
 import CameraRig from './CameraRig.jsx'
 import GoalTracker from './GoalTracker.jsx'
 import PlayerController from '../player/PlayerController.jsx'
-import { playerState } from './worldState.js'
+import { playerState, perf } from './worldState.js'
 import { loadClips } from '../characters/clipLoader.js'
 import Traffic from './Traffic.jsx'
 import FeeRunDirector from '../modes/feeCollection/FeeRunDirector.jsx'
@@ -110,6 +110,9 @@ export default function GameCanvas({ view, game, activity = null, paused = false
   // changing it resizes the whole drawing surface (itself a long freeze).
   const warmed = useWarmup((s) => s.warmed)
   const capped = quality === 'low' // Light mode: a steady 30 frames a second
+  useEffect(() => {
+    perf.light = quality === 'low'
+  }, [quality])
   const [settled, setSettled] = useState(false)
   useEffect(() => {
     if (!warmed || settled) return undefined // once it is watching, it keeps watching

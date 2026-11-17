@@ -370,6 +370,464 @@
     }
    ],
    "nativeHeight": 465.28
+  },
+  "rpg_cleric": {
+   "file": "characters/people/rpg_cleric.glb",
+   "source": "Cleric.fbx (Quaternius RPG pack)",
+   "label": "Robed",
+   "parts": [
+    {
+     "name": "Skin",
+     "slot": "skin",
+     "color": "#6e4329"
+    },
+    {
+     "name": "Hair",
+     "slot": "hair",
+     "color": "#161110"
+    },
+    {
+     "name": "Shirt",
+     "slot": "shirt",
+     "color": "#d8d2c4"
+    },
+    {
+     "name": "Shirt2",
+     "slot": "shirt2",
+     "color": "#8d6e4f"
+    },
+    {
+     "name": "Pants",
+     "slot": "trousers",
+     "color": "#2c3e50"
+    },
+    {
+     "name": "Shoes",
+     "slot": "shoes",
+     "color": "#1e1e1e"
+    }
+   ],
+   "nativeHeight": 294.55,
+   "rig": {
+    "k": 0.5331,
+    "from": {
+     "Body": [
+      0.0065,
+      2.0907,
+      0.2919
+     ],
+     "FootL": [
+      0.4259,
+      0.0601,
+      -0.1305
+     ],
+     "FootR": [
+      -0.4476,
+      0.0601,
+      -0.0857
+     ]
+    },
+    "to": {
+     "Body": [
+      0.0022,
+      1.1139,
+      0.0752
+     ],
+     "FootL": [
+      0.2078,
+      0.0247,
+      -0.0451
+     ],
+     "FootR": [
+      -0.2121,
+      0.0247,
+      -0.0451
+     ]
+    }
+   },
+   "headScale": 1.896
+  },
+  "rpg_monk": {
+   "file": "characters/people/rpg_monk.glb",
+   "source": "Monk.fbx (Quaternius RPG pack)",
+   "label": "Elder",
+   "parts": [
+    {
+     "name": "Skin",
+     "slot": "skin",
+     "color": "#6e4329"
+    },
+    {
+     "name": "Hair",
+     "slot": "hair",
+     "color": "#161110"
+    },
+    {
+     "name": "Shirt",
+     "slot": "shirt",
+     "color": "#d8d2c4"
+    },
+    {
+     "name": "Pants",
+     "slot": "trousers",
+     "color": "#2c3e50"
+    },
+    {
+     "name": "Shoes",
+     "slot": "shoes",
+     "color": "#1e1e1e"
+    },
+    {
+     "name": "Details",
+     "slot": "accent",
+     "color": "#a0522d"
+    }
+   ],
+   "nativeHeight": 291.83,
+   "rig": {
+    "k": 0.5295,
+    "from": {
+     "Body": [
+      0.0065,
+      2.0907,
+      0.2919
+     ],
+     "FootL": [
+      0.4259,
+      0.0601,
+      -0.1305
+     ],
+     "FootR": [
+      -0.4476,
+      0.0601,
+      -0.0857
+     ]
+    },
+    "to": {
+     "Body": [
+      0.0022,
+      1.1063,
+      0.0752
+     ],
+     "FootL": [
+      0.2078,
+      0.0247,
+      -0.0451
+     ],
+     "FootR": [
+      -0.2121,
+      0.0247,
+      -0.0451
+     ]
+    }
+   },
+   "headScale": 1.908
+  },
+  "rpg_ranger": {
+   "file": "characters/people/rpg_ranger.glb",
+   "source": "Ranger.fbx (Quaternius RPG pack)",
+   "label": "Hunter",
+   "parts": [
+    {
+     "name": "Skin",
+     "slot": "skin",
+     "color": "#6e4329"
+    },
+    {
+     "name": "Shirt",
+     "slot": "shirt",
+     "color": "#d8d2c4"
+    },
+    {
+     "name": "Shirt2",
+     "slot": "shirt2",
+     "color": "#8d6e4f"
+    },
+    {
+     "name": "Pants",
+     "slot": "trousers",
+     "color": "#2c3e50"
+    },
+    {
+     "name": "Shoes",
+     "slot": "shoes",
+     "color": "#1e1e1e"
+    },
+    {
+     "name": "Details",
+     "slot": "accent",
+     "color": "#a0522d"
+    }
+   ],
+   "nativeHeight": 293.68,
+   "rig": {
+    "k": 0.5312,
+    "from": {
+     "Body": [
+      0.0065,
+      2.0907,
+      0.2919
+     ],
+     "FootL": [
+      0.4259,
+      0.0601,
+      -0.1305
+     ],
+     "FootR": [
+      -0.4476,
+      0.0601,
+      -0.0857
+     ]
+    },
+    "to": {
+     "Body": [
+      0.0022,
+      1.11,
+      0.0752
+     ],
+     "FootL": [
+      0.2078,
+      0.0247,
+      -0.0451
+     ],
+     "FootR": [
+      -0.2121,
+      0.0247,
+      -0.0451
+     ]
+    }
+   },
+   "headScale": 1.624,
+   "hood": true
+  },
+  "rpg_rogue": {
+   "file": "characters/people/rpg_rogue.glb",
+   "source": "Rogue.fbx (Quaternius RPG pack)",
+   "label": "Hooded",
+   "parts": [
+    {
+     "name": "Skin",
+     "slot": "skin",
+     "color": "#6e4329"
+    },
+    {
+     "name": "Hair",
+     "slot": "hair",
+     "color": "#161110"
+    },
+    {
+     "name": "Shirt",
+     "slot": "shirt",
+     "color": "#d8d2c4"
+    },
+    {
+     "name": "Pants",
+     "slot": "trousers",
+     "color": "#2c3e50"
+    },
+    {
+     "name": "Shoes",
+     "slot": "shoes",
+     "color": "#1e1e1e"
+    },
+    {
+     "name": "Details",
+     "slot": "accent",
+     "color": "#a0522d"
+    }
+   ],
+   "nativeHeight": 297.92,
+   "rig": {
+    "k": 0.5295,
+    "from": {
+     "Body": [
+      0.0065,
+      2.0907,
+      0.2919
+     ],
+     "FootL": [
+      0.4259,
+      0.0601,
+      -0.1305
+     ],
+     "FootR": [
+      -0.4476,
+      0.0601,
+      -0.0857
+     ]
+    },
+    "to": {
+     "Body": [
+      0.0022,
+      1.1063,
+      0.0752
+     ],
+     "FootL": [
+      0.2078,
+      0.0247,
+      -0.0451
+     ],
+     "FootR": [
+      -0.2121,
+      0.0247,
+      -0.0451
+     ]
+    }
+   },
+   "headScale": 1.873,
+   "hood": true
+  },
+  "rpg_warrior": {
+   "file": "characters/people/rpg_warrior.glb",
+   "source": "Warrior.fbx (Quaternius RPG pack)",
+   "label": "Guard",
+   "parts": [
+    {
+     "name": "Skin",
+     "slot": "skin",
+     "color": "#6e4329"
+    },
+    {
+     "name": "Hair",
+     "slot": "hair",
+     "color": "#161110"
+    },
+    {
+     "name": "Shirt",
+     "slot": "shirt",
+     "color": "#d8d2c4"
+    },
+    {
+     "name": "Shirt2",
+     "slot": "shirt2",
+     "color": "#8d6e4f"
+    },
+    {
+     "name": "Pants",
+     "slot": "trousers",
+     "color": "#2c3e50"
+    },
+    {
+     "name": "Shoes",
+     "slot": "shoes",
+     "color": "#1e1e1e"
+    }
+   ],
+   "nativeHeight": 288.63,
+   "rig": {
+    "k": 0.5334,
+    "from": {
+     "Body": [
+      0.0065,
+      2.0907,
+      0.2919
+     ],
+     "FootL": [
+      0.4259,
+      0.0601,
+      -0.1305
+     ],
+     "FootR": [
+      -0.4476,
+      0.0601,
+      -0.0857
+     ]
+    },
+    "to": {
+     "Body": [
+      0.0022,
+      1.1145,
+      0.0752
+     ],
+     "FootL": [
+      0.2078,
+      0.0247,
+      -0.0451
+     ],
+     "FootR": [
+      -0.2121,
+      0.0247,
+      -0.0451
+     ]
+    }
+   },
+   "headScale": 1.65
+  },
+  "rpg_wizard": {
+   "file": "characters/people/rpg_wizard.glb",
+   "source": "Wizard.fbx (Quaternius RPG pack)",
+   "label": "Prophet",
+   "parts": [
+    {
+     "name": "Skin",
+     "slot": "skin",
+     "color": "#6e4329"
+    },
+    {
+     "name": "Hair",
+     "slot": "hair",
+     "color": "#161110"
+    },
+    {
+     "name": "Shirt",
+     "slot": "shirt",
+     "color": "#d8d2c4"
+    },
+    {
+     "name": "Pants",
+     "slot": "trousers",
+     "color": "#2c3e50"
+    },
+    {
+     "name": "Shoes",
+     "slot": "shoes",
+     "color": "#1e1e1e"
+    },
+    {
+     "name": "Details",
+     "slot": "accent",
+     "color": "#a0522d"
+    }
+   ],
+   "nativeHeight": 302.55,
+   "rig": {
+    "k": 0.5328,
+    "from": {
+     "Body": [
+      0.0065,
+      2.0907,
+      0.2919
+     ],
+     "FootL": [
+      0.4259,
+      0.0601,
+      -0.1305
+     ],
+     "FootR": [
+      -0.4476,
+      0.0601,
+      -0.0857
+     ]
+    },
+    "to": {
+     "Body": [
+      0.0022,
+      1.1133,
+      0.0752
+     ],
+     "FootL": [
+      0.2078,
+      0.0247,
+      -0.0451
+     ],
+     "FootR": [
+      -0.2121,
+      0.0247,
+      -0.0451
+     ]
+    }
+   },
+   "headScale": 1.868
   }
  },
  "extras": {

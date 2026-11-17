@@ -7,7 +7,13 @@
     { "id": "female_casual", "label": "Tee (women's)", "price": 0, "style": "plain" },
     { "id": "female_tanktop", "label": "Tank top", "price": 0, "style": "plain" },
     { "id": "female_dress", "label": "Ankara dress", "price": 3000, "style": "sharp" },
-    { "id": "female_alternative", "label": "Jacket", "price": 8000, "style": "flashy" }
+    { "id": "female_alternative", "label": "Jacket", "price": 8000, "style": "flashy" },
+    { "id": "rpg_rogue", "label": "Hoodie & mask", "price": 1500, "style": "plain", "anyone": true },
+    { "id": "rpg_monk", "label": "Herbalist wrap", "price": 2500, "style": "plain", "anyone": true },
+    { "id": "rpg_ranger", "label": "Hunter's tunic", "price": 4000, "style": "sharp", "anyone": true },
+    { "id": "rpg_cleric", "label": "White garment", "price": 5000, "style": "sharp", "anyone": true },
+    { "id": "rpg_warrior", "label": "Bouncer kit", "price": 9000, "style": "flashy", "anyone": true },
+    { "id": "rpg_wizard", "label": "Prophet's robe", "price": 12000, "style": "flashy", "anyone": true }
   ],
   "colours": ["#d8d2c4", "#c0392b", "#2c5aa0", "#2f8f5b", "#e0b400", "#1a1a1a", "#e67e22", "#8e44ad", "#ffffff", "#5d4037"],
   "accessories": [
