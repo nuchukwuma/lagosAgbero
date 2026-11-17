@@ -44,10 +44,10 @@ const DEFAULT_SLOTS = {
   hands: 'skin', thigh: 'trousers', shin: 'trousers', feet: 'shoes', piece: 'accent',
 }
 const CHARACTERS = {
-  'Cleric.fbx': { id: 'rpg_cleric', label: 'Robed', slots: { hips: 'shirt', ShoulderPads: 'shirt2' }, face: ['Head#0'], simplify: { Head: 800 } },
+  'Cleric.fbx': { id: 'rpg_cleric', label: 'Robed', slots: { hips: 'shirt', ShoulderPads: 'shirt2' }, face: ['Head#0', 'Head#1'], noNose: true, simplify: { Head: 800 } },
   'Monk.fbx': { id: 'rpg_monk', label: 'Elder', slots: { torso: 'skin', upperArm: 'skin', hips: 'trousers', hands: 'accent', Monk001: 'hair' }, simplify: { Monk001: 900 } },
   'Ranger.fbx': { id: 'rpg_ranger', label: 'Hunter', slots: { Cloak: 'shirt2', forearm: 'shirt2' }, hood: true, simplify: {} },
-  'Rogue.fbx': { id: 'rpg_rogue', label: 'Hooded', slots: {}, faceShare: 1, hood: true, simplify: {} },
+  'Rogue.fbx': { id: 'rpg_rogue', label: 'Hooded', slots: {}, face: ['Face#3'], faceShare: 1, noNose: true, hood: true, simplify: {} },
   'Warrior.fbx': { id: 'rpg_warrior', label: 'Guard', slots: { forearm: 'shirt2', ShoulderPadL: 'shirt2', ShoulderPadR: 'shirt2' }, simplify: { Face: 900 } },
   'Wizard.fbx': { id: 'rpg_wizard', label: 'Prophet', slots: { hips: 'shirt', thigh: 'shirt' }, simplify: { Face: 900 } },
 }
@@ -229,7 +229,9 @@ function regionOfBone(b) {
 }
 
 // (face: extra islands that are face, as "piece#island" from a DEBUG=1 run;
-//  faceShare: how close to the best an island must score to count as face too)
+//  faceShare: how close to the best an island must score to count as face too;
+//  noNose: skip the nose search, for faces whose nose is already skin and
+//  whose middle holds a hair strip, a moustache or a mask)
 //
 // Faces: on the head, the island with the most surface facing forward in
 // the face zone is the face (hair strands and hood rims stick out further
@@ -269,13 +271,12 @@ function classify(pieces, cfg, headPos) {
   // the best, and any other island nearly as big (a face can be split in two)
   const share = cfg.faceShare ?? 0.5
   const faces = candidates.filter((f) => f.score >= candidates[0].score * share || cfg.face?.includes(`${f.piece.name}#${f.island}`))
-  for (const { p, count, islandOf } of all) {
-    const tris = islandOf.length
-    // per island: the bone most of its corners follow, its size and middle
+  // per island: the bone most of its corners follow, its size and its box
+  const info = all.map(({ p, count, islandOf }) => {
     const votes = Array.from({ length: count }, () => new Map())
     const box = Array.from({ length: count }, () => new THREE.Box3())
     const size = new Float32Array(count)
-    for (let t = 0; t < tris; t++) {
+    for (let t = 0; t < islandOf.length; t++) {
       const isl = islandOf[t]
       for (let k = 0; k < 3; k++) {
         const i = t * 3 + k
@@ -288,29 +289,49 @@ function classify(pieces, cfg, headPos) {
       }
       size[isl]++
     }
+    return { votes, box, size }
+  })
+  // the whole face, across pieces
+  const faceBox = new THREE.Box3()
+  let faceSize = 0
+  for (const f of faces) {
+    const k = all.findIndex((x) => x.p === f.piece)
+    faceBox.union(info[k].box[f.island])
+    faceSize = Math.max(faceSize, info[k].size[f.island])
+  }
+  const mid = new THREE.Vector3()
+  all.forEach(({ p, count, islandOf }, k) => {
+    const { votes, box, size } = info[k]
     const faceIslands = new Set(faces.filter((f) => f.piece === p).map((f) => f.island))
-    const faceBox = new THREE.Box3()
-    let faceSize = 0
-    for (const s of faceIslands) {
-      faceBox.union(box[s])
-      faceSize = Math.max(faceSize, size[s])
-    }
     const slotOf = new Array(count)
     for (let s = 0; s < count; s++) {
       const bone = [...votes[s].entries()].sort((a, b) => b[1] - a[1])[0][0]
       let region = regionOfBone(bone)
-      if (!p.skinned) region = cfg.slots[p.name] ? p.name : region === 'head' ? 'head' : 'piece'
-      if (region === 'head') {
-        if (faceIslands.has(s)) region = 'face'
-        else if (faceSize && size[s] < faceSize * 0.12 && faceBox.containsPoint(box[s].getCenter(new THREE.Vector3()))) region = 'eyes'
-        else region = cfg.slots[p.name] && !p.skinned ? p.name : 'hair'
-      }
+      box[s].getCenter(mid)
+      // small bits of the body sitting on the front of the face (a nose, a
+      // lip, a modelled eye slit) are skin too; separate pieces (beards,
+      // masks, hair) keep their own colour. The eyes and mouth are drawn on
+      // afterwards (scripts/add-faces.mjs)
+      const onFace = p.skinned && region === 'head' && faceSize && size[s] < faceSize * 0.15 && mid.x > faceBox.min.x && mid.x < faceBox.max.x && mid.y > faceBox.min.y && mid.y < faceBox.max.y && box[s].max.z >= faceBox.max.z - (faceBox.max.z - faceBox.min.z) * 0.5
+      // the nose: small, narrow, in the middle of the face and sticking out
+      // furthest (often modelled as part of the hair or hood piece)
+      const fw = faceBox.max.x - faceBox.min.x
+      const fh = faceBox.max.y - faceBox.min.y
+      const fd = faceBox.max.z - faceBox.min.z
+      const nose =
+        !cfg.noNose && region === 'head' && faceSize && size[s] < faceSize * 0.25 && box[s].max.x - box[s].min.x < fw * 0.3 && Math.abs(mid.x - (faceBox.min.x + faceBox.max.x) / 2) < fw * 0.08 &&
+        mid.y > faceBox.min.y + fh * 0.2 && mid.y < faceBox.min.y + fh * 0.75 && box[s].max.z >= faceBox.max.z - fd * 0.1
+      if (process.env.DEBUG && region === 'head' && Math.abs(mid.x - (faceBox.min.x + faceBox.max.x) / 2) < fw * 0.15) console.log(`   ${p.name}#${s} size ${size[s]}/${faceSize} w ${((box[s].max.x - box[s].min.x) / fw).toFixed(2)} y ${((mid.y - faceBox.min.y) / fh).toFixed(2)} zfront ${((faceBox.max.z - box[s].max.z) / fd).toFixed(2)} nose=${nose}`)
+      if (faceIslands.has(s) || onFace || nose) region = 'face'
+      else if (!p.skinned && cfg.slots[p.name]) region = p.name
+      else if (region === 'head') region = 'hair'
+      else if (!p.skinned) region = 'piece'
       slotOf[s] = cfg.slots[region] || DEFAULT_SLOTS[region] || 'accent'
     }
-    const per = new Array(tris)
-    for (let t = 0; t < tris; t++) per[t] = slotOf[islandOf[t]]
+    const per = new Array(islandOf.length)
+    for (let t = 0; t < islandOf.length; t++) per[t] = slotOf[islandOf[t]]
     triPart.set(p, per)
-  }
+  })
   return triPart
 }
 

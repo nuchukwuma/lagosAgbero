@@ -38,9 +38,18 @@
      "name": "Shoes",
      "slot": "shoes",
      "color": "#060606"
+    },
+    {
+     "name": "Mouth",
+     "slot": "mouth",
+     "color": "#3a1a14"
     }
    ],
-   "nativeHeight": 482.68
+   "nativeHeight": 482.68,
+   "face": {
+    "from": 3940,
+    "parts": 7
+   }
   },
   "male_shirt": {
    "file": "characters/people/male_shirt.glb",
@@ -90,9 +99,18 @@
      "name": "Shoes",
      "slot": "shoes",
      "color": "#060606"
+    },
+    {
+     "name": "Mouth",
+     "slot": "mouth",
+     "color": "#3a1a14"
     }
    ],
-   "nativeHeight": 484.33
+   "nativeHeight": 484.33,
+   "face": {
+    "from": 3954,
+    "parts": 9
+   }
   },
   "male_longsleeve": {
    "file": "characters/people/male_longsleeve.glb",
@@ -132,9 +150,18 @@
      "name": "Shoes",
      "slot": "shoes",
      "color": "#060606"
+    },
+    {
+     "name": "Mouth",
+     "slot": "mouth",
+     "color": "#3a1a14"
     }
    ],
-   "nativeHeight": 481.2
+   "nativeHeight": 481.2,
+   "face": {
+    "from": 4172,
+    "parts": 7
+   }
   },
   "male_suit": {
    "file": "characters/people/male_suit.glb",
@@ -179,9 +206,18 @@
      "name": "Shoes",
      "slot": "shoes",
      "color": "#060606"
+    },
+    {
+     "name": "Mouth",
+     "slot": "mouth",
+     "color": "#3a1a14"
     }
    ],
-   "nativeHeight": 482.83
+   "nativeHeight": 482.83,
+   "face": {
+    "from": 4364,
+    "parts": 8
+   }
   },
   "female_casual": {
    "file": "characters/people/female_casual.glb",
@@ -226,9 +262,18 @@
      "name": "HairBase",
      "slot": "hair",
      "color": "#161616"
+    },
+    {
+     "name": "Mouth",
+     "slot": "mouth",
+     "color": "#3a1a14"
     }
    ],
-   "nativeHeight": 463.63
+   "nativeHeight": 463.63,
+   "face": {
+    "from": 5782,
+    "parts": 8
+   }
   },
   "female_dress": {
    "file": "characters/people/female_dress.glb",
@@ -258,9 +303,18 @@
      "name": "Shoes",
      "slot": "shoes",
      "color": "#170906"
+    },
+    {
+     "name": "Mouth",
+     "slot": "mouth",
+     "color": "#3a1a14"
     }
    ],
-   "nativeHeight": 465.48
+   "nativeHeight": 465.48,
+   "face": {
+    "from": 3816,
+    "parts": 5
+   }
   },
   "female_tanktop": {
    "file": "characters/people/female_tanktop.glb",
@@ -305,9 +359,18 @@
      "name": "HairBase",
      "slot": "hair",
      "color": "#161616"
+    },
+    {
+     "name": "Mouth",
+     "slot": "mouth",
+     "color": "#3a1a14"
     }
    ],
-   "nativeHeight": 465.48
+   "nativeHeight": 465.48,
+   "face": {
+    "from": 4227,
+    "parts": 8
+   }
   },
   "female_alternative": {
    "file": "characters/people/female_alternative.glb",
@@ -367,9 +430,18 @@
      "name": "Hair",
      "slot": "hair",
      "color": "#380a1f"
+    },
+    {
+     "name": "Mouth",
+     "slot": "mouth",
+     "color": "#3a1a14"
     }
    ],
-   "nativeHeight": 465.28
+   "nativeHeight": 465.28,
+   "face": {
+    "from": 4242,
+    "parts": 11
+   }
   },
   "rpg_cleric": {
    "file": "characters/people/rpg_cleric.glb",
@@ -405,9 +477,24 @@
      "name": "Shoes",
      "slot": "shoes",
      "color": "#1e1e1e"
+    },
+    {
+     "name": "Eyes",
+     "slot": "eyes",
+     "color": "#0a0606"
+    },
+    {
+     "name": "EyeShine",
+     "slot": "shine",
+     "color": "#ffffff"
+    },
+    {
+     "name": "Mouth",
+     "slot": "mouth",
+     "color": "#3a1a14"
     }
    ],
-   "nativeHeight": 294.55,
+   "nativeHeight": 294.89,
    "rig": {
     "k": 0.5331,
     "from": {
@@ -445,7 +532,11 @@
      ]
     }
    },
-   "headScale": 1.896
+   "headScale": 1.894,
+   "face": {
+    "from": 3987,
+    "parts": 6
+   }
   },
   "rpg_monk": {
    "file": "characters/people/rpg_monk.glb",
@@ -481,6 +572,21 @@
      "name": "Details",
      "slot": "accent",
      "color": "#a0522d"
+    },
+    {
+     "name": "Eyes",
+     "slot": "eyes",
+     "color": "#0a0606"
+    },
+    {
+     "name": "EyeShine",
+     "slot": "shine",
+     "color": "#ffffff"
+    },
+    {
+     "name": "Mouth",
+     "slot": "mouth",
+     "color": "#3a1a14"
     }
    ],
    "nativeHeight": 291.83,
@@ -521,7 +627,11 @@
      ]
     }
    },
-   "headScale": 1.908
+   "headScale": 1.908,
+   "face": {
+    "from": 4916,
+    "parts": 6
+   }
   },
   "rpg_ranger": {
    "file": "characters/people/rpg_ranger.glb",
@@ -557,6 +667,26 @@
      "name": "Details",
      "slot": "accent",
      "color": "#a0522d"
+    },
+    {
+     "name": "Eyes",
+     "slot": "eyes",
+     "color": "#0a0606"
+    },
+    {
+     "name": "EyeShine",
+     "slot": "shine",
+     "color": "#ffffff"
+    },
+    {
+     "name": "Brows",
+     "slot": "hair",
+     "color": "#161110"
+    },
+    {
+     "name": "Mouth",
+     "slot": "mouth",
+     "color": "#3a1a14"
     }
    ],
    "nativeHeight": 293.68,
@@ -598,7 +728,11 @@
     }
    },
    "headScale": 1.624,
-   "hood": true
+   "hood": true,
+   "face": {
+    "from": 3301,
+    "parts": 6
+   }
   },
   "rpg_rogue": {
    "file": "characters/people/rpg_rogue.glb",
@@ -634,6 +768,21 @@
      "name": "Details",
      "slot": "accent",
      "color": "#a0522d"
+    },
+    {
+     "name": "Eyes",
+     "slot": "eyes",
+     "color": "#0a0606"
+    },
+    {
+     "name": "EyeShine",
+     "slot": "shine",
+     "color": "#ffffff"
+    },
+    {
+     "name": "Mouth",
+     "slot": "mouth",
+     "color": "#3a1a14"
     }
    ],
    "nativeHeight": 297.92,
@@ -675,7 +824,11 @@
     }
    },
    "headScale": 1.873,
-   "hood": true
+   "hood": true,
+   "face": {
+    "from": 1364,
+    "parts": 6
+   }
   },
   "rpg_warrior": {
    "file": "characters/people/rpg_warrior.glb",
@@ -711,6 +864,21 @@
      "name": "Shoes",
      "slot": "shoes",
      "color": "#1e1e1e"
+    },
+    {
+     "name": "Eyes",
+     "slot": "eyes",
+     "color": "#0a0606"
+    },
+    {
+     "name": "EyeShine",
+     "slot": "shine",
+     "color": "#ffffff"
+    },
+    {
+     "name": "Mouth",
+     "slot": "mouth",
+     "color": "#3a1a14"
     }
    ],
    "nativeHeight": 288.63,
@@ -751,7 +919,11 @@
      ]
     }
    },
-   "headScale": 1.65
+   "headScale": 1.65,
+   "face": {
+    "from": 4254,
+    "parts": 6
+   }
   },
   "rpg_wizard": {
    "file": "characters/people/rpg_wizard.glb",
@@ -787,6 +959,21 @@
      "name": "Details",
      "slot": "accent",
      "color": "#a0522d"
+    },
+    {
+     "name": "Eyes",
+     "slot": "eyes",
+     "color": "#0a0606"
+    },
+    {
+     "name": "EyeShine",
+     "slot": "shine",
+     "color": "#ffffff"
+    },
+    {
+     "name": "Mouth",
+     "slot": "mouth",
+     "color": "#3a1a14"
     }
    ],
    "nativeHeight": 302.55,
@@ -827,7 +1014,11 @@
      ]
     }
    },
-   "headScale": 1.868
+   "headScale": 1.868,
+   "face": {
+    "from": 3640,
+    "parts": 6
+   }
   }
  },
  "extras": {

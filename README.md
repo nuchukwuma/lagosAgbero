@@ -127,6 +127,7 @@ npm run assets:animations -- a1.zip a2.zip a3.zip a4.rar a5.zip "source-assets/m
 npm run assets:animations -- path/to/rpg-pack/FBX/Cleric.fbx   # add the Quaternius RPG pack clips (roll, cheer, preach, pickUp); other clips are kept
 npm run assets:nature -- path/to/nature-pack.zip   # bake trees, bushes, rocks and grass into the scenery
 npm run assets:rpg -- path/to/rpg-pack.zip   # the RPG-pack people (Cleric, Monk, Ranger, Rogue, Warrior, Wizard), re-fitted to our skeleton so every animation works on them
+npm run assets:faces     # draw eyes, eyebrows and mouths onto the people's faces (after any people import)
 npm run assets:crowd     # rebuild the simplified bodies (background crowd, far-away people)
 npm run assets:slim      # shrink the .glb models (1-byte normals and skin weights, no unused tangents); run after any import
 ```

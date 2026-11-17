@@ -178,20 +178,20 @@ Sizes in metres are after pack scaling (1 unit = 1 m).
 
 | Game name | File | Download | Planned use |
 |---|---|---|---|
-| body: male_casual | `characters/people/male_casual.glb` | 163 KB | Outfit body (Male_Casual.fbx); parts: Skin, Eyes, Hair, Shirt, Pants, Socks, Shoes |
-| body: male_shirt | `characters/people/male_shirt.glb` | 163 KB | Outfit body (Male_Shirt.fbx); parts: Skin, Eyes, Hair, Hair2, Shirt, Shirt2, Pants, Socks, Shoes |
-| body: male_longsleeve | `characters/people/male_longsleeve.glb` | 170 KB | Outfit body (Male_LongSleeve.fbx); parts: Skin, Eyes, Hair, Shirt, Pants, Socks, Shoes |
-| body: male_suit | `characters/people/male_suit.glb` | 210 KB | Outfit body (Male_Suit.fbx); parts: Skin, TieTexture, Eyes, Hair, Shirt, Pants, Details, Shoes |
-| body: female_casual | `characters/people/female_casual.glb` | 219 KB | Outfit body (Female_Casual.fbx); parts: Skin, Eyes, Hair, Shirt, Pants, Socks, Shoes, HairBase |
-| body: female_dress | `characters/people/female_dress.glb` | 159 KB | Outfit body (Female_Dress.fbx); parts: Skin, Eyes, Hair, Dress, Shoes |
-| body: female_tanktop | `characters/people/female_tanktop.glb` | 204 KB | Outfit body (Female_TankTop.fbx); parts: Skin, Eyes, Hair, Shirt, Pants, Socks, Shoes, HairBase |
-| body: female_alternative | `characters/people/female_alternative.glb` | 172 KB | Outfit body (Female_Alternative.fbx); parts: Skin, Eyes, Eyebrows, Shirt, Pants, Socks, Shoes, HairBase, Jacket, LightJacket, Hair |
-| body: rpg_cleric | `characters/people/rpg_cleric.glb` | 165 KB | Outfit body (Cleric.fbx (Quaternius RPG pack)); parts: Skin, Hair, Shirt, Shirt2, Pants, Shoes |
-| body: rpg_monk | `characters/people/rpg_monk.glb` | 194 KB | Outfit body (Monk.fbx (Quaternius RPG pack)); parts: Skin, Hair, Shirt, Pants, Shoes, Details |
-| body: rpg_ranger | `characters/people/rpg_ranger.glb` | 150 KB | Outfit body (Ranger.fbx (Quaternius RPG pack)); parts: Skin, Shirt, Shirt2, Pants, Shoes, Details |
-| body: rpg_rogue | `characters/people/rpg_rogue.glb` | 92 KB | Outfit body (Rogue.fbx (Quaternius RPG pack)); parts: Skin, Hair, Shirt, Pants, Shoes, Details |
-| body: rpg_warrior | `characters/people/rpg_warrior.glb` | 178 KB | Outfit body (Warrior.fbx (Quaternius RPG pack)); parts: Skin, Hair, Shirt, Shirt2, Pants, Shoes |
-| body: rpg_wizard | `characters/people/rpg_wizard.glb` | 158 KB | Outfit body (Wizard.fbx (Quaternius RPG pack)); parts: Skin, Hair, Shirt, Pants, Shoes, Details |
+| body: male_casual | `characters/people/male_casual.glb` | 164 KB | Outfit body (Male_Casual.fbx); parts: Skin, Eyes, Hair, Shirt, Pants, Socks, Shoes, Mouth |
+| body: male_shirt | `characters/people/male_shirt.glb` | 165 KB | Outfit body (Male_Shirt.fbx); parts: Skin, Eyes, Hair, Hair2, Shirt, Shirt2, Pants, Socks, Shoes, Mouth |
+| body: male_longsleeve | `characters/people/male_longsleeve.glb` | 172 KB | Outfit body (Male_LongSleeve.fbx); parts: Skin, Eyes, Hair, Shirt, Pants, Socks, Shoes, Mouth |
+| body: male_suit | `characters/people/male_suit.glb` | 212 KB | Outfit body (Male_Suit.fbx); parts: Skin, TieTexture, Eyes, Hair, Shirt, Pants, Details, Shoes, Mouth |
+| body: female_casual | `characters/people/female_casual.glb` | 220 KB | Outfit body (Female_Casual.fbx); parts: Skin, Eyes, Hair, Shirt, Pants, Socks, Shoes, HairBase, Mouth |
+| body: female_dress | `characters/people/female_dress.glb` | 161 KB | Outfit body (Female_Dress.fbx); parts: Skin, Eyes, Hair, Dress, Shoes, Mouth |
+| body: female_tanktop | `characters/people/female_tanktop.glb` | 207 KB | Outfit body (Female_TankTop.fbx); parts: Skin, Eyes, Hair, Shirt, Pants, Socks, Shoes, HairBase, Mouth |
+| body: female_alternative | `characters/people/female_alternative.glb` | 174 KB | Outfit body (Female_Alternative.fbx); parts: Skin, Eyes, Eyebrows, Shirt, Pants, Socks, Shoes, HairBase, Jacket, LightJacket, Hair, Mouth |
+| body: rpg_cleric | `characters/people/rpg_cleric.glb` | 170 KB | Outfit body (Cleric.fbx (Quaternius RPG pack)); parts: Skin, Hair, Shirt, Shirt2, Pants, Shoes, Eyes, EyeShine, Mouth |
+| body: rpg_monk | `characters/people/rpg_monk.glb` | 197 KB | Outfit body (Monk.fbx (Quaternius RPG pack)); parts: Skin, Hair, Shirt, Pants, Shoes, Details, Eyes, EyeShine, Mouth |
+| body: rpg_ranger | `characters/people/rpg_ranger.glb` | 153 KB | Outfit body (Ranger.fbx (Quaternius RPG pack)); parts: Skin, Shirt, Shirt2, Pants, Shoes, Details, Eyes, EyeShine, Brows, Mouth |
+| body: rpg_rogue | `characters/people/rpg_rogue.glb` | 95 KB | Outfit body (Rogue.fbx (Quaternius RPG pack)); parts: Skin, Hair, Shirt, Pants, Shoes, Details, Eyes, EyeShine, Mouth |
+| body: rpg_warrior | `characters/people/rpg_warrior.glb` | 181 KB | Outfit body (Warrior.fbx (Quaternius RPG pack)); parts: Skin, Hair, Shirt, Shirt2, Pants, Shoes, Eyes, EyeShine, Mouth |
+| body: rpg_wizard | `characters/people/rpg_wizard.glb` | 161 KB | Outfit body (Wizard.fbx (Quaternius RPG pack)); parts: Skin, Hair, Shirt, Pants, Shoes, Details, Eyes, EyeShine, Mouth |
 | extra: bus | `vehicles-extra/bus.glb` | 108 KB | Molue / BRT-style bus (Kenney has no bus) |
 
 ## Retargeted animations

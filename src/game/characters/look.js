@@ -44,6 +44,7 @@ export function bodyInfo(body) {
 
 const EYES_REST = new THREE.Color('#0a0606')
 const EYES_RED = new THREE.Color('#c81a1a')
+const MOUTH_TINT = new THREE.Color('#5a1414')
 const tmp = new THREE.Color()
 
 /** The colour a look gives one body part (slot from peopleIndex.json). */
@@ -53,6 +54,11 @@ export function partColor(part, look) {
       return tmp.copy(EYES_REST).lerp(EYES_RED, Math.min(1, Math.max(0, look.eyeRed || 0))).clone()
     case 'shirt2':
       return look.shirt2 ? new THREE.Color(look.shirt2) : look.shirt ? new THREE.Color(look.shirt).multiplyScalar(0.7) : new THREE.Color(part.color)
+    case 'mouth': {
+      // a darker, slightly redder shade of the skin
+      const skin = new THREE.Color(look.skin || DEFAULT_LOOK.skin)
+      return skin.multiplyScalar(0.45).lerp(MOUTH_TINT, 0.3)
+    }
     case 'socks':
       return new THREE.Color(look.socks || look.trousers || part.color)
     default:

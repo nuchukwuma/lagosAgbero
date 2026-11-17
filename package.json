@@ -17,7 +17,8 @@
     "assets:crowd": "node scripts/make-crowd-lod.mjs",
     "assets:nature": "node scripts/import-nature.mjs",
     "assets:slim": "node scripts/slim-models.mjs",
-    "assets:rpg": "node scripts/import-rpg-characters.mjs"
+    "assets:rpg": "node scripts/import-rpg-characters.mjs",
+    "assets:faces": "node scripts/add-faces.mjs"
   },
   "engines": {
     "node": ">=20"
