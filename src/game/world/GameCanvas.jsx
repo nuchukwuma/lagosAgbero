@@ -20,7 +20,6 @@ import FeeRunDirector from '../modes/feeCollection/FeeRunDirector.jsx'
 import { useFeeRun } from '../modes/feeCollection/feeRunStore.js'
 import ChaseDirector from '../modes/chase/ChaseDirector.jsx'
 import { useChase } from '../modes/chase/chaseStore.js'
-import FightDirector from '../modes/fight/FightDirector.jsx'
 import { useFight, opponentProfile } from '../modes/fight/fightStore.js'
 import RunnerScene from '../modes/runner/RunnerScene.jsx'
 import DriveScene from '../modes/drive/DriveScene.jsx'
@@ -101,6 +100,7 @@ export default function GameCanvas({ view, game, activity = null, paused = false
   const feeRunActive = useFeeRun((s) => s.active && s.started && !s.ended)
   const chaseActive = useChase((s) => s.active && s.started && !s.ended)
   const fightOn = useFight((s) => s.active)
+  const fight2d = fightOn && modeName === 'fight'
   const runnerOn = useRunner((s) => s.active) && modeName === 'runner'
   const busOn = useBus((s) => s.active) && modeName === 'conductor'
   const driveOn = useDrive((s) => s.active) && modeName === 'drive'
@@ -138,7 +138,8 @@ export default function GameCanvas({ view, game, activity = null, paused = false
       className="game-canvas"
       dpr={safeGl ? 1 : dpr}
       // paused (a panel is open): the world stops, and with it every activity's clock
-      frameloop={capped || paused ? 'never' : 'always'}
+      // a 2D fight is drawn over it (Fight2D.jsx): the 3D street holds still meanwhile
+      frameloop={capped || paused || fight2d ? 'never' : 'always'}
       // safeGl: the plainest settings, for machines where the normal ones fail (see CanvasGuard)
       gl={safeGl ? { antialias: false, powerPreference: 'default', stencil: false } : { antialias: profile.antialias, powerPreference: 'high-performance', stencil: true }}
       camera={{ fov: 50, near: 0.3, far: profile.far, position: [0, 8, 12] }}
@@ -151,8 +152,8 @@ export default function GameCanvas({ view, game, activity = null, paused = false
       <ShaderWarmup />
       <PortraitStudio />
       <ReactionDirector enabled={freeRoam && !paused} />
-      {capped && !paused && <FrameCap fps={30} />}
-      {paused && <FrozenFrame />}
+      {capped && !paused && !fight2d && <FrameCap fps={30} />}
+      {(paused || fight2d) && <FrozenFrame />}
       {settled && profile.dpr.min !== profile.dpr.max && <PerformanceMonitor onDecline={() => setDpr(range.min)} onIncline={() => setDpr(range.max)} flipflops={3} bounds={capped ? () => [22, 29] : undefined} onFallback={() => setDpr(range.min)} />}
       <Lighting time={view.time} raining={Boolean(game.flags.raining)} />
       <Sky />
@@ -186,12 +187,11 @@ export default function GameCanvas({ view, game, activity = null, paused = false
           </Suspense>
           {worldMode && modeName === 'feeCollection' && <FeeRunDirector />}
           {worldMode && modeName === 'chase' && <ChaseDirector />}
-          {worldMode && modeName === 'fight' && fightOn && <FightDirector playerLook={look} />}
           {busOn && <ConductorDirector playerLook={look} slogan={(activity?.params || view.params)?.slogan} />}
         </Suspense>
       )}
       {freeRoam && <GoalTracker key={view.key} goal={view.goal} layout={layout} onReached={onGoalReached} />}
-      <CameraRig mode={driveOn ? 'drive' : busOn ? 'vehicle' : runnerOn ? 'runner' : modeName === 'fight' && fightOn ? 'fight' : talking ? 'dialogue' : 'follow'} speaker={speaker} ceiling={runnerOn || driveOn ? null : layout.raw.flyover} obstacles={runnerOn || driveOn ? null : layout.shadows} />
+      <CameraRig mode={driveOn ? 'drive' : busOn ? 'vehicle' : runnerOn ? 'runner' : talking ? 'dialogue' : 'follow'} speaker={speaker} ceiling={runnerOn || driveOn ? null : layout.raw.flyover} obstacles={runnerOn || driveOn ? null : layout.shadows} />
     </Canvas>
   )
 }

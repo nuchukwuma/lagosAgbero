@@ -24,10 +24,11 @@ After every chapter you see the choices you made, and a story map shows the
 paths you didn't take. The title screen has an **Endings** page: the endings
 you've reached, and a hint for each one you haven't.
 
-Between story beats there's the street: fee runs, chases, fist fights (land
-hits close together for a combo; every blow lands with a burst, a comic word
-like "GBAM!" and a squash), escape runs (dodge cartons, banners and danfos
-driving straight at you; stumble and the Task Force is right at your back),
+Between story beats there's the street: fee runs, chases, fist fights (a 2D
+fighting game on a painted Lagos street, see below; land hits close together
+for a combo), escape runs (dodge cartons, banners, danfos driving straight at
+you and Task Force officers running at you; stumble and the rest of them are
+right at your back),
 danfo driving, side quests, and small finds lying around for anyone who
 wanders. Pausing (the menu, map or status) stops everything: activity
 timers, the runner, fights and timed choices wait for you.
@@ -47,8 +48,8 @@ The game is one web page that adapts to the device:
   screen (finger or mouse) to swing it round freely, pinch or scroll to zoom,
   Q / R to turn. If something blocks the view, the camera moves in closer,
   then up. The stick always walks "up the screen", whichever way it faces.
-- **Fights:** filmed side-on from the street; if a danfo or stall is in the
-  way, from the other side, with you still on the left.
+- **Fights:** a 2D fighting game, side-on: guard stance, jab, high kick, the
+  spinning "Lagos Roundabout", block, backstep dodge, stagger, knock-out.
 - **Fee runs:** stand in front of a vehicle that's trying to leave and it
   can't: a driver who refused gives in and pays, one that got tired of
   waiting stops so you can collect.
@@ -78,6 +79,24 @@ are bright, and people are Kenney's blocky Mini Characters with a dark
 outline, dressed in each character's own colours and skin tone. All of it is set in
 `src/game/world/style.js` (band edges, outline width and distance, head size),
 so it can be tuned in one place. Outlines are off in Light mode.
+
+## Fights in 2D
+
+Street fights switch to a 2D fighting game (`src/game/modes/fight/Fight2D.jsx`).
+The fighters are drawn live with the canvas (`fight2d/puppet.js`): a jointed
+figure built from each character's own look (skin tone, hair, clothes, shoes,
+hats, glasses, chains), with outlines, two-tone shading and a face that
+reacts (gritted teeth, a shout, eyes squeezed shut, crosses at a K.O.). Poses
+set the hips, fists and feet; elbows and knees are worked out, so feet stay
+planted. The street behind them (`fight2d/stage.js`) is painted once to match
+the time of day: shopfronts and signboards, water tanks, power lines,
+yellow-and-black kerbs, and a crowd that cheers louder with every blow. Hits
+land with sparks, comic words, a split-second freeze and screen shake; the
+knock-out plays in slow motion.
+
+It's drawn at the screen's own sharpness (capped at 1.5x in Light mode, 2x on
+Normal, 3x on Sharp), and the 3D street is switched off and hidden while a
+fight is on, so 2 GB phones keep a steady frame rate.
 
 ## Voices
 

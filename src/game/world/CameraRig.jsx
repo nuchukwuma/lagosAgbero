@@ -3,8 +3,7 @@ import { useFrame, useThree } from '@react-three/fiber'
 import * as THREE from 'three'
 import { playerState, npcRegistry } from './worldState.js'
 import { cam, cycleView, dragView, zoomView, turnView } from './camView.js'
-import { vehicleColliders } from '../systems/traffic.js'
-import { blockedHeight, fightSideBlock } from './cameraMath.js'
+import { blockedHeight } from './cameraMath.js'
 
 // Camera behaviour:
 //   follow    behind and above the player (looks north), for walking around;
@@ -30,7 +29,6 @@ export default function CameraRig({ mode = 'follow', speaker = null, ceiling = n
   const camera = useThree((s) => s.camera)
   const size = useThree((s) => s.size)
   const follow = useRef({ kind: 'south', clearSince: 0 })
-  const fightCam = useRef({ key: '', lift: 0 })
   const gl = useThree((s) => s.gl)
   const modeRef = useRef(mode)
   modeRef.current = mode
@@ -148,31 +146,6 @@ export default function CameraRig({ mode = 'follow', speaker = null, ceiling = n
       const v = playerState.vehicleView
       tmpLook.set(v.x + 1, 1.3, v.z)
       tmpPos.set(v.x - 3, portrait ? 6 : 4.5, v.z + (portrait ? 12 : 9.5))
-    } else if (mode === 'fight' && playerState.fightView) {
-      // side-on, fighting-game style. Always from the south, so screen left and
-      // right match the move buttons; if something tall stands in between (a
-      // parked danfo), the camera rises to film over it.
-      const c = playerState.fightView
-      const dist = portrait ? 9 : 6.5
-      const f = fightCam.current
-      const key = `${c.x.toFixed(1)},${c.z.toFixed(1)},${dist}`
-      if (f.key !== key || f.fight !== c) {
-        f.key = key
-        f.fight = c // a new fight on the same spot decides afresh
-        // Film from the south if a sensible height sees over what's in between;
-        // if not (a danfo right next to the fight), from the north, and the
-        // fight is mirrored (FightDirector) so you stay on the left of the screen.
-        const solid = (obstacles || []).concat(vehicleColliders().map((v) => ({ ...v, h: 2.3 })))
-        const south = fightSideBlock(c, 1, dist, solid)
-        const north = south > 5 ? fightSideBlock(c, -1, dist, solid) : Infinity
-        c.side = north < south ? -1 : 1
-        f.lift = Math.min(9, c.side > 0 ? south : north)
-      }
-      // On a landscape phone the health bars sit across the top third, so the
-      // fighters are framed a little low (the camera looks above their heads).
-      const low = !portrait && size.height < 560 ? 0.55 : 0
-      tmpLook.set(c.x, 1.05 + low + (f.lift > 4 ? -0.3 : 0), c.z)
-      tmpPos.set(c.x, Math.max(portrait ? 3.2 : 2.4, f.lift), c.z + (c.side || 1) * dist)
     } else if (mode === 'dialogue' && npc) {
       // Raised three-quarter shot from the street side (south), so poles and
       // parked danfos rarely block the faces.

@@ -30,7 +30,7 @@ import RotateHint, { useTurnHint } from '../hud/RotateHint.jsx'
 import { applyOrientation } from '../../game/systems/orientation.js'
 import { useSettings } from '../../game/store/settings.js'
 
-const MAP_MODES = new Set(['feeCollection', 'chase', 'fight'])
+const MAP_MODES = new Set(['feeCollection', 'chase']) // (fights are 2D: no map)
 
 // The story screen: the 3D street + HUD + whatever the engine says to show.
 // During a freeRoam beat the player walks; otherwise the story has the floor.
@@ -144,7 +144,7 @@ export default function StoryScreen() {
   }
 
   return (
-    <div className="story-screen">
+    <div className={`story-screen ${modeName === 'fight' ? 'fighting' : ''}`}>
       <CanvasGuard onBack={quitToTitle}>{(safeGl) => <GameCanvas view={view} game={game} activity={activity} paused={paused} onGoalReached={advance} safeGl={safeGl} />}</CanvasGuard>
       {raining && <div className="rain" aria-hidden="true" />}
       <div id="speech-layer" className="speech-layer" aria-live="polite" />

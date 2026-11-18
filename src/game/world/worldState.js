@@ -15,7 +15,6 @@ export const playerState = {
   canRun: true, // e.g. out of stamina in a chase
   stunUntil: 0, // performance.now() ms; the player stumbles until then
   gesture: null, // { name, speed, until } a one-shot clip (taking money, cheering); see playGesture()
-  fightView: null, // { x, z } centre of a fight in progress (camera)
   runnerView: null, // { x, z } runner position during an escape run (camera)
   viewFlipped: false, // the follow camera is filming from the north (controls flip with it)
   viewYaw: 0, // where the follow camera stands round the player (0 = south); screen-up on the stick walks away from it
