@@ -19,20 +19,17 @@ export default function ChoiceMenu({ view, onChoose }) {
     setLeft(timeout || 0)
   }, [view.key, timeout])
 
-  // read aloud: the question in the speaker's voice, then the options
-  const { canReplay, replay } = useReadAloud(view.key, (say) => {
-    const list = options
-      .filter((o) => !o.locked)
-      .map((o) => `${options.indexOf(o) + 1}. ${o.text}${/[.!?"”]$/.test(o.text) ? '' : '.'}`)
-      .join(' ')
-    const sayOptions = () => say(list, 'narrator')
-    if (text) say(text, speaker || 'narrator', { onDone: sayOptions })
-    else sayOptions()
+  // read aloud: someone else's question, in their voice. The options aren't
+  // read out: your character says only the one you pick, once you pick it.
+  const asked = text && speaker && speaker !== 'player'
+  const { canReplay, replay, sayChosen } = useReadAloud(view.key, (say) => {
+    if (asked) say(text, speaker)
   })
 
   const pick = (opt) => {
     if (chosen.current || opt.locked) return
     chosen.current = true
+    sayChosen(opt.text)
     onChoose(opt.index)
   }
 
@@ -74,7 +71,7 @@ export default function ChoiceMenu({ view, onChoose }) {
             <div className="dialogue-speaker">
               {speakerName && <Portrait speaker={speaker} />}
               {speakerName && <span className="speaker-name">{speakerName}</span>}
-              {canReplay && (
+              {canReplay && asked && (
                 <button className="dialogue-replay choice-replay" aria-label="Read the choices again" onClick={replay}>
                   <Icon name="sound" size={18} />
                 </button>

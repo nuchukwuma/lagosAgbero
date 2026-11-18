@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef } from 'react'
 import { useSettings } from '../../game/store/settings.js'
 import { useGameStore } from '../../game/store/gameStore.js'
 import { withAllegiance } from '../../game/characters/look.js'
-import { speak, stopSpeaking, voicesSupported } from '../../game/audio/voices.js'
+import { speak, speakChosen, stopSpeaking, voicesSupported } from '../../game/audio/voices.js'
 
 /**
  * Reads a story beat aloud (Settings → Voices). `say(speakNow)` is called
@@ -30,7 +30,12 @@ export function useReadAloud(beatKey, say) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [beatKey, enabled])
 
-  return { canReplay: enabled && voicesSupported(), replay: run }
+  /** Say the option you picked, in your own voice. */
+  const sayChosen = (text) => {
+    if (enabled) speakChosen(text, withAllegiance(playerLook || {}, flags || {}))
+  }
+
+  return { canReplay: enabled && voicesSupported(), replay: run, sayChosen }
 }
 
 /** Hands-free (Settings → Voices): move on by itself once a line has been said. */

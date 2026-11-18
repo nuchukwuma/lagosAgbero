@@ -12,6 +12,7 @@
 
 import characters from '../data/characters.json'
 import { isFemale } from '../characters/look.js'
+import { respell } from './pronounce.js'
 
 const synth = typeof window !== 'undefined' ? window.speechSynthesis : null
 export const voicesSupported = () => Boolean(synth && typeof window.SpeechSynthesisUtterance === 'function')
@@ -163,9 +164,10 @@ export function spokenText(text) {
     .replace(/[*_~`#]/g, '')
     .replace(/\p{Extended_Pictographic}/gu, '')
     .normalize('NFD')
-    .replace(/\p{M}/gu, '') // Ṣàngóbíyìí -> Sangobiyii: English voices read it more kindly
+    .replace(/\p{M}/gu, '') // Ṣàngóbíyìí -> Sangobiyii, then respelt below
     .replace(/…/g, '...')
     .replace(/\s+/g, ' ')
+    .replace(/.+/, respell) // Nigerian words said the Nigerian way (pronounce.js)
     .trim()
 }
 
@@ -194,10 +196,47 @@ function setSpeaking(on) {
   for (const fn of listeners) fn(on)
 }
 
-export function stopSpeaking() {
+// The line you just chose is said in full: the next screen's line waits for
+// it (pending) instead of cutting it off.
+let chosen = false
+let pending = null
+let chosenTimer = 0
+
+function hardStop() {
   session++
   if (synth && (synth.speaking || synth.pending)) synth.cancel()
   setSpeaking(false)
+}
+
+/** Stop talking (and drop anything waiting). The line you just chose still finishes. */
+export function stopSpeaking() {
+  pending = null
+  if (!chosen) hardStop()
+}
+
+function finishChosen() {
+  clearTimeout(chosenTimer)
+  chosen = false
+  const next = pending
+  pending = null
+  if (next) speak(...next)
+}
+
+/**
+ * Your own choice, said in your voice: the words in quotes if the option
+ * has any ("Oga, show me your ID card first."), otherwise the option itself.
+ */
+export function speakChosen(text, look) {
+  if (!voicesSupported()) return false
+  const quoted = [...String(text || '').matchAll(/["“]([^"”]+)["”]/g)].map((m) => m[1]).join(' ')
+  chosen = false
+  pending = null
+  const ok = speak(quoted || text, 'player', { look, onDone: finishChosen })
+  if (ok) {
+    chosen = true
+    chosenTimer = setTimeout(finishChosen, 15000) // never wait forever on a voice that stalls
+  }
+  return ok
 }
 
 /**
@@ -205,9 +244,14 @@ export function stopSpeaking() {
  * full (not when it's cut short by the next line or stopSpeaking).
  * Returns false when the device can't speak.
  */
-export function speak(text, speaker, { look, onDone } = {}) {
+export function speak(text, speaker, opts = {}) {
   if (!voicesSupported()) return false
-  stopSpeaking()
+  if (chosen) {
+    pending = [text, speaker, opts] // after your own line
+    return true
+  }
+  const { look, onDone } = opts
+  hardStop()
   const said = spokenText(text)
   if (!said) return false
   const id = session

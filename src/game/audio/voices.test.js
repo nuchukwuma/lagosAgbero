@@ -5,8 +5,14 @@ import { spokenText, voiceProfile } from './voices.js'
 
 describe('spoken dialogue', () => {
   it('reads money, drops markup and stage directions, strips accent marks', () => {
-    expect(spokenText('Bring ₦2,000 *now* (he spits)!')).toBe('Bring 2,000 naira now !')
-    expect(spokenText('Ṣàngóbíyìí… oya')).toBe('Sangobiyii... oya')
+    expect(spokenText('Bring ₦2,000 *now* (he spits)!')).toBe('Bring 2,000 nye-rah now !')
+    expect(spokenText('Ṣàngóbíyìí… oya')).toBe('shahn-goh-bee-yee... aw-yah')
+  })
+
+  it('says Nigerian words the Nigerian way', () => {
+    expect(spokenText('Abeg, wetin dey happen for Oshodi? Wahala dey o!')).toBe('ah-beg, weh-tin day happen for oh-shoh-dee? wah-hah-lah day oh!')
+    expect(spokenText('JJC, no be you be the danfo man?')).toContain('J J C')
+    expect(spokenText('Dangerous dey are')).toBe('Dangerous day are') // whole words only
   })
 
   it('gives every character their own voice', () => {
