@@ -113,7 +113,7 @@ export default function GameCanvas({ view, game, activity = null, paused = false
   // Settings: auto lets PerformanceMonitor pick; low / high fix the resolution.
   const chosen = useSettings((s) => s.quality)
   const profile = renderProfile(chosen)
-  const quality = profile.quality // 'auto' on a budget phone becomes 'low'
+  const quality = profile.quality // low | medium | high | sharpest
   const range = profile.dpr
   const [dpr, setDpr] = useState(range.max)
   useEffect(() => setDpr(range.max), [quality]) // eslint-disable-line react-hooks/exhaustive-deps

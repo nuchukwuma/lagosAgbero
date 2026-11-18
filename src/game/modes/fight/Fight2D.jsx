@@ -5,7 +5,7 @@ import { createFight, stepFight, MOVES } from './fightLogic.js'
 import { makeFighter, poseFor, drawFighter, mix, POSES } from './fight2d/puppet.js'
 import { makeStage } from './fight2d/stage.js'
 import { useGameStore } from '../../store/gameStore.js'
-import { useSettings, effectiveQuality } from '../../store/settings.js'
+import { useSettings, effectiveQuality, canvasRatio } from '../../store/settings.js'
 import { isPaused } from '../../store/pauseStore.js'
 import { randomLook, withAllegiance } from '../../characters/look.js'
 import characters from '../../data/characters.json'
@@ -32,11 +32,7 @@ const WORDS = {
 }
 const PAN = 4.5 // metres the camera can slide either way
 
-function pixelRatio() {
-  const q = effectiveQuality(useSettings.getState().quality)
-  const dev = window.devicePixelRatio || 1
-  return Math.min(dev, q === 'low' ? 1.5 : q === 'high' ? 3 : 2)
-}
+const pixelRatio = () => canvasRatio(useSettings.getState().quality)
 
 function starPath(ctx, x, y, r, points = 8, inner = 0.45) {
   ctx.beginPath()

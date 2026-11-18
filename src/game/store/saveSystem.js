@@ -95,3 +95,23 @@ export function recordEnding(id) {
     // storage blocked: nothing to remember
   }
 }
+
+// Chapters finished on this device, in any story or save (the Progress screen).
+const CHAPTERS_KEY = 'naijavice.chaptersDone'
+export function chaptersDone() {
+  try {
+    return JSON.parse(storage()?.getItem(CHAPTERS_KEY) || '[]')
+  } catch {
+    return []
+  }
+}
+export function recordChapters(ids = []) {
+  try {
+    const done = new Set(chaptersDone())
+    const before = done.size
+    for (const id of ids) if (id) done.add(id)
+    if (done.size !== before) storage()?.setItem(CHAPTERS_KEY, JSON.stringify([...done]))
+  } catch {
+    // storage blocked: nothing to remember
+  }
+}

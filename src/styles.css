@@ -3123,3 +3123,24 @@ svg .is-chase { fill: #e53935; stroke: #fff; stroke-width: 0.6; animation: map-p
 .pause-objective strong {
   color: var(--danfo);
 }
+/* Progress screen (EndingsScreen.jsx) */
+.progress-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin: 8px 0 2px;
+  font-weight: 700;
+}
+.progress-line small {
+  color: var(--muted);
+  font-weight: 600;
+}
+.chapter-list {
+  margin: 6px 0 4px;
+  padding-left: 20px;
+  font-size: 14px;
+  color: var(--muted);
+}
+.chapter-list li.done {
+  color: #8ff0a4;
+}

@@ -1,4 +1,4 @@
-import { latestSave, endingsFound } from '../game/store/saveSystem.js'
+import { latestSave } from '../game/store/saveSystem.js'
 import { storyCtx } from '../game/narrative/storyData.js'
 import { useGameStore } from '../game/store/gameStore.js'
 import { webglSupport } from '../game/world/webgl.js'
@@ -50,8 +50,6 @@ function DevChapterPicker() {
 
 export default function TitleScreen({ onNavigate, onContinue }) {
   const hasSave = Boolean(latestSave())
-  const total = Object.keys(storyCtx.endings).filter((k) => !k.startsWith('_')).length
-  const found = endingsFound().filter((id) => storyCtx.endings[id]).length
   return (
     <div className="screen title-screen">
       <MusicButton />
@@ -75,7 +73,7 @@ export default function TitleScreen({ onNavigate, onContinue }) {
           </button>
         )}
         <button className="btn" onClick={() => onNavigate('endings')}>
-          Endings {found}/{total}
+          Progress
         </button>
         <button className="btn" onClick={() => onNavigate('about')}>
           About

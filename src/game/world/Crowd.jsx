@@ -24,7 +24,7 @@ import { applyHeadSize } from './style.js'
 const LOOK_SEEDS = [5, 12, 19, 26, 33, 41]
 const FRAMES = 8
 const NEAR = 55 // metres: people further than this are not drawn
-export const CROWD_SIZE = { low: 8, auto: 26, high: 40 } // low = the light mode for 2 GB phones
+export const CROWD_SIZE = { low: 8, medium: 26, high: 34, sharpest: 40 } // low = the light mode for 2 GB phones
 const MATERIAL = new THREE.MeshLambertMaterial({ vertexColors: true })
 let bakedCrowd = null // [{ walk, idle, talk }] per look, shared by every world
 
@@ -227,7 +227,7 @@ function Walkers({ baked, walkways, count, paused }) {
   )
 }
 
-export default function Crowd({ layout, quality = 'auto', paused = false }) {
+export default function Crowd({ layout, quality = 'medium', paused = false }) {
   const looks = useMemo(() => LOOK_SEEDS.map((s, i) => ({ ...randomLook(s, i % 3 === 2 ? 'female' : 'male'), accessories: [] })), [])
   const gltfs = useGLTF(looks.map((l) => `${ASSET_ROOT}/${bodyInfo(l.body).file}`))
   const [baked, setBaked] = useState(bakedCrowd)
@@ -269,7 +269,7 @@ export default function Crowd({ layout, quality = 'auto', paused = false }) {
   return (
     <>
       <Standers baked={baked} people={people} limit={quality === 'low' ? Math.ceil(people.length / 2) : people.length} />
-      <Walkers baked={baked} walkways={layout.raw.walkways || []} count={CROWD_SIZE[quality] ?? CROWD_SIZE.auto} paused={paused} />
+      <Walkers baked={baked} walkways={layout.raw.walkways || []} count={CROWD_SIZE[quality] ?? CROWD_SIZE.medium} paused={paused} />
     </>
   )
 }

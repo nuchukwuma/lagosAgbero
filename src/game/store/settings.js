@@ -2,7 +2,7 @@
 import { create } from 'zustand'
 
 const KEY = 'areaBoy.settings'
-const DEFAULTS = { quality: 'auto', music: true, sound: true, voices: true, handsFree: false, orientation: 'landscape' } // quality: auto | low | high; orientation: landscape | portrait | auto (phones); voices: dialogue read aloud; handsFree: move on once a line has been said
+const DEFAULTS = { quality: 'auto', music: true, sound: true, voices: true, handsFree: false, orientation: 'landscape' } // quality: low | medium | high | sharpest ('auto' = chosen for the device); orientation: landscape | portrait | auto (phones); voices: dialogue read aloud; handsFree: move on once a line has been said
 
 function read() {
   try {
@@ -38,10 +38,17 @@ export function deviceTier() {
   return 'mid'
 }
 
-/** The quality actually used: 'low' | 'auto' | 'high' ("auto" on a weak device becomes 'low'). */
+// Graphics levels, from easiest on the phone to sharpest:
+//   low       for 2 GB phones: fewer people, cars and props, lower resolution, 30 fps
+//   medium    smoothed edges, up to 1.5x resolution
+//   high      up to 2x resolution, a little more of the crowd
+//   sharpest  the screen's full resolution (up to 3x), the whole crowd, the furthest view
+export const QUALITY_LEVELS = ['low', 'medium', 'high', 'sharpest']
+
+/** The level actually used. 'auto' (the first visit) picks low or medium for the device; old saves map across. */
 export function effectiveQuality(quality) {
-  if (quality === 'auto' && deviceTier() === 'low') return 'low'
-  return quality
+  if (QUALITY_LEVELS.includes(quality)) return quality
+  return deviceTier() === 'low' ? 'low' : 'medium' // 'auto', or anything unknown
 }
 
 /** Everything the renderer needs for a quality level. */
@@ -49,9 +56,15 @@ export function renderProfile(quality) {
   const q = effectiveQuality(quality)
   const max = typeof window !== 'undefined' ? window.devicePixelRatio || 1 : 1
   if (q === 'low') return { quality: q, dpr: { min: 0.7, max: Math.min(1, max) }, antialias: false, far: 150 }
-  if (q === 'high') return { quality: q, dpr: { min: Math.min(2, max), max: Math.min(2, max) }, antialias: true, far: 240 }
-  // Normal: edges smoothed too (at up to 1.5x resolution it's affordable on mid-range phones)
-  return { quality: q, dpr: { min: 1, max: Math.min(1.5, max) }, antialias: true, far: 220 }
+  if (q === 'high') return { quality: q, dpr: { min: Math.min(1.5, max), max: Math.min(2, max) }, antialias: true, far: 240 }
+  if (q === 'sharpest') return { quality: q, dpr: { min: Math.min(2, max), max: Math.min(3, max) }, antialias: true, far: 270 }
+  return { quality: q, dpr: { min: 1, max: Math.min(1.5, max) }, antialias: true, far: 220 } // medium
+}
+
+/** The sharpness (pixel ratio cap) for drawn screens like the 2D fights. */
+export function canvasRatio(quality) {
+  const dev = typeof window !== 'undefined' ? window.devicePixelRatio || 1 : 1
+  return Math.min(dev, { low: 1.5, medium: 2, high: 2.5, sharpest: 3 }[effectiveQuality(quality)])
 }
 
 /** Device pixel ratio range for a quality setting. */

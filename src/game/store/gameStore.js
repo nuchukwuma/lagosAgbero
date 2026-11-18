@@ -7,7 +7,7 @@ import { create } from 'zustand'
 import { storyCtx, FIRST_CHAPTER } from '../narrative/storyData.js'
 import * as engine from '../narrative/storyEngine.js'
 import { bus } from '../narrative/eventBus.js'
-import { saveGame, loadGame, latestSave } from './saveSystem.js'
+import { saveGame, loadGame, latestSave, recordChapters } from './saveSystem.js'
 import { defaultStats, clampStat } from '../narrative/stats.js'
 import { consumeItem, dueEffects, drainRate, ITEMS } from '../systems/energy.js'
 import { TIME_SCALE, EVENING_AT, parseTime } from '../systems/clock.js'
@@ -49,6 +49,7 @@ export const useGameStore = create((set, get) => {
         if (ev.type === 'mode:start') bus.emit('mode:start', { mode: ev.mode, params: ev.params })
         if (ev.type === 'chapter') bus.emit('chapter:start', ev)
       }
+      if (state?.story?.completedChapters?.length !== game?.story?.completedChapters?.length) recordChapters(state.story.completedChapters)
       set((s) => ({ game: state, view, error: null, toasts: [...s.toasts, ...toasts].slice(-4) }))
     } catch (e) {
       console.error(e)
@@ -270,6 +271,7 @@ export const useGameStore = create((set, get) => {
       if (!saved) return false
       // Saves from older versions may lack stats added later: fill defaults.
       const game = { ...saved, stats: { ...defaultStats(), ...saved.stats }, flags: saved.flags || {}, memory: saved.memory || {} }
+      recordChapters(game.story?.completedChapters) // saves from before Progress was kept count too
       try {
         set({ game, view: engine.renderView(storyCtx, game), screen: 'story', toasts: [], error: null })
         return true

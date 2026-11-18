@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useSettings, fullscreenSupported, toggleFullscreen, deviceTier } from '../../game/store/settings.js'
+import { useSettings, fullscreenSupported, toggleFullscreen, effectiveQuality } from '../../game/store/settings.js'
 import { useDevice } from '../hud/useDevice.js'
 import { ORIENTATIONS, isPhone, applyOrientation } from '../../game/systems/orientation.js'
 import Icon from '../Icon.jsx'
@@ -13,6 +13,7 @@ const VOICE_MODES = [
 
 export default function SettingsPanel() {
   const quality = useSettings((s) => s.quality)
+  const level = effectiveQuality(quality) // 'auto' (never chosen) shows the level picked for this device
   const music = useSettings((s) => s.music !== false)
   const sound = useSettings((s) => s.sound !== false)
   const orientation = useSettings((s) => s.orientation || 'landscape')
@@ -31,11 +32,12 @@ export default function SettingsPanel() {
       <div className="swatch-row">
         <span>Graphics</span>
         {[
-          ['auto', 'Auto'],
-          ['low', 'Light'],
-          ['high', 'Sharp'],
+          ['low', 'Low'],
+          ['medium', 'Medium'],
+          ['high', 'High'],
+          ['sharpest', 'Sharpest'],
         ].map(([id, label]) => (
-          <button key={id} className={`chip ${quality === id ? 'on' : ''}`} onClick={() => update({ quality: id })}>
+          <button key={id} className={`chip ${level === id ? 'on' : ''}`} onClick={() => update({ quality: id })}>
             {label}
           </button>
         ))}
@@ -86,8 +88,17 @@ export default function SettingsPanel() {
         <p className="footnote">Voices: this browser has no built-in voices, so the story is text only here.</p>
       )}
       {voiceMode === 'hands' && <p className="footnote">Hands-free: every line is read aloud and the story moves on by itself. You still pick the choices.</p>}
-      {quality === 'auto' && <p className="footnote">Auto: {deviceTier() === 'low' ? 'this phone gets the Light version (fewer people, cars and props), so it runs smoothly.' : 'resolution adapts to how fast this device runs.'}</p>}
-      {quality === 'low' && <p className="footnote">Light: made for 2 GB phones. Fewer background people, cars and props, lower resolution; the story is the same.</p>}
+      <p className="footnote">
+        {
+          {
+            low: 'Low: made for 2 GB phones. Fewer background people, cars and props, lower resolution, a steady 30 frames a second; the story is the same.',
+            medium: 'Medium: smoothed edges and a sharper picture. Good for most phones.',
+            high: 'High: sharper still and a busier street. For newer phones.',
+            sharpest: "Sharpest: your screen's full resolution, the whole crowd and the furthest view. For strong phones and computers: it uses more battery.",
+          }[level]
+        }
+        {quality === 'auto' && ' (Picked for this device.)'}
+      </p>
       {fullscreenSupported() ? (
         <button className="btn" onClick={toggleFullscreen}>
           {full ? 'Exit full screen' : 'Full screen'}
