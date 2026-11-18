@@ -3,6 +3,7 @@ import Joystick from './Joystick.jsx'
 import { input } from '../../game/player/input.js'
 import { useDevice } from './useDevice.js'
 import Icon from '../Icon.jsx'
+import CameraButton from './CameraButton.jsx'
 
 // Shared movement controls for every mode played in the street:
 // joystick + run button on touch screens; on keyboard devices only the
@@ -13,6 +14,7 @@ export default function MoveControls({ actionLabel = null, actionIcon = 'talk', 
   useEffect(() => () => (input.runButton = false), [])
   return (
     <>
+      <CameraButton />
       <div className="controls">
         {touch ? <Joystick /> : <span />}
         <div className="action-buttons">
@@ -37,7 +39,7 @@ export default function MoveControls({ actionLabel = null, actionIcon = 'talk', 
           )}
         </div>
       </div>
-      {!touch && <div className="keyboard-hint">WASD / arrows move · Shift run · E {actionLabel ? actionLabel.toLowerCase() : 'act'}</div>}
+      {!touch && <div className="keyboard-hint">WASD / arrows move · Shift run · E {actionLabel ? actionLabel.toLowerCase() : 'act'} · V camera (or drag)</div>}
     </>
   )
 }

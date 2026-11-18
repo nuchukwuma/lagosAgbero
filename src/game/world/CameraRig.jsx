@@ -1,10 +1,15 @@
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
 import * as THREE from 'three'
 import { playerState, npcRegistry } from './worldState.js'
+import { cam, cycleView, dragView, zoomView, turnView } from './camView.js'
+import { vehicleColliders } from '../systems/traffic.js'
+import { blockedHeight, fightSideBlock } from './cameraMath.js'
 
 // Camera behaviour:
-//   follow    behind and above the player (looks north), for walking around
+//   follow    behind and above the player (looks north), for walking around;
+//             or wherever the player puts it (camView.js: the camera button,
+//             V, dragging the screen, Q / R, the wheel or a pinch)
 //   dialogue  side-on shot of the player and whoever is talking
 // Movement is smoothed so cuts never feel jumpy.
 
@@ -20,53 +25,82 @@ const lookAt = new THREE.Vector3()
 
 // `ceiling` (optional): { x, width, deckY, fromZ, toZ } — the flyover. Under it
 // the camera drops below the deck instead of filming concrete.
-function blockedHeight(p, cam, obstacles, samples = [0.45, 0.7, 1]) {
-  let need = 0
-  for (const t of samples) {
-    const x = p.x + (cam.x - p.x) * t
-    const z = p.z + (cam.z - p.z) * t
-    for (const o of obstacles) {
-      if (o.h < 2.6 || (o.hw < 1 && o.hd < 1)) continue // low things and thin things (palm trees, poles) never block the view
-      const dx = x - o.x
-      const dz = z - o.z
-      const c = Math.cos(o.angle)
-      const s = Math.sin(o.angle)
-      const lx = dx * c - dz * s
-      const lz = dx * s + dz * c
-      if (Math.abs(lx) < o.hw + 1 && Math.abs(lz) < o.hd + 1) need = Math.max(need, o.h + 2.5 + (1 - t) * 4)
-    }
-  }
-  return need
-}
-
-// How tall is whatever stands between a fight and a camera on that side?
-// Unlike the street camera, anything above waist height counts here: a
-// parked danfo is enough to hide two fighters.
-function fightSideBlock(c, side, dist, obstacles) { // side: 1 = south
-  let tallest = 0
-  for (const t of [0.25, 0.45, 0.65, 0.85]) {
-    for (const xOff of [-1.6, 0, 1.6]) {
-      const x = c.x + xOff
-      const z = c.z + side * dist * t
-      for (const o of obstacles) {
-        if (o.h < 1.2) continue
-        const dx = x - o.x
-        const dz = z - o.z
-        const co = Math.cos(o.angle)
-        const si = Math.sin(o.angle)
-        if (Math.abs(dx * co - dz * si) < o.hw + 0.3 && Math.abs(dx * si + dz * co) < o.hd + 0.3) tallest = Math.max(tallest, o.h)
-      }
-    }
-  }
-  return tallest
-}
-
 // `obstacles` (optional): [{ x, z, hw, hd, angle, h }] building footprints.
 export default function CameraRig({ mode = 'follow', speaker = null, ceiling = null, obstacles = null }) {
   const camera = useThree((s) => s.camera)
   const size = useThree((s) => s.size)
   const follow = useRef({ kind: 'south', clearSince: 0 })
   const fightCam = useRef({ key: '', lift: 0 })
+  const gl = useThree((s) => s.gl)
+  const modeRef = useRef(mode)
+  modeRef.current = mode
+
+  // Changing the view while walking around: drag the screen (one finger or the
+  // mouse) to swing the camera round, pinch or wheel to zoom, the camera
+  // button / V to step through the set views, Q / R to turn.
+  useEffect(() => {
+    const el = gl.domElement
+    const pointers = new Map()
+    let pinch = 0
+    let moved = false
+    const free = () => modeRef.current === 'follow'
+    const down = (e) => {
+      if (!free()) return
+      pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
+      moved = false
+      if (pointers.size === 2) {
+        const [a, b] = [...pointers.values()]
+        pinch = Math.hypot(a.x - b.x, a.y - b.y)
+      }
+    }
+    const move = (e) => {
+      const last = pointers.get(e.pointerId)
+      if (!last || !free()) return
+      const dx = e.clientX - last.x
+      const dy = e.clientY - last.y
+      pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
+      if (pointers.size === 2) {
+        const [a, b] = [...pointers.values()]
+        const d = Math.hypot(a.x - b.x, a.y - b.y)
+        if (pinch > 0 && d > 0) zoomView(pinch / d)
+        pinch = d
+        return
+      }
+      if (!moved && Math.hypot(dx, dy) < 3) return
+      moved = true
+      dragView(dx, dy)
+    }
+    const up = (e) => {
+      pointers.delete(e.pointerId)
+      if (pointers.size < 2) pinch = 0
+    }
+    const wheel = (e) => {
+      if (!free()) return
+      e.preventDefault()
+      zoomView(e.deltaY > 0 ? 1.1 : 1 / 1.1)
+    }
+    const key = (e) => {
+      if (!free() || e.target.closest?.('input, textarea, select')) return
+      if (e.code === 'KeyV') cycleView()
+      else if (e.code === 'KeyQ') turnView(-1)
+      else if (e.code === 'KeyR') turnView(1)
+    }
+    el.style.touchAction = 'none'
+    el.addEventListener('pointerdown', down)
+    window.addEventListener('pointermove', move)
+    window.addEventListener('pointerup', up)
+    window.addEventListener('pointercancel', up)
+    el.addEventListener('wheel', wheel, { passive: false })
+    window.addEventListener('keydown', key)
+    return () => {
+      el.removeEventListener('pointerdown', down)
+      window.removeEventListener('pointermove', move)
+      window.removeEventListener('pointerup', up)
+      window.removeEventListener('pointercancel', up)
+      el.removeEventListener('wheel', wheel)
+      window.removeEventListener('keydown', key)
+    }
+  }, [gl])
 
   useFrame((_, delta) => {
     const p = playerState.position
@@ -122,13 +156,23 @@ export default function CameraRig({ mode = 'follow', speaker = null, ceiling = n
       const dist = portrait ? 9 : 6.5
       const f = fightCam.current
       const key = `${c.x.toFixed(1)},${c.z.toFixed(1)},${dist}`
-      if (f.key !== key) {
+      if (f.key !== key || f.fight !== c) {
         f.key = key
-        const block = obstacles ? fightSideBlock(c, 1, dist, obstacles) : 0
-        f.lift = block ? block + 1.4 : 0
+        f.fight = c // a new fight on the same spot decides afresh
+        // Film from the south if a sensible height sees over what's in between;
+        // if not (a danfo right next to the fight), from the north, and the
+        // fight is mirrored (FightDirector) so you stay on the left of the screen.
+        const solid = (obstacles || []).concat(vehicleColliders().map((v) => ({ ...v, h: 2.3 })))
+        const south = fightSideBlock(c, 1, dist, solid)
+        const north = south > 5 ? fightSideBlock(c, -1, dist, solid) : Infinity
+        c.side = north < south ? -1 : 1
+        f.lift = Math.min(9, c.side > 0 ? south : north)
       }
-      tmpLook.set(c.x, 1.05, c.z)
-      tmpPos.set(c.x, Math.max(portrait ? 3.2 : 2.4, f.lift), c.z + dist)
+      // On a landscape phone the health bars sit across the top third, so the
+      // fighters are framed a little low (the camera looks above their heads).
+      const low = !portrait && size.height < 560 ? 0.55 : 0
+      tmpLook.set(c.x, 1.05 + low + (f.lift > 4 ? -0.3 : 0), c.z)
+      tmpPos.set(c.x, Math.max(portrait ? 3.2 : 2.4, f.lift), c.z + (c.side || 1) * dist)
     } else if (mode === 'dialogue' && npc) {
       // Raised three-quarter shot from the street side (south), so poles and
       // parked danfos rarely block the faces.
@@ -159,6 +203,27 @@ export default function CameraRig({ mode = 'follow', speaker = null, ceiling = n
       tmpLook.set(p.x, 1.2, p.z)
       const side = p.z > 4 ? -1 : 1
       tmpPos.set(p.x + 2, portrait ? 4.8 : 4, p.z + side * (portrait ? 7.5 : 6.5))
+    } else if (cam.mode !== 'auto') {
+      // the player's own view: wherever they put the camera. If something is
+      // in the way, the camera moves in closer, and up as a last resort.
+      const dist = 13 * cam.zoom * (portrait ? 1.15 : 1)
+      const sx = Math.sin(cam.yaw)
+      const sz = Math.cos(cam.yaw)
+      const ce = Math.cos(cam.elev)
+      const se = Math.sin(cam.elev)
+      const ahead = 3 * Math.max(0, 1 - (cam.elev - 0.3)) // look a little ahead, less when looking down
+      tmpLook.set(p.x - sx * ahead, 1.3, p.z - sz * ahead)
+      let need = 0
+      for (const f of [1, 0.8, 0.62, 0.48, 0.36]) {
+        tmpPos.set(p.x + sx * dist * ce * f, Math.max(2.2, 1.3 + dist * se * f), p.z + sz * dist * ce * f)
+        need = obstacles ? blockedHeight(p, tmpPos, obstacles) : 0
+        if (!need || tmpPos.y >= need) {
+          need = 0
+          break
+        }
+      }
+      if (need) tmpPos.y = Math.min(20, need)
+      playerState.viewYaw = cam.yaw
     } else {
       // Ways to film the player, tried in order:
       //   south  the normal view: camera south of the player, looking north
@@ -187,6 +252,9 @@ export default function CameraRig({ mode = 'follow', speaker = null, ceiling = n
       if (southNear > 0 || southNeed >= 13) view.clearSince = now
       view.kind = want
       playerState.viewFlipped = want === 'north'
+      // which way the game is filming from (the controls follow it; dragging starts from here)
+      cam.autoYaw = want === 'north' || (want === 'over' && p.z > 2) ? Math.PI : 0
+      playerState.viewYaw = cam.autoYaw
       if (want === 'north') {
         tmpLook.set(p.x, 1.5, p.z + 3)
         tmpPos.set(p.x, FOLLOW_OFFSET.y * k, p.z - back)
@@ -203,7 +271,10 @@ export default function CameraRig({ mode = 'follow', speaker = null, ceiling = n
         tmpPos.set(p.x + FOLLOW_OFFSET.x, FOLLOW_OFFSET.y * k, p.z + back)
       }
     }
-    if (mode !== 'follow') playerState.viewFlipped = false
+    if (mode !== 'follow') {
+      playerState.viewFlipped = false
+      playerState.viewYaw = 0
+    }
 
     if (ceiling && Math.abs(tmpPos.x - ceiling.x) < ceiling.width / 2 + 2 && tmpPos.z > ceiling.fromZ && tmpPos.z < ceiling.toZ) {
       const maxY = ceiling.deckY - 1.4

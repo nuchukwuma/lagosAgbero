@@ -34,7 +34,7 @@ export default function PlayerController({ layout, look, enabled, eyeRed = 0, ti
   const ref = useRef()
   const [anim, setAnim] = useState({ name: 'idle', speed: 1 })
   const animRef = useRef(anim)
-  const basis = useRef(false)
+  const basis = useRef(0) // the camera direction the stick is read against (radians, see playerState.viewYaw)
   const vel = useRef({ x: 0, z: 0 })
 
   useEffect(() => attachKeyboard(), [])
@@ -71,12 +71,16 @@ export default function PlayerController({ layout, look, enabled, eyeRed = 0, ti
       const running = (m.run || m.len > 0.95) && playerState.canRun && !tired
       playerState.running = running
       const speed = (running ? RUN_SPEED : WALK_SPEED) * Math.max(0.5, m.len)
-      // screen up = away from the camera: north (-Z) normally, south when the
-      // camera films from the north. The direction only changes while the
-      // stick is at rest, so a camera flip never reverses a walk in progress.
-      const flip = basis.current ? -1 : 1
-      const dx = m.x * flip
-      const dz = -m.y * flip
+      // screen up = away from the camera (north normally). When the game flips
+      // the camera to the other side, the controls change only once the stick
+      // is at rest, so a flip never reverses a walk in progress; when the
+      // player swings the camera round by hand, they follow it as it turns.
+      const turn = Math.atan2(Math.sin(playerState.viewYaw - basis.current), Math.cos(playerState.viewYaw - basis.current))
+      if (Math.abs(turn) < 0.5) basis.current = playerState.viewYaw
+      const c = Math.cos(basis.current)
+      const sn = Math.sin(basis.current)
+      const dx = m.x * c - m.y * sn
+      const dz = -m.x * sn - m.y * c
       const len = Math.hypot(dx, dz) || 1
       const k = ease(ACCEL, dt)
       v.x += ((dx / len) * speed - v.x) * k
@@ -105,7 +109,7 @@ export default function PlayerController({ layout, look, enabled, eyeRed = 0, ti
       next = { name: clip, speed: Math.round(clipRate(clip, moving, clipSet) * 10) / 10 }
     }
 
-    if (m.len <= 0.08) basis.current = playerState.viewFlipped
+    if (m.len <= 0.08) basis.current = playerState.viewYaw
 
     g.position.copy(p)
     g.rotation.y = playerState.facing

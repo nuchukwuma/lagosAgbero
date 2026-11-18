@@ -2938,3 +2938,45 @@ svg .is-chase { fill: #e53935; stroke: #fff; stroke-width: 0.6; animation: map-p
   .impact-word { animation-duration: 0.9s; animation-timing-function: linear; }
   .impact-flash { display: none; }
 }
+
+/* camera view button (CameraButton.jsx): bottom right, just left of the action buttons */
+.cam-control {
+  position: fixed;
+  right: calc(max(20px, env(safe-area-inset-right)) + 98px);
+  bottom: calc(max(20px, env(safe-area-inset-bottom)) + 19px);
+  z-index: 6;
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  gap: 8px;
+  pointer-events: none;
+}
+.cam-btn {
+  pointer-events: auto;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.55);
+  background: rgba(26, 20, 8, 0.6);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  cursor: pointer;
+}
+.cam-btn.on {
+  border-color: var(--danfo);
+  color: var(--danfo);
+}
+.cam-btn:active {
+  transform: scale(0.94);
+}
+.cam-label {
+  padding: 5px 10px;
+  border-radius: 8px;
+  background: rgba(26, 20, 8, 0.85);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+}

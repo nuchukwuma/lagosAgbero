@@ -41,6 +41,14 @@ The game is one web page that adapts to the device:
   lets it open offline after the first visit (PWA + service worker).
 - **Computer:** WASD / arrows to move, Shift to run, E or Enter to talk or
   act, mouse for menus.
+- **Camera (walking around):** the camera button (bottom right, or V) steps
+  through the views: Auto (the game picks, and dodges buildings by itself),
+  from the other side, the left, the right, the street, above. Drag the
+  screen (finger or mouse) to swing it round freely, pinch or scroll to zoom,
+  Q / R to turn. If something blocks the view, the camera moves in closer,
+  then up. The stick always walks "up the screen", whichever way it faces.
+- **Fights:** filmed side-on from the street; if a danfo or stall is in the
+  way, from the other side, with you still on the left.
 - **Fee runs:** stand in front of a vehicle that's trying to leave and it
   can't: a driver who refused gives in and pays, one that got tired of
   waiting stops so you can collect.

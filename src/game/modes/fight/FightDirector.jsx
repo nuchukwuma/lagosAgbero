@@ -68,7 +68,7 @@ export default function FightDirector({ playerLook }) {
     return () => {
       playerState.fightView = null
       const f = fight.current
-      playerState.teleport = { x: center.x + (f?.p.x ?? 0), z: center.z, facing: Math.PI / 2 }
+      playerState.teleport = { x: center.x + (center.side || 1) * (f?.p.x ?? 0), z: center.z, facing: Math.PI / 2 }
     }
   }, [center])
 
@@ -89,7 +89,7 @@ export default function FightDirector({ playerLook }) {
           const victim = ev.who === 'player' ? f.o : f.p
           const side = ev.who === 'player' ? -1 : 1
           const high = ev.move === 'kick' ? 0.75 : 1.0
-          hitPoint.set(center.x + victim.x + side * 0.28, GROUND_Y + high, center.z)
+          hitPoint.set(center.x + (center.side || 1) * (victim.x + side * 0.28), GROUND_Y + high, center.z)
           const kind = ev.type === 'blocked' ? 'block' : ev.move === 'special' ? 'special' : ev.move === 'kick' ? 'kick' : 'punch'
           impact(hitPoint, { kind })
           if (ev.type === 'hit') {
@@ -126,14 +126,17 @@ export default function FightDirector({ playerLook }) {
       const k = Math.sin((t / SQUASH_TIME) * Math.PI) * 0.18
       return [1 + k, 1 - k, 1 + k]
     }
+    // filmed from the north (something in the way on the street side), the
+    // fight is mirrored so you're still on the left and the buttons still match
+    const m = center.side || 1
     if (pRef.current) {
-      pRef.current.position.set(center.x + f.p.x, GROUND_Y, center.z)
-      pRef.current.rotation.y = Math.PI / 2
+      pRef.current.position.set(center.x + m * f.p.x, GROUND_Y, center.z)
+      pRef.current.rotation.y = (m * Math.PI) / 2
       pRef.current.scale.set(...squashed(squash.current.p))
     }
     if (oRef.current) {
-      oRef.current.position.set(center.x + f.o.x, GROUND_Y, center.z)
-      oRef.current.rotation.y = -Math.PI / 2
+      oRef.current.position.set(center.x + m * f.o.x, GROUND_Y, center.z)
+      oRef.current.rotation.y = (-m * Math.PI) / 2
       oRef.current.scale.set(...squashed(squash.current.o))
     }
     setPAnim(animOf(f.p, f.over, f.over === 'won'), animSpeedOf(f.p))
