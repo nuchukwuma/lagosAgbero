@@ -2,7 +2,8 @@ import { useEffect } from 'react'
 import { isFemale } from '../characters/look.js'
 import { useGameStore } from '../store/gameStore.js'
 import { useSettings } from '../store/settings.js'
-import { unlock, sfx, setMusic, setAmbience, setVolumes, suspend } from './audio.js'
+import { unlock, sfx, setMusic, setAmbience, setVolumes, suspend, duckMusic } from './audio.js'
+import { onSpeaking, voicesSupported } from './voices.js'
 import characters from '../data/characters.json'
 
 // Connects the game to the sound engine. Nothing else needs to know about
@@ -40,6 +41,9 @@ export default function AudioDirector() {
     }
   }, [])
 
+  // music drops while someone speaks
+  useEffect(() => onSpeaking(duckMusic), [])
+
   // settings: music / sound on-off
   useEffect(() => {
     const apply = (s) => setVolumes({ music: s.music !== false, sound: s.sound !== false })
@@ -75,8 +79,10 @@ export default function AudioDirector() {
       const key = `${view.type}|${view.key ?? ''}|${view.text ?? view.headline ?? ''}`
       if (key !== last.key) {
         if (view.type === 'dialogue') {
+          // the little "talk" chirp, unless the line is read aloud
+          const spoken = useSettings.getState().voices !== false && voicesSupported()
           const p = voicePitch(view.speaker)
-          if (p) sfx('talk', p)
+          if (p && !spoken) sfx('talk', p)
         } else if (view.type === 'choice') sfx('open')
         else if (view.type === 'news') sfx('radio')
         else if (view.type === 'cutscene') sfx('whoosh')

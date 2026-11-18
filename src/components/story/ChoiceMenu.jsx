@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import Portrait from './Portrait.jsx'
+import Icon from '../Icon.jsx'
+import { useReadAloud } from './useReadAloud.js'
 import { formatNaira } from '../../game/narrative/stats.js'
 
 // Choice list. Locked options show why. Costs show in naira. Timed choices
@@ -15,6 +17,17 @@ export default function ChoiceMenu({ view, onChoose }) {
     chosen.current = false
     setLeft(timeout || 0)
   }, [view.key, timeout])
+
+  // read aloud: the question in the speaker's voice, then the options
+  const { canReplay, replay } = useReadAloud(view.key, (say) => {
+    const list = options
+      .filter((o) => !o.locked)
+      .map((o) => `${options.indexOf(o) + 1}. ${o.text}${/[.!?"”]$/.test(o.text) ? '' : '.'}`)
+      .join(' ')
+    const sayOptions = () => say(list, 'narrator')
+    if (text) say(text, speaker || 'narrator', { onDone: sayOptions })
+    else sayOptions()
+  })
 
   const pick = (opt) => {
     if (chosen.current || opt.locked) return
@@ -51,10 +64,15 @@ export default function ChoiceMenu({ view, onChoose }) {
     <div className="choice-panel">
       {text && (
         <div className="choice-prompt">
-          {speakerName && (
+          {(speakerName || canReplay) && (
             <div className="dialogue-speaker">
-              <Portrait speaker={speaker} />
-              <span className="speaker-name">{speakerName}</span>
+              {speakerName && <Portrait speaker={speaker} />}
+              {speakerName && <span className="speaker-name">{speakerName}</span>}
+              {canReplay && (
+                <button className="dialogue-replay choice-replay" aria-label="Read the choices again" onClick={replay}>
+                  <Icon name="sound" size={18} />
+                </button>
+              )}
             </div>
           )}
           <p>{text}</p>

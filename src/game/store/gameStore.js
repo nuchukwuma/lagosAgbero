@@ -20,6 +20,7 @@ import { campaignById, campaignOf, chapterCampaign } from '../narrative/campaign
 import { collectFind } from '../systems/finds.js'
 import { effectsFor } from '../systems/reactions.js'
 import { useStreet } from '../world/streetState.js'
+import { useSettings } from './settings.js'
 
 let toastId = 0
 
@@ -295,4 +296,5 @@ bus.on('mode:result', (result) => useGameStore.getState().modeResult(result))
 if (typeof window !== 'undefined' && (import.meta.env.DEV || new URLSearchParams(window.location.search).has('bench'))) {
   window.__gameStore = useGameStore
   window.__playerState = playerState
+  window.__settings = useSettings
 }

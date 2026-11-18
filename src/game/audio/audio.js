@@ -18,7 +18,7 @@ let musicBus = null
 let sfxBus = null
 let ambBus = null
 let noiseBuffer = null
-const state = { music: true, sound: true, mood: 'none', wantMood: 'none', amb: { street: 0, rain: 0, night: 0 } }
+const state = { music: true, sound: true, duck: false, mood: 'none', wantMood: 'none', amb: { street: 0, rain: 0, night: 0 } }
 
 export function audioReady() {
   return Boolean(ctx)
@@ -46,7 +46,7 @@ export function unlock() {
   musicBus = ctx.createGain()
   sfxBus = ctx.createGain()
   ambBus = ctx.createGain()
-  musicBus.gain.value = state.music ? 0.32 : 0
+  musicBus.gain.value = musicLevel()
   sfxBus.gain.value = state.sound ? 0.8 : 0
   ambBus.gain.value = state.sound ? 0.5 : 0
   for (const b of [musicBus, sfxBus, ambBus]) b.connect(master)
@@ -59,12 +59,20 @@ export function unlock() {
   setMusic(state.wantMood)
 }
 
+const musicLevel = () => (state.music ? (state.duck ? 0.1 : 0.32) : 0)
+
+/** Quieten the music while a character is speaking (voices.js). */
+export function duckMusic(on) {
+  state.duck = on
+  if (ctx) musicBus.gain.setTargetAtTime(musicLevel(), ctx.currentTime, on ? 0.08 : 0.4)
+}
+
 export function setVolumes({ music, sound }) {
   if (music !== undefined) state.music = music
   if (sound !== undefined) state.sound = sound
   if (!ctx) return
   const t = ctx.currentTime
-  musicBus.gain.setTargetAtTime(state.music ? 0.32 : 0, t, 0.1)
+  musicBus.gain.setTargetAtTime(musicLevel(), t, 0.1)
   sfxBus.gain.setTargetAtTime(state.sound ? 0.8 : 0, t, 0.05)
   ambBus.gain.setTargetAtTime(state.sound ? 0.5 : 0, t, 0.2)
 }

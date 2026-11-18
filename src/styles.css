@@ -354,6 +354,40 @@ body,
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
 }
 
+.dialogue-box,
+.choice-panel {
+  position: relative;
+}
+/* say it again (when voices are on): bottom corner of the line, beside "tap" */
+.dialogue-replay {
+  position: absolute;
+  bottom: 8px;
+  right: 10px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid rgba(242, 195, 0, 0.5);
+  background: rgba(242, 195, 0, 0.12);
+  color: var(--danfo);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  padding: 0;
+}
+.dialogue-box:has(.dialogue-replay) .dialogue-next {
+  padding-right: 48px;
+  line-height: 36px;
+}
+/* on the choice panel: after the speaker's name */
+.choice-replay {
+  position: static;
+  margin-left: auto;
+  flex: none;
+}
+.dialogue-replay:active {
+  transform: scale(0.94);
+}
+
 .dialogue-box {
   min-height: 130px;
   cursor: pointer;

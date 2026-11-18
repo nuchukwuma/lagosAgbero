@@ -31,7 +31,7 @@
       "shirt": "#2f8f5b",
       "trousers": "#2f8f5b",
       "shoes": "#5d4037",
-      "height": 1.0,
+      "height": 1,
       "width": 1.3,
       "accessories": [
         {
@@ -140,7 +140,7 @@
       "skin": "#6e4329",
       "shirt": "#f4f1ea",
       "trousers": "#ecf0f1",
-      "height": 1.0,
+      "height": 1,
       "width": 1.35,
       "accessories": [
         {
@@ -292,7 +292,10 @@
     "name": "Mama (phone)",
     "fullName": "Mama",
     "color": "#e67e22",
-    "role": "family"
+    "role": "family",
+    "voice": {
+      "sex": "female"
+    }
   },
   "iyaBose": {
     "name": "Iya Bọ́sẹ̀",
@@ -913,6 +916,10 @@
     "name": "QuickCash",
     "fullName": "QuickCash Loans (an app with feelings)",
     "color": "#e74c3c",
-    "role": "app"
+    "role": "app",
+    "voice": {
+      "pitch": 1.15,
+      "rate": 1.2
+    }
   }
 }

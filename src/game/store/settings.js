@@ -2,7 +2,7 @@
 import { create } from 'zustand'
 
 const KEY = 'areaBoy.settings'
-const DEFAULTS = { quality: 'auto', music: true, sound: true, orientation: 'landscape' } // quality: auto | low | high; orientation: landscape | portrait | auto (phones)
+const DEFAULTS = { quality: 'auto', music: true, sound: true, voices: true, handsFree: false, orientation: 'landscape' } // quality: auto | low | high; orientation: landscape | portrait | auto (phones); voices: dialogue read aloud; handsFree: move on once a line has been said
 
 function read() {
   try {

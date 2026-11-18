@@ -3,12 +3,20 @@ import { useSettings, fullscreenSupported, toggleFullscreen, deviceTier } from '
 import { useDevice } from '../hud/useDevice.js'
 import { ORIENTATIONS, isPhone, applyOrientation } from '../../game/systems/orientation.js'
 import Icon from '../Icon.jsx'
+import { voicesSupported, speak } from '../../game/audio/voices.js'
+
+const VOICE_MODES = [
+  ['off', 'Off'],
+  ['on', 'Read aloud'],
+  ['hands', 'Hands-free'],
+]
 
 export default function SettingsPanel() {
   const quality = useSettings((s) => s.quality)
   const music = useSettings((s) => s.music !== false)
   const sound = useSettings((s) => s.sound !== false)
   const orientation = useSettings((s) => s.orientation || 'landscape')
+  const voiceMode = useSettings((s) => (s.voices === false ? 'off' : s.handsFree ? 'hands' : 'on'))
   const update = useSettings((s) => s.update)
   const { touch } = useDevice()
   const [full, setFull] = useState(Boolean(document.fullscreenElement))
@@ -58,6 +66,26 @@ export default function SettingsPanel() {
           <Icon name={sound ? 'sound' : 'mute'} size={16} /> Sound
         </button>
       </div>
+      {voicesSupported() ? (
+        <div className="swatch-row">
+          <span>Voices</span>
+          {VOICE_MODES.map(([id, label]) => (
+            <button
+              key={id}
+              className={`chip ${voiceMode === id ? 'on' : ''}`}
+              onClick={() => {
+                update({ voices: id !== 'off', handsFree: id === 'hands' })
+                if (id !== 'off') speak(id === 'hands' ? 'Hands-free. Just listen: the story moves on by itself.' : 'I go read am for you.', 'professor')
+              }}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+      ) : (
+        <p className="footnote">Voices: this browser has no built-in voices, so the story is text only here.</p>
+      )}
+      {voiceMode === 'hands' && <p className="footnote">Hands-free: every line is read aloud and the story moves on by itself. You still pick the choices.</p>}
       {quality === 'auto' && <p className="footnote">Auto: {deviceTier() === 'low' ? 'this phone gets the Light version (fewer people, cars and props), so it runs smoothly.' : 'resolution adapts to how fast this device runs.'}</p>}
       {quality === 'low' && <p className="footnote">Light: made for 2 GB phones. Fewer background people, cars and props, lower resolution; the story is the same.</p>}
       {fullscreenSupported() ? (

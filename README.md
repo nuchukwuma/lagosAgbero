@@ -67,6 +67,19 @@ outline, dressed in each character's own colours and skin tone. All of it is set
 `src/game/world/style.js` (band edges, outline width and distance, head size),
 so it can be tuned in one place. Outlines are off in Light mode.
 
+## Voices
+
+Dialogue is read aloud for players who'd rather listen than read (Settings →
+Voices: Off, Read aloud, Hands-free). It uses the voices built into the phone
+or browser, so nothing is downloaded: Nigerian English when the device has
+it, then the nearest accent. Every character has their own pitch and pace, set
+by who they are (elders low and slow, hustlers quick) plus a personal touch, and
+no two of the cast match (`src/game/audio/voices.js`; a character can set its
+own with `"voice": { "pitch", "rate", "sex" }` in characters.json). Choices are
+read out too, with their numbers; the speaker button says a line again; music
+dips while someone talks. Hands-free moves the story on by itself once a line
+has been said (you still pick the choices).
+
 ## Requirements
 
 - **Phones:** Android phones with 2 GB of RAM and up (Chrome), recent
