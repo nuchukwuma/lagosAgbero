@@ -116,11 +116,11 @@ export function makeFighter(lookInput) {
 export const POSES = {
   stance: { hip: [0, 0.84], lean: 0.14, head: -0.1, fF: [0.24, 0.1], fB: [0.13, 0.03], footF: [0.3, 0], footB: [-0.3, 0], rot: 0, turn: 1, eyes: 'open', mouth: 'shut' },
   jabLoad: { hip: [-0.04, 0.82], lean: 0.06, head: -0.06, fF: [0.1, 0.06], fB: [0.12, 0.04], footF: [0.3, 0], footB: [-0.32, 0], rot: 0, turn: 1, eyes: 'open', mouth: 'grit' },
-  jab: { hip: [0.16, 0.81], lean: 0.34, head: -0.12, fF: [0.64, 0.06], fB: [0.06, 0.02], footF: [0.46, 0], footB: [-0.28, 0], rot: 0, turn: 1, eyes: 'open', mouth: 'shout' },
-  kickLoad: { hip: [-0.06, 0.88], lean: -0.08, head: -0.04, fF: [0.2, 0.12], fB: [0.1, 0.05], footF: [0.24, 0.56], footB: [-0.1, 0], rot: 0, turn: 1, eyes: 'open', mouth: 'grit' },
-  kick: { hip: [-0.02, 0.93], lean: -0.44, head: 0.18, fF: [0.06, -0.08], fB: [-0.24, -0.12], footF: [1.06, 0.82], footB: [-0.12, 0], rot: 0, turn: 1, eyes: 'open', mouth: 'shout' },
-  spinLoad: { hip: [-0.08, 0.74], lean: 0.32, head: 0.05, fF: [0.12, 0.0], fB: [0.12, -0.04], footF: [0.34, 0], footB: [-0.3, 0], rot: 0, turn: 1, eyes: 'open', mouth: 'grit' },
-  spin: { hip: [0.05, 1.0], lean: -0.62, head: 0.25, fF: [0.0, -0.12], fB: [-0.3, 0.05], footF: [1.02, 1.12], footB: [-0.08, 0.1], rot: 0, turn: 1, eyes: 'open', mouth: 'shout' },
+  jab: { dx: 0.32, hip: [0.16, 0.81], lean: 0.34, head: -0.12, fF: [0.64, 0.06], fB: [0.06, 0.02], footF: [0.46, 0], footB: [-0.28, 0], rot: 0, turn: 1, eyes: 'open', mouth: 'shout' },
+  kickLoad: { dx: 0.15, hip: [-0.06, 0.88], lean: -0.08, head: -0.04, fF: [0.2, 0.12], fB: [0.1, 0.05], footF: [0.24, 0.56], footB: [-0.1, 0], rot: 0, turn: 1, eyes: 'open', mouth: 'grit' },
+  kick: { dx: 0.5, hip: [-0.02, 0.93], lean: -0.44, head: 0.18, fF: [0.06, -0.08], fB: [-0.24, -0.12], footF: [1.06, 0.82], footB: [-0.12, 0], rot: 0, turn: 1, eyes: 'open', mouth: 'shout' },
+  spinLoad: { dx: 0.1, hip: [-0.08, 0.74], lean: 0.32, head: 0.05, fF: [0.12, 0.0], fB: [0.12, -0.04], footF: [0.34, 0], footB: [-0.3, 0], rot: 0, turn: 1, eyes: 'open', mouth: 'grit' },
+  spin: { dx: 0.55, hip: [0.05, 1.0], lean: -0.62, head: 0.25, fF: [0.0, -0.12], fB: [-0.3, 0.05], footF: [1.02, 1.12], footB: [-0.08, 0.1], rot: 0, turn: 1, eyes: 'open', mouth: 'shout' },
   block: { hip: [-0.05, 0.8], lean: -0.04, head: 0.14, fF: [0.16, 0.22], fB: [0.21, 0.11], footF: [0.28, 0], footB: [-0.34, 0], rot: 0, turn: 1, eyes: 'open', mouth: 'grit' },
   dodge: { hip: [-0.32, 0.7], lean: -0.46, head: -0.15, fF: [0.2, 0.14], fB: [0.1, 0.08], footF: [0.22, 0], footB: [-0.46, 0], rot: 0, turn: 1, eyes: 'open', mouth: 'shut' },
   hit: { hip: [-0.15, 0.8], lean: -0.48, head: -0.55, fF: [0.26, 0.26], fB: [-0.26, -0.04], footF: [0.24, 0], footB: [-0.4, 0], rot: 0, turn: 1, eyes: 'shut', mouth: 'open' },
@@ -145,6 +145,7 @@ export function mix(a, b, t) {
     footB: lerp2(a.footB, b.footB, t),
     rot: lerp(a.rot, b.rot, t),
     turn: lerp(a.turn, b.turn, t),
+    dx: lerp(a.dx || 0, b.dx || 0, t),
     eyes: t < 0.5 ? a.eyes : b.eyes,
     mouth: t < 0.5 ? a.mouth : b.mouth,
     lying: t < 0.5 ? a.lying : b.lying,
@@ -877,6 +878,7 @@ export function drawFighter(ctx, fx, pose, { alpha = 1 } = {}) {
   const sk = skeleton(pose, fx)
   ctx.save()
   if (alpha < 1) ctx.globalAlpha = alpha
+  if (pose.dx) ctx.translate(pose.dx, 0) // the lunge
   // the whole-body turn (falls) about the hips, and the spin (squash to a side view)
   ctx.translate(sk.hip[0], sk.hip[1])
   if (pose.rot) ctx.rotate(pose.rot)
@@ -896,5 +898,7 @@ export function drawFighter(ctx, fx, pose, { alpha = 1 } = {}) {
 /** Where the front fist and front foot are (for hit sparks), in the fighter's own frame. */
 export function reachPoints(fx, pose) {
   const sk = skeleton(pose, fx)
-  return { fist: sk.fistF, foot: sk.ankF, head: sk.headC, chest: [sk.sh[0], sk.sh[1] - 0.15] }
+  const d = pose.dx || 0
+  const at = (p) => [p[0] + d, p[1]]
+  return { fist: at(sk.fistF), foot: at(sk.ankF), head: at(sk.headC), chest: [sk.sh[0] + d, sk.sh[1] - 0.15] }
 }

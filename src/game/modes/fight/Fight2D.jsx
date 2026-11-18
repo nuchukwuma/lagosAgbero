@@ -256,8 +256,9 @@ export default function Fight2D({ params }) {
       ctx.translate(-W / 2, -groundY)
       if (stage) stage.draw(ctx, camX, t, fx.cheer)
       // shadows on the road
-      for (const f of [fight.p, fight.o]) {
-        const [sx] = toScreen(f.x, 0)
+      for (const k of ['p', 'o']) {
+        const f = fight[k]
+        const [sx] = toScreen(f.x + (look[k].pose.dx || 0) * (k === 'p' ? 1 : -1), 0) // follows the lunge
         ctx.fillStyle = 'rgba(0,0,0,0.32)'
         ctx.beginPath()
         ctx.ellipse(sx, groundY + 2, ppm * 0.45, ppm * 0.08, 0, 0, Math.PI * 2)

@@ -2971,3 +2971,63 @@ svg .is-chase { fill: #e53935; stroke: #fff; stroke-width: 0.6; animation: map-p
 .story-screen.fighting .game-canvas {
   visibility: hidden;
 }
+
+/* Short screens (phones held sideways): full-screen cards scroll, and a
+   centred card never pushes its top or its buttons off the screen */
+.cutscene {
+  overflow-y: auto;
+  justify-content: safe center;
+  -webkit-overflow-scrolling: touch;
+}
+.cutscene-card {
+  margin: auto 0;
+}
+.ending-screen,
+.overlay {
+  justify-content: safe center;
+}
+.fee-intro {
+  max-height: calc(100dvh - 24px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  overflow-y: auto;
+}
+@media (max-height: 520px) {
+  .cutscene {
+    padding: 12px 16px;
+  }
+  .cutscene-card h2 {
+    font-size: 26px;
+    margin-bottom: 6px;
+  }
+  .cutscene-card p {
+    font-size: 15px;
+    margin: 6px 0;
+  }
+  .chapter-end .recap {
+    max-height: none;
+  }
+  .chapter-end .menu {
+    flex-direction: row;
+    justify-content: center;
+    gap: 10px;
+  }
+  .chapter-end .menu .btn {
+    flex: 1;
+    padding: 9px 12px;
+    min-height: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-size: 15px;
+  }
+  .chapter-end .menu {
+    position: sticky; /* Continue stays in reach while the recap scrolls */
+    bottom: 0;
+    padding: 8px 0 2px;
+    background: linear-gradient(rgba(10, 8, 4, 0), rgba(10, 8, 4, 0.95) 30%);
+  }
+  .fee-intro {
+    margin-bottom: 0;
+    padding: 12px;
+  }
+}
