@@ -1460,8 +1460,8 @@
       "minutes": 60,
       "params": {
         "spot": "backSide",
-        "duration": 90,
-        "vehicles": 11,
+        "duration": 110,
+        "vehicles": 16,
         "drivers": [
           "pastorDriver",
           "iyaKeke",
@@ -1480,8 +1480,8 @@
       "minutes": 60,
       "params": {
         "spot": "frontStop",
-        "duration": 90,
-        "vehicles": 13
+        "duration": 110,
+        "vehicles": 17
       },
       "where": "Front Stop",
       "icon": "naira"

@@ -13,7 +13,7 @@ export const VENDORS = data.vendors
 
 export const DRAIN = {
   base: 0.07, // per second just being out there (~4 per minute)
-  running: 0.22, // extra per second while running
+  running: 0.09, // extra per second while running (~9 a minute in all: a full bar lasts ~11 minutes of running)
   rain: 0.05, // extra per second in the rain
 }
 export const LOW_ENERGY = 20 // below this: staggering walk, no running

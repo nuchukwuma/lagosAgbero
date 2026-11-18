@@ -13,17 +13,42 @@ import TaskPanel from '../../../components/hud/TaskPanel.jsx'
 // to one and COLLECT. Drivers pay, haggle or refuse depending on your fee.
 // Ends when time runs out, or early if the story's defaulter runs off.
 
+const FEE_STEPS = [300, 400, 500, 600, 700, 800, 1000, 1200, 1500]
+
 function Intro({ store, onStart }) {
   const fee = store.stopFee
+  const f = store.fatigue()
+  const setFee = (n) => {
+    useFeeRun.setState({ stopFee: n })
+    useGameStore.getState().setStopFee(n) // it stays your fee until you change it
+  }
+  const i = FEE_STEPS.indexOf(fee)
+  const lower = FEE_STEPS[(i < 0 ? FEE_STEPS.findIndex((x) => x > fee) : i) - 1]
+  const higher = FEE_STEPS[(i < 0 ? FEE_STEPS.findIndex((x) => x > fee) - 1 : i) + 1]
   return (
     <div className="fee-intro">
       <h2>Fee run · {store.stopLabel}</h2>
       <p>Vehicles go stop for your side. Walk to each one and press <strong>COLLECT</strong>.</p>
+      <div className="fee-setter">
+        <span>
+          Your fee per danfo: <strong>{formatNaira(fee)}</strong>
+        </span>
+        <button className="btn btn-small" disabled={!lower} onClick={() => setFee(lower)} aria-label="Lower your fee">
+          −
+        </button>
+        <button className="btn btn-small" disabled={!higher} onClick={() => setFee(higher)} aria-label="Raise your fee">
+          +
+        </button>
+      </div>
+      <p className="muted small">Raise your fee here. More per vehicle, but more drivers haggle, refuse or run; lower it and they pay happily and the street likes you.</p>
       <ul>
-        <li>Danfo {formatNaira(feeFor('danfo', fee))} · Taxi {formatNaira(feeFor('taxi', fee))}</li>
+        <li>Danfo {formatNaira(feeFor('danfo', fee))} · Molue {formatNaira(feeFor('molue', fee))} · Taxi {formatNaira(feeFor('taxi', fee))}</li>
         <li>Keke {formatNaira(feeFor('keke', fee))} · Okada {formatNaira(feeFor('okada', fee))} · Lorry {formatNaira(feeFor('lorry', fee))}</li>
       </ul>
-      <p className="muted">Baba Ticket's share today: {formatNaira(store.quota)}. If a vehicle waits too long, e go drive off without paying.</p>
+      <p className="muted">
+        Baba Ticket's share today: {formatNaira(store.quota)}.{' '}
+        {f < 0.15 ? 'Drivers are fresh this morning.' : f < 0.5 ? 'Drivers have been asked a few times today: some are getting tired of agberos.' : f < 0.9 ? 'Drivers are fed up with agberos today: expect haggling, refusals and runners.' : "Every driver has been asked all day. Some will shove you aside. Tomorrow they'll be calmer."}
+      </p>
       <p>
         <strong>Block am:</strong> stand in front of a vehicle wey wan run (even one wey refuse to pay) and e no fit move. Refusers go pay; others go wait make you collect.
       </p>
@@ -43,6 +68,7 @@ function Summary({ store, result, onDone }) {
       </p>
       <p className="muted">
         Paid: {(store.counts.paidFair || 0) + (store.counts.paidOver || 0) + (store.counts.acceptedLess || 0)} · Let go: {store.counts.letGo || 0} · Threatened: {store.counts.threatened || 0} · Blocked: {store.counts.cornered || 0} · Missed: {store.counts.missed || 0}
+        {store.shoved ? ` · Shoved aside: ${store.shoved}` : ''}
       </p>
       <button className="btn btn-primary" onClick={onDone}>
         Continue
@@ -58,7 +84,9 @@ export default function FeeCollectionMode({ params, onFinish }) {
   const [result, setResult] = useState(null)
 
   useEffect(() => {
-    useFeeRun.getState().start({ ...params, fairFeeBonus: feeBonus(styleOf(look)) }, stats || {})
+    const g = useGameStore.getState().game
+    const askedToday = g?.feeDay?.day === g?.stats?.day ? g.feeDay.asked : 0
+    useFeeRun.getState().start({ ...params, fairFeeBonus: feeBonus(styleOf(look)) }, { ...(stats || {}), askedToday })
     return () => {
       input.runButton = false
       useFeeRun.getState().reset()

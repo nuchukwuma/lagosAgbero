@@ -72,7 +72,7 @@ export function makeTraffic(items, seed, density = 1, from = 70) {
     const meet = (a + b) / 2
     const lanes = [...LANES].sort(() => rnd() - 0.5).slice(0, rnd() < 0.25 && meet > 200 ? 2 : 1) // one free lane at least
     // further on, some gaps send Task Force officers running at you instead
-    const officers = meet > 110 && rnd() < 0.55
+    const officers = meet > 110 && rnd() < Math.min(0.85, 0.55 + 0.4 * (density - 1.05)) // more of them when the route is hot
     for (const lane of lanes) {
       if (officers) cars.push({ d: meet, meet, lane, kind: 'officer', v: 3.2 + rnd() * 1.4, active: false })
       else cars.push({ d: meet, meet, lane, kind: 'car', model: CAR_MODELS[Math.floor(rnd() * CAR_MODELS.length)], v: 6 + rnd() * 5, active: false })
@@ -89,6 +89,7 @@ export function createRun({ goal = 320, seed = 1, difficulty = 1, energy = 70, e
     goal: endless ? Infinity : goal,
     endless,
     traffic,
+    difficulty,
     seed,
     density,
     builtTo: endless ? SEGMENT : goal,
@@ -151,7 +152,7 @@ export function stepRun(r, input, dt) {
   const speed = r.stumbleT > 0 ? r.speed * 0.45 : r.speed
   const before = r.distance
   r.distance += speed * dt
-  r.speed = Math.min(r.maxSpeed, r.speed + dt * (r.endless ? 0.22 : 0.12))
+  r.speed = Math.min(r.maxSpeed, r.speed + dt * (r.endless ? 0.22 * (1 + (r.difficulty - 1) * 0.25) : 0.12)) // a hot Gauntlet speeds up faster
   if (r.endless && r.distance > r.builtTo - 120) {
     // build the next stretch ahead; forget rows far behind (nothing piles up)
     const density = r.density * (1 + r.builtTo / 4000)

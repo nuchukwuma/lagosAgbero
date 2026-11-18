@@ -72,7 +72,7 @@ export default function FeeRunDirector() {
       const v = spawnVehicle({
         kind,
         lane: 'west',
-        stopAt: { x: run.stopX, wait: run.params.wait ?? 12 },
+        stopAt: { x: run.stopX, wait: Math.max(5, (run.params.wait ?? 12) * (1 - 0.4 * Math.min(1, run.fatigue()))) }, // tired drivers wait less
         tag: { feeRun: true, driver: next.driver },
         slogan: kind === 'danfo' ? next.driver.slogan || randomSlogan() : null,
         color: kind === 'keke' ? vehicleData.kekeColors[seed % vehicleData.kekeColors.length] : kind === 'okada' ? vehicleData.okadaColors[seed % vehicleData.okadaColors.length] : null,

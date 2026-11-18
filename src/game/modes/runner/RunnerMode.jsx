@@ -49,6 +49,13 @@ export default function RunnerMode({ params, onFinish }) {
         ) : (
           <p>{(CHASERS[params.chaser] || CHASERS.taskForce).text} Reach {params.goal ?? 320} m to escape. Grab naira notes on the way.</p>
         )}
+        {params.endless && (params.heat > 0 || params.notoriety >= 25) && (
+          <p className="warn">
+            {params.heat > 0 ? `You ran here ${params.heat === 1 ? 'not long ago' : `${params.heat} times lately`}: they know the route now, so it's faster and there are more of them. ` : ''}
+            {params.notoriety >= 25 ? 'Your name is known: the Task Force wants you badly. ' : ''}
+            Give it a few hours and they'll ease off.
+          </p>
+        )}
         <p className="muted">{touch ? 'Swipe, or tap the arrows: left/right change lane, up jumps cartons, down slides under banners. Danfos and Task Force men coming at you: get out of their lane!' : '←/→ or A/D change lane · ↑/W/Space jump · ↓/S slide · dodge the danfos and officers coming at you'}</p>
         <button className="btn btn-primary" onClick={runner.begin}>
           Go!

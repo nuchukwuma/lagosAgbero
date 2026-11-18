@@ -20,6 +20,7 @@ import { campaignById, campaignOf, chapterCampaign } from '../narrative/campaign
 import { collectFind } from '../systems/finds.js'
 import { effectsFor } from '../systems/reactions.js'
 import { useStreet } from '../world/streetState.js'
+import { tunedActivity, recordRun } from '../systems/heat.js'
 import { useSettings } from './settings.js'
 
 let toastId = 0
@@ -169,7 +170,18 @@ export const useGameStore = create((set, get) => {
 
     /** Free-roam activities the player starts (e.g. a fee run at the Back Side). */
     activity: null,
-    startActivity: (activity) => set({ activity }),
+    startActivity: (activity) => {
+      // repeat runs get hot (systems/heat.js): harder, or staked out for a while
+      const { game } = get()
+      const tuned = game ? tunedActivity(game, activity) : activity
+      if (tuned.blocked) return set((s) => ({ toasts: [...s.toasts, { id: ++toastId, text: tuned.blocked }].slice(-4) }))
+      set({ activity: tuned })
+    },
+    /** Your fee per danfo (others pay a share), chosen before a fee run. */
+    setStopFee: (fee) => {
+      const { game } = get()
+      if (game) set({ game: { ...game, stats: { ...game.stats, stopFee: clampStat('stopFee', Math.round(fee / 50) * 50) } } })
+    },
     finishActivity: (result) => {
       const { game, activity } = get()
       if (!game || !activity) return set({ activity: null })
@@ -183,6 +195,12 @@ export const useGameStore = create((set, get) => {
       }
       const minutes = activity.minutes ?? 120
       const next = { ...r.state, time: Math.min((r.state.time ?? 0) + minutes, EVENING_AT - 1) }
+      if (activity.mode === 'runner' && activity.params?.endless) Object.assign(next, { heat: recordRun(next, activity.id).heat })
+      // drivers remember how many times agberos asked them today (fee runs get harder; a new day resets it)
+      if (result.feeAsked) {
+        const day = next.stats.day
+        next.feeDay = { day, asked: (next.feeDay?.day === day ? next.feeDay.asked : 0) + result.feeAsked }
+      }
       if (activity.mode === 'fight') useStreet.setState({ lastFight: { outcome: result.outcome, at: performance.now() } })
       const m = result.moneyChange || 0
       const summary = m > 0 ? `+₦${m.toLocaleString('en-NG')}` : m < 0 ? `−₦${(-m).toLocaleString('en-NG')}` : 'No money this time'

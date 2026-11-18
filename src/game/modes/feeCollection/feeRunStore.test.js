@@ -41,3 +41,46 @@ describe('fee run', () => {
     expect(useFeeRun.getState().log.at(-1).text).toMatch(/Missed/)
   })
 })
+
+import { weary, fatigueOf } from './feeRunStore.js'
+import { feeFor, driverResponse, insist } from '../../systems/fees.js'
+
+describe('fee runs over a day', () => {
+  // what a sensible player takes from one run: pays, and the full fee after insisting
+  function yieldOf(schedule, asked0, fee = 500, seed = 7) {
+    let s = seed
+    const rng = () => ((s = (s * 9301 + 49297) % 233280) / 233280)
+    let money = 0
+    schedule.forEach((slot, i) => {
+      const d = weary(slot.driver, fatigueOf(asked0 + i + 1))
+      const r = driverResponse(d, feeFor(slot.kind, fee), feeFor(slot.kind, 500), rng)
+      if (r.type === 'pay') money += r.amount
+      else if (r.type === 'haggle') money += insist(d, rng) === 'pay' ? r.amount : 0
+    })
+    return money
+  }
+  const params = { duration: 110, vehicles: 17 }
+  const avg = (asked0) => {
+    let total = 0
+    for (let k = 0; k < 40; k++) {
+      let s = 11 + k
+      const rng = () => ((s = (s * 9301 + 49297) % 233280) / 233280)
+      total += yieldOf(buildSchedule(params, rng), asked0, 500, k + 3)
+    }
+    return total / 40
+  }
+
+  it("a good morning run covers a third of Baba Ticket's share; three runs can meet it", () => {
+    const first = avg(0)
+    expect(first).toBeGreaterThan(15000 / 3)
+    expect(first + avg(17) + avg(34)).toBeGreaterThan(15000)
+  })
+
+  it('drivers get harder to collect from as the day goes on', () => {
+    expect(avg(0)).toBeGreaterThan(avg(34) * 1.15)
+    const d = { tolerance: 1.2, stingy: 0.4 }
+    expect(weary(d, 1).tolerance).toBeLessThan(d.tolerance)
+    expect(weary(d, 1).stingy).toBeGreaterThan(d.stingy)
+    expect(weary(d, 0)).toBe(d)
+  })
+})

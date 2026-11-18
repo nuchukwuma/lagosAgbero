@@ -3144,3 +3144,23 @@ svg .is-chase { fill: #e53935; stroke: #fff; stroke-width: 0.6; animation: map-p
 .chapter-list li.done {
   color: #8ff0a4;
 }
+/* fee run: choose your fee before you start */
+.fee-setter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0 2px;
+}
+.fee-setter span {
+  flex: 1;
+}
+.fee-setter .btn {
+  min-width: 40px;
+  padding: 4px 10px;
+  font-size: 18px;
+  font-weight: 800;
+}
+.fee-intro .small {
+  font-size: 12.5px;
+  margin-top: 2px;
+}

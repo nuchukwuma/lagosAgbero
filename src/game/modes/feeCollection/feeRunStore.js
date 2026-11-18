@@ -11,25 +11,44 @@
 //   wait       seconds a vehicle waits before leaving (default 12)
 //   fairFee    what drivers consider normal (default ₦500)
 //   rememberAs memory key to store how the run went ("metQuota" | "half" | "poor")
+//
+// Drivers get tired of being asked: every vehicle you ask today (in any run)
+// makes the next ones less willing: they haggle and refuse more, wait less
+// before driving off, and some shove you aside and go. It resets each day
+// (game.feeDay, gameStore.finishActivity). See fatigue().
 
 import { create } from 'zustand'
 import { traffic, releaseVehicle, kindInfo, LANES } from '../../systems/traffic.js'
 import { feeFor, driverResponse, insist, threaten, reaction, pickLine, randomDriver, namedDriver, BASE_FAIR_FEE } from '../../systems/fees.js'
+import { playerState, shake } from '../../world/worldState.js'
 
 export const STOPS = {
   backSide: { x: 3, label: 'Back Side' },
   frontStop: { x: -20, label: 'Front Stop' },
 }
 
+// a bus stop: mostly danfos and molues, the rest passing through
 const STOP_KINDS = [
-  ['danfo', 40],
-  ['molue', 5],
-  ['keke', 18],
-  ['okada', 14],
-  ['taxi', 12],
-  ['lorry', 6],
-  ['boxTruck', 6],
+  ['danfo', 50],
+  ['molue', 10],
+  ['keke', 14],
+  ['okada', 8],
+  ['taxi', 10],
+  ['lorry', 4],
+  ['boxTruck', 4],
 ]
+
+// How tired of you the drivers are: 0 fresh in the morning, 1 after 50 asked.
+// Tuned so a steady player (fee ₦500) makes about ₦6,500, ₦5,500, ₦4,500 in
+// the day's first three runs: Baba Ticket's ₦15,000 is in reach, each run
+// harder than the last (feeRunStore.test.js).
+export const FATIGUE_PER = 50
+export const fatigueOf = (asked) => Math.min(1.2, asked / FATIGUE_PER)
+/** A driver as they are after being asked by agberos all day. */
+export function weary(driver, f) {
+  if (!f) return driver
+  return { ...driver, tolerance: (driver.tolerance ?? 1) - 0.3 * f, stingy: Math.min(1, (driver.stingy ?? 0.5) + 0.25 * f) }
+}
 
 function pickKind(rng) {
   const total = STOP_KINDS.reduce((s, [, w]) => s + w, 0)
@@ -120,6 +139,12 @@ export const useFeeRun = create((set, get) => {
     log: [],
     ended: null,
     defaulterLeft: false,
+    pressure: 0, // vehicles asked earlier today
+    asked: 0, // vehicles asked in this run
+    shoved: 0,
+
+    /** 0 (fresh) .. 1.2 (sick of agberos) */
+    fatigue: () => fatigueOf(get().pressure + get().asked),
 
     start(params, stats) {
       const stop = STOPS[params.spot] || STOPS.backSide
@@ -145,6 +170,9 @@ export const useFeeRun = create((set, get) => {
         log: [],
         ended: null,
         defaulterLeft: false,
+        pressure: stats.askedToday ?? 0,
+        asked: 0,
+        shoved: 0,
       })
     },
     begin: () => set({ started: true }),
@@ -170,7 +198,19 @@ export const useFeeRun = create((set, get) => {
         return
       }
 
-      const r = driverResponse(driver, fee, fair)
+      // every car asked today makes the next driver less patient
+      set({ asked: s.asked + 1 })
+      const f = get().fatigue()
+      v.tag.driver = weary(driver, f)
+      const r = driverResponse(v.tag.driver, fee, fair)
+      // a tired driver who won't pay may just push past you and go
+      if (r.type === 'refuse' && f > 0.25 && Math.random() < 0.35 * f) {
+        set({ shoved: s.shoved + 1 })
+        playerState.stunUntil = performance.now() + 700
+        shake(0.25, 0.3)
+        finishWith(v, pickLine('shove', {}, driver), { effect: 'refused', boost: 1.6 })
+        return
+      }
       if (r.type === 'pay') {
         finishWith(v, pickLine(r.overcharged ? 'payOver' : 'pay', { fee }, driver), { amount: fee, effect: r.overcharged ? 'paidOver' : 'paidFair' })
       } else if (r.type === 'haggle') {
@@ -284,6 +324,8 @@ export const useFeeRun = create((set, get) => {
         stats: { communityGoodwill: Math.round(s.effects.communityGoodwill), notoriety: Math.round(s.effects.notoriety) },
         remember: s.params.rememberAs ? { [s.params.rememberAs]: grade } : undefined,
         summary: { collected: s.collected, quota: s.quota, counts: s.counts },
+        feeAsked: s.asked, // drivers remember for the rest of the day
+        ...(s.shoved ? { stats: { communityGoodwill: Math.round(s.effects.communityGoodwill), notoriety: Math.round(s.effects.notoriety), energy: -3 * s.shoved } } : {}),
       }
     },
   }
