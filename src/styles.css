@@ -3031,3 +3031,95 @@ svg .is-chase { fill: #e53935; stroke: #fff; stroke-width: 0.6; animation: map-p
     padding: 12px;
   }
 }
+
+/* ---------- phones: keep the view clear ---------- */
+/* the objective folds into a pill (ObjectiveBanner.jsx) */
+.objective {
+  color: inherit;
+  font: inherit;
+  font-size: 15px;
+  cursor: pointer;
+}
+.objective.is-folded {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  max-width: min(46vw, 320px);
+  padding: 4px 10px;
+  border-width: 1px;
+  font-size: 12px;
+  opacity: 0.92;
+}
+.objective-short {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* activity status boxes (TaskPanel.jsx): tap to shrink to their first line */
+.task-panel {
+  cursor: pointer;
+  padding-right: 26px !important;
+}
+.task-panel.is-min > :not(:first-child):not(.task-toggle) {
+  display: none;
+}
+.task-panel.is-min {
+  width: auto !important;
+  max-width: min(70vw, 380px);
+  padding-top: 4px !important;
+  padding-bottom: 4px !important;
+  opacity: 0.92;
+}
+.task-panel.is-min .fee-row {
+  gap: 12px;
+}
+.task-toggle {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 11px;
+  color: var(--danfo);
+}
+@media (pointer: coarse) and (max-height: 600px), (pointer: coarse) and (max-width: 600px) {
+  /* the chapter name is in the pause menu; the corner map gets smaller */
+  .chapter-chip {
+    display: none;
+  }
+  .minimap {
+    width: 84px;
+    height: 84px;
+  }
+  .minimap-goal {
+    font-size: 10px;
+  }
+  .toast {
+    font-size: 12px;
+    padding: 5px 10px;
+  }
+  .hud-clock {
+    font-size: 11px;
+  }
+}
+/* the pause menu shows where you are and what you're doing */
+.pause-objective {
+  margin: 0 0 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(242, 195, 0, 0.5);
+  background: rgba(242, 195, 0, 0.08);
+  text-align: left;
+}
+.pause-objective small {
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 11px;
+}
+.pause-objective p {
+  margin: 4px 0 0;
+  font-size: 14px;
+}
+.pause-objective strong {
+  color: var(--danfo);
+}

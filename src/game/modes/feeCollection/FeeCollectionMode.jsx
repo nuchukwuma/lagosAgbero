@@ -7,6 +7,7 @@ import { useGameStore } from '../../store/gameStore.js'
 import MoveControls from '../../../components/hud/MoveControls.jsx'
 import { input } from '../../player/input.js'
 import { formatNaira } from '../../narrative/stats.js'
+import TaskPanel from '../../../components/hud/TaskPanel.jsx'
 
 // The fee run, played in the 3D street. Vehicles pull in at the stop; walk up
 // to one and COLLECT. Drivers pay, haggle or refuse depending on your fee.
@@ -95,7 +96,7 @@ export default function FeeCollectionMode({ params, onFinish }) {
   const quotaPct = Math.min(100, (store.collected / Math.max(1, store.quota)) * 100)
   return (
     <>
-      <div className="fee-hud">
+      <TaskPanel>
         <div className="fee-row">
           <strong>FEE RUN · {store.stopLabel}</strong>
           <span>⏱ {Math.ceil(store.timeLeft)}s</span>
@@ -117,7 +118,7 @@ export default function FeeCollectionMode({ params, onFinish }) {
             </div>
           ))}
         </div>
-      </div>
+      </TaskPanel>
 
       {store.popup && (
         <div className="fee-popup">

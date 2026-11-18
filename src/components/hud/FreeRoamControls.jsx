@@ -4,6 +4,7 @@ import { useWorldStore } from '../../game/world/worldState.js'
 import characters from '../../game/data/characters.json'
 import { worldJson } from '../../game/world/worlds.js'
 import { QUESTS } from '../../game/systems/quests.js'
+import ObjectiveBanner from './ObjectiveBanner.jsx'
 
 // On-screen controls while walking around: objective, joystick, RUN, TALK.
 // Keyboard: WASD / arrows to move, Shift to run, E or Enter to talk.
@@ -33,11 +34,7 @@ export default function FreeRoamControls({ view, onTalk, onShop, onActivity, onQ
 
   return (
     <>
-      {view.objective && (
-        <div className="objective">
-          <span className="objective-tag">Objective</span> {view.objective}
-        </div>
-      )}
+      <ObjectiveBanner text={view.objective} />
       <MoveControls
         actionLabel={talkName ? 'TALK' : quest ? `QUEST: ${quest.title}` : activity ? activity.label : vendorName ? 'BUY' : null}
         actionIcon={talkName ? 'talk' : quest ? 'quest' : activity ? activity.icon || 'star' : 'buy'}

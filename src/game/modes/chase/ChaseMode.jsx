@@ -3,6 +3,7 @@ import { useChase } from './chaseStore.js'
 import { useGameStore } from '../../store/gameStore.js'
 import { input } from '../../player/input.js'
 import MoveControls from '../../../components/hud/MoveControls.jsx'
+import TaskPanel from '../../../components/hud/TaskPanel.jsx'
 
 // The chase on foot. Overlay: intro, stamina, distance, GRAB, result.
 export default function ChaseMode({ params, onFinish }) {
@@ -59,7 +60,7 @@ export default function ChaseMode({ params, onFinish }) {
   const pct = (chase.stamina / chase.maxStamina) * 100
   return (
     <>
-      <div className="fee-hud">
+      <TaskPanel>
         <div className="fee-row">
           <strong>CHASE</strong>
           <span>⏱ {Math.ceil(chase.timeLeft)}s</span>
@@ -71,7 +72,7 @@ export default function ChaseMode({ params, onFinish }) {
         <div className="fee-quota">
           <div style={{ width: `${pct}%`, background: pct < 25 ? '#e2553a' : '#8ff0a4' }} />
         </div>
-      </div>
+      </TaskPanel>
       <MoveControls actionLabel={chase.canGrab ? 'GRAB' : null} actionIcon="hand" onAction={chase.grab} />
       {import.meta.env.DEV && (
         <button className="btn btn-small dev-end" onClick={() => chase.end('won', 'dev')}>

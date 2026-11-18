@@ -15,6 +15,7 @@ import { MiniMap, MapScreen, useMapStore } from '../hud/WorldMap.jsx'
 import Confrontation from '../hud/Confrontation.jsx'
 import DialogueBox from './DialogueBox.jsx'
 import { usePause } from '../../game/store/pauseStore.js'
+import { useAd } from '../../game/services/adService.js'
 import ChoiceMenu from './ChoiceMenu.jsx'
 import NewsBroadcast from './NewsBroadcast.jsx'
 import CutsceneCards from './CutsceneCards.jsx'
@@ -53,7 +54,13 @@ export default function StoryScreen() {
   }, [orientation])
   const turnTo = useTurnHint()
   // a panel over the game, or the phone needs turning: everything holds still
-  const paused = Boolean(overlay || turnTo)
+  const adPlaying = useAd((s) => Boolean(s.playing)) // a sponsor message is showing
+  const paused = Boolean(overlay || turnTo || adPlaying)
+  // the last objective you were given (activities and dialogue don't carry one)
+  const [lastObjective, setLastObjective] = useState(null)
+  useEffect(() => {
+    if (view?.objective) setLastObjective(view.objective)
+  }, [view?.objective])
   useEffect(() => {
     usePause.setState({ paused })
     return () => usePause.setState({ paused: false })
@@ -193,6 +200,9 @@ export default function StoryScreen() {
           onQuit={quitToTitle}
           canDress={view.type === 'freeRoam' && !activity}
           onMap={() => setOverlay('map')}
+          objective={view.objective || lastObjective}
+          chapter={view.chapterTitle}
+          activity={activity?.label || null}
         />
       )}
     </div>

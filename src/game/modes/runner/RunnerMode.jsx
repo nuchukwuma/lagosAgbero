@@ -3,6 +3,7 @@ import { useRunner, runnerInput, bestDistance } from './runnerStore.js'
 import { useDevice } from '../../../components/hud/useDevice.js'
 import Icon from '../../../components/Icon.jsx'
 import { CHASERS } from './RunnerScene.jsx'
+import TaskPanel from '../../../components/hud/TaskPanel.jsx'
 
 // Escape run overlay: distance, stumbles, pursuers; swipe (or arrow keys /
 // WASD / Space) to change lane, jump and slide.
@@ -91,7 +92,7 @@ export default function RunnerMode({ params, onFinish }) {
           else runnerInput[dy < 0 ? 'jump' : 'slide'] = true
         }}
       />
-      <div className="fee-hud">
+      <TaskPanel>
         <div className="fee-row">
           <strong>{endless ? 'GAUNTLET' : 'ESCAPE'}</strong>
           <span>{endless ? `${Math.round(distance)} m · best ${bestDistance()} m` : `${Math.round(distance)} / ${goal} m`}</span>
@@ -105,7 +106,7 @@ export default function RunnerMode({ params, onFinish }) {
           <span>Stumbles {hits}/{maxHits} · ₦ notes {notes}</span>
           <span className={close || pursuer < 6 ? 'warn' : 'muted'}>{close ? 'On your back!' : `They're ${Math.max(0, Math.round(pursuer))} m behind`}</span>
         </div>
-      </div>
+      </TaskPanel>
       {close && <div className="runner-alarm">{(CHASERS[params.chaser] || CHASERS.taskForce).back || 'DEM DEY YOUR BACK!'}</div>}
       {touch ? (
         <div className="runner-pad">

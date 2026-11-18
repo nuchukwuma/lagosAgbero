@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { createRally, playRound, rallyResult, canUse, RALLY } from './rallyLogic.js'
 import { formatNaira } from '../../narrative/stats.js'
 import { sfx } from '../../audio/audio.js'
+import TaskPanel from '../../../components/hud/TaskPanel.jsx'
 
 // Settlement's rally job at the Roundabout. Story params:
 //   job   "disturb" (scatter the PJP rally) | "crowd" (fill the FEP rally)
@@ -52,7 +53,7 @@ export default function RallyMode({ params, onFinish }) {
 
   return (
     <>
-      <div className="fee-hud">
+      <TaskPanel>
         <div className="fee-row">
           <strong>RALLY · {j.title}</strong>
           <span>
@@ -70,7 +71,7 @@ export default function RallyMode({ params, onFinish }) {
           <div style={{ width: `${rally.heat}%`, background: '#e2553a' }} />
         </div>
         {note && <div className="fee-log">{note}</div>}
-      </div>
+      </TaskPanel>
       <div className="fee-popup">
         <div className="speaker-name">The Roundabout</div>
         <p>"FORWARD EVER!" "BACKWARD SOMETIMES!" The crowd sways. What do you do?</p>

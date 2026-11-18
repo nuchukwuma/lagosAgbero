@@ -3,6 +3,7 @@ import { createBegRun, approach, currentTarget, begResult, BEG } from './begging
 import { formatNaira } from '../../narrative/stats.js'
 import { useGameStore } from '../../store/gameStore.js'
 import { sfx } from '../../audio/audio.js'
+import TaskPanel from '../../../components/hud/TaskPanel.jsx'
 
 // Aggressive begging at the Zone 5 Estate gate. Story params:
 //   count        how many people pass (default 6)
@@ -60,7 +61,7 @@ export default function BeggingMode({ params, onFinish }) {
 
   return (
     <>
-      <div className="fee-hud">
+      <TaskPanel>
         <div className="fee-row">
           <strong>BEGGING · Zone 5</strong>
           <span>
@@ -75,7 +76,7 @@ export default function BeggingMode({ params, onFinish }) {
           <div style={{ width: `${run.anger}%`, background: run.anger > 60 ? '#e2553a' : '#f39c12' }} />
         </div>
         {note && <div className="fee-log">{note}</div>}
-      </div>
+      </TaskPanel>
       <div className="fee-popup">
         <div className="speaker-name">{t.wrong ? t.name : '???'}</div>
         <p>{t.hint}</p>

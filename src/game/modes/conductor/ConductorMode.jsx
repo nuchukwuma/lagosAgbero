@@ -4,6 +4,7 @@ import routesData from '../../data/routes.json'
 import { createTrip, dropOff, callRoute, paymentFor, changeOptions, settleFare, settleQuirk, nextStop, conductorPay, isLastStop, stopName } from './conductorLogic.js'
 import { formatNaira } from '../../narrative/stats.js'
 import { sfx } from '../../audio/audio.js'
+import TaskPanel from '../../../components/hud/TaskPanel.jsx'
 
 // Bus conductor mission. Story params (startMode "conductor"):
 //   route        "oshodi"
@@ -85,7 +86,7 @@ export default function ConductorMode({ params, onFinish }) {
   }
 
   const header = (
-    <div className="fee-hud">
+    <TaskPanel>
       <div className="fee-row">
         <strong>CONDUCTOR · {trip.route.name}</strong>
         <span>
@@ -100,7 +101,7 @@ export default function ConductorMode({ params, onFinish }) {
         <div style={{ width: `${trip.anger}%`, background: trip.anger > 60 ? '#e2553a' : '#f39c12' }} />
       </div>
       {note && <div className="fee-log">{note}</div>}
-    </div>
+    </TaskPanel>
   )
 
   if (step === 'intro')
