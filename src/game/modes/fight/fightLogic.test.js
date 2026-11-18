@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { createFight, stepFight, animOf } from './fightLogic.js'
+import { createFight, stepFight, animOf, MOVES } from './fightLogic.js'
 
 const idleOpponent = { hp: 50, aggression: 0, block: 0 }
 const run = (s, input, seconds, rng = () => 0.99) => {
@@ -112,5 +112,23 @@ describe('fight', () => {
     stepFight(s, { punch: true }, 1 / 30, () => 0.99)
     run(s, () => ({}), 0.5)
     expect(s.p.combo).toBe(0)
+  })
+})
+
+describe('fight power-ups', () => {
+  it('Heavy Hands hits harder and Iron Jaw takes less', () => {
+    const swing = (mods, who) => {
+      const f = createFight({ hp: 500, power: 1 }, { energy: 70 })
+      f.mods = mods
+      f.o.x = f.p.x + 1.2
+      const attacker = who === 'player' ? f.p : f.o
+      attacker.action = { type: 'punch', t: MOVES.punch.startup + 0.01, hit: false }
+      f.o.ai.think = 99
+      f.o.ai.blockT = 0
+      stepFight(f, {}, 0.001, () => 0.99)
+      return who === 'player' ? f.o.maxHp - f.o.hp : f.p.maxHp - f.p.hp
+    }
+    expect(swing({ dealt: 1.3 }, 'player')).toBeGreaterThan(swing({}, 'player'))
+    expect(swing({ taken: 0.65 }, 'opponent')).toBeLessThan(swing({}, 'opponent'))
   })
 })

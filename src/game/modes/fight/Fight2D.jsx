@@ -10,6 +10,7 @@ import { isPaused } from '../../store/pauseStore.js'
 import { randomLook, withAllegiance } from '../../characters/look.js'
 import characters from '../../data/characters.json'
 import { sfx } from '../../audio/audio.js'
+import { has } from '../../systems/powerups.js'
 
 // A street fight as a 2D fighting game: side-on, two hand-drawn fighters
 // (fight2d/puppet.js) on a painted Lagos street (fight2d/stage.js), the
@@ -132,6 +133,8 @@ export default function Fight2D({ params }) {
       const store = useFight.getState()
       if (!started && store.started) {
         started = true
+        fight.mods = { dealt: has('heavyHands') ? 1.3 : 1, taken: has('ironJaw') ? 0.65 : 1 }
+        if (has('fullMeter')) fight.p.special = 100
         fx.banner = { text: 'FIGHT!', t: 0 }
         sfx('whistle')
       }

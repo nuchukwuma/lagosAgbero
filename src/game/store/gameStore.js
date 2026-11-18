@@ -21,6 +21,7 @@ import { collectFind } from '../systems/finds.js'
 import { effectsFor } from '../systems/reactions.js'
 import { useStreet } from '../world/streetState.js'
 import { tunedActivity, recordRun } from '../systems/heat.js'
+import { clearPowerups } from '../systems/powerups.js'
 import { useSettings } from './settings.js'
 
 let toastId = 0
@@ -86,7 +87,10 @@ export const useGameStore = create((set, get) => {
 
     advance: () => dispatch((g) => engine.advance(storyCtx, g)),
     choose: (index) => dispatch((g) => engine.choose(storyCtx, g, index)),
-    modeResult: (result) => dispatch((g) => engine.receiveModeResult(storyCtx, g, result)),
+    modeResult: (result) => {
+      clearPowerups() // used up
+      dispatch((g) => engine.receiveModeResult(storyCtx, g, result))
+    },
 
     /** Cut to a scene from anywhere (collapse, raid...). */
     interrupt: (target) => dispatch((g) => engine.interrupt(storyCtx, g, target)),
@@ -183,6 +187,7 @@ export const useGameStore = create((set, get) => {
       if (game) set({ game: { ...game, stats: { ...game.stats, stopFee: clampStat('stopFee', Math.round(fee / 50) * 50) } } })
     },
     finishActivity: (result) => {
+      clearPowerups() // used up
       const { game, activity } = get()
       if (!game || !activity) return set({ activity: null })
       let r = applyEffects(game, resultToEffects(result))

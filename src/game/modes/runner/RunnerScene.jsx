@@ -11,6 +11,7 @@ import { playerState, shake } from '../../world/worldState.js'
 import { useGameStore } from '../../store/gameStore.js'
 import characters from '../../data/characters.json'
 import { sfx } from '../../audio/audio.js'
+import { has } from '../../systems/powerups.js'
 
 // The escape run: a straight Lagos road built from the same street pieces.
 // The player runs towards -Z; lanes are 2.6 m apart.
@@ -186,8 +187,15 @@ export default function RunnerScene({ playerLook }) {
   const shown = useRef(run.pursuer) // how far behind the chasers are drawn
   const chaserLook = useMemo(() => (chaser.look === 'bassey' ? characters.bassey.look : { ...randomLook(chaser.seed || 131, 'male'), ...chaser.look }), [chaser])
 
+  // power-ups, applied when the run starts: a free stumble, a head start
+  const boosted = useRef(false)
   useFrame((_, raw) => {
     const dt = Math.min(raw, 0.05)
+    if (started && !boosted.current) {
+      boosted.current = true
+      if (has('charm')) run.maxHits += 1
+      if (has('headStart')) run.pursuer += 15
+    }
     if (started && !run.over) {
       if (runnerInput.slide) sfx('slide')
       stepRun(run, { ...runnerInput }, dt)

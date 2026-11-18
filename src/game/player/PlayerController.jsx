@@ -70,7 +70,7 @@ export default function PlayerController({ layout, look, enabled, eyeRed = 0, ti
     if (!stunned && !gesture && m.len > 0.08) {
       const running = (m.run || m.len > 0.95) && playerState.canRun && !tired
       playerState.running = running
-      const speed = (running ? RUN_SPEED : WALK_SPEED) * Math.max(0.5, m.len)
+      const speed = (running ? RUN_SPEED : WALK_SPEED) * Math.max(0.5, m.len) * (playerState.speedBoost || 1) // Light Feet power-up
       // screen up = away from the camera (north normally). When the game flips
       // the camera to the other side, the controls change only once the stick
       // is at rest, so a flip never reverses a walk in progress; when the

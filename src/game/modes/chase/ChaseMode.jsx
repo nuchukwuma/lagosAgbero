@@ -4,6 +4,7 @@ import { useGameStore } from '../../store/gameStore.js'
 import { input } from '../../player/input.js'
 import MoveControls from '../../../components/hud/MoveControls.jsx'
 import TaskPanel from '../../../components/hud/TaskPanel.jsx'
+import PowerupOffer from '../../../components/hud/PowerupOffer.jsx'
 
 // The chase on foot. Overlay: intro, stamina, distance, GRAB, result.
 export default function ChaseMode({ params, onFinish }) {
@@ -39,6 +40,7 @@ export default function ChaseMode({ params, onFinish }) {
         <h2>Chase am!</h2>
         <p>The danfo dey crawl for go-slow. Run along the pavement, dodge people, and press <strong>GRAB</strong> when you reach the door.</p>
         <p className="muted">Running uses stamina (it starts from your energy). Walk small to catch breath. Trick: traffic go stop if you stand for road in front of am.</p>
+        <PowerupOffer mode="chase" />
         <button className="btn btn-primary" onClick={chase.begin}>
           Oya, run!
         </button>
@@ -62,12 +64,12 @@ export default function ChaseMode({ params, onFinish }) {
     <>
       <TaskPanel>
         <div className="fee-row">
-          <strong>CHASE</strong>
+          <strong>CHASE · {chase.targetName || 'the driver'}</strong>
           <span>⏱ {Math.ceil(chase.timeLeft)}s</span>
         </div>
         <div className="fee-row">
           <span>Stamina</span>
-          <span>{chase.distance != null ? `${chase.distance.toFixed(0)} m to the door` : ''}</span>
+          <span>{chase.distance != null ? `${chase.distance.toFixed(0)} m to ${chase.targetKind === 'okada' || chase.targetKind === 'keke' ? 'him' : 'the door'} (follow the red marker)` : ''}</span>
         </div>
         <div className="fee-quota">
           <div style={{ width: `${pct}%`, background: pct < 25 ? '#e2553a' : '#8ff0a4' }} />

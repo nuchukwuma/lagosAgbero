@@ -3,6 +3,7 @@ import { useFight, fightInput } from "./fightStore.js";
 import { useDevice } from "../../../components/hud/useDevice.js";
 import Icon from "../../../components/Icon.jsx";
 import Fight2D from "./Fight2D.jsx";
+import PowerupOffer from '../../../components/hud/PowerupOffer.jsx'
 
 // Fight overlay: health bars, special meter, buttons (touch) or keys.
 // Keys: A/D or ←/→ move · J punch · K kick · L block (hold) · Space dodge · U special
@@ -124,6 +125,7 @@ export default function FightMode({ params, onFinish }) {
               "Keys: A/D move · J punch · K kick · L block (hold) · Space dodge · U special"
             )}
           </p>
+          <PowerupOffer mode="fight" />
           <button className="btn btn-primary" onClick={fight.begin}>
             Oya!
           </button>

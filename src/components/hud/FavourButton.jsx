@@ -3,6 +3,7 @@ import { useGameStore } from '../../game/store/gameStore.js'
 import Icon from '../Icon.jsx'
 import { canOfferAd, showRewardedAd, REWARDS, ADS_PER_DAY, useAd, pickPlacement } from '../../game/services/adService.js'
 import { campaignOf } from '../../game/narrative/campaigns.js'
+import { POWERUPS } from '../../game/systems/powerups.js'
 
 // An optional favour during free roam (a mock rewarded ad in costume).
 export default function FavourButton({ view, activity, overlay }) {
@@ -39,7 +40,9 @@ export function AdOverlay() {
     return () => clearInterval(id)
   }, [playing])
   if (!playing) return null
-  const r = REWARDS[playing.placement]
+  // favours have their own reward; power-ups name theirs (systems/powerups.js)
+  const pu = playing.placement?.startsWith('powerup:') ? POWERUPS[playing.placement.slice(8)] : null
+  const r = REWARDS[playing.placement] || { label: pu ? `Power-up: ${pu.name}. ${pu.text}.` : 'Thanks for watching', rewardText: pu ? pu.name : 'reward' }
   return (
     <div className="overlay ad-overlay">
       <div className="panel">

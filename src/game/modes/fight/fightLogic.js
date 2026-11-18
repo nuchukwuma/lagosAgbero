@@ -157,8 +157,9 @@ export function stepFight(state, input, dt, rng = Math.random) {
   o.x += o.moving * MOVE_SPEED * state.profile.speed * dt
 
   // hits
-  if (p.action) resolveHit(state, p, o, 'player', 1)
-  if (o.action) resolveHit(state, o, p, 'opponent', state.profile.power)
+  // power-ups (systems/powerups.js) scale what you deal and what you take
+  if (p.action) resolveHit(state, p, o, 'player', state.mods?.dealt ?? 1)
+  if (o.action) resolveHit(state, o, p, 'opponent', state.profile.power * (state.mods?.taken ?? 1))
 
   // keep them apart and in the arena (player always on the left)
   if (o.x - p.x < MIN_GAP) {

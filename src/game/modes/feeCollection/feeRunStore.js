@@ -21,6 +21,7 @@ import { create } from 'zustand'
 import { traffic, releaseVehicle, kindInfo, LANES } from '../../systems/traffic.js'
 import { feeFor, driverResponse, insist, threaten, reaction, pickLine, randomDriver, namedDriver, BASE_FAIR_FEE } from '../../systems/fees.js'
 import { playerState, shake } from '../../world/worldState.js'
+import { has } from '../../systems/powerups.js'
 
 export const STOPS = {
   backSide: { x: 3, label: 'Back Side' },
@@ -175,7 +176,16 @@ export const useFeeRun = create((set, get) => {
         shoved: 0,
       })
     },
-    begin: () => set({ started: true }),
+    begin: () => {
+      // power-ups: drivers find more fees fair (Sweet Mouth); 30 s more with a few more vehicles (Extra Time)
+      const s = get()
+      if (has('sweetMouth')) set({ fairFee: Math.round(s.fairFee * 1.25) })
+      if (has('extraTime')) {
+        const duration = s.duration + 30
+        set({ duration, timeLeft: duration, schedule: buildSchedule({ ...s.params, duration, vehicles: (s.params.vehicles ?? 18) + 4 }) })
+      }
+      set({ started: true })
+    },
     reset: () => set({ active: false, started: false, popup: null, near: null, ended: null }),
     setNear: (id) => get().near !== id && set({ near: id }),
     end: (outcome) => !get().ended && set({ ended: outcome, popup: null }),

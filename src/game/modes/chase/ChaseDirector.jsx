@@ -8,6 +8,9 @@ import Character from '../../characters/Character.jsx'
 import { Model } from '../../world/Model.jsx'
 import { randomLook } from '../../characters/look.js'
 import { namedDriver } from '../../systems/fees.js'
+import { has } from '../../systems/powerups.js'
+import { Html } from '@react-three/drei'
+import * as THREE from 'three'
 
 // Runs the chase inside the 3D street:
 //   - puts the fleeing vehicle ahead of the player in the west lane
@@ -58,6 +61,38 @@ function Walker({ w, colliders }) {
   return <Character ref={ref} look={randomLook(w.seed)} animation="walk" position={[w.x, GROUND_Y, -5.8]} />
 }
 
+// Who you're after: a red marker bobbing over the vehicle, a ring on the
+// road under it, and their name, so it stands out from the rest of the traffic.
+const markerMat = new THREE.MeshBasicMaterial({ color: '#ff3b30', depthTest: false, transparent: true })
+const ringMat = new THREE.MeshBasicMaterial({ color: '#ff3b30', transparent: true, opacity: 0.55, depthWrite: false, side: THREE.DoubleSide })
+const markerGeo = new THREE.ConeGeometry(0.42, 0.8, 4)
+const ringGeo = new THREE.RingGeometry(2.6, 3.0, 40)
+function TargetMarker({ vehicleRef, name }) {
+  const g = useRef()
+  const ring = useRef()
+  useFrame((state) => {
+    const v = vehicleRef.current
+    if (!g.current || !v) return
+    const z = LANES[v.lane].z
+    const t = state.clock.elapsedTime
+    g.current.position.set(v.x, GROUND_Y + 3.6 + Math.sin(t * 4) * 0.18, z)
+    g.current.rotation.y = t * 2
+    ring.current.position.set(v.x, GROUND_Y + 0.06, z)
+    ring.current.scale.setScalar(1 + Math.sin(t * 5) * 0.06)
+  })
+  return (
+    <>
+      <group ref={g} renderOrder={20}>
+        <mesh geometry={markerGeo} material={markerMat} rotation-x={Math.PI} renderOrder={20} />
+        <Html center position={[0, 0.9, 0]} zIndexRange={[5, 0]} style={{ pointerEvents: 'none' }}>
+          <div className="chase-tag">{name}</div>
+        </Html>
+      </group>
+      <mesh ref={ring} geometry={ringGeo} material={ringMat} rotation-x={-Math.PI / 2} />
+    </>
+  )
+}
+
 export default function ChaseDirector() {
   const chase = useChase()
   const vehicleRef = useRef(null)
@@ -82,6 +117,8 @@ export default function ChaseDirector() {
     v.x = startX - 9
     v.speed = 3
     vehicleRef.current = v
+    useChase.setState({ targetName: driver?.name || 'the driver', targetKind: kind })
+    playerState.speedBoost = has('lightFeet') ? 1.12 : 1
     return undefined
   }, [chase.started]) // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -89,6 +126,7 @@ export default function ChaseDirector() {
     () => () => {
       if (vehicleRef.current) removeVehicle(vehicleRef.current.id)
       playerState.canRun = true
+      playerState.speedBoost = 1
     },
     [],
   )
@@ -140,6 +178,7 @@ export default function ChaseDirector() {
   if (!chase.active) return null
   return (
     <group>
+      {chase.started && <TargetMarker vehicleRef={vehicleRef} name={chase.targetName || 'Catch am!'} />}
       {obstacles.statics.map((o, i) => (
         <Model key={i} name={o.model} position={[o.x, GROUND_Y, o.z]} rotation-y={(o.rot * Math.PI) / 180} />
       ))}

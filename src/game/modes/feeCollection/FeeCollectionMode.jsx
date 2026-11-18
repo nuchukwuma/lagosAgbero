@@ -8,6 +8,7 @@ import MoveControls from '../../../components/hud/MoveControls.jsx'
 import { input } from '../../player/input.js'
 import { formatNaira } from '../../narrative/stats.js'
 import TaskPanel from '../../../components/hud/TaskPanel.jsx'
+import PowerupOffer from '../../../components/hud/PowerupOffer.jsx'
 
 // The fee run, played in the 3D street. Vehicles pull in at the stop; walk up
 // to one and COLLECT. Drivers pay, haggle or refuse depending on your fee.
@@ -52,6 +53,7 @@ function Intro({ store, onStart }) {
       <p>
         <strong>Block am:</strong> stand in front of a vehicle wey wan run (even one wey refuse to pay) and e no fit move. Refusers go pay; others go wait make you collect.
       </p>
+      <PowerupOffer mode="feeCollection" />
       <button className="btn btn-primary" onClick={onStart}>
         Oya, start
       </button>

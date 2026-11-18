@@ -10,6 +10,7 @@
 //   timeLimit   seconds (default 45)
 
 import { create } from 'zustand'
+import { has } from '../../systems/powerups.js'
 
 export const useChase = create((set, get) => ({
   active: false,
@@ -30,7 +31,11 @@ export const useChase = create((set, get) => ({
     const max = Math.round(40 + energy * 0.6)
     set({ active: true, started: false, params, stamina: max, maxStamina: max, staminaUsed: 0, distance: null, canGrab: false, timeLeft: params.timeLimit ?? 45, ended: null, reason: '', bumps: 0 })
   },
-  begin: () => set({ started: true }),
+  begin: () => {
+    // power-ups: more stamina (Second Wind); faster legs are in ChaseDirector (Light Feet)
+    if (has('secondWind')) set((s) => ({ stamina: Math.round(s.maxStamina * 1.6), maxStamina: Math.round(s.maxStamina * 1.6) }))
+    set({ started: true })
+  },
   reset: () => set({ active: false, started: false, ended: null }),
   end: (outcome, reason) => !get().ended && set({ ended: outcome, reason, canGrab: false }),
   grab: () => get().canGrab && get().end('won', 'grabbed'),

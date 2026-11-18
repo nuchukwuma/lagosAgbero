@@ -4,6 +4,7 @@ import { useDevice } from '../../../components/hud/useDevice.js'
 import Icon from '../../../components/Icon.jsx'
 import { CHASERS } from './RunnerScene.jsx'
 import TaskPanel from '../../../components/hud/TaskPanel.jsx'
+import PowerupOffer from '../../../components/hud/PowerupOffer.jsx'
 
 // Escape run overlay: distance, stumbles, pursuers; swipe (or arrow keys /
 // WASD / Space) to change lane, jump and slide.
@@ -57,6 +58,7 @@ export default function RunnerMode({ params, onFinish }) {
           </p>
         )}
         <p className="muted">{touch ? 'Swipe, or tap the arrows: left/right change lane, up jumps cartons, down slides under banners. Danfos and Task Force men coming at you: get out of their lane!' : '←/→ or A/D change lane · ↑/W/Space jump · ↓/S slide · dodge the danfos and officers coming at you'}</p>
+        <PowerupOffer mode="runner" />
         <button className="btn btn-primary" onClick={runner.begin}>
           Go!
         </button>
