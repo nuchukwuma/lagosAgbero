@@ -48,7 +48,7 @@ export default function RunnerMode({ params, onFinish }) {
         ) : (
           <p>{(CHASERS[params.chaser] || CHASERS.taskForce).text} Reach {params.goal ?? 320} m to escape. Grab naira notes on the way.</p>
         )}
-        <p className="muted">{touch ? 'Swipe, or tap the arrows: left/right change lane, up jumps cartons, down slides under banners.' : '←/→ or A/D change lane · ↑/W/Space jump · ↓/S slide'}</p>
+        <p className="muted">{touch ? 'Swipe, or tap the arrows: left/right change lane, up jumps cartons, down slides under banners. Danfos coming at you: get out of their lane!' : '←/→ or A/D change lane · ↑/W/Space jump · ↓/S slide · dodge the danfos coming at you'}</p>
         <button className="btn btn-primary" onClick={runner.begin}>
           Go!
         </button>
@@ -74,7 +74,7 @@ export default function RunnerMode({ params, onFinish }) {
       </div>
     )
 
-  const { distance, goal, hits, maxHits, notes, pursuer, endless } = runner.hud
+  const { distance, goal, hits, maxHits, notes, pursuer, endless, close } = runner.hud
   return (
     <>
       <div
@@ -103,9 +103,10 @@ export default function RunnerMode({ params, onFinish }) {
         )}
         <div className="fee-row">
           <span>Stumbles {hits}/{maxHits} · ₦ notes {notes}</span>
-          <span className={pursuer < 6 ? 'warn' : 'muted'}>They're {Math.max(0, Math.round(pursuer))} m behind</span>
+          <span className={close || pursuer < 6 ? 'warn' : 'muted'}>{close ? 'On your back!' : `They're ${Math.max(0, Math.round(pursuer))} m behind`}</span>
         </div>
       </div>
+      {close && <div className="runner-alarm">{(CHASERS[params.chaser] || CHASERS.taskForce).back || 'DEM DEY YOUR BACK!'}</div>}
       {touch ? (
         <div className="runner-pad">
           <button className="fight-btn" aria-label="Lane left" onPointerDown={() => (runnerInput.left = true)}>

@@ -19,12 +19,12 @@ const LANE_W = 2.6
 
 // Who is behind you (params.chaser)
 export const CHASERS = {
-  taskForce: { look: 'bassey', vehicle: 'taskForceVan', text: 'Task Force dey behind you!' },
-  hyenas: { look: { shirt: '#8e44ad', trousers: '#ffffff' }, vehicle: 'bigManSuv', text: 'The Hyenas dey behind you.' },
-  fellowship: { look: { body: 'male_longsleeve', shirt: '#fbfbfb', trousers: '#fbfbfb' }, seed: 151, vehicle: 'bigManSuv', text: 'Men in white are running after you. They are not shouting. That is worse.' },
-  dons: { look: { shirt: '#c0392b', trousers: '#1a1a1a', accessories: [{ type: 'bandana', color: '#c0392b' }] }, seed: 171, vehicle: null, text: 'Crimson Dons behind you. Run!' },
-  villagers: { look: { shirt: '#7b241c' }, seed: 191, vehicle: null, text: 'Half the village is chasing you. With brooms.' },
-  mob: { look: { shirt: '#5d4037' }, seed: 211, vehicle: null, text: 'An angry crowd dey behind you!' },
+  taskForce: { look: 'bassey', vehicle: 'taskForceVan', text: 'Task Force dey behind you!', back: 'TASK FORCE DEY YOUR BACK!' },
+  hyenas: { look: { shirt: '#8e44ad', trousers: '#ffffff' }, vehicle: 'bigManSuv', text: 'The Hyenas dey behind you.', back: 'HYENAS DEY YOUR BACK!' },
+  fellowship: { look: { body: 'male_longsleeve', shirt: '#fbfbfb', trousers: '#fbfbfb' }, seed: 151, vehicle: 'bigManSuv', text: 'Men in white are running after you. They are not shouting. That is worse.', back: 'THE MEN IN WHITE ARE RIGHT BEHIND YOU' },
+  dons: { look: { shirt: '#c0392b', trousers: '#1a1a1a', accessories: [{ type: 'bandana', color: '#c0392b' }] }, seed: 171, vehicle: null, text: 'Crimson Dons behind you. Run!', back: 'DONS DEY YOUR BACK!' },
+  villagers: { look: { shirt: '#7b241c' }, seed: 191, vehicle: null, text: 'Half the village is chasing you. With brooms.', back: 'THE BROOMS DEY YOUR BACK!' },
+  mob: { look: { shirt: '#5d4037' }, seed: 211, vehicle: null, text: 'An angry crowd dey behind you!', back: 'THE CROWD DEY YOUR BACK!' },
 }
 const Y = 0.02
 const BUILDINGS = ['shopHouseA', 'tenementA', 'tenementB', 'storeyHouseA', 'shopRow', 'warehouseA', 'bungalowWide', 'storeyHouseC']
@@ -120,6 +120,29 @@ function Notes({ run, from, to }) {
   ))
 }
 
+// Oncoming danfos and taxis: each drives down its lane towards you once it
+// sets off (runnerLogic), and is hidden until then.
+function Cars({ run, from, to }) {
+  const refs = useRef([])
+  const cars = useMemo(() => run.items.filter((it) => it.kind === 'car' && it.meet >= from && it.meet < to), [run, from, to])
+  useFrame(() => {
+    cars.forEach((c, i) => {
+      const m = refs.current[i]
+      if (!m) return
+      m.visible = c.active && c.d > run.distance - 12
+      if (!m.visible) return
+      const off = (c.off || 0) * (c.swerve || 0)
+      m.position.set(c.lane * LANE_W + off, Y, -c.d)
+      m.rotation.y = -off * 0.12 // nose turned towards the kerb
+    })
+  })
+  return cars.map((c, i) => (
+    <group key={i} ref={(el) => (refs.current[i] = el)} visible={false}>
+      <Model name={c.model} />
+    </group>
+  ))
+}
+
 export default function RunnerScene({ playerLook }) {
   const params = useRunner((s) => s.params)
   const started = useRunner((s) => s.started)
@@ -132,6 +155,7 @@ export default function RunnerScene({ playerLook }) {
   const hudTimer = useRef(0)
   const ended = useRef(false)
   const chaser = CHASERS[params.chaser] || CHASERS.taskForce
+  const shown = useRef(run.pursuer) // how far behind the chasers are drawn
   const chaserLook = useMemo(() => (chaser.look === 'bassey' ? characters.bassey.look : { ...randomLook(chaser.seed || 131, 'male'), ...chaser.look }), [chaser])
 
   useFrame((_, raw) => {
@@ -139,12 +163,18 @@ export default function RunnerScene({ playerLook }) {
     if (started && !run.over) {
       if (runnerInput.slide) sfx('slide')
       stepRun(run, { ...runnerInput }, dt)
-      for (const ev of run.events) sfx(ev.type === 'note' ? 'coin' : ev.type === 'jump' ? 'jump' : 'bump')
+      for (const ev of run.events) {
+        if (ev.type === 'horn') sfx('horn')
+        else if (ev.type === 'hit') {
+          sfx(ev.kind === 'car' ? 'crash' : 'bump')
+          sfx('whistle') // and they're on you
+        } else sfx(ev.type === 'note' ? 'coin' : 'jump')
+      }
       runnerInput.left = runnerInput.right = runnerInput.jump = runnerInput.slide = false
       hudTimer.current -= dt
       if (hudTimer.current <= 0 || run.events.length) {
         hudTimer.current = 0.15
-        useRunner.setState({ hud: { distance: run.distance, goal: run.goal, hits: run.hits, maxHits: run.maxHits, notes: run.notes, pursuer: run.pursuer, endless: run.endless } })
+        useRunner.setState({ hud: { distance: run.distance, goal: run.goal, hits: run.hits, maxHits: run.maxHits, notes: run.notes, pursuer: run.pursuer, endless: run.endless, close: run.closeT > 0 } })
       }
       if (run.builtTo !== builtTo) setBuiltTo(run.builtTo)
       for (const ev of run.events) if (ev.type === 'hit') shake(0.35, 0.3)
@@ -160,7 +190,12 @@ export default function RunnerScene({ playerLook }) {
       player.current.position.set(x, Y + jumpY, z)
       player.current.rotation.y = Math.PI // facing -Z
     }
-    if (chasers.current) chasers.current.position.set(0, Y, z + run.pursuer + 2)
+    // The chasers are drawn where they are: normally too far back to see. Right
+    // after a stumble they rush up to your back (in view, under the camera)
+    // and stay there a few seconds, then drop back as you get away.
+    const target = run.over === 'caught' ? 0.4 : run.closeT > 0 ? Math.min(run.pursuer, 1.1) : run.pursuer
+    shown.current += (target - shown.current) * (1 - Math.exp(-dt * (target < shown.current ? 7 : 1.1)))
+    if (chasers.current) chasers.current.position.set(run.laneX * LANE_W * 0.6, Y, z + shown.current)
     playerState.runnerView = { x, z }
     const next = run.over === 'caught' ? 'stunned' : run.stumbleT > 0 ? 'bumped' : run.slideT > 0 ? 'slide' : run.jumpT > 0 ? 'roll' : 'run'
     if (next !== anim) setAnim(next)
@@ -172,19 +207,21 @@ export default function RunnerScene({ playerLook }) {
         <>
           <Course key={builtTo} run={run} from={Math.max(-24, builtTo - 480)} to={builtTo + 40} />
           <Notes key={`n${builtTo}`} run={run} from={Math.max(0, builtTo - 480)} to={builtTo + 40} />
+          <Cars key={`c${builtTo}`} run={run} from={Math.max(0, builtTo - 480)} to={builtTo + 40} />
         </>
       ) : (
         <>
           <Course run={run} from={-24} to={run.goal + 60} />
           <Notes run={run} from={0} to={run.goal + 60} />
+          <Cars run={run} from={0} to={run.goal + 60} />
         </>
       )}
       <Suspense fallback={null}>
         <Character ref={player} look={playerLook} animation={anim} speed={anim === 'run' ? 1.2 : anim === 'roll' ? 1.6 : 1.4} />
         <group ref={chasers}>
           {chaser.vehicle && <Model name={chaser.vehicle} position={[2.6, 0, 5]} rotation-y={Math.PI} />}
-          <Character look={chaserLook} animation="run" speed={1.2} position={[-1.2, 0, 0]} rotation-y={Math.PI} />
-          <Character look={{ ...chaserLook, skin: '#4e2f1d' }} animation="run" speed={1.15} position={[1.0, 0, 1.4]} rotation-y={Math.PI} />
+          <Character look={chaserLook} animation="run" speed={1.2} position={[-1.3, 0, 0]} rotation-y={Math.PI} />
+          <Character look={{ ...chaserLook, skin: '#4e2f1d' }} animation="run" speed={1.15} position={[1.3, 0, 0.5]} rotation-y={Math.PI} />
         </group>
       </Suspense>
     </group>

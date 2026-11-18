@@ -4,6 +4,7 @@ import { useGameStore } from '../../store/gameStore.js'
 import characters from '../../data/characters.json'
 import Icon from '../../../components/Icon.jsx'
 import { sfx } from '../../audio/audio.js'
+import { isPaused } from '../../store/pauseStore.js'
 
 // Bluff: answer questions without breaking your story. Story params:
 //   scenario  id in bluffs.json ("orientation", "dinner", "vetting"...)
@@ -30,7 +31,7 @@ export default function BluffMode({ params, onFinish }) {
 
   useEffect(() => {
     if (!started || b.over) return undefined
-    const id = setInterval(() => setLeft((t) => t - 1), 1000)
+    const id = setInterval(() => setLeft((t) => (isPaused() ? t : t - 1)), 1000) // holds while the game is paused
     return () => clearInterval(id)
   }, [started, b.over])
   useEffect(() => {

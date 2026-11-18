@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import Portrait from './Portrait.jsx'
+import { isPaused } from '../../game/store/pauseStore.js'
 import Icon from '../Icon.jsx'
 import { useReadAloud } from './useReadAloud.js'
 import { formatNaira } from '../../game/narrative/stats.js'
@@ -37,9 +38,14 @@ export default function ChoiceMenu({ view, onChoose }) {
 
   useEffect(() => {
     if (!timeout) return
-    const started = performance.now()
+    // count only the time the game isn't paused
+    let used = 0
+    let last = performance.now()
     const id = setInterval(() => {
-      const remaining = Math.max(0, timeout - (performance.now() - started) / 1000)
+      const now = performance.now()
+      if (!isPaused()) used += (now - last) / 1000
+      last = now
+      const remaining = Math.max(0, timeout - used)
       setLeft(remaining)
       if (remaining <= 0) {
         clearInterval(id)

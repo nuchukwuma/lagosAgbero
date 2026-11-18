@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { sfx } from '../../audio/audio.js';
+import { isPaused } from '../../store/pauseStore.js';
 import {
   createInitiation,
   answer,
@@ -55,7 +56,7 @@ export default function InitiationMode({ params, onFinish }) {
 
   useEffect(() => {
     if (!started || s.over) return undefined;
-    const id = setInterval(() => setLeft((t) => t - 1), 1000);
+    const id = setInterval(() => setLeft((t) => (isPaused() ? t : t - 1)), 1000); // holds while the game is paused
     return () => clearInterval(id);
   }, [started, s.over]);
   useEffect(() => {

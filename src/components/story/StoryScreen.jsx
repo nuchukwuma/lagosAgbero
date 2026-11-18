@@ -14,6 +14,7 @@ import { worldJson, getLayout } from '../../game/world/worlds.js'
 import { MiniMap, MapScreen, useMapStore } from '../hud/WorldMap.jsx'
 import Confrontation from '../hud/Confrontation.jsx'
 import DialogueBox from './DialogueBox.jsx'
+import { usePause } from '../../game/store/pauseStore.js'
 import ChoiceMenu from './ChoiceMenu.jsx'
 import NewsBroadcast from './NewsBroadcast.jsx'
 import CutsceneCards from './CutsceneCards.jsx'
@@ -51,6 +52,12 @@ export default function StoryScreen() {
     applyOrientation(orientation)
   }, [orientation])
   const turnTo = useTurnHint()
+  // a panel over the game, or the phone needs turning: everything holds still
+  const paused = Boolean(overlay || turnTo)
+  useEffect(() => {
+    usePause.setState({ paused })
+    return () => usePause.setState({ paused: false })
+  }, [paused])
   const feeRunOn = useFeeRun((s) => s.active && s.started && !s.ended)
   const chaseOn = useChase((s) => s.active && s.started && !s.ended)
   const streetMode = feeRunOn || chaseOn
@@ -138,7 +145,7 @@ export default function StoryScreen() {
 
   return (
     <div className="story-screen">
-      <CanvasGuard onBack={quitToTitle}>{(safeGl) => <GameCanvas view={view} game={game} activity={activity} paused={Boolean(overlay || turnTo)} onGoalReached={advance} safeGl={safeGl} />}</CanvasGuard>
+      <CanvasGuard onBack={quitToTitle}>{(safeGl) => <GameCanvas view={view} game={game} activity={activity} paused={paused} onGoalReached={advance} safeGl={safeGl} />}</CanvasGuard>
       {raining && <div className="rain" aria-hidden="true" />}
       <div id="speech-layer" className="speech-layer" aria-live="polite" />
       <HUD game={game} onStatus={() => setOverlay('status')} onMenu={() => setOverlay('menu')} onMap={view.world ? () => setOverlay('worldMap') : null} />

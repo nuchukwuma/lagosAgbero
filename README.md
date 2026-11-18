@@ -25,8 +25,12 @@ paths you didn't take. The title screen has an **Endings** page: the endings
 you've reached, and a hint for each one you haven't.
 
 Between story beats there's the street: fee runs, chases, fist fights (land
-hits close together for a combo), escape runs, danfo driving, side quests,
-and small finds lying around for anyone who wanders.
+hits close together for a combo; every blow lands with a burst, a comic word
+like "GBAM!" and a squash), escape runs (dodge cartons, banners and danfos
+driving straight at you; stumble and the Task Force is right at your back),
+danfo driving, side quests, and small finds lying around for anyone who
+wanders. Pausing (the menu, map or status) stops everything: activity
+timers, the runner, fights and timed choices wait for you.
 
 ## Play on a phone or a computer
 

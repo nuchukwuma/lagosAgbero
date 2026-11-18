@@ -1,5 +1,5 @@
 import { Suspense, useEffect, useMemo, useRef, useState } from 'react'
-import { Canvas } from '@react-three/fiber'
+import { Canvas, useThree } from '@react-three/fiber'
 import * as THREE from 'three'
 import { PerformanceMonitor } from '@react-three/drei'
 import Lighting from './Lighting.jsx'
@@ -78,6 +78,15 @@ function useSceneTeleport(view, layout) {
 // fallback pose into breathing/walking a second later.
 const COMMON_CLIPS = ['breathingIdle', 'walk', 'run', 'talk', 'argue', 'pickUp']
 
+/** While paused, redraw the still picture if the screen changes size (turning the phone clears it). */
+function FrozenFrame() {
+  const { gl, scene, camera, size } = useThree()
+  useEffect(() => {
+    gl.render(scene, camera)
+  }, [gl, scene, camera, size])
+  return null
+}
+
 export default function GameCanvas({ view, game, activity = null, paused = false, onGoalReached, safeGl = false }) {
   const layout = getLayout(view.world) // Iyana-Wahala, the village, the campus...
   useSceneTeleport(view, layout)
@@ -128,7 +137,8 @@ export default function GameCanvas({ view, game, activity = null, paused = false
       key={safeGl ? 'safe' : profile.antialias ? 'aa' : 'no-aa'} // these can only be chosen when the canvas is created
       className="game-canvas"
       dpr={safeGl ? 1 : dpr}
-      frameloop={capped ? 'never' : 'always'}
+      // paused (a panel is open): the world stops, and with it every activity's clock
+      frameloop={capped || paused ? 'never' : 'always'}
       // safeGl: the plainest settings, for machines where the normal ones fail (see CanvasGuard)
       gl={safeGl ? { antialias: false, powerPreference: 'default', stencil: false } : { antialias: profile.antialias, powerPreference: 'high-performance', stencil: true }}
       camera={{ fov: 50, near: 0.3, far: profile.far, position: [0, 8, 12] }}
@@ -141,7 +151,8 @@ export default function GameCanvas({ view, game, activity = null, paused = false
       <ShaderWarmup />
       <PortraitStudio />
       <ReactionDirector enabled={freeRoam && !paused} />
-      {capped && <FrameCap fps={30} />}
+      {capped && !paused && <FrameCap fps={30} />}
+      {paused && <FrozenFrame />}
       {settled && profile.dpr.min !== profile.dpr.max && <PerformanceMonitor onDecline={() => setDpr(range.min)} onIncline={() => setDpr(range.max)} flipflops={3} bounds={capped ? () => [22, 29] : undefined} onFallback={() => setDpr(range.min)} />}
       <Lighting time={view.time} raining={Boolean(game.flags.raining)} />
       <Sky />

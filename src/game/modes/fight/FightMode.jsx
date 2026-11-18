@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useFight, fightInput } from './fightStore.js'
 import { useDevice } from '../../../components/hud/useDevice.js'
 import Icon from '../../../components/Icon.jsx'
+import { ImpactWords } from './FightFX.jsx'
 
 // Fight overlay: health bars, special meter, buttons (touch) or keys.
 // Keys: A/D or ←/→ move · J punch · K kick · L block (hold) · Space dodge · U special
@@ -123,6 +124,7 @@ export default function FightMode({ params, onFinish }) {
   const { php, pmax, ohp, omax, special, name, combo = 0 } = fight.hud
   return (
     <>
+      <ImpactWords />
       <div className="fight-hud">
         <Bar value={php} max={pmax} color="#8ff0a4" label="You" />
         <div className="fight-vs">VS</div>

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { createRun, stepRun, makeCourse, LANES } from './runnerLogic.js'
+import { createRun, stepRun, makeCourse, makeTraffic, LANES, CLOSE_TIME } from './runnerLogic.js'
 
 describe('runner', () => {
   it('every row of obstacles leaves a lane free', () => {
@@ -81,5 +81,36 @@ describe('runner', () => {
     expect(r.items.some((it) => it.d > r.distance)).toBe(true) // road ahead
     expect(r.items.every((it) => it.d > r.distance - 400)).toBe(true) // old rows dropped
     expect(r.speed).toBeGreaterThan(18)
+  })
+
+  it('oncoming cars come in the gaps between obstacles and leave a lane free', () => {
+    const course = makeCourse(2000, 11, 1.4)
+    const cars = makeTraffic(course, 11, 1.4)
+    expect(cars.length).toBeGreaterThan(5)
+    const meets = new Map()
+    for (const c of cars) meets.set(c.meet, (meets.get(c.meet) || 0) + 1)
+    for (const [meet, n] of meets) {
+      expect(n).toBeLessThan(LANES.length)
+      expect(course.some((it) => it.kind !== 'note' && Math.abs(it.d - meet) < 5)).toBe(false)
+    }
+  })
+
+  it('a car in your lane knocks you down and brings them to your back; a side-step saves you', () => {
+    const run = (dodge) => {
+      const r = createRun({ goal: 400, seed: 3 })
+      r.items = [{ d: 60, meet: 60, lane: 0, kind: 'car', model: 'danfo', v: 9, active: false }]
+      let honked = false
+      for (let i = 0; i < 60 * 8 && r.distance < 80; i++) {
+        stepRun(r, dodge && r.items[0].active && r.items[0].d - r.distance < 14 && r.lane === 0 ? { left: true } : {}, 1 / 60)
+        honked ||= r.events.some((e) => e.type === 'horn')
+        if (r.hits) break
+      }
+      return { r, honked }
+    }
+    const hitRun = run(false)
+    expect(hitRun.honked).toBe(true)
+    expect(hitRun.r.hits).toBe(1)
+    expect(hitRun.r.closeT).toBeGreaterThan(CLOSE_TIME - 0.1)
+    expect(run(true).r.hits).toBe(0)
   })
 })
