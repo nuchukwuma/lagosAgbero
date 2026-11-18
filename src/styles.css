@@ -43,6 +43,42 @@ body,
   isolation: isolate;
   background: var(--bg);
 }
+/* music on/off, top corner of the title screen */
+.title-music {
+  position: fixed;
+  top: max(14px, env(safe-area-inset-top));
+  right: max(14px, env(safe-area-inset-right));
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  min-width: 44px;
+  justify-content: center;
+  padding: 0 14px;
+  border-radius: 22px;
+  border: 1px solid rgba(242, 195, 0, 0.55);
+  background: rgba(26, 20, 8, 0.75);
+  color: var(--danfo);
+  font: inherit;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+}
+.title-music.on {
+  padding: 0;
+}
+.title-music.waiting {
+  animation: music-invite 1.6s ease-in-out infinite;
+}
+@keyframes music-invite {
+  50% {
+    box-shadow: 0 0 0 6px rgba(242, 195, 0, 0.18);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .title-music.waiting { animation: none; }
+}
 /* Lagos at dusk, rendered from the game's own street, drifting slowly */
 .title-screen::before {
   content: '';

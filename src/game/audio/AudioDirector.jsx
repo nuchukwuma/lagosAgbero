@@ -24,9 +24,10 @@ function voicePitch(speaker) {
 export default function AudioDirector() {
   // browsers need a tap or a key before any sound
   useEffect(() => {
+    // (phones only count the end of a touch as a tap, so listen for that too)
     const go = () => unlock()
-    window.addEventListener('pointerdown', go, { passive: true })
-    window.addEventListener('keydown', go)
+    const UNLOCK = ['pointerdown', 'pointerup', 'touchend', 'click', 'keydown']
+    for (const e of UNLOCK) window.addEventListener(e, go, { passive: true })
     const click = (e) => {
       if (e.target.closest?.('button, .choice-btn, select')) sfx('click')
     }
@@ -34,8 +35,7 @@ export default function AudioDirector() {
     const hide = () => suspend(document.visibilityState === 'hidden')
     document.addEventListener('visibilitychange', hide)
     return () => {
-      window.removeEventListener('pointerdown', go)
-      window.removeEventListener('keydown', go)
+      for (const e of UNLOCK) window.removeEventListener(e, go)
       document.removeEventListener('pointerdown', click, { capture: true })
       document.removeEventListener('visibilitychange', hide)
     }

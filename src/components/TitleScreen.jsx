@@ -3,6 +3,35 @@ import { storyCtx } from '../game/narrative/storyData.js'
 import { useGameStore } from '../game/store/gameStore.js'
 import { webglSupport } from '../game/world/webgl.js'
 import WebGLHelp from './help/WebGLHelp.jsx'
+import { useEffect, useState } from 'react'
+import Icon from './Icon.jsx'
+import { useSettings } from '../game/store/settings.js'
+import { unlock, audioRunning, onAudioRunning } from '../game/audio/audio.js'
+
+// Music on the title screen. Browsers stay silent until the first tap, so
+// until then this invites one; afterwards it switches the music on and off.
+function MusicButton() {
+  const music = useSettings((s) => s.music !== false)
+  const update = useSettings((s) => s.update)
+  const [running, setRunning] = useState(audioRunning())
+  useEffect(() => onAudioRunning(setRunning), [])
+  const playing = running && music
+  return (
+    <button
+      className={`title-music ${playing ? 'on' : 'waiting'}`}
+      aria-label={playing ? 'Music off' : 'Play music'}
+      aria-pressed={playing}
+      onClick={() => {
+        unlock()
+        if (!running) update({ music: true })
+        else update({ music: !music })
+      }}
+    >
+      <Icon name={playing ? 'music' : 'mute'} size={20} />
+      {!playing && <span>{running ? 'Music off' : 'Tap for music'}</span>}
+    </button>
+  )
+}
 
 // Developer shortcut: jump into any chapter with a test player.
 function DevChapterPicker() {
@@ -25,6 +54,7 @@ export default function TitleScreen({ onNavigate, onContinue }) {
   const found = endingsFound().filter((id) => storyCtx.endings[id]).length
   return (
     <div className="screen title-screen">
+      <MusicButton />
       <div className="title-block">
         <h1>NAIJAVICE</h1>
         <p className="tagline">Three stories. Every choice counts. Naija go remember.</p>

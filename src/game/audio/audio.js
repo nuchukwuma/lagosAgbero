@@ -24,6 +24,16 @@ export function audioReady() {
   return Boolean(ctx)
 }
 
+/** Is sound actually coming out? (Browsers keep it off until the first tap.) */
+export const audioRunning = () => Boolean(ctx && ctx.state === 'running')
+const runningListeners = new Set()
+/** Called with true/false when sound starts or stops; returns an unsubscribe. */
+export function onAudioRunning(fn) {
+  runningListeners.add(fn)
+  return () => runningListeners.delete(fn)
+}
+const announce = () => runningListeners.forEach((fn) => fn(audioRunning()))
+
 export function unlock() {
   if (ctx) {
     if (ctx.state === 'suspended') ctx.resume().catch(() => {})
@@ -36,6 +46,8 @@ export function unlock() {
   } catch {
     return
   }
+  ctx.onstatechange = announce
+  if (ctx.state === 'suspended') ctx.resume().catch(() => {})
   master = ctx.createGain()
   master.gain.value = 0.9
   // a gentle limiter so stacked effects never clip on phone speakers
@@ -59,7 +71,8 @@ export function unlock() {
   setMusic(state.wantMood)
 }
 
-const musicLevel = () => (state.music ? (state.duck ? 0.1 : 0.32) : 0)
+// the title theme plays alone, so it can be louder than music under the street
+const musicLevel = () => (state.music ? (state.duck ? 0.1 : state.mood === 'menu' ? 0.6 : 0.32) : 0)
 
 /** Quieten the music while a character is speaking (voices.js). */
 export function duckMusic(on) {
@@ -403,18 +416,28 @@ const MOODS = {
     scale: [0, 2, 4, 7, 9, 12, 14],
     leadWave: 'triangle',
   },
+  // the NaijaVice theme (title screen): a sunny highlife tune. A written
+  // melody every other four bars; in between, the "guitar" plays around it
   menu: {
-    bpm: 96,
-    kick: 'x.....x.........',
-    rim: '',
-    shaker: '..x...x...x...x.',
+    bpm: 100,
+    kick: 'x.....x...x.....',
+    rim: '....x.......x...',
+    shaker: 'x.xx..x.x.xx..x.',
     bell: 'x..x..x...x.x...',
-    chords: [57, 62, 57, 64],
-    bass: 'x.....x...x.....',
-    bassNotes: [0, 7, 0],
-    lead: 'x.x..x....x.x...',
+    chords: [57, 62, 57, 64], // A D A E
+    bass: 'x..x..x...x..x..',
+    bassNotes: [0, 7, 12, 7],
+    lead: 'x..x.x..x..x.x..',
     scale: [0, 4, 7, 9, 12, 16],
-    leadWave: 'sine',
+    leadWave: 'triangle',
+    pad: true,
+    // MIDI notes, one per sixteenth (0 = rest), four bars
+    melody: [
+      76, 0, 73, 0, 76, 0, 78, 76, 0, 0, 73, 0, 71, 0, 69, 0, // A:  "Nai-ja vi-i-ce..."
+      78, 0, 0, 81, 0, 78, 0, 76, 0, 74, 0, 0, 78, 0, 76, 0, // D
+      76, 0, 73, 0, 76, 0, 81, 0, 78, 76, 0, 73, 0, 0, 69, 0, // A
+      71, 0, 73, 0, 76, 0, 0, 68, 0, 71, 0, 0, 69, 0, 0, 0, // E -> home
+    ],
   },
 }
 
@@ -441,7 +464,15 @@ function schedule(m, step, when) {
     const n = m.bassNotes[Math.floor(rnd() * m.bassNotes.length)]
     tone({ type: 'triangle', f: NOTE(root - 24 + n), t, a: 0.005, d: 0.2, v: 0.5, bus: musicBus })
   }
-  if (m.lead[s] === 'x') {
+  const tune = m.melody && Math.floor(step / m.melody.length) % 2 === 0
+  if (tune) {
+    const n = m.melody[step % m.melody.length]
+    if (n) {
+      tone({ type: m.leadWave, f: NOTE(n), t, a: 0.006, d: 0.32, v: 0.22, bus: musicBus })
+      tone({ type: 'sine', f: NOTE(n + 12), t: t + 0.01, a: 0.004, d: 0.16, v: 0.05, bus: musicBus })
+      tone({ type: m.leadWave, f: NOTE(n), t: t + 0.18, a: 0.006, d: 0.2, v: 0.06, bus: musicBus }) // a little echo
+    }
+  } else if (m.lead[s] === 'x') {
     // wander up and down the scale: sounds like a guitar line, never the same twice
     seq.leadIdx = Math.max(0, Math.min(m.scale.length - 1, seq.leadIdx + Math.floor(rnd() * 5) - 2))
     const n = root + m.scale[seq.leadIdx]
@@ -450,6 +481,8 @@ function schedule(m, step, when) {
   }
   // a soft chord on the first beat of each bar
   if (s === 0) for (const k of [0, 4, 7]) tone({ type: 'sine', f: NOTE(root + (k === 4 && m.leadWave === 'square' ? 3 : k)), t, a: 0.03, d: 0.9, v: 0.08, bus: musicBus })
+  // a warm held chord under the theme, twice a bar
+  if (m.pad && (s === 0 || s === 8)) for (const k of [0, 4, 7, 12]) tone({ type: 'triangle', f: NOTE(root + k), t, a: 0.08, d: 1.1, v: 0.035, bus: musicBus })
 }
 
 function startSequencer() {
@@ -475,6 +508,7 @@ export function setMusic(mood) {
   state.mood = mood
   seq.step = 0
   seq.next = 0
+  musicBus.gain.setTargetAtTime(musicLevel(), ctx.currentTime, 0.3)
 }
 
 export const MUSIC_MOODS = Object.keys(MOODS)
