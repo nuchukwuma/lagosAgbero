@@ -5,6 +5,7 @@
 //   high   (hanging banner)   slide
 //   note                      ₦ to collect
 //   car  (danfo, taxi)        drives AT you down its lane: change lane
+//   officer (Task Force)       runs AT you down its lane to grab you: change lane
 // Every hit makes you stumble and lets the pursuers close in; 3 hits = caught.
 // Right after a hit they're at your back for a few seconds (closeT), where
 // you can see them.
@@ -28,6 +29,9 @@ export const CLOSE_TIME = 3.5 // seconds the pursuers stay at your back after a 
 const CAR_LEAD = 42
 const CAR_MODELS = ['danfo', 'taxi', 'danfo']
 export const CAR_HALF = { danfo: 2.9, taxi: 2.3 } // half their length, metres
+const OFFICER_LEAD = 34
+const OFFICER_REACH = 0.55 // metres: how close an officer must get to grab you
+const MOVERS = new Set(['car', 'officer']) // things that come at you
 
 const KINDS = ['block', 'low', 'high']
 
@@ -58,7 +62,7 @@ export function makeCourse(goal, seed = 1, density = 1, from = 30) {
 export function makeTraffic(items, seed, density = 1, from = 70) {
   let s = (seed * 7 + 1013) % 233280
   const rnd = () => ((s = (s * 9301 + 49297) % 233280) / 233280)
-  const rows = [...new Set(items.filter((it) => it.kind !== 'note' && it.kind !== 'car').map((it) => it.d))].sort((a, b) => a - b)
+  const rows = [...new Set(items.filter((it) => it.kind !== 'note' && !MOVERS.has(it.kind)).map((it) => it.d))].sort((a, b) => a - b)
   const cars = []
   const chance = Math.min(0.4, 0.14 + 0.1 * density)
   for (let i = 0; i + 1 < rows.length; i++) {
@@ -67,9 +71,11 @@ export function makeTraffic(items, seed, density = 1, from = 70) {
     if (a < from || b - a < 11 || rnd() > chance) continue
     const meet = (a + b) / 2
     const lanes = [...LANES].sort(() => rnd() - 0.5).slice(0, rnd() < 0.25 && meet > 200 ? 2 : 1) // one free lane at least
+    // further on, some gaps send Task Force officers running at you instead
+    const officers = meet > 110 && rnd() < 0.55
     for (const lane of lanes) {
-      const model = CAR_MODELS[Math.floor(rnd() * CAR_MODELS.length)]
-      cars.push({ d: meet, meet, lane, kind: 'car', model, v: 6 + rnd() * 5, active: false })
+      if (officers) cars.push({ d: meet, meet, lane, kind: 'officer', v: 3.2 + rnd() * 1.4, active: false })
+      else cars.push({ d: meet, meet, lane, kind: 'car', model: CAR_MODELS[Math.floor(rnd() * CAR_MODELS.length)], v: 6 + rnd() * 5, active: false })
     }
   }
   return cars
@@ -156,10 +162,12 @@ export function stepRun(r, input, dt) {
   // pursuers run at a steady pace; stumbling lets them close in
   r.pursuer = Math.max(0, r.pursuer + (speed - (r.speed * 0.92)) * dt)
 
-  // oncoming cars: set off in time, drive down their lane, knock you over if you're in it
+  // oncoming cars and officers: set off in time, come down their lane, knock
+  // you over (or grab you) if you're in it
   for (const it of r.items) {
-    if (it.kind !== 'car') continue
+    if (!MOVERS.has(it.kind)) continue
     if (it.done) {
+      if (it.grabbed) it.d -= Math.max(0, (it.v -= 12 * dt)) * dt // stumbles to a stop behind you
       // knocked you over: it brakes and swerves off to the roadside
       if (it.swerve) {
         it.d -= it.v * dt
@@ -169,22 +177,25 @@ export function stepRun(r, input, dt) {
       continue
     }
     if (!it.active) {
+      const officer = it.kind === 'officer'
       const gap = it.meet - r.distance
-      if (gap > CAR_LEAD) continue
+      if (gap > (officer ? OFFICER_LEAD : CAR_LEAD)) continue
       it.active = true
       it.d = it.meet + (Math.max(0, gap) / Math.max(1, r.speed)) * it.v
-      r.events.push({ type: 'horn', lane: it.lane })
+      r.events.push({ type: officer ? 'officer' : 'horn', lane: it.lane })
     }
     it.d -= it.v * dt
-    if (Math.abs(it.d - r.distance) < (CAR_HALF[it.model] || 2.5) + 0.3 && Math.round(r.laneX) === it.lane && r.y < 1.4) {
+    const reach = it.kind === 'officer' ? OFFICER_REACH : (CAR_HALF[it.model] || 2.5) + 0.3
+    if (Math.abs(it.d - r.distance) < reach && Math.round(r.laneX) === it.lane && r.y < 1.4) {
       it.done = true
-      it.swerve = it.lane !== 0 ? it.lane : r.distance % 2 > 1 ? 1 : -1 // towards the nearer side
-      hit(r, 'car')
+      if (it.kind === 'officer') it.grabbed = true
+      else it.swerve = it.lane !== 0 ? it.lane : r.distance % 2 > 1 ? 1 : -1 // towards the nearer side
+      hit(r, it.kind)
     }
   }
 
   for (const it of r.items) {
-    if (it.kind === 'car') continue
+    if (MOVERS.has(it.kind)) continue
     if (it.done || it.d < before - 0.5 || it.d > r.distance + 0.5) continue
     if (Math.round(r.laneX) !== it.lane) continue
     it.done = true

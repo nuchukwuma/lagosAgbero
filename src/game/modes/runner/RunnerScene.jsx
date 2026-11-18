@@ -143,11 +143,39 @@ function Cars({ run, from, to }) {
   ))
 }
 
+// Officers running at you: a pool of three runners, handed to whichever
+// officers are nearest (only a few are ever in view), so the run stays light.
+const OFFICER_POOL = 3
+function Officers({ run, look }) {
+  const refs = useRef([])
+  useFrame(() => {
+    const near = []
+    for (const it of run.items) if (it.kind === 'officer' && it.active && it.d > run.distance - 8 && it.d < run.distance + 70) near.push(it)
+    near.sort((a, b) => a.d - b.d)
+    for (let i = 0; i < OFFICER_POOL; i++) {
+      const g = refs.current[i]
+      if (!g) continue
+      const it = near[i]
+      g.visible = Boolean(it)
+      if (!it) continue
+      g.position.set(it.lane * LANE_W, Y, -it.d)
+      g.rotation.y = 0 // running towards you (+Z)
+      g.rotation.x = it.grabbed ? -0.5 : 0 // missed you and went sprawling
+    }
+  })
+  return Array.from({ length: OFFICER_POOL }, (_, i) => (
+    <group key={i} ref={(el) => (refs.current[i] = el)} visible={false}>
+      <Character look={look} animation="run" speed={1.25} />
+    </group>
+  ))
+}
+
 export default function RunnerScene({ playerLook }) {
   const params = useRunner((s) => s.params)
   const started = useRunner((s) => s.started)
   const energy = useGameStore((s) => s.game?.stats.energy ?? 70)
   const run = useMemo(() => createRun({ goal: params.goal ?? 320, seed: params.seed ?? Math.floor(Math.random() * 1000), difficulty: params.difficulty ?? 1, energy, endless: Boolean(params.endless) }), [params]) // eslint-disable-line react-hooks/exhaustive-deps
+  if (import.meta.env.DEV && typeof window !== 'undefined') window.__run = run // dev bots: read the run
   const [builtTo, setBuiltTo] = useState(run.builtTo) // endless runs: redraw the road when more is built
   const player = useRef()
   const chasers = useRef()
@@ -165,8 +193,9 @@ export default function RunnerScene({ playerLook }) {
       stepRun(run, { ...runnerInput }, dt)
       for (const ev of run.events) {
         if (ev.type === 'horn') sfx('horn')
+        else if (ev.type === 'officer') sfx('whistle')
         else if (ev.type === 'hit') {
-          sfx(ev.kind === 'car' ? 'crash' : 'bump')
+          sfx(ev.kind === 'car' ? 'crash' : ev.kind === 'officer' ? 'hurt' : 'bump')
           sfx('whistle') // and they're on you
         } else sfx(ev.type === 'note' ? 'coin' : 'jump')
       }
@@ -218,6 +247,7 @@ export default function RunnerScene({ playerLook }) {
       )}
       <Suspense fallback={null}>
         <Character ref={player} look={playerLook} animation={anim} speed={anim === 'run' ? 1.2 : anim === 'roll' ? 1.6 : 1.4} />
+        <Officers run={run} look={characters.bassey.look} />
         <group ref={chasers}>
           {chaser.vehicle && <Model name={chaser.vehicle} position={[2.6, 0, 5]} rotation-y={Math.PI} />}
           <Character look={chaserLook} animation="run" speed={1.2} position={[-1.3, 0, 0]} rotation-y={Math.PI} />

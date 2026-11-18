@@ -113,4 +113,24 @@ describe('runner', () => {
     expect(hitRun.r.closeT).toBeGreaterThan(CLOSE_TIME - 0.1)
     expect(run(true).r.hits).toBe(0)
   })
+
+  it('further along, Task Force officers run at you: one in your lane grabs you, a side-step saves you', () => {
+    const traffic = makeTraffic(makeCourse(3000, 4, 1.3), 4, 1.3)
+    expect(traffic.some((t) => t.kind === 'officer')).toBe(true)
+    expect(traffic.filter((t) => t.kind === 'officer').every((t) => t.meet > 110)).toBe(true)
+    const run = (dodge) => {
+      const r = createRun({ goal: 400, seed: 3 })
+      r.items = [{ d: 60, meet: 60, lane: 0, kind: 'officer', v: 4, active: false }]
+      let shouted = false
+      for (let i = 0; i < 60 * 8 && r.distance < 80 && !r.hits; i++) {
+        stepRun(r, dodge && r.items[0].active && r.items[0].d - r.distance < 8 && r.lane === 0 ? { right: true } : {}, 1 / 60)
+        shouted ||= r.events.some((e) => e.type === 'officer')
+      }
+      return { r, shouted }
+    }
+    const caught = run(false)
+    expect(caught.shouted).toBe(true)
+    expect(caught.r.hits).toBe(1)
+    expect(run(true).r.hits).toBe(0)
+  })
 })
