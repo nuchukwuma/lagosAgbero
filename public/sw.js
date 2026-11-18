@@ -1,6 +1,7 @@
 // NaijaVice service worker: lets the game open offline after one visit.
 // - page + code: network first, cached copy when offline
-// - models, textures, animation clips (/assets/...): cache first (they rarely change)
+// - models, textures, animation clips (.../assets/...): cache first (they rarely change)
+// Works at a site's root or under a sub-folder (GitHub Pages).
 const CACHE = 'naijavice-v3' // v3: Kenney Mini Characters (old bodies dropped from phones' storage)
 
 self.addEventListener('install', () => self.skipWaiting())
@@ -35,6 +36,6 @@ self.addEventListener('fetch', (e) => {
         if (res.ok) caches.open(CACHE).then((c) => c.put(req, res.clone()))
         return res
       })
-      .catch(() => caches.match(req).then((hit) => hit || caches.match('/'))),
+      .catch(() => caches.match(req).then((hit) => hit || caches.match(self.registration.scope))), // the game's start page, wherever it's hosted
   )
 })

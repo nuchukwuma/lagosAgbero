@@ -2,8 +2,18 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import pkg from './package.json' with { type: 'json' }
 
+// BASE_PATH: where the game is hosted. '/' (Vercel, local) unless set, e.g.
+// '/lagosAgbero/' for GitHub Pages (.github/workflows/pages.yml).
+// NOINDEX=1: ask search engines not to list the site (a private test copy).
+const base = process.env.BASE_PATH || '/'
+const noindex = {
+  name: 'noindex',
+  transformIndexHtml: (html) => (process.env.NOINDEX ? html.replace('</head>', '    <meta name="robots" content="noindex, nofollow" />\n  </head>') : html),
+}
+
 export default defineConfig({
-  plugins: [react()],
+  base,
+  plugins: [react(), noindex],
   define: {
     __APP_VERSION__: JSON.stringify(pkg.version),
   },

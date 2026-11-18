@@ -1,0 +1,54 @@
+# A private test copy of the game on GitHub Pages:
+#   https://<owner>.github.io/<repo>/
+# Built from the default branch on every push (or by hand: Actions tab ->
+# "Play on GitHub Pages" -> Run workflow). Anyone with the link can open it,
+# but it isn't listed anywhere and asks search engines not to index it.
+#
+# One-time setup: repository Settings -> Pages -> Build and deployment ->
+# Source: "GitHub Actions".
+name: Play on GitHub Pages
+
+on:
+  push:
+    branches: [claude/peaceful-meitner-h524kv]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+        env:
+          BASE_PATH: /${{ github.event.repository.name }}/
+          NOINDEX: '1'
+      # links to a page inside the game still open the game
+      - run: cp dist/index.html dist/404.html
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

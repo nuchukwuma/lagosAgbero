@@ -24,7 +24,8 @@ import assetIndex from './assetIndex.json'
 import clipIndex from './clipIndex.json'
 import peopleIndex from './peopleIndex.json'
 
-export const ASSET_ROOT = '/assets'
+// under the site's base path: '/' normally, '/lagosAgbero/' on GitHub Pages (vite.config.js)
+export const ASSET_ROOT = `${import.meta.env?.BASE_URL ?? '/'}assets`
 
 // Native unit -> metres. City kits are built on 1x1 road tiles; at x8 a road
 // tile is 8 m (two lanes + kerb), a 20 ft container is 6.6 m long, a compound

@@ -159,6 +159,21 @@ npm run assets:check
 Game code only ever uses names from `assetManifest.js` (`danfo`,
 `taskForceVan`, `richManHouse`...), never file paths.
 
+## Play it online without launching (GitHub Pages)
+
+A private test copy builds itself on every push to the default branch
+(`.github/workflows/pages.yml`) and appears at
+`https://nuchukwuma.github.io/lagosAgbero/`. It isn't linked from anywhere and
+asks search engines not to list it, so only people you send the link to will
+find it (anyone with the link can open it, though).
+
+One-time setup: on GitHub, open the repository's **Settings → Pages**, and
+under **Build and deployment → Source** choose **GitHub Actions**. Then push,
+or open the **Actions** tab, pick **Play on GitHub Pages** and press
+**Run workflow**. The link shows on the finished run (about two minutes).
+
+To build the same thing locally: `BASE_PATH=/lagosAgbero/ NOINDEX=1 npm run build`.
+
 ## Deploy (Vercel)
 
 `vercel.json` is ready: framework Vite, output `dist/`, long caching for
