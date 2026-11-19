@@ -5,14 +5,39 @@ import Icon from '../../../components/Icon.jsx'
 import { CHASERS } from './RunnerScene.jsx'
 import TaskPanel from '../../../components/hud/TaskPanel.jsx'
 import PowerupOffer from '../../../components/hud/PowerupOffer.jsx'
+import { showRewardedAd } from '../../services/adService.js'
+import { seenIntro, markIntroSeen } from '../../systems/records.js'
+import { PICKUPS } from './runnerLogic.js'
 
-// Escape run overlay: distance, stumbles, pursuers; swipe (or arrow keys /
-// WASD / Space) to change lane, jump and slide.
+const SWIPE = 26 // px a finger must travel to count as a swipe
+
+// Escape run overlay: distance, stumbles, pursuers, power-ups picked up on the
+// way; swipe (or the pad, arrow keys / WASD / Space) to change lane, jump and
+// slide. Swipes count as soon as the finger has moved, not when it lifts.
+// Caught? Keep running for an ad (one more ad each time in the same run).
 export default function RunnerMode({ params, onFinish }) {
   const runner = useRunner()
   const { touch } = useDevice()
   const [result, setResult] = useState(null)
   const swipe = useRef(null)
+  const [firstTime] = useState(() => !seenIntro('runner'))
+  const [busy, setBusy] = useState(false)
+  const adsNeeded = runner.revives + 1
+  const keepRunning = async () => {
+    setBusy(true)
+    let watched = 0
+    for (let i = 0; i < adsNeeded; i++) if (await showRewardedAd('revive:runner')) watched++
+    else break
+    setBusy(false)
+    if (watched === adsNeeded) {
+      setResult(null)
+      useRunner.getState().revive()
+    }
+  }
+  const fire = (dx, dy) => {
+    if (Math.abs(dx) > Math.abs(dy)) runnerInput[dx < 0 ? 'left' : 'right'] = true
+    else runnerInput[dy < 0 ? 'jump' : 'slide'] = true
+  }
 
   useEffect(() => {
     useRunner.getState().start(params)
@@ -57,9 +82,20 @@ export default function RunnerMode({ params, onFinish }) {
             Give it a few hours and they'll ease off.
           </p>
         )}
-        <p className="muted">{touch ? 'Swipe, or tap the arrows: left/right change lane, up jumps cartons, down slides under banners. Danfos and Task Force men coming at you: get out of their lane!' : '←/→ or A/D change lane · ↑/W/Space jump · ↓/S slide · dodge the danfos and officers coming at you'}</p>
+        {firstTime && (
+          <>
+            <p className="muted">{touch ? 'Swipe, or tap the arrows: left/right change lane, up jumps cartons, down slides under banners. Danfos and Task Force men coming at you: get out of their lane!' : '←/→ or A/D change lane · ↑/W/Space jump · ↓/S slide · dodge the danfos and officers coming at you'}</p>
+            <p className="muted">Grab power-ups on the way: the red magnet pulls in notes, the gold star makes you untouchable, the blue charm forgives a stumble.</p>
+          </>
+        )}
         <PowerupOffer mode="runner" />
-        <button className="btn btn-primary" onClick={runner.begin}>
+        <button
+          className="btn btn-primary"
+          onClick={() => {
+            markIntroSeen('runner')
+            runner.begin()
+          }}
+        >
           Go!
         </button>
       </div>
@@ -78,28 +114,43 @@ export default function RunnerMode({ params, onFinish }) {
             Distance {Math.round(runner.hud.distance)} m · Naira notes {runner.hud.notes} (₦{(runner.hud.notes * 100).toLocaleString('en-NG')})
           </p>
         )}
-        <button className="btn btn-primary" onClick={() => onFinish(result)}>
-          Continue
-        </button>
+        {result.outcome !== 'escaped' ? (
+          <div className="result-actions">
+            <button className="btn btn-primary" disabled={busy} onClick={keepRunning}>
+              Keep running ({adsNeeded === 1 ? 'watch an ad' : `watch ${adsNeeded} ads`})
+            </button>
+            <button className="btn" onClick={() => onFinish(result)}>
+              {result.metres != null ? 'Collect and stop' : 'Continue'}
+            </button>
+          </div>
+        ) : (
+          <button className="btn btn-primary" onClick={() => onFinish(result)}>
+            Continue
+          </button>
+        )}
       </div>
     )
 
-  const { distance, goal, hits, maxHits, notes, pursuer, endless, close } = runner.hud
+  const { distance, goal, hits, maxHits, notes, pursuer, endless, close, magnet = 0, star = 0, charms = 0 } = runner.hud
   return (
     <>
       <div
         className="swipe-zone"
-        onPointerDown={(e) => (swipe.current = { x: e.clientX, y: e.clientY })}
-        onPointerUp={(e) => {
+        onPointerDown={(e) => {
+          swipe.current = { x: e.clientX, y: e.clientY }
+          e.currentTarget.setPointerCapture?.(e.pointerId)
+        }}
+        onPointerMove={(e) => {
           const s = swipe.current
-          swipe.current = null
           if (!s) return
           const dx = e.clientX - s.x
           const dy = e.clientY - s.y
-          if (Math.max(Math.abs(dx), Math.abs(dy)) < 24) return
-          if (Math.abs(dx) > Math.abs(dy)) runnerInput[dx < 0 ? 'left' : 'right'] = true
-          else runnerInput[dy < 0 ? 'jump' : 'slide'] = true
+          if (Math.max(Math.abs(dx), Math.abs(dy)) < SWIPE) return
+          fire(dx, dy)
+          swipe.current = null // one move per swipe
         }}
+        onPointerUp={() => (swipe.current = null)}
+        onPointerCancel={() => (swipe.current = null)}
       />
       <TaskPanel>
         <div className="fee-row">
@@ -109,6 +160,13 @@ export default function RunnerMode({ params, onFinish }) {
         {!endless && (
           <div className="fee-quota">
             <div style={{ width: `${(distance / goal) * 100}%` }} />
+          </div>
+        )}
+        {(magnet > 0 || star > 0 || charms > 0) && (
+          <div className="fee-row runner-powers">
+            {magnet > 0 && <span className="pw magnet">{PICKUPS.magnet.name} {Math.ceil(magnet)}s</span>}
+            {star > 0 && <span className="pw star">{PICKUPS.star.name} {Math.ceil(star)}s</span>}
+            {charms > 0 && <span className="pw charm">{PICKUPS.charm.name}{charms > 1 ? ` ×${charms}` : ''}</span>}
           </div>
         )}
         <div className="fee-row">

@@ -81,7 +81,22 @@ export function makeTraffic(items, seed, density = 1, from = 70) {
   return cars
 }
 
-const withTraffic = (items, seed, density, traffic) => (traffic ? items.concat(makeTraffic(items, seed, density)) : items)
+// Power-ups you pick up mid-run, no ads needed: some naira notes are
+// swapped for one (separate dice, so a seed's course stays the same).
+export const PICKUPS = {
+  magnet: { name: 'Money magnet', time: 8 }, // notes in every lane fly to you
+  star: { name: 'Untouchable', time: 6 }, // run straight through anything
+  charm: { name: 'Free stumble', time: 0 }, // the next stumble doesn't count
+}
+const PICKUP_KINDS = Object.keys(PICKUPS)
+export function addPickups(items, seed, chance = 0.08) {
+  let s = (seed * 13 + 4271) % 233280
+  const rnd = () => ((s = (s * 9301 + 49297) % 233280) / 233280)
+  for (const it of items) if (it.kind === 'note' && it.d > 40 && rnd() < chance) it.kind = PICKUP_KINDS[Math.floor(rnd() * PICKUP_KINDS.length)]
+  return items
+}
+
+const withTraffic = (items, seed, density, traffic) => addPickups(traffic ? items.concat(makeTraffic(items, seed, density)) : items, seed)
 
 export function createRun({ goal = 320, seed = 1, difficulty = 1, energy = 70, endless = false, traffic = true } = {}) {
   const density = 0.9 + difficulty * 0.15
@@ -107,6 +122,9 @@ export function createRun({ goal = 320, seed = 1, difficulty = 1, energy = 70, e
     maxHits: energy < 25 ? 2 : 3,
     notes: 0,
     pursuer: 18, // metres behind
+    magnetT: 0, // power-ups picked up on the way
+    invT: 0,
+    charms: 0,
     closeT: 0, // > 0: the pursuers are right at your back (just after a hit)
     items: withTraffic(makeCourse(endless ? SEGMENT : goal, seed, density), seed, density, traffic),
     over: null,
@@ -115,6 +133,13 @@ export function createRun({ goal = 320, seed = 1, difficulty = 1, energy = 70, e
 }
 
 function hit(r, kind) {
+  if (r.charms > 0) {
+    // the charm takes it: a little wobble and on you go
+    r.charms--
+    r.stumbleT = 0.25
+    r.events.push({ type: 'saved', kind })
+    return
+  }
   r.hits++
   r.stumbleT = 0.8
   r.closeT = CLOSE_TIME // they're on you: you can see them at your back
@@ -147,6 +172,8 @@ export function stepRun(r, input, dt) {
   r.slideT = Math.max(0, r.slideT - dt)
   r.stumbleT = Math.max(0, r.stumbleT - dt)
   r.closeT = Math.max(0, r.closeT - dt)
+  r.magnetT = Math.max(0, r.magnetT - dt)
+  r.invT = Math.max(0, r.invT - dt)
   r.laneX += (r.lane - r.laneX) * Math.min(1, dt * 12)
 
   const speed = r.stumbleT > 0 ? r.speed * 0.45 : r.speed
@@ -191,26 +218,51 @@ export function stepRun(r, input, dt) {
       it.done = true
       if (it.kind === 'officer') it.grabbed = true
       else it.swerve = it.lane !== 0 ? it.lane : r.distance % 2 > 1 ? 1 : -1 // towards the nearer side
-      hit(r, it.kind)
+      if (r.invT > 0) r.events.push({ type: 'smash', kind: it.kind })
+      else hit(r, it.kind)
     }
   }
 
   for (const it of r.items) {
     if (MOVERS.has(it.kind)) continue
-    if (it.done || it.d < before - 0.5 || it.d > r.distance + 0.5) continue
-    if (Math.round(r.laneX) !== it.lane) continue
+    if (it.done || it.d < before - 0.5) continue
+    // the magnet pulls notes from every lane, a little ahead of you
+    const pulled = it.kind === 'note' && r.magnetT > 0 && it.d <= r.distance + 6
+    if (!pulled && (it.d > r.distance + 0.5 || Math.round(r.laneX) !== it.lane)) continue
     it.done = true
     if (it.kind === 'note') {
       r.notes++
       r.events.push({ type: 'note' })
       continue
     }
+    if (PICKUPS[it.kind]) {
+      if (it.kind === 'magnet') r.magnetT = PICKUPS.magnet.time
+      else if (it.kind === 'star') r.invT = PICKUPS.star.time
+      else r.charms++
+      r.events.push({ type: 'power', kind: it.kind })
+      continue
+    }
     const cleared = (it.kind === 'low' && r.y > CLEAR_HEIGHT) || (it.kind === 'high' && r.slideT > 0)
     if (cleared) continue
+    if (r.invT > 0) {
+      r.events.push({ type: 'smash', kind: it.kind })
+      continue
+    }
     hit(r, it.kind)
   }
 
-  if (r.hits >= r.maxHits || r.pursuer <= 0) r.over = 'caught'
+  if (r.hits >= r.maxHits || (r.pursuer <= 0 && r.invT <= 0)) r.over = 'caught'
   else if (r.distance >= r.goal) r.over = 'escaped'
   return r
+}
+
+/** Back on your feet after being caught (the revive): a clear stretch ahead and a moment untouchable. */
+export function reviveRun(r) {
+  r.over = null
+  r.hits = 0
+  r.stumbleT = 0
+  r.closeT = 0
+  r.pursuer = Math.max(r.pursuer, 16)
+  r.invT = 2.5
+  for (const it of r.items) if (!it.done && it.kind !== 'note' && !PICKUPS[it.kind] && it.d > r.distance - 2 && it.d < r.distance + 30) it.done = true
 }

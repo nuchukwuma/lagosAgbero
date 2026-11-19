@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { createRun, stepRun, makeCourse, makeTraffic, LANES, CLOSE_TIME } from './runnerLogic.js'
+import { createRun, stepRun, makeCourse, makeTraffic, LANES, CLOSE_TIME, reviveRun, addPickups } from './runnerLogic.js'
 
 describe('runner', () => {
   it('every row of obstacles leaves a lane free', () => {
@@ -132,5 +132,45 @@ describe('runner', () => {
     expect(caught.shouted).toBe(true)
     expect(caught.r.hits).toBe(1)
     expect(run(true).r.hits).toBe(0)
+  })
+})
+
+describe('runner power-ups and revive', () => {
+  const clear = (r) => (r.items = [])
+  it('a money magnet pulls notes from the other lanes', () => {
+    const r = createRun({ goal: 300, traffic: false })
+    clear(r)
+    r.items.push({ d: 12, lane: 0, kind: 'magnet' }, { d: 20, lane: 1, kind: 'note' }, { d: 22, lane: -1, kind: 'note' })
+    for (let i = 0; i < 300 && r.notes < 2; i++) stepRun(r, {}, 1 / 30)
+    expect(r.notes).toBe(2)
+  })
+  it('untouchable runs straight through a block', () => {
+    const r = createRun({ goal: 300, traffic: false })
+    clear(r)
+    r.items.push({ d: 12, lane: 0, kind: 'star' }, { d: 20, lane: 0, kind: 'block' })
+    for (let i = 0; i < 90; i++) stepRun(r, {}, 1 / 30)
+    expect(r.hits).toBe(0)
+  })
+  it('a charm forgives one stumble, then they count again', () => {
+    const r = createRun({ goal: 300, traffic: false })
+    clear(r)
+    r.items.push({ d: 12, lane: 0, kind: 'charm' }, { d: 20, lane: 0, kind: 'block' }, { d: 45, lane: 0, kind: 'block' })
+    for (let i = 0; i < 200; i++) stepRun(r, {}, 1 / 30)
+    expect(r.hits).toBe(1)
+  })
+  it('a revive puts you back on your feet with a clear road', () => {
+    const r = createRun({ goal: 300, traffic: false })
+    r.over = 'caught'
+    r.hits = r.maxHits
+    reviveRun(r)
+    expect(r.over).toBe(null)
+    expect(r.hits).toBe(0)
+    expect(r.items.filter((it) => !it.done && it.kind !== 'note' && it.d > r.distance && it.d < r.distance + 30)).toEqual([])
+  })
+  it('pickups replace some notes and leave the course the same', () => {
+    const a = createRun({ goal: 2000, seed: 5, traffic: false }).items
+    expect(a.some((it) => it.kind === 'magnet' || it.kind === 'star' || it.kind === 'charm')).toBe(true)
+    const blocks = (items) => items.filter((it) => ['block', 'low', 'high'].includes(it.kind)).map((it) => `${it.d}:${it.lane}`)
+    expect(blocks(a)).toEqual(blocks(addPickups(makeCourse(2000, 5, a.density || 1.05), 5, 0)))
   })
 })

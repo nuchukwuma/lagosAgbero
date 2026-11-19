@@ -6,7 +6,7 @@ import Character from '../../characters/Character.jsx'
 import { randomLook } from '../../characters/look.js'
 import Sign from '../../world/Sign.jsx'
 import { useRunner, runnerInput } from './runnerStore.js'
-import { createRun, stepRun } from './runnerLogic.js'
+import { createRun, stepRun, reviveRun, PICKUPS } from './runnerLogic.js'
 import { playerState, shake } from '../../world/worldState.js'
 import { useGameStore } from '../../store/gameStore.js'
 import characters from '../../data/characters.json'
@@ -32,6 +32,17 @@ const BUILDINGS = ['shopHouseA', 'tenementA', 'tenementB', 'storeyHouseA', 'shop
 const bannerMat = new THREE.MeshLambertMaterial({ color: '#c0392b' })
 const poleMat = new THREE.MeshLambertMaterial({ color: '#3c3f44' })
 const noteMat = new THREE.MeshBasicMaterial({ color: '#2ecc71', side: THREE.DoubleSide })
+// the mid-run power-ups: a red magnet, a gold star, a blue charm
+const pickupMats = {
+  magnet: new THREE.MeshBasicMaterial({ color: '#e74c3c' }),
+  star: new THREE.MeshBasicMaterial({ color: '#ffd23a' }),
+  charm: new THREE.MeshBasicMaterial({ color: '#4b8df0' }),
+}
+const pickupGeos = {
+  magnet: new THREE.TorusGeometry(0.32, 0.1, 6, 12, Math.PI),
+  star: new THREE.OctahedronGeometry(0.38),
+  charm: new THREE.IcosahedronGeometry(0.3),
+}
 
 // The course is drawn for the stretch [from, to): the whole run for a normal
 // escape; for an endless run, the current two stretches only (it is rebuilt,
@@ -121,6 +132,21 @@ function Notes({ run, from, to }) {
   ))
 }
 
+function Pickups({ run, from, to }) {
+  const refs = useRef([])
+  const list = useMemo(() => run.items.filter((it) => PICKUPS[it.kind] && it.d >= from && it.d < to), [run, from, to])
+  useFrame((state) => {
+    list.forEach((n, i) => {
+      const m = refs.current[i]
+      if (!m) return
+      m.visible = !n.done
+      m.rotation.y = state.clock.elapsedTime * 2.5
+      m.position.y = 1.1 + Math.sin(state.clock.elapsedTime * 4 + i) * 0.15
+    })
+  })
+  return list.map((n, i) => <mesh key={i} ref={(el) => (refs.current[i] = el)} material={pickupMats[n.kind]} geometry={pickupGeos[n.kind]} position={[n.lane * LANE_W, 1.1, -n.d]} />)
+}
+
 // Oncoming danfos and taxis: each drives down its lane towards you once it
 // sets off (runnerLogic), and is hidden until then.
 function Cars({ run, from, to }) {
@@ -196,6 +222,13 @@ export default function RunnerScene({ playerLook }) {
       if (has('charm')) run.maxHits += 1
       if (has('headStart')) run.pursuer += 15
     }
+    // "Keep running" after an ad: back on your feet
+    if (useRunner.getState().reviveReq) {
+      reviveRun(run)
+      ended.current = false
+      useRunner.setState({ reviveReq: false, ended: null })
+      sfx('whistle')
+    }
     if (started && !run.over) {
       if (runnerInput.slide) sfx('slide')
       stepRun(run, { ...runnerInput }, dt)
@@ -205,13 +238,15 @@ export default function RunnerScene({ playerLook }) {
         else if (ev.type === 'hit') {
           sfx(ev.kind === 'car' ? 'crash' : ev.kind === 'officer' ? 'hurt' : 'bump')
           sfx('whistle') // and they're on you
-        } else sfx(ev.type === 'note' ? 'coin' : 'jump')
+        } else if (ev.type === 'power') sfx('special')
+        else if (ev.type === 'saved' || ev.type === 'smash') sfx('block')
+        else sfx(ev.type === 'note' ? 'coin' : 'jump')
       }
       runnerInput.left = runnerInput.right = runnerInput.jump = runnerInput.slide = false
       hudTimer.current -= dt
       if (hudTimer.current <= 0 || run.events.length) {
         hudTimer.current = 0.15
-        useRunner.setState({ hud: { distance: run.distance, goal: run.goal, hits: run.hits, maxHits: run.maxHits, notes: run.notes, pursuer: run.pursuer, endless: run.endless, close: run.closeT > 0 } })
+        useRunner.setState({ hud: { distance: run.distance, goal: run.goal, hits: run.hits, maxHits: run.maxHits, notes: run.notes, pursuer: run.pursuer, endless: run.endless, close: run.closeT > 0, magnet: run.magnetT, star: run.invT, charms: run.charms } })
       }
       if (run.builtTo !== builtTo) setBuiltTo(run.builtTo)
       for (const ev of run.events) if (ev.type === 'hit') shake(0.35, 0.3)
@@ -226,6 +261,8 @@ export default function RunnerScene({ playerLook }) {
     if (player.current) {
       player.current.position.set(x, Y + jumpY, z)
       player.current.rotation.y = Math.PI // facing -Z
+      // untouchable: the runner flickers
+      player.current.visible = !(run.invT > 0 && run.invT < 5.5 && Math.floor(run.invT * 10) % 2)
     }
     // The chasers are drawn where they are: normally too far back to see. Right
     // after a stumble they rush up to your back (in view, under the camera)
@@ -244,12 +281,14 @@ export default function RunnerScene({ playerLook }) {
         <>
           <Course key={builtTo} run={run} from={Math.max(-24, builtTo - 480)} to={builtTo + 40} />
           <Notes key={`n${builtTo}`} run={run} from={Math.max(0, builtTo - 480)} to={builtTo + 40} />
+          <Pickups key={`p${builtTo}`} run={run} from={Math.max(0, builtTo - 480)} to={builtTo + 40} />
           <Cars key={`c${builtTo}`} run={run} from={Math.max(0, builtTo - 480)} to={builtTo + 40} />
         </>
       ) : (
         <>
           <Course run={run} from={-24} to={run.goal + 60} />
           <Notes run={run} from={0} to={run.goal + 60} />
+          <Pickups run={run} from={0} to={run.goal + 60} />
           <Cars run={run} from={0} to={run.goal + 60} />
         </>
       )}

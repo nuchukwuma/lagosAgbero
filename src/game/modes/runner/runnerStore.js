@@ -34,8 +34,11 @@ export const useRunner = create((set, get) => ({
   params: {},
   hud: { distance: 0, goal: 320, hits: 0, maxHits: 3, notes: 0, pursuer: 18 },
   ended: null,
+  revives: 0, // "Keep running" (an ad each, one more each time) used this run
+  reviveReq: false,
 
-  start: (params) => set({ active: true, started: false, params, ended: null, hud: { distance: 0, goal: params.goal ?? 320, hits: 0, maxHits: 3, notes: 0, pursuer: 18 } }),
+  revive: () => set((s) => ({ ended: null, reviveReq: true, revives: s.revives + 1 })),
+  start: (params) => set({ active: true, started: false, params, ended: null, revives: 0, reviveReq: false, hud: { distance: 0, goal: params.goal ?? 320, hits: 0, maxHits: 3, notes: 0, pursuer: 18 } }),
   begin: () => set({ started: true }),
   reset: () => {
     Object.assign(runnerInput, { left: false, right: false, jump: false, slide: false })

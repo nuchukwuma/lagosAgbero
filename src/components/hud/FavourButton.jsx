@@ -32,13 +32,15 @@ export default function FavourButton({ view, activity, overlay }) {
 /** Full-screen "sponsor message" with a short countdown. */
 export function AdOverlay() {
   const playing = useAd((s) => s.playing)
-  const [left, setLeft] = useState(0)
+  // the countdown runs from when the ad started, so "Collect" can't show early
+  const [now, setNow] = useState(() => Date.now())
   useEffect(() => {
     if (!playing) return undefined
-    setLeft(playing.seconds)
-    const id = setInterval(() => setLeft((t) => Math.max(0, t - 1)), 1000)
+    setNow(Date.now())
+    const id = setInterval(() => setNow(Date.now()), 250)
     return () => clearInterval(id)
   }, [playing])
+  const left = playing ? Math.max(0, Math.ceil(playing.seconds - (now - (playing.startedAt ?? now)) / 1000)) : 0
   if (!playing) return null
   // favours have their own reward; power-ups name theirs (systems/powerups.js)
   const pu = playing.placement?.startsWith('powerup:') ? POWERUPS[playing.placement.slice(8)] : null

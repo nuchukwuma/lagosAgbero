@@ -45,6 +45,7 @@ export function showRewardedAd(placement) {
         placement,
         sponsor,
         seconds: 5,
+        startedAt: Date.now(),
         done: (watched) => {
           useAd.setState({ playing: null })
           resolve(watched)
