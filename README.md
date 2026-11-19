@@ -87,41 +87,38 @@ Grace's Emeka a village trader, Campus's Somto neat.
 
 ## Fights in 2D
 
-Street fights switch to a 2D cartoon brawler in the style of a mobile action
-game (`src/game/modes/fight/Fight2D.jsx`; the look is written down in
-`docs/fight-art-direction.md`). The fighters are painted live with the canvas
-(`fight2d/puppet.js`): big heads with big shiny eyes and glossy hair, soft
-rounded shading on every part, mitten fists, chunky trainers with white soles,
-T-shirts with a print, jeans with seams and turned-up hems, thick dark
-outlines. They're built from each character's own look (skin tone, hair,
-clothes, shoes, hats, glasses, chains), and faces react (gritted teeth, a
-shout, eyes squeezed shut, crosses at a K.O.). Poses set the hips, fists and
-feet; elbows and knees are worked out, so feet stay planted. Swings leave a
-white swoosh behind the fist or foot.
+Street fights switch to a 2D pixel-art fighting game
+(`src/game/modes/fight/Fight2D.jsx`; the look is in
+`docs/fight-art-direction.md`, the HUD in `docs/fight-hud.md`). The fighters
+(`fight2d/pixel.js`) follow a chunky pixel-people design: a big head with two
+tall dot eyes and blush, a stubby body, nub arms, short legs and a navy
+outline, dressed in each character's own skin tone, hair or hat, clothes and
+shoes. Every frame (idle, walk, punch, kick, spin kick, jump, flying kick,
+block, dodge, hit, knock-out, win) is painted pixel by pixel once when the
+fight starts, then drawn scaled up with square pixels.
 
-The fight happens on a wooden jetty over the Lagos lagoon (`fight2d/stage.js`),
-in layers that slide at their own pace: the sky with a big moon and stars (or
-sun and clouds), far rooftops and the Third Mainland Bridge with its lights,
-stilt houses and palms in the mist with glowing windows, wooden water-tank
-towers and plank shacks with signboards, lamps that glow, a crowd at the far
-end of the jetty, posts down into the water, a canoe, lamp reflections and
-reeds in the corners. Dawn, day, dusk and night each have their own colours.
-Hits land with sparks, comic words, a split-second freeze and screen shake;
-the knock-out plays in slow motion.
+The backdrop (`fight2d/pixelStage.js`) is wherever the fight happens: the
+world you're in and the nearest place in it. In Iyana-Wahala that's the bus
+stop (shelter, danfo, shops), under the bridge (the flyover and its pillars),
+the market (stalls and umbrellas) or a shop street. In Nkwọ-Agụụ it's the
+square (a big tree, mud houses), the farm (yam mounds, palms, a hut), a
+compound, the church or the shrine. At Royal Crest it's the quad (the faculty
+building), the hostels or the sports field. The sky follows the time of day,
+and at dusk and night windows, lamps and signboards glow. A few passers-by
+walk, stand and cheer in the background with the same pixel frames, kept
+small and hazy.
 
 Moves: punch (light, chains into combos), kick (heavy, more reach; if it's
 blocked you're left open for a moment), jump (hop over a kick; attack in the
 air for a flying kick), block, dodge and the Lagos Roundabout special. The
-opponent leaps in now and then too. The crowd throws money for good combos and
-specials: coins spin off the opponent into the purse (top left), and the
-winner keeps it (₦50 a coin). The HUD has round portrait badges of both
-fighters (they wince when health is low) and round see-through buttons.
+crowd throws money for good combos and specials: pixel coins spin into the
+purse, and the winner keeps it (₦50 a coin). Health and special bars sit at
+the top as square-ended pixel bars with square portraits; touch buttons have
+pixel-art icons.
 
-It's drawn at the screen's own sharpness (capped at 1.5x on Low, 2x on
-Medium, 2.5x on High, 3x on Sharpest), and the 3D street is switched off and
-hidden while a fight is on. On Low (2 GB phones) fighters use flat colours
-instead of soft shading, the two background layers share one strip, the
-biggest glows are skipped and fights draw at most 30 frames a second.
+Pixel art renders to a screen-sized buffer and the browser scales it up
+crisply, so a fight frame costs well under a millisecond: light on 2 GB phones
+whatever the graphics setting.
 
 ## Checks that catch broken data
 

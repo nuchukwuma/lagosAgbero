@@ -1,51 +1,49 @@
 # Fights: art direction
 
-The look of the 2D street fights (`src/game/modes/fight/`). Written so new
-fighters, stages and effects stay in one style: a polished mobile cartoon
-action game, set in Lagos. It follows the general look of that genre and
-copies no particular game's characters, art or levels.
+The look of the 2D street fights (`src/game/modes/fight/`). Written in the
+Claude Code Game Studios art-direction form so new fighters, places and
+effects stay in one style. The character design follows a small free pixel
+pack the project owner chose ("thicc n juicy"): it is recreated in code, not
+copied, and dressed as NaijaVice's own cast.
 
-**Mood.** A noisy, funny scrap on the lagoon waterfront: more Nollywood
-slapstick than blood sport. Nobody bleeds; a knock-out is a flop onto the
-planks with crosses for eyes.
+**Mood.** A noisy, funny scrap in a real place: the bus stop, under the
+bridge, the village square, the hostel. Cute and snappy rather than gory;
+nobody bleeds, a knock-out is a flop with crosses for eyes.
 
-**Camera.** Side-on, both fighters always in shot, standing on a jetty in the
-lower middle of the screen with the water below them (where the buttons sit).
-The camera slides and eases out as they move apart. Shake, freeze and slow
-motion are for impact only.
+**Camera.** Side-on, both fighters always in shot, fighters about 30% of the
+screen tall so the place around them shows. The camera slides; it never
+zooms (zooming breaks the pixel grid). Shake moves in whole sprite pixels.
 
-**Shapes.** Round and chunky. Fighters are about three and a half heads tall:
-big round heads in three-quarter view, slim bodies, oversized fists and
-trainers. Buildings are plank boxes on stilts with pitched zinc roofs; towers
-are cross-braced timber. The HUD is circles and pills.
+**Shapes.** Pixel people about 21 pixels tall: a big round-cornered head half
+their height, two tall dot eyes with a white glint, blush under them, a stubby
+body, nub arms with block fists, short legs, little shoes. Scenery is boxes
+and blocks on the same pixel grid: plank and block buildings, zinc roofs,
+umbrellas, palms, pillars.
 
-**Values.** Fighters are the brightest, highest-contrast things on screen.
-Each layer behind them is smaller, flatter and closer to the sky colour (far
-rooftops and bridge, then misty stilt houses, then the near towers and shacks).
-At night the moon, lit windows, signboards and lamps are the only bright shapes
-besides the fighters.
+**Values.** Fighters are the brightest, highest-contrast things on screen
+(full colour, dark outline). Passers-by are smaller and hazed into the scene;
+far layers are flat silhouettes. At dusk and night the scene darkens and only
+windows, lamps and signboards glow.
 
-**Palette.** Night: deep navy to teal sky (#06142c to #2a6f8f), blue
-silhouettes, warm yellow windows and lamps (#ffd86b, #fff3a0), dark lagoon.
-Day: clear blue sky with white clouds, warm timber, bright blue water. Clothes
-and skin a little more saturated than life. Effects: white swooshes, yellow and
-orange for hits, blue for blocks, red and white for the special, gold coins.
+**Palette.** Outline #0e0d1e (navy, as in the pack). Each fighter wears their
+own colours from their look; shade is the same colour darker and cooler. Sky
+in four or five flat bands with dithered seams. Lagos: painted shop walls,
+yellow-and-black kerbs, yellow danfo. Village: red earth, mud brown, zinc
+grey, palm green. Campus: cream and terracotta blocks, lawn green.
 
-**Detail.** Thick dark outlines (#120a08) round every fighter part. Soft
-rounded shading: dark on the side away from the light (above), a bright band
-towards it, a little bounce at the edge; radial shading on heads and fists;
-glossy hair with a highlight streak. Faces: two big eyes with two shines,
-heavy brows angled down, a mouth that changes with the moment. Lagos
-specifics: water tanks on towers, zinc roofs, painted signboards, the Third
-Mainland Bridge, canoes.
+**Detail.** One-pixel outline round every part; back arm and leg one shade
+darker; a shadow row under the chin; hair and hats as pixel shapes per body
+(fade, afro, dreads, puffs, bun, cap, beret, gele...). Signboards use a 3×5
+pixel font. Animation is snappy: a few held frames per move, like the pack.
 
 **Rules.**
-- A fighter's silhouette must read at phone size: no thin parts.
-- The face is never hidden by the guard; fists sit below the chin.
-- Nothing behind the fighters is as bright or saturated as they are.
-- The moon (or sun) always has open sky around it.
-- Every blow gets feedback within a frame (swoosh, spark, word, freeze).
-- Budget phones (Low) lose shading, glows and frames, never readability.
+- Pixels stay square: integer scaling only, no smoothing, no zoom.
+- A fighter's face is never covered by its own guard.
+- Nothing behind the fighters is as bright or as big as they are.
+- The backdrop is where the fight is (world and nearest place).
+- Background people use the same frames as the fighters (walk, stand,
+  cheer), kept few (6, or 3 on Low) and hazed.
+- Every blow gets feedback within a frame: flash, swoosh, spark, word, freeze.
 
-**Signature.** The moon over the stilt houses, the lamp on the jetty, the
-water below, and a crowd throwing naira coins.
+**Signature.** Big-headed pixel brawlers in recognisably Nigerian places,
+with the crowd's naira coins spinning up into the purse.

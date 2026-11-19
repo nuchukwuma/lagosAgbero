@@ -2,28 +2,29 @@ import { useEffect, useMemo, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { useFight, fightInput, opponentProfile } from './fightStore.js'
 import { createFight, stepFight, MOVES } from './fightLogic.js'
-import { makeFighter, poseFor, drawFighter, mix, POSES, reachPoints } from './fight2d/puppet.js'
-import { makeStage } from './fight2d/stage.js'
+import { makePixelFighter, frameFor, flashOf, reachOf, M_PER_PX, CW, CH, AX, AY } from './fight2d/pixel.js'
+import { makePixelStage, backdropFor } from './fight2d/pixelStage.js'
 import { useGameStore } from '../../store/gameStore.js'
-import { useSettings, effectiveQuality, canvasRatio } from '../../store/settings.js'
+import { useSettings, effectiveQuality } from '../../store/settings.js'
+import { playerState } from '../../world/worldState.js'
+import { getLayout } from '../../world/worlds.js'
 import { isPaused } from '../../store/pauseStore.js'
 import { randomLook, withAllegiance } from '../../characters/look.js'
 import characters from '../../data/characters.json'
 import { sfx } from '../../audio/audio.js'
 import { has } from '../../systems/powerups.js'
 
-// A street fight as a 2D fighting game: side-on, two hand-drawn fighters
-// (fight2d/puppet.js) on a painted Lagos street (fight2d/stage.js), the
-// camera sliding and easing out to keep both in shot. The rules are the same
+// A street fight as a 2D pixel-art fighting game: side-on, two pixel
+// fighters (fight2d/pixel.js) in front of a pixel backdrop of wherever the
+// fight is (fight2d/pixelStage.js), the camera sliding to keep both in shot. The rules are the same
 // as before (fightLogic.js); this draws them and adds the feel: hit sparks,
 // comic words, a split-second freeze on every blow, screen shake, a flash and
 // a slow-motion knock-out.
 //
-// Sharp on any screen: everything is drawn as shapes at the phone's own pixel
-// density, capped on budget phones (Light mode) so 2 GB phones keep a steady
-// frame rate. The 3D street is switched off while the fight is on.
+// Pixel art renders to a screen-sized buffer (not the phone's full pixel
+// density) and is scaled up with crisp square pixels by the browser, so it is
+// light even on 2 GB phones. The 3D street is switched off while the fight is on.
 
-const STUN = 0.38 // fightLogic's stun time (for the hit pose)
 const HIT_STOP = { punch: 0.06, kick: 0.09, special: 0.16 }
 const WORDS = {
   punch: ['GBAM!', 'KPA!', 'POW!', 'WHAM!'],
@@ -34,7 +35,37 @@ const WORDS = {
 }
 const PAN = 4.5 // metres the camera can slide either way
 
-const pixelRatio = () => canvasRatio(useSettings.getState().quality)
+// which place the fight is in: the activity's own spot, or the spot nearest the player
+function fightPlace(world, activitySpot) {
+  if (activitySpot) return activitySpot
+  const spots = getLayout(world)?.spots || {}
+  let best = null
+  let bestD = Infinity
+  for (const [id, sp] of Object.entries(spots)) {
+    const d = Math.hypot(sp.pos[0] - playerState.position.x, sp.pos[1] - playerState.position.z)
+    if (d < bestD) {
+      bestD = d
+      best = id
+    }
+  }
+  return best
+}
+
+/** A naira coin in pixels: u is one coin pixel on screen; it squashes sideways as it spins. */
+const COIN_ROWS = ['..###..', '.#lll#.', '#lyyyl#', '#yynyy#', '#yyyyd#', '.#ddd#.', '..###..']
+const COIN_COLORS = { '#': '#3a2405', l: '#ffe680', y: '#f2b705', d: '#c99a0e', n: '#8a5a00' }
+function drawPixelCoin(ctx, x, y, u, spin) {
+  const sx = Math.max(0.2, Math.abs(Math.cos(spin)))
+  const cw = Math.max(1, Math.round(u * sx))
+  COIN_ROWS.forEach((row, r) => {
+    for (let c = 0; c < 7; c++) {
+      const ch = row[c]
+      if (ch === '.') continue
+      ctx.fillStyle = COIN_COLORS[ch]
+      ctx.fillRect(Math.round(x + (c - 3.5) * cw), Math.round(y + (r - 3.5) * u), cw, u)
+    }
+  })
+}
 
 function starPath(ctx, x, y, r, points = 8, inner = 0.45) {
   ctx.beginPath()
@@ -49,42 +80,17 @@ function starPath(ctx, x, y, r, points = 8, inner = 0.45) {
 
 const ease = (t) => (t < 0 ? 0 : t > 1 ? 1 : t * t * (3 - 2 * t))
 
-/** A gold naira coin, spinning (squashed sideways as it turns). */
-function drawCoin(ctx, x, y, r, spin) {
-  const sx = Math.max(0.15, Math.abs(Math.cos(spin)))
-  ctx.save()
-  ctx.translate(x, y)
-  ctx.scale(sx, 1)
-  ctx.beginPath()
-  ctx.arc(0, 0, r, 0, Math.PI * 2)
-  ctx.fillStyle = '#b8860b'
-  ctx.fill()
-  ctx.lineWidth = Math.max(1.5, r * 0.18)
-  ctx.strokeStyle = '#3a2405'
-  ctx.stroke()
-  ctx.beginPath()
-  ctx.arc(-r * 0.06, -r * 0.06, r * 0.78, 0, Math.PI * 2)
-  ctx.fillStyle = '#ffd23a'
-  ctx.fill()
-  if (sx > 0.5) {
-    ctx.fillStyle = '#9a6a00'
-    ctx.font = `900 ${Math.round(r * 1.1)}px system-ui, sans-serif`
-    ctx.textAlign = 'center'
-    ctx.textBaseline = 'middle'
-    ctx.fillText('₦', 0, r * 0.05)
-  }
-  ctx.restore()
-}
-
 export default function Fight2D({ params }) {
   const canvasRef = useRef()
   const game = useGameStore((s) => s.game)
   const time = useGameStore((s) => s.view?.time || 'day')
+  const world = useGameStore((s) => s.view?.world || 'iyanaWahala')
+  const activitySpot = useGameStore((s) => s.activity?.spot)
   const profile = opponentProfile(params.opponent)
   const fighters = useMemo(() => {
     const base = profile.character ? characters[profile.character]?.look : randomLook(profile.seed || 5, 'male')
     const player = withAllegiance(game?.player.look || {}, game?.flags || {})
-    return { p: makeFighter(player), o: makeFighter({ ...base, ...(profile.lookOverride || {}) }) }
+    return { p: makePixelFighter(player), o: makePixelFighter({ ...base, ...(profile.lookOverride || {}) }) }
   }, [profile]) // eslint-disable-line react-hooks/exhaustive-deps
   // the HUD draws the same fighters in its round portrait badges
   useEffect(() => useFight.setState({ looks: fighters }), [fighters])
@@ -97,35 +103,37 @@ export default function Fight2D({ params }) {
     const light = effectiveQuality(useSettings.getState().quality) === 'low'
     let W = 0
     let H = 0
-    let dpr = 1
     let ppm = 100
+    let PX = 8 // screen pixels per sprite pixel
     let groundY = 0
     let stage = null
+    const { kind, place } = backdropFor(world, fightPlace(world, activitySpot))
     const layout = () => {
       const rect = canvas.getBoundingClientRect()
-      W = Math.max(1, rect.width)
-      H = Math.max(1, rect.height)
-      dpr = pixelRatio()
-      canvas.width = Math.round(W * dpr)
-      canvas.height = Math.round(H * dpr)
+      W = Math.max(1, Math.round(rect.width))
+      H = Math.max(1, Math.round(rect.height))
+      canvas.width = W // pixel art: a screen-sized buffer, scaled up crisply by CSS
+      canvas.height = H
       const portrait = H > W
-      groundY = H * (portrait ? 0.66 : 0.75) // the lagoon shows below the jetty
-      // as big as fits: both fighters across, heads clear of the health bars
-      const top = portrait ? 150 : 112
-      ppm = Math.min(W / (portrait ? 4.6 : 7.2), (groundY - top) / 1.85)
-      stage = makeStage({ W, H, ppm, groundY, pan: PAN + 2, time, dpr, light, seed: (params.opponent || 'x').length * 31 + 7 })
+      // a fighter (21 sprite pixels) stands about 30% of the screen tall, and
+      // both fit across with room around them, so the place shows
+      groundY = H * (portrait ? 0.68 : 0.84)
+      PX = Math.max(2, Math.round(Math.min((H * 0.3) / 21, (W / (portrait ? 4.6 : 7.4)) * M_PER_PX)))
+      ppm = PX / M_PER_PX
+      groundY = Math.round(groundY / PX) * PX
+      stage = makePixelStage({ W, H, PX, groundY, pan: PAN + 2, time, kind, place, light, seed: (params.opponent || 'x').length * 31 + 7 })
     }
     layout()
     window.addEventListener('resize', layout)
 
     // per fighter: the drawn pose (eased towards the rules' pose), squash, afterimages
     const look = {
-      p: { pose: mix(POSES.stance, POSES.stance, 0), squash: 0, ghosts: [], ghostT: 0, trail: [] },
-      o: { pose: mix(POSES.stance, POSES.stance, 0), squash: 0, ghosts: [], ghostT: 0, trail: [] },
+      p: { info: null, squash: 0, ghosts: [], ghostT: 0, trail: [] },
+      o: { info: null, squash: 0, ghosts: [], ghostT: 0, trail: [] },
     }
     const fx = { sparks: [], bursts: [], words: [], coins: [], shake: 0, flash: 0, hitStop: 0, slow: 0, banner: null, cheer: 0.2 }
     let camX = 0
-    let zoom = 1
+    const zoom = 1 // pixel art doesn't zoom: pixels stay whole
     let t = 0
     let overT = 0
     let endAt = 0
@@ -140,8 +148,8 @@ export default function Fight2D({ params }) {
     function impact(kind, attacker, victim, who) {
       const dir = who === 'player' ? 1 : -1
       const x = victim.x - dir * 0.2
-      // the cartoon fighters are shorter: head about 1.2 m, chest about 0.85 m
-      const y = victim.y + (kind === 'kick' ? 0.8 : kind === 'block' ? 1.0 : kind === 'air' ? 1.05 : 1.18)
+      // the pixel fighters: head about 1.1 m, chest about 0.65 m
+      const y = victim.y + (kind === 'kick' ? 0.62 : kind === 'block' ? 0.85 : kind === 'air' ? 0.75 : kind === 'special' ? 1.0 : 0.9)
       const st = { punch: ['#fff3b0', '#ffb020', 0.36], kick: ['#ffe08a', '#ff7a1a', 0.48], air: ['#ffe08a', '#ff7a1a', 0.5], special: ['#ffffff', '#ff3d2e', 0.8], block: ['#d8f1ff', '#5aa9ff', 0.28] }[kind]
       fx.bursts.push({ x, y, t: 0, color: st[0], ring: st[1], size: st[2] })
       for (let i = 0; i < (light ? 6 : 12); i++) {
@@ -160,7 +168,7 @@ export default function Fight2D({ params }) {
         if (kind === 'special' || (kind === 'kick' && Math.random() < 0.5)) sfx('crowd') // the crowd roars at the big ones
         if (kind === 'special') fx.flash = 0.18
         // a drop of sweat flies off
-        fx.sparks.push({ x: victim.x, y: victim.y + 1.4, vx: -dir * -1.5, vy: 2.5, life: 0.5, t: 0, color: '#bfe6ff', drop: true })
+        fx.sparks.push({ x: victim.x, y: victim.y + 1.3, vx: -dir * -1.5, vy: 2.5, life: 0.5, t: 0, color: '#bfe6ff', drop: true })
       }
     }
 
@@ -230,16 +238,15 @@ export default function Fight2D({ params }) {
       // poses
       for (const k of ['p', 'o']) {
         const f = fight[k]
-        const target = poseFor(f, MOVES, { over: fight.over, winner: (k === 'p') === (fight.over === 'won'), t: t + (k === 'o' ? 0.4 : 0), overT, stunMax: STUN })
         const L = look[k]
-        L.pose = f.action || fight.over ? target : mix(L.pose, target, 1 - Math.exp(-dt * 24))
+        L.info = frameFor(fighters[k], f, MOVES, { over: fight.over, winner: (k === 'p') === (fight.over === 'won'), t: t + (k === 'o' ? 0.4 : 0), overT })
         L.squash = Math.max(0, L.squash - dt)
         // afterimages while dodging or spinning
         L.ghostT -= dt
         const trail = f.dodgeT > 0 || f.action?.type === 'special' || f.action?.type === 'air' || f.action?.type === 'air'
         if (trail && L.ghostT <= 0) {
           L.ghostT = 0.035
-          L.ghosts.push({ pose: L.pose, x: f.x, y: f.y, life: 0.22 })
+          L.ghosts.push({ info: L.info, x: f.x, y: f.y, life: 0.22 })
           if (L.ghosts.length > (light ? 2 : 4)) L.ghosts.shift()
         }
         for (const g of L.ghosts) g.life -= dt
@@ -250,7 +257,7 @@ export default function Fight2D({ params }) {
         if (a) {
           const m = MOVES[a.type]
           if (a.t > m.startup * 0.45 && a.t < m.startup + m.active) {
-            const rp = reachPoints(fighters[k], lunge(L.pose))
+            const rp = reachOf(lunge(L.info.frame))
             const tip = a.type === 'punch' ? rp.fist : rp.foot
             const dir = k === 'p' ? 1 : -1
             L.trail.push({ x: f.x + dir * tip[0], y: f.y + tip[1], age: 0, kind: a.type })
@@ -261,9 +268,6 @@ export default function Fight2D({ params }) {
       // camera: follow the middle, ease out when they're far apart
       const mid = (fight.p.x + fight.o.x) / 2
       camX += (Math.max(-PAN, Math.min(PAN, mid)) - camX) * (1 - Math.exp(-dt * 5))
-      const gap = fight.o.x - fight.p.x
-      const want = Math.max(0.78, Math.min(1, W / ppm / (gap + 3.0)))
-      zoom += (want - zoom) * (1 - Math.exp(-dt * 3))
       // effects
       for (const s of fx.sparks) {
         s.t += dt
@@ -299,28 +303,38 @@ export default function Fight2D({ params }) {
     }
 
     // the lunge carries a blow to its target, but never through the other fighter
-    const lunge = (pose) => {
-      const room = Math.max(0.08, fight.o.x - fight.p.x - 1.0)
-      return pose.dx > room ? { ...pose, dx: room } : pose
+    const lunge = (frame) => {
+      const room = Math.max(1, Math.floor((fight.o.x - fight.p.x - 1.0) / M_PER_PX))
+      return frame.dx > room ? { ...frame, dx: room } : frame
     }
 
-    function drawPuppet(k, f, facing, alpha = 1, pose0 = look[k].pose, x = f.x, y = f.y) {
+    function drawSprite(k, f, facing, alpha = 1, info = look[k].info, x = f.x, y = f.y) {
+      if (!info) return
       const L = look[k]
-      const pose = lunge(pose0)
+      const frame = lunge(info.frame)
       const [sx, sy] = toScreen(x, y)
-      const sq = alpha === 1 && L.squash > 0 ? Math.sin((L.squash / 0.16) * Math.PI) * 0.16 : 0
       ctx.save()
-      ctx.translate(sx, sy)
-      ctx.scale(ppm * facing * (1 + sq), -ppm * (1 - sq))
-      drawFighter(ctx, fighters[k], pose, { alpha, flat: light })
+      ctx.imageSmoothingEnabled = false
+      ctx.globalAlpha = alpha
+      ctx.translate(Math.round(sx), Math.round(sy))
+      ctx.scale(facing * PX, PX)
+      if (info.rot) {
+        // tipping over backwards about the feet, then lying on the ground
+        ctx.translate(-(frame.dx || 0), info.lying ? -7 : -3)
+        ctx.rotate(info.rot)
+      }
+      // a white flash the moment a blow lands
+      const img = alpha === 1 && L.squash > 0.1 ? flashOf(fighters[k], info.frame) : frame.canvas || info.frame.canvas
+      ctx.drawImage(img, -AX + (frame.dx || 0), -AY, CW, CH)
       ctx.restore()
     }
 
     function render() {
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+      ctx.setTransform(1, 0, 0, 1, 0, 0)
       ctx.clearRect(0, 0, W, H)
-      const shx = fx.shake ? (Math.random() - 0.5) * fx.shake : 0
-      const shy = fx.shake ? (Math.random() - 0.5) * fx.shake : 0
+      // shake in whole sprite pixels, so the pixels stay square
+      const shx = fx.shake ? Math.round(((Math.random() - 0.5) * fx.shake) / PX) * PX : 0
+      const shy = fx.shake ? Math.round(((Math.random() - 0.5) * fx.shake) / PX) * PX : 0
       ctx.save()
       // zoom about the fighters' feet in the middle of the screen
       ctx.translate(W / 2 + shx, groundY + shy)
@@ -330,20 +344,21 @@ export default function Fight2D({ params }) {
       // shadows on the road
       for (const k of ['p', 'o']) {
         const f = fight[k]
-        const [sx] = toScreen(f.x + (lunge(look[k].pose).dx || 0) * (k === 'p' ? 1 : -1), 0) // follows the lunge
-        const lift = Math.max(0.35, 1 - f.y * 0.5) // smaller under a jumper
-        ctx.fillStyle = `rgba(0,0,0,${0.36 * lift})`
-        ctx.beginPath()
-        ctx.ellipse(sx, groundY + 2, ppm * 0.48 * lift, ppm * 0.09 * lift, 0, 0, Math.PI * 2)
-        ctx.fill()
+        const dx = look[k].info ? (lunge(look[k].info.frame).dx || 0) * M_PER_PX : 0
+        const [sx] = toScreen(f.x + dx * (k === 'p' ? 1 : -1), 0) // follows the lunge
+        // a blocky pixel shadow, smaller under a jumper
+        const half = Math.max(2, Math.round(7 * Math.max(0.4, 1 - f.y * 0.5)))
+        ctx.fillStyle = 'rgba(10,8,25,0.35)'
+        ctx.fillRect(Math.round(sx / PX) * PX - half * PX, groundY, half * 2 * PX, PX)
+        ctx.fillRect(Math.round(sx / PX) * PX - (half - 2) * PX, groundY + PX, (half - 2) * 2 * PX, PX)
       }
       // the attacker in front, so the blow lands over the other one
       const order = fight.o.action && !fight.p.action ? ['p', 'o'] : ['o', 'p']
       for (const k of order) {
         const f = fight[k]
         const facing = k === 'p' ? 1 : -1
-        look[k].ghosts.forEach((g, i) => drawPuppet(k, f, facing, 0.12 + i * 0.05, g.pose, g.x, g.y))
-        drawPuppet(k, f, facing)
+        look[k].ghosts.forEach((g, i) => drawSprite(k, f, facing, 0.12 + i * 0.05, g.info, g.x, g.y))
+        drawSprite(k, f, facing)
       }
       // swooshes: a white crescent tapering away behind each swing
       for (const k of ['p', 'o']) {
@@ -453,7 +468,7 @@ export default function Fight2D({ params }) {
           x += (40 - x) * k // the purse, top left
           y += (30 - y) * k
         }
-        drawCoin(ctx, x, y, Math.max(9, ppm * 0.13) * (c.t > 0.35 ? 1 - (c.t - 0.35) * 0.9 : 1), c.spin + c.t * 14)
+        drawPixelCoin(ctx, x, y, Math.max(2, Math.round(PX * 0.75 * (c.t > 0.35 ? 1 - (c.t - 0.35) * 0.9 : 1))), c.spin + c.t * 14)
       }
       // banners: FIGHT! / K.O.!
       if (fx.banner) {
@@ -484,7 +499,8 @@ export default function Fight2D({ params }) {
 
     const frame = (now) => {
       raf = requestAnimationFrame(frame)
-      const dt = Math.min(0.05, (now - last) / 1000)
+      // (the first frame's timestamp can be a little before the start: never step backwards)
+      const dt = Math.max(0, Math.min(0.05, (now - last) / 1000))
       last = now
       if (!isPaused()) step(dt) // paused: the picture holds
       // Light mode (budget phones): draw at most 30 times a second, like the 3D street
@@ -493,7 +509,7 @@ export default function Fight2D({ params }) {
       render()
     }
     raf = requestAnimationFrame(frame)
-    if (import.meta.env.DEV) window.__fight2d = { fight, fx }
+    if (import.meta.env.DEV) window.__fight2d = { fight, fx, look }
     return () => {
       cancelAnimationFrame(raf)
       window.removeEventListener('resize', layout)

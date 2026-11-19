@@ -3397,3 +3397,135 @@ svg .is-chase { fill: #e53935; stroke: #fff; stroke-width: 0.6; animation: map-p
   .fight-purse,
   .fight-badge.hurt { animation: none; }
 }
+
+/* ---- pixel-art fights: crisp pixels, square-ended bars at the top, square
+   portraits, pixel icons (see docs/fight-art-direction.md and docs/fight-hud.md) ---- */
+.fight2d-canvas {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+.story-screen.fighting .fight-hud {
+  gap: 10px;
+}
+.story-screen.fighting .fight-badge,
+.fight-badge {
+  width: 52px;
+  height: 52px;
+  border-radius: 0;
+  border: 3px solid #0e0d1e;
+  box-shadow: inset 0 0 0 3px #3fbf3a, 3px 3px 0 rgba(14, 13, 30, 0.6);
+  background: #8fd8ff;
+  image-rendering: pixelated;
+  animation: none;
+}
+.fight-bar.right .fight-badge {
+  box-shadow: inset 0 0 0 3px #e2553a, -3px 3px 0 rgba(14, 13, 30, 0.6);
+  background: #ffb38a;
+}
+.fight-badge canvas {
+  image-rendering: pixelated;
+}
+.fight-badge.hurt {
+  animation: badge-blink 0.5s steps(2) infinite;
+}
+@keyframes badge-blink {
+  50% { filter: brightness(1.6) saturate(0.4); }
+}
+.story-screen.fighting .fight-name {
+  font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+  font-weight: 900;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-shadow: 2px 2px 0 #0e0d1e;
+}
+.story-screen.fighting .fight-track {
+  height: 18px;
+  border-radius: 0;
+  border: 3px solid #0e0d1e;
+  background: #2a2638;
+  box-shadow: 3px 3px 0 rgba(14, 13, 30, 0.6);
+  position: relative;
+}
+.story-screen.fighting .fight-fill {
+  border-radius: 0;
+  box-shadow: inset 0 3px 0 rgba(255, 255, 255, 0.35), inset 0 -3px 0 rgba(0, 0, 0, 0.25);
+  transition: width 0.12s steps(4);
+}
+/* tick marks every tenth, like a pixel health bar */
+.story-screen.fighting .fight-track::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(90deg, transparent 0 calc(10% - 2px), rgba(14, 13, 30, 0.55) calc(10% - 2px) 10%);
+  pointer-events: none;
+}
+.story-screen.fighting .fight-vs {
+  font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+  font-size: 20px;
+  -webkit-text-stroke: 0;
+  text-shadow: 2px 2px 0 #0e0d1e, -1px -1px 0 #0e0d1e;
+}
+.story-screen.fighting .fight-special {
+  top: calc(max(8px, env(safe-area-inset-top)) + 96px);
+  left: 74px;
+  width: min(220px, 38vw);
+  height: 14px;
+  border-radius: 0;
+  border: 3px solid #0e0d1e;
+  background: #2a2638;
+  box-shadow: 3px 3px 0 rgba(14, 13, 30, 0.6);
+}
+.story-screen.fighting .fight-special div {
+  border-radius: 0;
+  background: #f39c12;
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.35);
+}
+.story-screen.fighting .fight-special div.full {
+  background: #ffd23a;
+  animation: special-blink 0.4s steps(2) infinite;
+}
+@keyframes special-blink {
+  50% { background: #fff3b0; }
+}
+.story-screen.fighting .fight-special span {
+  font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+  font-size: 9px;
+  line-height: 8px;
+  text-transform: uppercase;
+  text-shadow: 1px 1px 0 #0e0d1e;
+}
+.story-screen.fighting .fight-combo {
+  top: calc(max(8px, env(safe-area-inset-top)) + 118px);
+  font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+  text-shadow: 3px 3px 0 #0e0d1e;
+}
+.fight-purse {
+  border-radius: 0;
+  border: 3px solid #0e0d1e;
+  background: rgba(14, 13, 30, 0.82);
+  padding: 2px 12px 2px 2px;
+  font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+  box-shadow: 3px 3px 0 rgba(14, 13, 30, 0.5);
+}
+.fight-purse .coin {
+  width: 24px;
+  height: 24px;
+  border-radius: 0;
+  border: 2px solid #3a2405;
+  background: #f2b705;
+  box-shadow: inset 2px 2px 0 #ffe680, inset -2px -2px 0 #c99a0e;
+  color: #8a5a00;
+  font-size: 14px;
+}
+.pixel-icon {
+  image-rendering: pixelated;
+}
+.story-screen.fighting .fight-btn .icon {
+  filter: drop-shadow(0 2px 0 rgba(0, 0, 0, 0.5));
+}
+.fee-intro .move-list .pixel-icon {
+  display: inline-block;
+  vertical-align: -5px;
+  margin-right: 4px;
+}

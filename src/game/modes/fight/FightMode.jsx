@@ -1,14 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import { useFight, fightInput } from "./fightStore.js";
 import { useDevice } from "../../../components/hud/useDevice.js";
-import Icon from "../../../components/Icon.jsx";
+import PixelIcon from "../../../components/PixelIcon.jsx";
 import Fight2D from "./Fight2D.jsx";
 import PowerupOffer from "../../../components/hud/PowerupOffer.jsx";
-import { drawPortrait } from "./fight2d/puppet.js";
+import { drawPixelPortrait } from "./fight2d/pixel.js";
 import { COIN } from "./fightLogic.js";
 
 // Fight overlay: round portrait badges with health bars, the special meter,
-// the crowd's money (the purse), round see-through buttons (touch) or keys.
+// the crowd's money (the purse), round see-through buttons with pixel-art
+// icons (touch) or keys. Bars are square-ended, like the pixel art.
 // Keys: A/D or ←/→ move · W/↑ jump · J punch · K kick · L block (hold) · Space dodge · U special
 
 const KEYS = {
@@ -33,7 +34,7 @@ const MOVE_LIST = [
   ["bolt", "Special", "when the meter is full: the Lagos Roundabout"],
 ];
 
-const SIZE = 112; // the badge canvas, drawn sharp then shrunk by CSS
+const SIZE = 64; // the badge canvas: a pixel portrait, scaled up crisply
 
 /** A round portrait of a fighter: their own drawn face, worried when hurt. */
 function Badge({ fx, facing, hp, max }) {
@@ -44,7 +45,7 @@ function Badge({ fx, facing, hp, max }) {
     if (!c || !fx) return;
     const g = c.getContext("2d");
     g.clearRect(0, 0, SIZE, SIZE);
-    drawPortrait(g, fx, SIZE, { facing, mood });
+    drawPixelPortrait(g, fx, SIZE, { facing, mood });
   }, [fx, facing, mood]);
   return (
     <div className={`fight-badge ${mood}`}>
@@ -95,7 +96,7 @@ function HoldButton({ action, icon, label, className = "" }) {
         if (action === "left" || action === "right") fightInput.move = 0;
       }}
     >
-      <Icon name={icon} size={className.includes("big") ? 42 : 30} />
+      <PixelIcon name={icon} size={className.includes("big") ? 44 : 32} />
     </button>
   );
 }
@@ -156,7 +157,7 @@ export default function FightMode({ params, onFinish }) {
           <ul className="move-list">
             {MOVE_LIST.map(([icon, name, what]) => (
               <li key={name}>
-                <Icon name={icon} size={18} /> <strong>{name}</strong>: {what}
+                <PixelIcon name={icon} size={20} /> <strong>{name}</strong>: {what}
               </li>
             ))}
           </ul>
