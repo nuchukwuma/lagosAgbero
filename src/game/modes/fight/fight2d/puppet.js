@@ -15,24 +15,25 @@ import { normalizeLook } from '../../../characters/look.js'
 
 // ---- body sizes (metres: a cartoon about 1.5 m tall, a third of it head) ----
 const B = {
-  thigh: 0.31,
-  shin: 0.3,
+  thigh: 0.35,
+  shin: 0.34,
   ankle: 0.07,
   foot: 0.3,
-  torso: 0.4,
+  torso: 0.42,
   neck: 0.04,
-  upper: 0.21,
-  fore: 0.2,
+  upper: 0.23,
+  fore: 0.22,
   fist: 0.088, // big mitts
   line: 0.026, // outline width
 }
-const HEAD = 1.85 // the head is drawn this much bigger than life
-const BULK = 1.3 // limbs this much thicker
-const SHOE = 1.3 // and shoes this much bigger
+const HEAD = 1.8 // the head is drawn this much bigger than life
+const BULK = 1.15 // limbs this much thicker
+const SHOE = 1.35 // and shoes this much bigger
 // the poses below were made for long, adult limbs: scaled to these
 const LEG_K = (B.thigh + B.shin + B.ankle) / 0.95
 const ARM_K = (B.upper + B.fore) / 0.56
 let olw = B.line * 2 // outline stroke width (thinner inside the scaled-up head)
+let FLAT = false // Light mode: flat colours instead of soft shading (cheaper on budget phones)
 
 // ---- colours ----
 function rgb(hex) {
@@ -114,9 +115,10 @@ export function makeFighter(lookInput) {
       shoeL: light(shoes, 0.3),
       hair: css(hair),
       hairD: dark(hair, 0.6),
-      hairL: light(hair, 0.18),
+      hairL: light(hair, 0.25),
       hat: css(hatColor),
       hatD: dark(hatColor),
+      hatL: light(hatColor, 0.3),
       lip: dark(skin, 0.55),
     },
     hat,
@@ -286,25 +288,41 @@ function capsule(ctx, a, b, ra, rb) {
   ctx.closePath()
 }
 
-/** A limb (list of segments) with one outline round the whole thing, then shaded fills. */
+/**
+ * Soft, rounded shading across a limb, like painted game art: the side away
+ * from the light (it comes from above) dark, a bright band towards the light,
+ * then a little bounce at the very edge.
+ */
+function across(ctx, a, b, r, dark, base, lite) {
+  const dx = b[0] - a[0]
+  const dy = b[1] - a[1]
+  const L = Math.hypot(dx, dy) || 1
+  let nx = -dy / L
+  let ny = dx / L
+  if (ny < 0 || (ny === 0 && nx < 0)) {
+    nx = -nx
+    ny = -ny
+  }
+  const mx = (a[0] + b[0]) / 2
+  const my = (a[1] + b[1]) / 2
+  const g = ctx.createLinearGradient(mx - nx * r, my - ny * r, mx + nx * r, my + ny * r)
+  g.addColorStop(0, dark)
+  g.addColorStop(0.42, base)
+  g.addColorStop(0.76, lite)
+  g.addColorStop(1, base)
+  return g
+}
+
+/** A limb (list of segments): one outline round the whole thing, then each part shaded. */
 function limb(ctx, segs, fill, shade, light = null) {
   ctx.beginPath()
   for (const [a, b, ra, rb] of segs) capsule(ctx, a, b, ra + B.line, rb + B.line)
   ctx.fillStyle = OUTLINE
   ctx.fill()
-  ctx.beginPath()
-  for (const [a, b, ra, rb] of segs) capsule(ctx, a, b, ra, rb)
-  ctx.fillStyle = shade
-  ctx.fill()
-  // the lit side: the same shape, a little smaller, pushed towards the light (up and forward)
-  ctx.beginPath()
-  for (const [a, b, ra, rb] of segs) capsule(ctx, [a[0] + ra * 0.22, a[1] + ra * 0.3], [b[0] + rb * 0.22, b[1] + rb * 0.3], ra * 0.78, rb * 0.78)
-  ctx.fillStyle = fill
-  ctx.fill()
-  if (light) {
+  for (const [a, b, ra, rb] of segs) {
     ctx.beginPath()
-    for (const [a, b, ra, rb] of segs) capsule(ctx, [a[0] + ra * 0.45, a[1] + ra * 0.5], [b[0] + rb * 0.45, b[1] + rb * 0.5], ra * 0.28, rb * 0.28)
-    ctx.fillStyle = light
+    capsule(ctx, a, b, ra, rb)
+    ctx.fillStyle = FLAT ? fill : across(ctx, a, b, Math.max(ra, rb), shade, fill, light || fill)
     ctx.fill()
   }
 }
@@ -322,6 +340,12 @@ function shoe(ctx, ank, knee, fx, back, grounded) {
     const y = y0 * SHOE
     return [ank[0] + x * c - y * s, ank[1] + x * s + y * c]
   }
+  const vert = (top, bottom, stops) => {
+    if (FLAT) return stops[Math.floor(stops.length / 2)]
+    const g = ctx.createLinearGradient(...P(0, top), ...P(0, bottom))
+    stops.forEach((col, i) => g.addColorStop(i / (stops.length - 1), col))
+    return g
+  }
   if (fx.rugged) {
     // rubber slippers: a bare foot on a thin sole, one strap across
     ctx.beginPath()
@@ -334,86 +358,114 @@ function shoe(ctx, ank, knee, fx, back, grounded) {
     ctx.lineWidth = B.line * 2
     ctx.strokeStyle = OUTLINE
     ctx.stroke()
-    ctx.fillStyle = back ? fx.c.skinB : fx.c.skin
+    ctx.fillStyle = vert(0.03, -0.05, [fx.c.skinL, back ? fx.c.skinB : fx.c.skin, fx.c.skinD])
     ctx.fill()
     ctx.beginPath()
     ctx.moveTo(...P(-0.08, -0.058))
     ctx.lineTo(...P(0.2, -0.062))
-    ctx.lineWidth = 0.026
+    ctx.lineWidth = 0.03
     ctx.strokeStyle = back ? fx.c.shoeD : fx.c.shoe
     ctx.stroke()
     ctx.beginPath()
     ctx.moveTo(...P(0.05, -0.05))
     ctx.lineTo(...P(0.1, -0.0))
-    ctx.lineWidth = 0.018
+    ctx.lineWidth = 0.02
     ctx.stroke()
     return
   }
-  const pts = [P(-0.07, 0.03), P(-0.075, -0.055), P(0.2, -0.065), P(0.215, -0.02), P(0.12, 0.035), P(0.02, 0.05)]
-  const path = () => {
+  // a chunky trainer: padded upper, a fat white sole, laces, a stripe
+  const upper = () => {
     ctx.beginPath()
-    ctx.moveTo(...pts[0])
-    ctx.lineTo(...pts[1])
-    ctx.lineTo(...pts[2])
-    ctx.quadraticCurveTo(...P(0.235, -0.06), ...pts[3])
-    ctx.quadraticCurveTo(...P(0.2, 0.03), ...pts[4])
-    ctx.lineTo(...pts[5])
+    ctx.moveTo(...P(-0.075, -0.035))
+    ctx.quadraticCurveTo(...P(-0.09, 0.03), ...P(-0.05, 0.07)) // heel
+    ctx.quadraticCurveTo(...P(-0.0, 0.085), ...P(0.04, 0.06)) // collar
+    ctx.quadraticCurveTo(...P(0.13, 0.04), ...P(0.2, 0.0)) // laces down to the toe
+    ctx.quadraticCurveTo(...P(0.235, -0.02), ...P(0.22, -0.035)) // toe
     ctx.closePath()
   }
-  path()
+  const sole = () => {
+    ctx.beginPath()
+    ctx.moveTo(...P(-0.085, -0.03))
+    ctx.lineTo(...P(0.228, -0.03))
+    ctx.quadraticCurveTo(...P(0.25, -0.05), ...P(0.225, -0.07))
+    ctx.lineTo(...P(-0.08, -0.07))
+    ctx.quadraticCurveTo(...P(-0.1, -0.05), ...P(-0.085, -0.03))
+    ctx.closePath()
+  }
+  ctx.lineJoin = 'round'
   ctx.lineWidth = B.line * 2
   ctx.strokeStyle = OUTLINE
+  upper()
   ctx.stroke()
-  ctx.fillStyle = back ? fx.c.shoeD : fx.c.shoe
+  sole()
+  ctx.stroke()
+  upper()
+  ctx.fillStyle = vert(0.08, -0.035, back ? [fx.c.shoe, fx.c.shoeD] : [fx.c.shoeL, fx.c.shoe, fx.c.shoeD])
+  ctx.fill()
+  sole()
+  ctx.fillStyle = vert(-0.03, -0.07, back ? ['#c9c3b8', '#8f897f'] : ['#ffffff', '#e8e2d6', '#a9a397'])
   ctx.fill()
   if (!back) {
-    // a shine on the toe cap
+    // the stripe, the laces and a shine on the toe
     ctx.beginPath()
-    ctx.ellipse(...P(0.13, 0.0), 0.035 * SHOE, 0.014 * SHOE, Math.atan2(s, c), 0, Math.PI * 2)
-    ctx.fillStyle = fx.c.shoeL
+    ctx.moveTo(...P(-0.04, 0.0))
+    ctx.quadraticCurveTo(...P(0.06, 0.035), ...P(0.15, -0.02))
+    ctx.lineWidth = 0.022
+    ctx.strokeStyle = fx.c.trim
+    ctx.stroke()
+    ctx.lineWidth = 0.009
+    ctx.strokeStyle = '#f4f1ea'
+    for (const k of [0.05, 0.09, 0.13]) {
+      ctx.beginPath()
+      ctx.moveTo(...P(k - 0.015, 0.055 - k * 0.32))
+      ctx.lineTo(...P(k + 0.015, 0.068 - k * 0.32))
+      ctx.stroke()
+    }
+    ctx.beginPath()
+    ctx.ellipse(...P(0.17, 0.005), 0.025 * SHOE, 0.01 * SHOE, ang - 0.4, 0, Math.PI * 2)
+    ctx.fillStyle = 'rgba(255,255,255,0.55)'
     ctx.fill()
   }
-  // sole
-  ctx.beginPath()
-  ctx.moveTo(...P(-0.072, -0.04))
-  ctx.lineTo(...P(0.205, -0.05))
-  ctx.lineWidth = 0.03
-  ctx.strokeStyle = back ? '#9a948a' : '#f4efe4'
-  ctx.stroke()
+  ctx.lineJoin = 'miter'
 }
 
 function fist(ctx, p, elb, r, fx, back) {
+  const ang = Math.atan2(p[1] - elb[1], p[0] - elb[0])
+  // a big mitten fist, lit from above
   ctx.beginPath()
-  ctx.arc(p[0], p[1], r + B.line, 0, Math.PI * 2)
+  ctx.ellipse(p[0], p[1], r * 1.08 + B.line, r * 0.95 + B.line, ang, 0, Math.PI * 2)
   ctx.fillStyle = OUTLINE
   ctx.fill()
+  let g = back ? fx.c.skinB : fx.c.skin
+  if (!FLAT) {
+    g = ctx.createRadialGradient(p[0] - r * 0.2, p[1] + r * 0.4, r * 0.1, p[0], p[1], r * 1.1)
+    g.addColorStop(0, back ? fx.c.skin : fx.c.skinL)
+    g.addColorStop(0.55, back ? fx.c.skinB : fx.c.skin)
+    g.addColorStop(1, fx.c.skinD)
+  }
   ctx.beginPath()
-  ctx.arc(p[0], p[1], r, 0, Math.PI * 2)
-  ctx.fillStyle = back ? fx.c.skinB : fx.c.skin
+  ctx.ellipse(p[0], p[1], r * 1.08, r * 0.95, ang, 0, Math.PI * 2)
+  ctx.fillStyle = g
   ctx.fill()
-  // knuckles: creases facing away from the elbow, a thumb across, a shine on top
-  const ang = Math.atan2(p[1] - elb[1], p[0] - elb[0])
-  ctx.beginPath()
-  ctx.arc(p[0] + Math.cos(ang + 1.2) * r * 0.25, p[1] + Math.sin(ang + 1.2) * r * 0.25, r * 0.55, 0, Math.PI * 2)
-  ctx.fillStyle = fx.c.skinL
-  ctx.fill()
-  ctx.lineWidth = 0.011
+  // folded fingers facing away from the elbow, and the thumb across them
+  ctx.lineCap = 'round'
+  ctx.lineWidth = 0.012
   ctx.strokeStyle = fx.c.skinD
-  for (const o of [-0.5, 0, 0.5]) {
+  for (const o of [-0.55, 0, 0.55]) {
     ctx.beginPath()
-    ctx.arc(p[0], p[1], r * 0.68, ang + o - 0.16, ang + o + 0.16)
+    ctx.arc(p[0], p[1], r * 0.72, ang + o - 0.17, ang + o + 0.17)
     ctx.stroke()
   }
   ctx.beginPath()
   ctx.moveTo(p[0] + Math.cos(ang - 2.2) * r * 0.75, p[1] + Math.sin(ang - 2.2) * r * 0.75)
   ctx.quadraticCurveTo(p[0] + Math.cos(ang - 0.9) * r * 0.2, p[1] + Math.sin(ang - 0.9) * r * 0.2, p[0] + Math.cos(ang - 0.4) * r * 0.62, p[1] + Math.sin(ang - 0.4) * r * 0.62)
-  ctx.lineWidth = 0.014
+  ctx.lineWidth = 0.016
   ctx.strokeStyle = OUTLINE
   ctx.stroke()
+  ctx.lineCap = 'butt'
   if (fx.band) {
-    const w = along(elb, p, 0.78)
     ctx.beginPath()
-    capsule(ctx, along(elb, p, 0.7), w, 0.042, 0.042)
+    capsule(ctx, along(elb, p, 0.66), along(elb, p, 0.76), 0.045, 0.045)
     ctx.fillStyle = fx.band
     ctx.fill()
   }
@@ -427,16 +479,38 @@ function arm(ctx, sk, fx, back) {
   const sleeve = fx.style.jacket && fx.c.jacket ? fx.c.jacket : back ? fx.c.shirtB : fx.c.shirt
   const sleeveD = fx.style.jacket && fx.c.jacketD ? fx.c.jacketD : fx.c.shirtD
   // bare arm first, then the sleeve over it
-  limb(ctx, [[sh, elb, 0.052 * w, 0.044 * w], [elb, fs, 0.044 * w, 0.038 * w]], skin, fx.c.skinD, back ? null : fx.c.skinL)
-  if (long) limb(ctx, [[sh, elb, 0.062 * w, 0.054 * w], [elb, along(elb, fs, 0.82), 0.054 * w, 0.048 * w]], sleeve, sleeveD, back ? null : fx.c.shirtL)
-  else limb(ctx, [[sh, along(sh, elb, 0.62), 0.066 * w, 0.058 * w]], sleeve, sleeveD, back ? null : fx.c.shirtL)
+  limb(ctx, [[sh, elb, 0.05 * w, 0.044 * w], [elb, fs, 0.044 * w, 0.042 * w]], skin, fx.c.skinD, back ? null : fx.c.skinL)
+  if (long) limb(ctx, [[sh, elb, 0.062 * w, 0.056 * w], [elb, along(elb, fs, 0.8), 0.056 * w, 0.054 * w]], sleeve, sleeveD, back ? null : fx.c.shirtL)
+  else {
+    // a T-shirt sleeve: a short flared tube with a hem
+    const end = along(sh, elb, 0.58)
+    limb(ctx, [[sh, end, 0.068 * w, 0.064 * w]], sleeve, sleeveD, back ? null : fx.c.shirtL)
+    ctx.beginPath()
+    capsule(ctx, along(sh, elb, 0.5), end, 0.064 * w, 0.064 * w)
+    ctx.fillStyle = 'rgba(0,0,0,0.16)'
+    ctx.fill()
+  }
   fist(ctx, fs, elb, B.fist * fx.w, fx, back)
 }
 
 function leg(ctx, sk, fx, back, pose) {
   const [hp, kn, an] = back ? [sk.hipB, sk.kneeB, sk.ankB] : [sk.hipF, sk.kneeF, sk.ankF]
   const w = fx.w * BULK
-  limb(ctx, [[hp, kn, 0.08 * w, 0.064 * w], [kn, an, 0.064 * w, 0.056 * w]], back ? fx.c.pantsB : fx.c.pants, fx.c.pantsD, back ? null : fx.c.pantsL)
+  limb(ctx, [[hp, kn, 0.078 * w, 0.064 * w], [kn, an, 0.064 * w, 0.06 * w]], back ? fx.c.pantsB : fx.c.pants, fx.c.pantsD, back ? null : fx.c.pantsL)
+  if (!back) {
+    // the outside seam, and a turned-up hem at the ankle
+    ctx.beginPath()
+    ctx.moveTo(...along(hp, kn, 0.15))
+    ctx.lineTo(...kn)
+    ctx.lineTo(...along(kn, an, 0.85))
+    ctx.lineWidth = 0.008
+    ctx.strokeStyle = fx.c.pantsD
+    ctx.stroke()
+  }
+  ctx.beginPath()
+  capsule(ctx, along(kn, an, 0.82), along(kn, an, 0.97), 0.068 * w, 0.068 * w)
+  ctx.fillStyle = fx.c.pantsD
+  ctx.fill()
   if (fx.rugged && !back) {
     // a sewn-on patch on the thigh, and a frayed cuff above the slippers
     const m = along(hp, kn, 0.55)
@@ -444,23 +518,14 @@ function leg(ctx, sk, fx, back, pose) {
     ctx.save()
     ctx.translate(m[0], m[1])
     ctx.rotate(a)
-    ctx.fillStyle = 'rgba(120, 92, 60, 0.9)'
+    ctx.fillStyle = 'rgba(120, 92, 60, 0.95)'
     ctx.fillRect(-0.05, -0.045, 0.1, 0.09)
     ctx.setLineDash([0.012, 0.01])
     ctx.lineWidth = 0.006
-    ctx.strokeStyle = 'rgba(240, 230, 200, 0.8)'
+    ctx.strokeStyle = 'rgba(240, 230, 200, 0.85)'
     ctx.strokeRect(-0.042, -0.037, 0.084, 0.074)
     ctx.setLineDash([])
     ctx.restore()
-    const c = along(kn, an, 0.9)
-    ctx.beginPath()
-    for (let k = -2; k <= 2; k++) {
-      ctx.moveTo(c[0] + k * 0.018, c[1])
-      ctx.lineTo(c[0] + k * 0.018 + 0.006, c[1] - 0.03)
-    }
-    ctx.lineWidth = 0.008
-    ctx.strokeStyle = fx.c.pantsD
-    ctx.stroke()
   }
   const grounded = (back ? pose.footB : pose.footF)[1] < 0.05 && !pose.lying
   shoe(ctx, an, kn, fx, back, grounded)
@@ -473,82 +538,95 @@ function torso(ctx, sk, fx) {
   const ay = Math.cos(lean)
   const P = (v, u) => [hip[0] + ax * u + ay * v, hip[1] + ay * u - ax * v]
   const T = B.torso * fx.h
-  const w = fx.w * 1.18
+  const w = fx.w * 1.12
   const f = fx.female
   const shape = [
-    [-0.13 * w, 0.0], // back of the waist
-    [0.12 * w, 0.0], // front of the waist
-    [(f ? 0.15 : 0.15) * w, T * 0.55], // belly / chest
+    [-0.12 * w, 0.0], // back of the waist
+    [0.11 * w, 0.0], // front of the waist
+    [0.13 * w, T * 0.55], // belly
     [(f ? 0.15 : 0.14) * w, T * 0.85], // chest
     [0.08 * w, T * 1.02], // collar front
     [-0.1 * w, T * 1.02], // shoulder top
-    [-0.15 * w, T * 0.78], // back of the shoulders
-    [-0.13 * w, T * 0.35], // small of the back
+    [-0.15 * w, T * 0.8], // back of the shoulders
+    [-0.12 * w, T * 0.35], // small of the back
   ]
-  const path = (grow = 0) => {
+  const path = () => {
     ctx.beginPath()
-    const pts = shape.map(([v, u], i) => P(v + Math.sign(v || 1) * grow, u + (i >= 4 && i <= 5 ? grow : i <= 1 ? -grow : 0)))
+    const pts = shape.map(([v, u]) => P(v, u))
     ctx.moveTo(...pts[0])
     ctx.lineTo(...pts[1])
-    ctx.quadraticCurveTo(...P(0.16 * w, T * 0.25), ...pts[2])
-    ctx.quadraticCurveTo(...P(0.17 * w, T * 0.72), ...pts[3])
+    ctx.quadraticCurveTo(...P(0.14 * w, T * 0.25), ...pts[2])
+    ctx.quadraticCurveTo(...P(0.16 * w, T * 0.72), ...pts[3])
     ctx.quadraticCurveTo(...P(0.13 * w, T * 1.0), ...pts[4])
     ctx.lineTo(...pts[5])
     ctx.quadraticCurveTo(...P(-0.17 * w, T * 0.98), ...pts[6])
-    ctx.quadraticCurveTo(...P(-0.16 * w, T * 0.55), ...pts[7])
+    ctx.quadraticCurveTo(...P(-0.15 * w, T * 0.55), ...pts[7])
     ctx.closePath()
   }
   path()
+  ctx.lineJoin = 'round'
   ctx.lineWidth = B.line * 2
   ctx.strokeStyle = OUTLINE
   ctx.stroke()
-  ctx.fillStyle = fx.c.shirtD
+  // shaded round: dark at the back, lit across the chest, a little bounce at the front edge
+  if (FLAT) ctx.fillStyle = fx.c.shirt
+  else {
+    const g = ctx.createLinearGradient(...P(-0.16 * w, T * 0.3), ...P(0.17 * w, T * 0.75))
+    g.addColorStop(0, fx.c.shirtD)
+    g.addColorStop(0.45, fx.c.shirt)
+    g.addColorStop(0.78, fx.c.shirtL)
+    g.addColorStop(1, fx.c.shirt)
+    ctx.fillStyle = g
+  }
   ctx.fill()
-  // the lit front of the shirt
   ctx.save()
   path()
   ctx.clip()
-  ctx.beginPath()
-  ctx.moveTo(...P(-0.04 * w, -0.05))
-  ctx.lineTo(...P(0.3 * w, -0.05))
-  ctx.lineTo(...P(0.3 * w, T * 1.1))
-  ctx.lineTo(...P(-0.08 * w, T * 1.1))
-  ctx.quadraticCurveTo(...P(-0.01 * w, T * 0.5), ...P(-0.04 * w, -0.05))
-  ctx.fillStyle = fx.c.shirt
-  ctx.fill()
-  // a jacket or waistcoat over it (shirt2)
+  // a soft shadow under the chest, and where the arms hang
+  if (!FLAT) {
+    const sh = ctx.createLinearGradient(...P(0, 0), ...P(0, T * 0.45))
+    sh.addColorStop(0, 'rgba(0,0,0,0.25)')
+    sh.addColorStop(1, 'rgba(0,0,0,0)')
+    ctx.fillStyle = sh
+    ctx.fillRect(hip[0] - 1, hip[1] - 1, 2, 2)
+  }
   if (fx.style.jacket && fx.c.jacket) {
+    // an open jacket over the shirt
     ctx.beginPath()
     ctx.moveTo(...P(-0.3 * w, -0.05))
-    ctx.lineTo(...P(0.06 * w, -0.05))
-    ctx.lineTo(...P(0.13 * w, T * 0.55))
+    ctx.lineTo(...P(0.05 * w, -0.05))
+    ctx.lineTo(...P(0.1 * w, T * 0.55))
     ctx.lineTo(...P(0.03 * w, T * 1.05))
     ctx.lineTo(...P(-0.3 * w, T * 1.05))
     ctx.closePath()
-    ctx.fillStyle = fx.c.jacket
+    if (FLAT) ctx.fillStyle = fx.c.jacket
+    else {
+      const j = ctx.createLinearGradient(...P(-0.16 * w, T * 0.3), ...P(0.1 * w, T * 0.75))
+      j.addColorStop(0, fx.c.jacketD)
+      j.addColorStop(1, fx.c.jacket)
+      ctx.fillStyle = j
+    }
     ctx.fill()
-    ctx.lineWidth = 0.01
-    ctx.strokeStyle = fx.c.jacketD
+    ctx.lineWidth = 0.012
+    ctx.strokeStyle = OUTLINE
     ctx.stroke()
   } else {
-    // a shirt seam and buttons down the front
-    ctx.lineWidth = 0.008
-    ctx.strokeStyle = fx.c.shirtD
+    // a print across the chest of the T-shirt: a bold band in the trim colour
     ctx.beginPath()
-    ctx.moveTo(...P(0.1 * w, T * 0.05))
-    ctx.lineTo(...P(0.1 * w, T * 0.92))
-    ctx.stroke()
+    ctx.moveTo(...P(-0.2 * w, T * 0.6))
+    ctx.lineTo(...P(0.2 * w, T * 0.66))
+    ctx.lineTo(...P(0.2 * w, T * 0.76))
+    ctx.lineTo(...P(-0.2 * w, T * 0.7))
+    ctx.closePath()
     ctx.fillStyle = fx.c.trim
-    for (const u of [0.25, 0.48, 0.71]) {
-      ctx.beginPath()
-      ctx.arc(...P(0.115 * w, T * u), 0.011, 0, Math.PI * 2)
-      ctx.fill()
-    }
+    ctx.globalAlpha = 0.85
+    ctx.fill()
+    ctx.globalAlpha = 1
   }
   if (fx.rugged) {
     // dust and sweat stains, and a tear near the hem
     ctx.fillStyle = 'rgba(95, 70, 40, 0.28)'
-    for (const [v, u, r] of [[0.06, 0.62, 0.05], [-0.04, 0.35, 0.04], [0.1, 0.25, 0.03]]) {
+    for (const [v, u, r] of [[0.06, 0.45, 0.05], [-0.04, 0.3, 0.04], [0.1, 0.2, 0.03]]) {
       ctx.beginPath()
       ctx.arc(...P(v * w, T * u), r, 0, Math.PI * 2)
       ctx.fill()
@@ -561,45 +639,51 @@ function torso(ctx, sk, fx) {
     ctx.fillStyle = 'rgba(30, 20, 14, 0.55)'
     ctx.fill()
   }
-  // folds where the shirt bunches at the back
-  ctx.lineWidth = 0.009
+  // folds where the shirt bunches at the waist
+  ctx.lineWidth = 0.01
   ctx.strokeStyle = fx.c.shirtD
   ctx.beginPath()
-  ctx.moveTo(...P(-0.11 * w, T * 0.2))
-  ctx.quadraticCurveTo(...P(-0.04 * w, T * 0.28), ...P(-0.02 * w, T * 0.18))
+  ctx.moveTo(...P(-0.1 * w, T * 0.16))
+  ctx.quadraticCurveTo(...P(-0.03 * w, T * 0.24), ...P(0.0, T * 0.14))
+  ctx.moveTo(...P(0.02 * w, T * 0.1))
+  ctx.quadraticCurveTo(...P(0.07 * w, T * 0.16), ...P(0.1 * w, T * 0.08))
   ctx.stroke()
   ctx.restore()
-  // collar
+  // the neckline
   ctx.beginPath()
-  ctx.moveTo(...P(-0.06 * w, T * 1.0))
-  ctx.lineTo(...P(0.03 * w, T * 0.9))
-  ctx.lineTo(...P(0.09 * w, T * 1.0))
-  ctx.lineWidth = 0.022
+  ctx.moveTo(...P(-0.07 * w, T * 1.0))
+  ctx.quadraticCurveTo(...P(0.0, T * 0.88), ...P(0.08 * w, T * 1.0))
+  ctx.lineWidth = 0.024
   ctx.strokeStyle = fx.c.trim
   ctx.stroke()
   if (fx.chain) {
     ctx.beginPath()
     ctx.moveTo(...P(-0.05 * w, T * 1.0))
-    ctx.quadraticCurveTo(...P(0.06 * w, T * 0.74), ...P(0.1 * w, T * 0.98))
-    ctx.lineWidth = 0.014
+    ctx.quadraticCurveTo(...P(0.06 * w, T * 0.72), ...P(0.1 * w, T * 0.98))
+    ctx.lineWidth = 0.016
     ctx.strokeStyle = fx.chain
     ctx.stroke()
   }
-  // trousers: the waistband and seat
+  // trousers: the waistband and seat, and a belt with a buckle
   ctx.beginPath()
-  capsule(ctx, P(-0.035 * w, 0.02), P(0.035 * w, 0.02), 0.13 * w + B.line, 0.12 * w + B.line)
+  capsule(ctx, P(-0.035 * w, 0.02), P(0.035 * w, 0.02), 0.125 * w + B.line, 0.115 * w + B.line)
   ctx.fillStyle = OUTLINE
   ctx.fill()
   ctx.beginPath()
-  capsule(ctx, P(-0.035 * w, 0.02), P(0.035 * w, 0.02), 0.13 * w, 0.12 * w)
-  ctx.fillStyle = fx.c.pants
+  capsule(ctx, P(-0.035 * w, 0.02), P(0.035 * w, 0.02), 0.125 * w, 0.115 * w)
+  ctx.fillStyle = FLAT ? fx.c.pants : across(ctx, P(-0.035 * w, 0.02), P(0.035 * w, 0.02), 0.12 * w, fx.c.pantsD, fx.c.pants, fx.c.pantsL)
   ctx.fill()
   ctx.beginPath()
-  ctx.moveTo(...P(-0.13 * w, 0.06))
-  ctx.lineTo(...P(0.12 * w, 0.06))
-  ctx.lineWidth = 0.028
-  ctx.strokeStyle = fx.c.pantsD // belt
+  ctx.moveTo(...P(-0.12 * w, 0.065))
+  ctx.lineTo(...P(0.115 * w, 0.065))
+  ctx.lineWidth = 0.03
+  ctx.strokeStyle = '#2a1c14'
   ctx.stroke()
+  ctx.beginPath()
+  ctx.rect(...P(0.07 * w, 0.08), 0.035, 0.03)
+  ctx.fillStyle = '#d9b44a'
+  ctx.fill()
+  ctx.lineJoin = 'miter'
 }
 
 // ---- the head ----
@@ -655,9 +739,18 @@ function head(ctx, sk, fx, pose) {
   headPath(ctx)
   ctx.clip()
   // cel light: the face side is lit, the back of the head falls into shade
+  // rounded like a ball: lit high on the forehead, rolling off into shade
+  let sg = fx.c.skin
+  if (!FLAT) {
+    sg = ctx.createRadialGradient(0.06, 0.05, 0.01, 0.03, 0.0, 0.17)
+    sg.addColorStop(0, fx.c.skinL)
+    sg.addColorStop(0.45, fx.c.skin)
+    sg.addColorStop(0.85, fx.c.skin)
+    sg.addColorStop(1, fx.c.skinD)
+  }
   ctx.beginPath()
-  ctx.ellipse(0.045, 0.012, 0.112, 0.145, 0, 0, Math.PI * 2)
-  ctx.fillStyle = fx.c.skin
+  ctx.ellipse(0.045, 0.012, 0.118, 0.15, 0, 0, Math.PI * 2)
+  ctx.fillStyle = sg
   ctx.fill()
   ctx.beginPath()
   ctx.ellipse(0.07, 0.07, 0.038, 0.026, 0.4, 0, Math.PI * 2) // forehead shine
@@ -896,6 +989,14 @@ function hairAndHat(ctx, fx) {
     ctx.fillStyle = fill
     ctx.fill()
   }
+  // glossy hair: light on top, dark underneath
+  let hairFill = fx.c.hair
+  if (!FLAT) {
+    hairFill = ctx.createLinearGradient(0, 0.2, 0, -0.02)
+    hairFill.addColorStop(0, fx.c.hairL)
+    hairFill.addColorStop(0.45, fx.c.hair)
+    hairFill.addColorStop(1, fx.c.hairD)
+  }
   // the hair cap that every style except bald shares
   if (hair !== 'bald' && fx.hat !== 'gele') {
     ctx.beginPath()
@@ -933,7 +1034,16 @@ function hairAndHat(ctx, fx) {
       ctx.quadraticCurveTo(-0.08, -0.01, -0.06, 0.03)
       ctx.quadraticCurveTo(0.0, 0.08, 0.102, 0.06)
     }
-    fillOutline(fx.c.hair)
+    fillOutline(hairFill)
+    // a gloss streak where the light catches it
+    ctx.beginPath()
+    ctx.moveTo(-0.07, 0.125)
+    ctx.quadraticCurveTo(-0.01, 0.16, 0.05, 0.135)
+    ctx.lineWidth = 0.012
+    ctx.lineCap = 'round'
+    ctx.strokeStyle = 'rgba(255,255,255,0.28)'
+    ctx.stroke()
+    ctx.lineCap = 'butt'
     // texture: curls / shine
     ctx.fillStyle = fx.c.hairL
     if (hair === 'afro' || hair === 'curly' || hair === 'puffs') {
@@ -974,13 +1084,20 @@ function hairAndHat(ctx, fx) {
   // hats
   const hat = fx.hat
   if (!hat) return
+  let hatFill = fx.c.hat
+  if (!FLAT) {
+    hatFill = ctx.createLinearGradient(0, 0.24, 0, 0.04)
+    hatFill.addColorStop(0, fx.c.hatL)
+    hatFill.addColorStop(0.5, fx.c.hat)
+    hatFill.addColorStop(1, fx.c.hatD)
+  }
   ctx.beginPath()
   if (hat === 'cap' || hat === 'hardhat') {
     ctx.moveTo(0.11, 0.08)
     ctx.quadraticCurveTo(0.1, 0.2, -0.02, 0.19)
     ctx.quadraticCurveTo(-0.13, 0.18, -0.12, 0.07)
     ctx.closePath()
-    fillOutline(fx.c.hat)
+    fillOutline(hatFill)
     ctx.beginPath() // brim
     if (hat === 'cap') {
       ctx.moveTo(0.06, 0.085)
@@ -1005,7 +1122,7 @@ function hairAndHat(ctx, fx) {
       ctx.quadraticCurveTo(-0.13, 0.2, -0.12, 0.05)
     }
     ctx.closePath()
-    fillOutline(fx.c.hat)
+    fillOutline(hatFill)
     ctx.beginPath()
     ctx.moveTo(0.105, 0.075)
     ctx.quadraticCurveTo(0.0, 0.11, -0.12, 0.07)
@@ -1018,25 +1135,25 @@ function hairAndHat(ctx, fx) {
     ctx.quadraticCurveTo(-0.06, 0.25, -0.16, 0.16)
     ctx.lineTo(-0.11, 0.05)
     ctx.closePath()
-    fillOutline(fx.c.hat)
+    fillOutline(hatFill)
   } else if (hat === 'bandana') {
     ctx.moveTo(0.105, 0.065)
     ctx.quadraticCurveTo(0.09, 0.17, -0.02, 0.165)
     ctx.quadraticCurveTo(-0.12, 0.155, -0.115, 0.03)
     ctx.quadraticCurveTo(-0.03, 0.09, 0.105, 0.065)
-    fillOutline(fx.c.hat)
+    fillOutline(hatFill)
     ctx.beginPath() // the knot's tails
     ctx.moveTo(-0.11, 0.06)
     ctx.lineTo(-0.19, 0.0)
     ctx.lineTo(-0.16, 0.08)
     ctx.closePath()
-    fillOutline(fx.c.hat)
+    fillOutline(hatFill)
   } else if (hat === 'gele') {
     ctx.moveTo(0.11, 0.06)
     ctx.bezierCurveTo(0.2, 0.2, 0.0, 0.32, -0.1, 0.22)
     ctx.bezierCurveTo(-0.22, 0.18, -0.18, 0.02, -0.11, 0.0)
     ctx.quadraticCurveTo(0.0, 0.06, 0.11, 0.06)
-    fillOutline(fx.c.hat)
+    fillOutline(hatFill)
     ctx.beginPath()
     ctx.moveTo(0.06, 0.12)
     ctx.quadraticCurveTo(0.0, 0.22, -0.1, 0.18)
@@ -1047,7 +1164,8 @@ function hairAndHat(ctx, fx) {
 }
 
 /** Draws one fighter. The canvas is already set up: metres, y up, at the fighter's feet, facing right. */
-export function drawFighter(ctx, fx, pose, { alpha = 1 } = {}) {
+export function drawFighter(ctx, fx, pose, { alpha = 1, flat = false } = {}) {
+  FLAT = flat
   const sk = skeleton(pose, fx)
   ctx.save()
   if (alpha < 1) ctx.globalAlpha = alpha

@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { useFight, fightInput, opponentProfile } from './fightStore.js'
 import { createFight, stepFight, MOVES } from './fightLogic.js'
-import { makeFighter, poseFor, drawFighter, mix, POSES } from './fight2d/puppet.js'
+import { makeFighter, poseFor, drawFighter, mix, POSES, reachPoints } from './fight2d/puppet.js'
 import { makeStage } from './fight2d/stage.js'
 import { useGameStore } from '../../store/gameStore.js'
 import { useSettings, effectiveQuality, canvasRatio } from '../../store/settings.js'
@@ -109,10 +109,10 @@ export default function Fight2D({ params }) {
       canvas.width = Math.round(W * dpr)
       canvas.height = Math.round(H * dpr)
       const portrait = H > W
-      groundY = H * (portrait ? 0.7 : 0.9)
+      groundY = H * (portrait ? 0.66 : 0.75) // the lagoon shows below the jetty
       // as big as fits: both fighters across, heads clear of the health bars
       const top = portrait ? 150 : 112
-      ppm = Math.min(W / (portrait ? 4.6 : 7.2), (groundY - top) / 1.75)
+      ppm = Math.min(W / (portrait ? 4.6 : 7.2), (groundY - top) / 1.85)
       stage = makeStage({ W, H, ppm, groundY, pan: PAN + 2, time, dpr, light, seed: (params.opponent || 'x').length * 31 + 7 })
     }
     layout()
@@ -120,8 +120,8 @@ export default function Fight2D({ params }) {
 
     // per fighter: the drawn pose (eased towards the rules' pose), squash, afterimages
     const look = {
-      p: { pose: mix(POSES.stance, POSES.stance, 0), squash: 0, ghosts: [], ghostT: 0 },
-      o: { pose: mix(POSES.stance, POSES.stance, 0), squash: 0, ghosts: [], ghostT: 0 },
+      p: { pose: mix(POSES.stance, POSES.stance, 0), squash: 0, ghosts: [], ghostT: 0, trail: [] },
+      o: { pose: mix(POSES.stance, POSES.stance, 0), squash: 0, ghosts: [], ghostT: 0, trail: [] },
     }
     const fx = { sparks: [], bursts: [], words: [], coins: [], shake: 0, flash: 0, hitStop: 0, slow: 0, banner: null, cheer: 0.2 }
     let camX = 0
@@ -244,6 +244,19 @@ export default function Fight2D({ params }) {
         }
         for (const g of L.ghosts) g.life -= dt
         L.ghosts = L.ghosts.filter((g) => g.life > 0)
+        // the swoosh: where the fist or foot has been during the swing
+        for (const q of L.trail) q.age += dt
+        const a = f.action
+        if (a) {
+          const m = MOVES[a.type]
+          if (a.t > m.startup * 0.45 && a.t < m.startup + m.active) {
+            const rp = reachPoints(fighters[k], lunge(L.pose))
+            const tip = a.type === 'punch' ? rp.fist : rp.foot
+            const dir = k === 'p' ? 1 : -1
+            L.trail.push({ x: f.x + dir * tip[0], y: f.y + tip[1], age: 0, kind: a.type })
+          }
+        }
+        L.trail = L.trail.filter((q) => q.age < 0.14).slice(-9)
       }
       // camera: follow the middle, ease out when they're far apart
       const mid = (fight.p.x + fight.o.x) / 2
@@ -299,7 +312,7 @@ export default function Fight2D({ params }) {
       ctx.save()
       ctx.translate(sx, sy)
       ctx.scale(ppm * facing * (1 + sq), -ppm * (1 - sq))
-      drawFighter(ctx, fighters[k], pose, { alpha })
+      drawFighter(ctx, fighters[k], pose, { alpha, flat: light })
       ctx.restore()
     }
 
@@ -331,6 +344,33 @@ export default function Fight2D({ params }) {
         const facing = k === 'p' ? 1 : -1
         look[k].ghosts.forEach((g, i) => drawPuppet(k, f, facing, 0.12 + i * 0.05, g.pose, g.x, g.y))
         drawPuppet(k, f, facing)
+      }
+      // swooshes: a white crescent tapering away behind each swing
+      for (const k of ['p', 'o']) {
+        const tr = look[k].trail
+        if (tr.length < 2) continue
+        ctx.lineCap = 'round'
+        for (let i = 1; i < tr.length; i++) {
+          const a = tr[i - 1]
+          const b = tr[i]
+          const fade = 1 - b.age / 0.14
+          const w = (i / tr.length) * ppm * (b.kind === 'punch' ? 0.16 : 0.24) * fade
+          const [x1, y1] = toScreen(a.x, a.y)
+          const [x2, y2] = toScreen(b.x, b.y)
+          ctx.globalAlpha = 0.35 * fade
+          ctx.strokeStyle = b.kind === 'special' ? '#ffb38a' : '#bfe6ff'
+          ctx.lineWidth = w * 1.8
+          ctx.beginPath()
+          ctx.moveTo(x1, y1)
+          ctx.lineTo(x2, y2)
+          ctx.stroke()
+          ctx.globalAlpha = 0.85 * fade
+          ctx.strokeStyle = '#ffffff'
+          ctx.lineWidth = w
+          ctx.stroke()
+        }
+        ctx.globalAlpha = 1
+        ctx.lineCap = 'butt'
       }
       // hit bursts: a star of light and a ring
       for (const b of fx.bursts) {
@@ -377,6 +417,7 @@ export default function Fight2D({ params }) {
       }
       ctx.globalAlpha = 1
       ctx.restore()
+      if (stage) stage.drawFront(ctx, camX, t)
       // comic words (not zoomed: always readable)
       for (const w of fx.words) {
         const [x, y] = toScreen(w.x, w.y)

@@ -87,20 +87,27 @@ Grace's Emeka a village trader, Campus's Somto neat.
 
 ## Fights in 2D
 
-Street fights switch to a 2D cartoon brawler (`src/game/modes/fight/Fight2D.jsx`;
-the look is written down in `docs/fight-art-direction.md`). The fighters are
-drawn live with the canvas (`fight2d/puppet.js`): chunky cartoon characters
-with big heads and big eyes, short thick limbs, big fists and shoes, thick
-dark outlines and bright cel shading, built from each character's own look
-(skin tone, hair, clothes, shoes, hats, glasses, chains). Faces react (gritted
-teeth, a shout, eyes squeezed shut, crosses at a K.O.). Poses set the hips,
-fists and feet; elbows and knees are worked out, so feet stay planted. The
-street behind them (`fight2d/stage.js`) is painted once to match the time of
-day; at night there's a big moon over an empty lot, stars, layered blue
-rooftops, palms and a church tower, and street lamps that glow. A crowd of
-big-eyed fans cheers louder with every blow. Hits land with sparks, comic
-words, a split-second freeze and screen shake; the knock-out plays in slow
-motion.
+Street fights switch to a 2D cartoon brawler in the style of a mobile action
+game (`src/game/modes/fight/Fight2D.jsx`; the look is written down in
+`docs/fight-art-direction.md`). The fighters are painted live with the canvas
+(`fight2d/puppet.js`): big heads with big shiny eyes and glossy hair, soft
+rounded shading on every part, mitten fists, chunky trainers with white soles,
+T-shirts with a print, jeans with seams and turned-up hems, thick dark
+outlines. They're built from each character's own look (skin tone, hair,
+clothes, shoes, hats, glasses, chains), and faces react (gritted teeth, a
+shout, eyes squeezed shut, crosses at a K.O.). Poses set the hips, fists and
+feet; elbows and knees are worked out, so feet stay planted. Swings leave a
+white swoosh behind the fist or foot.
+
+The fight happens on a wooden jetty over the Lagos lagoon (`fight2d/stage.js`),
+in layers that slide at their own pace: the sky with a big moon and stars (or
+sun and clouds), far rooftops and the Third Mainland Bridge with its lights,
+stilt houses and palms in the mist with glowing windows, wooden water-tank
+towers and plank shacks with signboards, lamps that glow, a crowd at the far
+end of the jetty, posts down into the water, a canoe, lamp reflections and
+reeds in the corners. Dawn, day, dusk and night each have their own colours.
+Hits land with sparks, comic words, a split-second freeze and screen shake;
+the knock-out plays in slow motion.
 
 Moves: punch (light, chains into combos), kick (heavy, more reach; if it's
 blocked you're left open for a moment), jump (hop over a kick; attack in the
@@ -111,9 +118,10 @@ winner keeps it (₦50 a coin). The HUD has round portrait badges of both
 fighters (they wince when health is low) and round see-through buttons.
 
 It's drawn at the screen's own sharpness (capped at 1.5x on Low, 2x on
-Medium, 2.5x on High, 3x on Sharpest; Low also draws at most 30 frames a
-second and skips the biggest glows), and the 3D street is switched off and
-hidden while a fight is on, so 2 GB phones keep a steady frame rate.
+Medium, 2.5x on High, 3x on Sharpest), and the 3D street is switched off and
+hidden while a fight is on. On Low (2 GB phones) fighters use flat colours
+instead of soft shading, the two background layers share one strip, the
+biggest glows are skipped and fights draw at most 30 frames a second.
 
 ## Checks that catch broken data
 

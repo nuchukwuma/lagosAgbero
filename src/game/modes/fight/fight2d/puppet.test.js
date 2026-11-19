@@ -15,6 +15,9 @@ function fakeCanvas() {
         return (...args) => {
           calls.n++
           for (const a of args) if (typeof a === 'number' && !Number.isFinite(a)) bad.push(`${String(key)}(${args.join(', ')})`)
+          // gradients: hand back one that checks its stops too
+          if (String(key).startsWith('create') && String(key).endsWith('Gradient'))
+            return { addColorStop: (o, c) => (!Number.isFinite(o) || typeof c !== 'string' || c.includes('NaN')) && bad.push(`addColorStop(${o}, ${c})`) }
         }
       },
       set(target, key, value) {
