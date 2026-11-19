@@ -2,13 +2,13 @@ import { useEffect, useMemo, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { useFight, fightInput, opponentProfile } from './fightStore.js'
 import { createFight, stepFight, MOVES } from './fightLogic.js'
-import { makePixelFighter, frameFor, flashOf, reachOf, M_PER_PX, CW, CH, AX, AY } from './fight2d/pixel.js'
+import { makePixelFighter, frameFor, flashOf, tintOf, reachOf, M_PER_PX, CW, CH, AX, AY } from './fight2d/pixel.js'
 import { makePixelStage, backdropFor } from './fight2d/pixelStage.js'
 import { useGameStore } from '../../store/gameStore.js'
 import { useSettings, effectiveQuality } from '../../store/settings.js'
 import { playerState } from '../../world/worldState.js'
 import { getLayout } from '../../world/worlds.js'
-import { isPaused } from '../../store/pauseStore.js'
+import { isPaused, usePause } from '../../store/pauseStore.js'
 import { randomLook, withAllegiance } from '../../characters/look.js'
 import characters from '../../data/characters.json'
 import { sfx } from '../../audio/audio.js'
@@ -30,7 +30,7 @@ const WORDS = {
   punch: ['GBAM!', 'KPA!', 'POW!', 'WHAM!'],
   kick: ['KPAU!', 'BOOM!', 'GBOSA!', 'WHUMP!'],
   special: ['LAGOS ROUNDABOUT!', 'KPAKPAKPA!', 'GBAGAUN!'],
-  block: ['BLOCK!', 'TCHK!'],
+  block: ['BLOCK!', 'TCHK!', 'GUARD!'],
   air: ['FLYING KICK!', 'GBOSA!', 'WHOOSH-KPA!'],
 }
 const PAN = 4.5 // metres the camera can slide either way
@@ -128,10 +128,10 @@ export default function Fight2D({ params }) {
 
     // per fighter: the drawn pose (eased towards the rules' pose), squash, afterimages
     const look = {
-      p: { info: null, squash: 0, ghosts: [], ghostT: 0, trail: [] },
-      o: { info: null, squash: 0, ghosts: [], ghostT: 0, trail: [] },
+      p: { info: null, squash: 0, ghosts: [], ghostT: 0, trail: [], air: false },
+      o: { info: null, squash: 0, ghosts: [], ghostT: 0, trail: [], air: false },
     }
-    const fx = { sparks: [], bursts: [], words: [], coins: [], shake: 0, flash: 0, hitStop: 0, slow: 0, banner: null, cheer: 0.2 }
+    const fx = { sparks: [], bursts: [], words: [], coins: [], rings: [], shields: [], stars: 0, shake: 0, flash: 0, hitStop: 0, slow: 0, banner: null, cheer: 0.2 }
     let camX = 0
     const zoom = 1 // pixel art doesn't zoom: pixels stay whole
     let t = 0
@@ -152,6 +152,8 @@ export default function Fight2D({ params }) {
       const y = victim.y + (kind === 'kick' ? 0.62 : kind === 'block' ? 0.85 : kind === 'air' ? 0.75 : kind === 'special' ? 1.0 : 0.9)
       const st = { punch: ['#fff3b0', '#ffb020', 0.36], kick: ['#ffe08a', '#ff7a1a', 0.48], air: ['#ffe08a', '#ff7a1a', 0.5], special: ['#ffffff', '#ff3d2e', 0.8], block: ['#d8f1ff', '#5aa9ff', 0.28] }[kind]
       fx.bursts.push({ x, y, t: 0, color: st[0], ring: st[1], size: st[2] })
+      fx.rings.push({ x, y, t: 0, color: st[1], big: kind === 'special' || kind === 'kick' })
+      if (kind === 'block') fx.shields.push({ x: victim.x - dir * 0.35, y: victim.y + 0.75, t: 0, dir })
       for (let i = 0; i < (light ? 6 : 12); i++) {
         const a = (dir > 0 ? 0 : Math.PI) + (Math.random() - 0.5) * 2.2
         const v = 2.5 + Math.random() * 4
@@ -181,6 +183,21 @@ export default function Fight2D({ params }) {
         fx.banner = { text: 'FIGHT!', t: 0 }
         sfx('whistle')
       }
+      // "Get back up": on your feet with some health, the same fight
+      if (store.reviveReq) {
+        fight.over = null
+        fight.p.hp = Math.round(fight.p.maxHp * 0.45)
+        fight.p.stunT = 0
+        fight.p.action = null
+        fight.o.action = null
+        fight.o.x = Math.min(5.5, fight.p.x + 2.4)
+        overT = 0
+        endAt = 0
+        fx.banner = { text: 'BACK UP!', t: 0 }
+        fx.cheer = 0.8
+        useFight.setState({ reviveReq: false })
+        sfx('whistle')
+      }
       if (fx.hitStop > 0) {
         fx.hitStop -= dt
         return
@@ -199,11 +216,14 @@ export default function Fight2D({ params }) {
           // the crowd throws money: coins spin up off the opponent and fly to the purse
           for (let i = 0; i < (ev.coins || 0); i++) fx.coins.push({ x: victim.x, y: victim.y + 1.2, vx: (Math.random() - 0.3) * 2.5, vy: 3 + Math.random() * 2, t: -i * 0.08, spin: Math.random() * 6 })
           if (ev.coins) setTimeout(() => sfx('coin'), 350)
+          if (ev.type === 'ducked') {
+            fx.words.push({ text: 'DUCK!', x: victim.x, y: victim.y + 1.2, t: 0, rot: -0.1, kind: 'block' })
+          }
           if (ev.type === 'jumped') {
             sfx('whoosh')
             fx.words.push({ text: 'OVER!', x: victim.x, y: victim.y + 1.6, t: 0, rot: 0.1, kind: 'block' })
           }
-          if (ev.type === 'dodged' || ev.type === 'jumped') sfx('whoosh')
+          if (ev.type === 'dodged' || ev.type === 'jumped' || ev.type === 'ducked') sfx('whoosh')
           else if (ev.type === 'blocked') sfx('block')
           else if (ev.move === 'special') sfx('special')
           else if (ev.who === 'player') sfx(ev.move === 'kick' ? 'kick' : 'punch')
@@ -216,6 +236,7 @@ export default function Fight2D({ params }) {
         hudTimer -= dt
         if (hudTimer <= 0 || taken || dealt) {
           hudTimer = 0.1
+          if (fight.p.combo > store.bestCombo) useFight.setState({ bestCombo: fight.p.combo })
           useFight.setState({ hud: { php: fight.p.hp, pmax: fight.p.maxHp, ohp: fight.o.hp, omax: fight.o.maxHp, special: fight.p.special, name: profile.name, combo: fight.p.combo } })
         }
         if (fight.over) {
@@ -241,6 +262,10 @@ export default function Fight2D({ params }) {
         const L = look[k]
         L.info = frameFor(fighters[k], f, MOVES, { over: fight.over, winner: (k === 'p') === (fight.over === 'won'), t: t + (k === 'o' ? 0.4 : 0), overT })
         L.squash = Math.max(0, L.squash - dt)
+        // dust when the feet leave or meet the road
+        const inAir = f.y > 0.02
+        if (inAir !== L.air) fx.sparks.push(...dustPuff(f.x, inAir ? 4 : 7))
+        L.air = inAir
         // afterimages while dodging or spinning
         L.ghostT -= dt
         const trail = f.dodgeT > 0 || f.action?.type === 'special' || f.action?.type === 'air' || f.action?.type === 'air'
@@ -285,6 +310,10 @@ export default function Fight2D({ params }) {
         }
       }
       fx.coins = fx.coins.filter((c) => c.t < 0.75)
+      for (const r of fx.rings) r.t += dt
+      fx.rings = fx.rings.filter((r) => r.t < 0.28)
+      for (const sh of fx.shields) sh.t += dt
+      fx.shields = fx.shields.filter((sh) => sh.t < 0.2)
       for (const b of fx.bursts) b.t += dt
       fx.bursts = fx.bursts.filter((b) => b.t < 0.3)
       for (const w of fx.words) w.t += dt
@@ -298,8 +327,8 @@ export default function Fight2D({ params }) {
       }
     }
 
-    function dustPuff(x) {
-      return Array.from({ length: light ? 5 : 10 }, (_, i) => ({ x: x - 0.6 + (i / 10) * 1.2, y: 0.05, vx: (Math.random() - 0.5) * 2, vy: 0.6 + Math.random(), life: 0.6, t: 0, color: 'rgba(200,185,160,0.8)', dust: true }))
+    function dustPuff(x, n = 10) {
+      return Array.from({ length: light ? Math.ceil(n / 2) : n }, (_, i) => ({ x: x - 0.6 + (i / n) * 1.2, y: 0.05, vx: (Math.random() - 0.5) * 2, vy: 0.6 + Math.random(), life: 0.6, t: 0, color: 'rgba(200,185,160,0.8)', dust: true }))
     }
 
     // the lunge carries a blow to its target, but never through the other fighter
@@ -322,6 +351,16 @@ export default function Fight2D({ params }) {
         // tipping over backwards about the feet, then lying on the ground
         ctx.translate(-(frame.dx || 0), info.lying ? -7 : -3)
         ctx.rotate(info.rot)
+      }
+      // the special is ready: a flickering aura round the fighter
+      if (alpha === 1 && f.special >= 100 && !fight.over) {
+        const aura = tintOf(fighters[k], info.frame, Math.floor(t * 12) % 2 ? '#ffd23a' : '#ff8a2a')
+        for (const [ox, oy] of [[-1, 0], [1, 0], [0, -1], [0, 1]]) ctx.drawImage(aura, -AX + (frame.dx || 0) + ox, -AY + oy, CW, CH)
+      }
+      // speed lines behind a lunge or a dodge
+      if (alpha === 1 && ((frame.dx || 0) > 2 || f.dodgeT > 0)) {
+        ctx.fillStyle = 'rgba(255,255,255,0.75)'
+        for (const [ly, len] of [[-14, 6], [-9, 9], [-4, 5]]) ctx.fillRect(-AX + (frame.dx || 0) - len - 1 + AX - 8, ly, len, 1)
       }
       // a white flash the moment a blow lands
       const img = alpha === 1 && L.squash > 0.1 ? flashOf(fighters[k], info.frame) : frame.canvas || info.frame.canvas
@@ -387,6 +426,47 @@ export default function Fight2D({ params }) {
         ctx.globalAlpha = 1
         ctx.lineCap = 'butt'
       }
+      // pixel rings spreading from each blow (a diamond of squares)
+      for (const r of fx.rings) {
+        const [x, y] = toScreen(r.x, r.y)
+        const k = r.t / 0.28
+        const rad = Math.round((r.big ? 9 : 6) * (0.3 + k)) // in sprite pixels
+        ctx.globalAlpha = 1 - k
+        ctx.fillStyle = r.color
+        for (let i = 0; i < rad * 4; i++) {
+          const q = i % rad
+          const side = Math.floor(i / rad)
+          const dx = [q, rad - q, -q, -(rad - q)][side]
+          const dy = [rad - q, -q, -(rad - q), q][side]
+          ctx.fillRect(Math.round(x / PX + dx) * PX, Math.round(y / PX + dy) * PX, PX, PX)
+        }
+        ctx.globalAlpha = 1
+      }
+      // a blue shield flash in front of whoever blocked
+      for (const sh of fx.shields) {
+        const [x, y] = toScreen(sh.x, sh.y)
+        ctx.globalAlpha = 1 - sh.t / 0.2
+        for (let j = -4; j <= 4; j++) {
+          const bulge = 2 - Math.round(Math.abs(j) / 2)
+          ctx.fillStyle = j % 2 ? '#bfe3ff' : '#4b8df0'
+          ctx.fillRect(Math.round(x / PX - sh.dir * bulge) * PX, Math.round(y / PX + j) * PX, PX, PX)
+        }
+        ctx.globalAlpha = 1
+      }
+      // knocked out: little stars circling the loser's head
+      if (fight.over && overT > 0.5) {
+        const loser = fight.over === 'won' ? fight.o : fight.p
+        const dir = fight.over === 'won' ? -1 : 1
+        const [hx, hy] = toScreen(loser.x - dir * 1.0, 0.45)
+        for (let i = 0; i < 3; i++) {
+          const a = t * 5 + (i * Math.PI * 2) / 3
+          const sx = Math.round(hx / PX + Math.cos(a) * 6) * PX
+          const sy = Math.round(hy / PX + Math.sin(a) * 2) * PX
+          ctx.fillStyle = i % 2 ? '#ffd23a' : '#ffffff'
+          ctx.fillRect(sx, sy - PX, PX, PX * 3)
+          ctx.fillRect(sx - PX, sy, PX * 3, PX)
+        }
+      }
       // hit bursts: a star of light and a ring
       for (const b of fx.bursts) {
         const [x, y] = toScreen(b.x, b.y)
@@ -422,12 +502,10 @@ export default function Fight2D({ params }) {
           ctx.ellipse(x, y, ppm * 0.025, ppm * 0.04, 0, 0, Math.PI * 2)
           ctx.fill()
         } else {
-          ctx.strokeStyle = s.color
-          ctx.lineWidth = Math.max(1.5, ppm * 0.025)
-          ctx.beginPath()
-          ctx.moveTo(x, y)
-          ctx.lineTo(x - s.vx * ppm * 0.03, y + s.vy * ppm * 0.03)
-          ctx.stroke()
+          // square pixel sparks, snapped to the grid
+          ctx.fillStyle = s.color
+          const size = k > 0.5 ? PX * 2 : PX
+          ctx.fillRect(Math.round(x / PX) * PX, Math.round(y / PX) * PX, size, size)
         }
       }
       ctx.globalAlpha = 1
@@ -509,9 +587,14 @@ export default function Fight2D({ params }) {
       render()
     }
     raf = requestAnimationFrame(frame)
+    // a held button never sees its release while the pause menu is up: let go of everything
+    const unPause = usePause.subscribe((st, prev) => {
+      if (st.paused && !prev.paused) Object.assign(fightInput, { move: 0, block: false, crouch: false, punch: false, kick: false, special: false, dodge: false, jump: false })
+    })
     if (import.meta.env.DEV) window.__fight2d = { fight, fx, look }
     return () => {
       cancelAnimationFrame(raf)
+      unPause()
       window.removeEventListener('resize', layout)
     }
   }, [fighters]) // eslint-disable-line react-hooks/exhaustive-deps

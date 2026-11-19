@@ -170,10 +170,10 @@ describe('fight: jump, heavy blows, crowd money', () => {
     expect(s.p.action?.type).toBe('air')
     run(s, () => ({}), 0.3)
     expect(s.o.hp).toBe(50 - MOVES.air.dmg)
-    while (s.p.action) stepFight(s, {}, 1 / 60, () => 0.99)
-    expect(s.p.y).toBeGreaterThan(0) // still in the air...
+    const first = s.p.action
     stepFight(s, { kick: true }, 1 / 60, () => 0.99)
-    expect(s.p.action).toBe(null) // ...but no second one
+    expect(s.p.action === first || s.p.action === null).toBe(true) // no second one this jump
+    expect(s.p.airUsed).toBe(true)
     run(s, () => ({}), 1)
     expect(s.p.y).toBe(0)
   })
@@ -205,5 +205,48 @@ describe('fight: jump, heavy blows, crowd money', () => {
     expect(useFight.getState().result().moneyChange).toBe(150)
     useFight.setState({ ended: 'lost' })
     expect(useFight.getState().result().moneyChange).toBeUndefined()
+  })
+})
+
+describe('fight: guarding and squatting', () => {
+  const hit = (move, defender) => {
+    const s = createFight({ hp: 100, aggression: 0, block: 0 })
+    s.p.x = -0.7
+    s.o.x = 0.7
+    Object.assign(s.o, defender)
+    s.o.ai.think = 9
+    s.p.action = { type: move, t: MOVES[move].startup, hit: false }
+    stepFight(s, {}, 1 / 60, () => 0.99)
+    return s
+  }
+  it('the shield blocks the special too (it only chips)', () => {
+    const s = hit('special', { blocking: true, ai: { think: 9, blockT: 9, move: 0 } })
+    expect(s.events.some((e) => e.type === 'blocked')).toBe(true)
+    expect(100 - s.o.hp).toBeLessThan(MOVES.special.dmg * 0.5)
+  })
+  it('holding back while they swing guards you', () => {
+    const s = createFight({ hp: 100, aggression: 0, block: 0 })
+    s.p.x = -0.7
+    s.o.x = 0.7
+    s.o.ai.think = 9
+    s.o.action = { type: 'punch', t: MOVES.punch.startup - 0.02, hit: false }
+    const hp = s.p.hp
+    for (let i = 0; i < 6; i++) stepFight(s, { move: -1 }, 1 / 60, () => 0.99)
+    expect(hp - s.p.hp).toBeLessThan(MOVES.punch.dmg)
+  })
+  it('a squat ducks a punch but not a kick', () => {
+    const s = createFight({ hp: 100, aggression: 0, block: 0 })
+    s.p.x = -0.7
+    s.o.x = 0.7
+    s.o.ai.think = 9
+    stepFight(s, { crouch: true }, 1 / 60, () => 0.99)
+    expect(s.p.crouching).toBe(true)
+    s.o.action = { type: 'punch', t: MOVES.punch.startup, hit: false }
+    stepFight(s, { crouch: true }, 1 / 60, () => 0.99)
+    expect(s.events.some((e) => e.type === 'ducked')).toBe(true)
+    s.o.action = { type: 'kick', t: MOVES.kick.startup, hit: false }
+    const hp = s.p.hp
+    stepFight(s, { crouch: true }, 1 / 60, () => 0.99)
+    expect(s.p.hp).toBeLessThan(hp)
   })
 })

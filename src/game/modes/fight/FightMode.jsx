@@ -6,11 +6,17 @@ import Fight2D from "./Fight2D.jsx";
 import PowerupOffer from "../../../components/hud/PowerupOffer.jsx";
 import { drawPixelPortrait } from "./fight2d/pixel.js";
 import { COIN } from "./fightLogic.js";
+import Joystick from "../../../components/hud/Joystick.jsx";
+import { showRewardedAd } from "../../services/adService.js";
+import { seenIntro, markIntroSeen, fightRecord, recordFight } from "../../systems/records.js";
 
 // Fight overlay: round portrait badges with health bars, the special meter,
 // the crowd's money (the purse), round see-through buttons with pixel-art
 // icons (touch) or keys. Bars are square-ended, like the pixel art.
-// Keys: A/D or ←/→ move · W/↑ jump · J punch · K kick · L block (hold) · Space dodge · U special
+// Touch: a stick (left/right move, up jump, down squat) and buttons.
+// Keys: A/D or ←/→ move · W/↑ jump · S/↓ squat · J punch · K kick · L block (hold) · Space dodge · U special
+// The how-to-play intro shows the first time only; after that, your record.
+// Lose, and you can get back up (an ad; the 2nd time in a fight 2 ads...) or try again.
 
 const KEYS = {
   KeyJ: "punch",
@@ -28,8 +34,9 @@ const MOVE_LIST = [
     "Kick",
     "heavy, longer reach; if it's blocked you're open for a moment",
   ],
-  ["up", "Jump", "hop over a kick; punch or kick in the air for a flying kick"],
-  ["shield", "Block (hold)", "takes most of the sting out of a blow"],
+  ["up", "Jump (stick up)", "hop over a kick; punch or kick in the air for a flying kick"],
+  ["shield", "Block (hold, or hold back)", "takes most of the sting out of any blow, even the special"],
+  ["down", "Squat (stick down)", "duck under punches and the spin kick; kicks still land"],
   ["dodge", "Dodge", "a quick step back: nothing touches you"],
   ["bolt", "Special", "when the meter is full: the Lagos Roundabout"],
 ];
@@ -101,10 +108,38 @@ function HoldButton({ action, icon, label, className = "" }) {
   );
 }
 
+// the stick: left/right walk, up jumps (once per push), down squats (held)
+let stickUp = false;
+function onStick(x, y) {
+  fightInput.move = x > 0.35 ? 1 : x < -0.35 ? -1 : 0;
+  const up = y > 0.55;
+  if (up && !stickUp) fightInput.jump = true;
+  stickUp = up;
+  fightInput.crouch = y < -0.55;
+}
+
 export default function FightMode({ params, onFinish }) {
   const fight = useFight();
   const { touch } = useDevice();
   const [result, setResult] = useState(null);
+  const [firstTime] = useState(() => !seenIntro("fight"));
+  const [record] = useState(fightRecord);
+  const [busy, setBusy] = useState(false);
+  const adsNeeded = fight.revives + 1;
+  const getBackUp = async () => {
+    setBusy(true);
+    let watched = 0;
+    for (let i = 0; i < adsNeeded; i++) if (await showRewardedAd("revive:fight")) watched++; else break;
+    setBusy(false);
+    if (watched === adsNeeded) {
+      setResult(null);
+      useFight.getState().revive();
+    }
+  };
+  const finish = () => {
+    recordFight({ outcome: result.outcome, combo: fight.bestCombo });
+    onFinish(result);
+  };
 
   useEffect(() => {
     useFight.getState().start(params);
@@ -123,11 +158,13 @@ export default function FightMode({ params, onFinish }) {
         e.preventDefault();
       }
       if (e.code === "KeyL") fightInput.block = true;
+      if (e.code === "KeyS" || e.code === "ArrowDown") fightInput.crouch = true;
       if (e.code === "KeyA" || e.code === "ArrowLeft") fightInput.move = -1;
       if (e.code === "KeyD" || e.code === "ArrowRight") fightInput.move = 1;
     };
     const up = (e) => {
       if (e.code === "KeyL") fightInput.block = false;
+      if (e.code === "KeyS" || e.code === "ArrowDown") fightInput.crouch = false;
       if ((e.code === "KeyA" || e.code === "ArrowLeft") && fightInput.move < 0)
         fightInput.move = 0;
       if ((e.code === "KeyD" || e.code === "ArrowRight") && fightInput.move > 0)
@@ -142,33 +179,48 @@ export default function FightMode({ params, onFinish }) {
   }, []);
 
   if (!fight.active) return null;
-  const stage = <Fight2D params={params} />;
+  const stage = <Fight2D params={params} key={fight.attempt} />;
   if (!fight.started)
     return (
       <>
         {stage}
         <div className="fee-intro">
           <h2>Fight! {fight.hud.name}</h2>
-          <p>
-            Punch, kick, block and dodge. Land hits to fill your meter, then
-            unleash the <strong>Lagos Roundabout</strong>. Hits landed close
-            together build a <strong>combo</strong>: each one hits harder.
-          </p>
-          <ul className="move-list">
-            {MOVE_LIST.map(([icon, name, what]) => (
-              <li key={name}>
-                <PixelIcon name={icon} size={20} /> <strong>{name}</strong>: {what}
-              </li>
-            ))}
-          </ul>
-          <p className="muted">
-            The crowd throws money for good combos and specials: win, and the
-            purse is yours.
-            {!touch &&
-              " Keys: A/D move · W jump · J punch · K kick · L block (hold) · Space dodge · U special"}
-          </p>
+          {firstTime ? (
+            <>
+              <p>
+                Punch, kick, block and dodge. Land hits to fill your meter, then
+                unleash the <strong>Lagos Roundabout</strong>. Hits landed close
+                together build a <strong>combo</strong>: each one hits harder.
+              </p>
+              <ul className="move-list">
+                {MOVE_LIST.map(([icon, name, what]) => (
+                  <li key={name}>
+                    <PixelIcon name={icon} size={20} /> <strong>{name}</strong>: {what}
+                  </li>
+                ))}
+              </ul>
+              <p className="muted">
+                The crowd throws money for good combos and specials: win, and the
+                purse is yours.
+                {!touch &&
+                  " Keys: A/D move · W jump · S squat · J punch · K kick · L block (hold) · Space dodge · U special"}
+              </p>
+            </>
+          ) : (
+            <p className="fight-record">
+              Your record: <strong>{record.won}</strong> won · {record.lost} lost · best combo{" "}
+              <strong>x{record.bestCombo}</strong>
+            </p>
+          )}
           <PowerupOffer mode="fight" />
-          <button className="btn btn-primary" onClick={fight.begin}>
+          <button
+            className="btn btn-primary"
+            onClick={() => {
+              markIntroSeen("fight");
+              fight.begin();
+            }}
+          >
             Oya!
           </button>
         </div>
@@ -193,9 +245,29 @@ export default function FightMode({ params, onFinish }) {
                 : `The crowd threw ₦${(fight.coins * COIN).toLocaleString("en-NG")}... the winner picks it up.`}
             </p>
           )}
-          <button className="btn btn-primary" onClick={() => onFinish(result)}>
-            Continue
-          </button>
+          {result.outcome === "won" ? (
+            <button className="btn btn-primary" onClick={finish}>
+              Continue
+            </button>
+          ) : (
+            <div className="result-actions">
+              <button className="btn btn-primary" disabled={busy} onClick={getBackUp}>
+                Get back up ({adsNeeded === 1 ? "watch an ad" : `watch ${adsNeeded} ads`})
+              </button>
+              <button
+                className="btn"
+                onClick={() => {
+                  setResult(null);
+                  fight.retry();
+                }}
+              >
+                Try again
+              </button>
+              <button className="btn" onClick={finish}>
+                Accept it and move on
+              </button>
+            </div>
+          )}
         </div>
       </>
     );
@@ -246,8 +318,7 @@ export default function FightMode({ params, onFinish }) {
       {touch ? (
         <div className="fight-controls">
           <div className="fight-move">
-            <HoldButton action="left" icon="left" label="Move left" />
-            <HoldButton action="right" icon="right" label="Move right" />
+            <Joystick onMove={onStick} className="fight-stick" />
           </div>
           <div className="fight-actions">
             <HoldButton
@@ -275,8 +346,8 @@ export default function FightMode({ params, onFinish }) {
         </div>
       ) : (
         <div className="keyboard-hint">
-          A/D move · W jump · J punch · K kick · L block · Space dodge · U
-          special
+          A/D move · W jump · S squat · J punch · K kick · L block · Space dodge
+          · U special
         </div>
       )}
       {import.meta.env.DEV && (

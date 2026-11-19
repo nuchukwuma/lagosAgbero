@@ -42,7 +42,8 @@ export function AdOverlay() {
   if (!playing) return null
   // favours have their own reward; power-ups name theirs (systems/powerups.js)
   const pu = playing.placement?.startsWith('powerup:') ? POWERUPS[playing.placement.slice(8)] : null
-  const r = REWARDS[playing.placement] || { label: pu ? `Power-up: ${pu.name}. ${pu.text}.` : 'Thanks for watching', rewardText: pu ? pu.name : 'reward' }
+  const revive = playing.placement?.startsWith('revive:')
+  const r = REWARDS[playing.placement] || (revive ? { label: 'Watch it through and you get back up.', rewardText: 'Get back up' } : { label: pu ? `Power-up: ${pu.name}. ${pu.text}.` : 'Thanks for watching', rewardText: pu ? pu.name : 'reward' })
   return (
     <div className="overlay ad-overlay">
       <div className="panel">

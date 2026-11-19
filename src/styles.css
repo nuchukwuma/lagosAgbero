@@ -3529,3 +3529,44 @@ svg .is-chase { fill: #e53935; stroke: #fff; stroke-width: 0.6; animation: map-p
   vertical-align: -5px;
   margin-right: 4px;
 }
+/* the fight stick: see-through like the buttons, with up/down hints */
+.joystick.fight-stick {
+  width: 124px;
+  height: 124px;
+  background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.04) 70%);
+  border: 3px solid rgba(255, 255, 255, 0.55);
+  position: relative;
+}
+.joystick.fight-stick::before,
+.joystick.fight-stick::after {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font: 900 11px ui-monospace, Menlo, Consolas, monospace;
+  color: rgba(255, 255, 255, 0.75);
+  text-shadow: 1px 1px 0 #0e0d1e;
+  pointer-events: none;
+}
+.joystick.fight-stick::before {
+  content: 'JUMP';
+  top: 6px;
+}
+.joystick.fight-stick::after {
+  content: 'SQUAT';
+  bottom: 6px;
+}
+.joystick.fight-stick .joystick-knob {
+  width: 52px;
+  height: 52px;
+  background: rgba(255, 210, 58, 0.8);
+  border: 3px solid #0e0d1e;
+}
+.result-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+.fight-record {
+  font-family: ui-monospace, Menlo, Consolas, monospace;
+}

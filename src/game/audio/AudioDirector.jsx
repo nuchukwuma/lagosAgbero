@@ -48,7 +48,8 @@ export default function AudioDirector() {
   useEffect(() => onSpeaking(duckMusic), [])
   // distant calls (conductors, hawkers, the crowd) in voices, if voices are on
   useEffect(() => {
-    onCall((line) => useSettings.getState().voices !== false && shout(line))
+    // (not during the run, a fight or any other activity: only the story is read out)
+    onCall((line) => useSettings.getState().voices !== false && !useGameStore.getState().activity && shout(line))
     return () => onCall(null)
   }, [])
 

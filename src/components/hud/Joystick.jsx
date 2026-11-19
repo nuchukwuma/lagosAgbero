@@ -3,10 +3,12 @@ import { input } from '../../game/player/input.js'
 
 // Virtual joystick for touch screens (also works with a mouse).
 // Writes straight into the shared input object; no React state per frame.
+// With onMove(x, y) it reports to that instead (x right, y up, -1..1): the
+// fight uses it for move / jump / squat.
 
 const RADIUS = 52
 
-export default function Joystick() {
+export default function Joystick({ onMove = null, className = '' }) {
   const base = useRef(null)
   const pointer = useRef(null)
   const [knob, setKnob] = useState({ x: 0, y: 0 })
@@ -20,21 +22,27 @@ export default function Joystick() {
       dx = (dx / len) * RADIUS
       dy = (dy / len) * RADIUS
     }
-    input.joy.x = dx / RADIUS
-    input.joy.y = -dy / RADIUS
+    if (onMove) onMove(dx / RADIUS, -dy / RADIUS)
+    else {
+      input.joy.x = dx / RADIUS
+      input.joy.y = -dy / RADIUS
+    }
     setKnob({ x: dx, y: dy })
   }
   const end = () => {
     pointer.current = null
-    input.joy.x = 0
-    input.joy.y = 0
+    if (onMove) onMove(0, 0)
+    else {
+      input.joy.x = 0
+      input.joy.y = 0
+    }
     setKnob({ x: 0, y: 0 })
   }
 
   return (
     <div
       ref={base}
-      className="joystick"
+      className={`joystick ${className}`}
       onPointerDown={(e) => {
         pointer.current = e.pointerId
         e.currentTarget.setPointerCapture(e.pointerId)

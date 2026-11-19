@@ -3,8 +3,10 @@
 // the ground.
 //
 // Moves: punch (light), kick (heavy), special ("Lagos Roundabout"), block
-// (hold), dodge (quick backstep with a moment of no-hit), jump (hop over a
-// kick; punch or kick in the air for a flying kick). Hits fill the special
+// (hold the shield, or hold back while they swing; blocks every move, even
+// the special), dodge (quick backstep with a moment of no-hit), jump (hop over
+// a kick; punch or kick in the air for a flying kick), squat (hold down: duck
+// under punches and the spin kick; kicks still land). Hits fill the special
 // meter. A heavy blow that's blocked leaves its thrower open for a moment.
 // The crowd dashes money (coins) for good combos and specials: the winner
 // keeps it.
@@ -14,10 +16,10 @@
 // already scales with difficulty).
 
 export const MOVES = {
-  punch: { startup: 0.2, active: 0.12, recover: 0.3, range: 1.45, dmg: 8, anim: 'punch', animSpeed: 2.2 },
-  kick: { startup: 0.34, active: 0.12, recover: 0.45, range: 1.9, dmg: 12, anim: 'kick', animSpeed: 1.7 },
-  special: { startup: 0.45, active: 0.2, recover: 0.6, range: 2.15, dmg: 26, anim: 'roundhouse', animSpeed: 1.95 },
-  air: { startup: 0.07, active: 0.24, recover: 0.12, range: 1.75, dmg: 11, anim: 'kick', animSpeed: 2 },
+  punch: { startup: 0.18, active: 0.16, recover: 0.28, range: 1.62, dmg: 8, anim: 'punch', animSpeed: 2.2 },
+  kick: { startup: 0.32, active: 0.16, recover: 0.42, range: 2.05, dmg: 12, anim: 'kick', animSpeed: 1.7 },
+  special: { startup: 0.45, active: 0.24, recover: 0.6, range: 2.25, dmg: 26, anim: 'roundhouse', animSpeed: 1.95 },
+  air: { startup: 0.07, active: 0.28, recover: 0.12, range: 1.85, dmg: 11, anim: 'kick', animSpeed: 2 },
 }
 const HEAVY = new Set(['kick', 'air'])
 export const JUMP_V = 6.2 // m/s up: about a metre high, 0.7 s in the air
@@ -32,12 +34,14 @@ const STUN_TIME = 0.38
 const MIN_GAP = 0.85
 const ARENA = 5.5 // metres either side of the centre
 const BLOCK_FACTOR = 0.2
+const SPECIAL_CHIP = 0.35 // a blocked special still stings a little
+const HIGH = new Set(['punch', 'special']) // what a squat ducks under
 export const COMBO_WINDOW = 1.6 // seconds to land the next hit
 const COMBO_BONUS = 0.15 // extra damage per step after the first
 const COMBO_MAX = 5
 
 function fighter(x, hp) {
-  return { x, y: 0, vy: 0, airUsed: false, hp, maxHp: hp, action: null, blocking: false, dodgeT: 0, dodgeCd: 0, stunT: 0, special: 0, moving: 0, combo: 0, comboT: 0, ai: { think: 0.6, blockT: 0, move: 0 } }
+  return { x, y: 0, vy: 0, airUsed: false, crouching: false, hp, maxHp: hp, action: null, blocking: false, dodgeT: 0, dodgeCd: 0, stunT: 0, special: 0, moving: 0, combo: 0, comboT: 0, ai: { think: 0.6, blockT: 0, move: 0 } }
 }
 
 /**
@@ -104,18 +108,23 @@ function resolveHit(state, attacker, defender, who, power) {
     state.events.push({ type: 'jumped', who })
     return
   }
+  if (defender.crouching && HIGH.has(attacker.action.type)) {
+    attacker.combo = 0
+    state.events.push({ type: 'ducked', who })
+    return
+  }
   if (defender.dodgeT > 0) {
     attacker.combo = 0
     state.events.push({ type: 'dodged', who })
     return
   }
   const moveType = attacker.action.type
-  const blocked = defender.blocking && moveType !== 'special'
+  const blocked = defender.blocking
   // a clean hit soon after the last one continues the chain
   attacker.combo = blocked ? 0 : Math.min(COMBO_MAX, attacker.comboT > 0 ? attacker.combo + 1 : 1)
   attacker.comboT = blocked ? 0 : COMBO_WINDOW
   const chain = who === 'player' ? 1 + Math.max(0, attacker.combo - 1) * COMBO_BONUS : 1
-  const dmg = Math.round(m.dmg * power * chain * (blocked ? BLOCK_FACTOR : 1))
+  const dmg = Math.round(m.dmg * power * chain * (blocked ? (moveType === 'special' ? SPECIAL_CHIP : BLOCK_FACTOR) : 1))
   defender.hp = Math.max(0, defender.hp - dmg)
   attacker.special = Math.min(100, attacker.special + dmg * 2.2)
   defender.special = Math.min(100, defender.special + dmg * 1.2)
@@ -145,7 +154,7 @@ function think(state, dt, rng) {
   o.ai.think -= dt
   o.ai.blockT = Math.max(0, o.ai.blockT - dt)
   // react to an incoming attack
-  if (p.action && p.action.t < 0.12 && !busy(o) && o.ai.blockT <= 0 && rng() < prof.block * dt * 12) {
+  if (p.action && p.action.t < 0.12 && !busy(o) && o.ai.blockT <= 0 && rng() < prof.block * dt * 7) {
     if (rng() < 0.3) tryDodge(o, 1)
     else o.ai.blockT = 0.55
   }
@@ -212,9 +221,16 @@ export function stepFight(state, input, dt, rng = Math.random) {
   if (input.special) startMove(p, 'special')
   if (input.dodge) tryDodge(p, -1)
   if (input.jump) tryJump(p)
-  p.blocking = Boolean(input.block) && !busy(p) && p.dodgeT <= 0 && !airborne(p)
+  // guarding: the shield, or holding back while their blow is coming. A guard
+  // also cuts short the end of your own swing or the tail of a stagger.
+  const threat = o.action && o.action.t < MOVES[o.action.type].startup + MOVES[o.action.type].active
+  const wantsGuard = Boolean(input.block) || ((input.move || 0) < 0 && threat)
+  if (wantsGuard && p.action && p.action.t > MOVES[p.action.type].startup + MOVES[p.action.type].active && !airborne(p)) p.action = null
+  if (wantsGuard && p.stunT > 0 && p.stunT < 0.15) p.stunT = 0
+  p.blocking = wantsGuard && !busy(p) && p.dodgeT <= 0 && !airborne(p)
+  p.crouching = Boolean(input.crouch) && !p.blocking && !busy(p) && p.dodgeT <= 0 && !airborne(p)
   // you can steer a little in the air, even while kicking
-  p.moving = (!busy(p) || airborne(p)) && !p.blocking ? input.move || 0 : 0
+  p.moving = (!busy(p) || airborne(p)) && !p.blocking && !p.crouching ? input.move || 0 : 0
   p.x += p.moving * MOVE_SPEED * dt
 
   // opponent

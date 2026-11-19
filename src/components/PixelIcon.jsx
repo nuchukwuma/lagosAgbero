@@ -106,6 +106,7 @@ const ICONS = {
   ],
 }
 ICONS.left = ICONS.right.map((row) => [...row].reverse().join(''))
+ICONS.down = [...ICONS.up].reverse()
 
 const cache = {}
 function cellsOf(name) {

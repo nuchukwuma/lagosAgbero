@@ -397,6 +397,7 @@ export const FRAMES = {
   jumpUp: [{ b: [0, 0], aF: [6, -13], aB: [-5, -12], lF: [3, -3], kF: [4, -5], lB: [-2, -2] }],
   jumpDown: [{ b: [0, 0], aF: [8, -9], aB: [-6, -9], lF: [3, -1], lB: [-3, -2] }],
   block: [{ b: [-1, 1], aF: [5, -14], aB: [4, -12], lF: [3, -1], lB: [-4, -1], eyes: 'shut' }],
+  duck: [{ b: [0, 3], aF: [6, -7], aB: [3, -6], lF: [4, -1], lB: [-4, -1] }],
   dodge: [{ b: [-3, 1], hd: [-1, 0], aF: [4, -9], aB: [2, -8], lF: [2, -1], lB: [-6, -1] }],
   hit: [{ b: [-2, 0], hd: [-2, 1], aF: [2, -14], aB: [-6, -12], lF: [2, -1], lB: [-5, -1], eyes: 'shut', mouth: 'open' }],
   ko: [{ b: [-2, 0], hd: [-2, 1], aF: [6, -13], aB: [-7, -12], lF: [3, -1], lB: [-5, -1], eyes: 'x', mouth: 'open' }],
@@ -425,7 +426,14 @@ export function makePixelFighter(look) {
 
 /** A white silhouette of a frame, for the flash when a blow lands. */
 export function flashOf(fighter, frame) {
-  let c = fighter.flash.get(frame)
+  return tintOf(fighter, frame, '#ffffff')
+}
+
+/** A one-colour silhouette of a frame (flash, aura), made once and kept. */
+export function tintOf(fighter, frame, color) {
+  let byColor = fighter.flash.get(frame)
+  if (!byColor) fighter.flash.set(frame, (byColor = new Map()))
+  let c = byColor.get(color)
   if (!c) {
     c = document.createElement('canvas')
     c.width = CW
@@ -433,9 +441,9 @@ export function flashOf(fighter, frame) {
     const g = c.getContext('2d')
     g.drawImage(frame.canvas, 0, 0)
     g.globalCompositeOperation = 'source-in'
-    g.fillStyle = '#ffffff'
+    g.fillStyle = color
     g.fillRect(0, 0, CW, CH)
-    fighter.flash.set(frame, c)
+    byColor.set(color, c)
   }
   return c
 }
@@ -470,6 +478,7 @@ export function frameFor(fighter, f, MOVES, { over, winner, t, overT }) {
   if (f.y > 0 || f.vy > 0) return { frame: f.vy > 0 ? F.jumpUp[0] : F.jumpDown[0], rot: 0 }
   if (f.dodgeT > 0) return { frame: F.dodge[0], rot: 0 }
   if (f.blocking) return { frame: F.block[0], rot: 0 }
+  if (f.crouching) return { frame: F.duck[0], rot: 0 }
   if (f.moving) return { frame: pick(F.walk, 11), rot: 0 }
   return { frame: pick(F.idle, 6), rot: 0 }
 }
