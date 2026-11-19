@@ -4,45 +4,288 @@
       "id": "areaBoy",
       "title": "Area Boy",
       "tagline": "A JJC with ₦2,300 and a phone on 3% battery becomes the agbero of Iyana-Wahala.",
-      "hero": { "name": "", "nickname": "JJC", "placeholder": "e.g. Tunde, Emeka, Musa" },
+      "hero": {
+        "name": "",
+        "nickname": "JJC",
+        "placeholder": "e.g. Tunde, Emeka, Musa",
+        "style": "rugged",
+        "look": {
+          "body": "mini_male_f",
+          "rugged": true,
+          "skin": "#5c3a24",
+          "shirt": "#d6cdb8",
+          "trousers": "#4a5a72",
+          "shoes": "#2a2a2a",
+          "accessories": []
+        },
+        "outfits": [
+          [
+            "mini_male_f",
+            "Singlet",
+            {}
+          ],
+          [
+            "mini_raider",
+            "Bandana",
+            {
+              "accessories": [
+                {
+                  "type": "bandana",
+                  "color": "#a33b2b"
+                }
+              ]
+            }
+          ],
+          [
+            "mini_male_e",
+            "Overalls",
+            {}
+          ],
+          [
+            "mini_soldier",
+            "Beanie",
+            {}
+          ],
+          [
+            "mini_male_c",
+            "Afro",
+            {}
+          ]
+        ],
+        "shirts": [
+          "#d6cdb8",
+          "#8a4b2d",
+          "#6b7a52",
+          "#3d4a5c",
+          "#a33b2b",
+          "#2b2622"
+        ],
+        "styleNote": "Fresh off the night bus: dusty, patched, rubber slippers."
+      },
       "firstChapter": "ch1_jjc",
       "world": "iyanaWahala",
       "art": "art/story-areaBoy.webp",
-      "loading": { "place": "IYANA-WAHALA, LAGOS", "lines": ["Packing danfo…", "Hanging NEPA wires…", "Waking up Baba Ticket…", "Finding change for ₦1,000…", "Sweeping under the bridge…"] },
+      "loading": {
+        "place": "IYANA-WAHALA, LAGOS",
+        "lines": [
+          "Packing danfo…",
+          "Hanging NEPA wires…",
+          "Waking up Baba Ticket…",
+          "Finding change for ₦1,000…",
+          "Sweeping under the bridge…"
+        ]
+      },
       "strict": true,
-      "features": { "energy": true },
-      "hud": { "meter": "redEyes", "bar": { "stat": "notoriety", "label": "Notoriety" } },
-      "stats": ["money", "hustleMoney", "cultMoney", "debt", "energy", "notoriety", "chairmanTrust", "mentorBond", "friendBond", "communityGoodwill", "policeHeat", "cultLoyalty", "rivalCultHatred", "settlementTrust"]
+      "features": {
+        "energy": true
+      },
+      "hud": {
+        "meter": "redEyes",
+        "bar": {
+          "stat": "notoriety",
+          "label": "Notoriety"
+        }
+      },
+      "stats": [
+        "money",
+        "hustleMoney",
+        "cultMoney",
+        "debt",
+        "energy",
+        "notoriety",
+        "chairmanTrust",
+        "mentorBond",
+        "friendBond",
+        "communityGoodwill",
+        "policeHeat",
+        "cultLoyalty",
+        "rivalCultHatred",
+        "settlementTrust"
+      ]
     },
     {
       "id": "grace",
       "title": "Grass to Grace",
       "tagline": "Emeka will do anything to leave the village for the city. Anything. Then the city names its price.",
-      "hero": { "name": "Emeka", "nickname": "Emeka", "placeholder": "Emeka", "look": { "body": "male_shirt", "skin": "#5c3a24", "shirt": "#c0392b", "trousers": "#2c3e50" } },
+      "hero": {
+        "name": "Emeka",
+        "nickname": "Emeka",
+        "placeholder": "Emeka",
+        "look": {
+          "body": "mini_male_b",
+          "skin": "#5c3a24",
+          "shirt": "#7a5a2e",
+          "trousers": "#4b3a26",
+          "shoes": "#5b3a1e"
+        },
+        "style": "village",
+        "outfits": [
+          [
+            "mini_male_b",
+            "Trader",
+            {}
+          ],
+          [
+            "mini_male_e",
+            "Work clothes",
+            {}
+          ],
+          [
+            "mini_male_d",
+            "Church best",
+            {
+              "shirt2": "#2c2a26"
+            }
+          ]
+        ],
+        "shirts": [
+          "#7a5a2e",
+          "#2f6b3a",
+          "#b9822f",
+          "#8e2f2f",
+          "#e6dcc4"
+        ],
+        "styleNote": "A trader's son from the village: earth colours, sandals."
+      },
       "firstChapter": "g1_village",
       "world": "nkwoAgu",
       "art": "art/story-grace.webp",
-      "loading": { "place": "NKWỌ-AGỤỤ", "lines": ["Pounding yam…", "Counting the harvest money…", "Waking the elders…", "Chasing goats off the road…", "Tuning Papa's radio…"] },
+      "loading": {
+        "place": "NKWỌ-AGỤỤ",
+        "lines": [
+          "Pounding yam…",
+          "Counting the harvest money…",
+          "Waking the elders…",
+          "Chasing goats off the road…",
+          "Tuning Papa's radio…"
+        ]
+      },
       "strict": true,
-      "features": { "energy": false },
-      "startStats": { "money": 1200, "debt": 0, "energy": 80, "notoriety": 0 },
-      "hud": { "meter": { "stat": "conscience", "label": "Conscience", "icon": "star" }, "bar": { "stat": "hold", "label": "The Fellowship's hold" } },
-      "stats": ["money", "villageDebt", "conscience", "hold", "motherBond", "chinweBond", "ikeTrust", "chiefFavour", "villageStanding", "policeHeat"]
+      "features": {
+        "energy": false
+      },
+      "startStats": {
+        "money": 1200,
+        "debt": 0,
+        "energy": 80,
+        "notoriety": 0
+      },
+      "hud": {
+        "meter": {
+          "stat": "conscience",
+          "label": "Conscience",
+          "icon": "star"
+        },
+        "bar": {
+          "stat": "hold",
+          "label": "The Fellowship's hold"
+        }
+      },
+      "stats": [
+        "money",
+        "villageDebt",
+        "conscience",
+        "hold",
+        "motherBond",
+        "chinweBond",
+        "ikeTrust",
+        "chiefFavour",
+        "villageStanding",
+        "policeHeat"
+      ]
     },
     {
       "id": "campus",
       "title": "Fake It Till You Graduate",
       "tagline": "A pap-seller's son wins a scholarship to the richest university in Lagos. Nobody there can know where he is from.",
-      "hero": { "name": "Somto", "nickname": "Scholar", "placeholder": "Somto", "look": { "body": "male_longsleeve", "skin": "#4e2f1d", "shirt": "#2c5aa0", "trousers": "#1a1a1a" } },
+      "hero": {
+        "name": "Somto",
+        "nickname": "Scholar",
+        "placeholder": "Somto",
+        "look": {
+          "body": "mini_male_a",
+          "skin": "#4e2f1d",
+          "shirt": "#2c5aa0",
+          "trousers": "#1f2a3a",
+          "shoes": "#f2f2ee"
+        },
+        "style": "neat",
+        "outfits": [
+          [
+            "mini_male_a",
+            "Glasses",
+            {}
+          ],
+          [
+            "mini_male_f",
+            "Polo",
+            {}
+          ],
+          [
+            "mini_male_d",
+            "Presentation",
+            {
+              "shirt2": "#1f2a3a"
+            }
+          ]
+        ],
+        "shirts": [
+          "#2c5aa0",
+          "#f2f2ee",
+          "#2f8f5b",
+          "#6c3483",
+          "#e0b400"
+        ],
+        "styleNote": "Neat for lectures: clean sneakers, pressed shirt."
+      },
       "firstChapter": "u1_admission",
       "world": "royalCrest",
       "art": "art/story-campus.webp",
-      "loading": { "place": "ROYAL CREST UNIVERSITY", "lines": ["Photocopying handouts…", "Queueing at the bursary…", "Charging three phones on one socket…", "Ironing the designer shirt…", "Looking for light in the hostel…"] },
+      "loading": {
+        "place": "ROYAL CREST UNIVERSITY",
+        "lines": [
+          "Photocopying handouts…",
+          "Queueing at the bursary…",
+          "Charging three phones on one socket…",
+          "Ironing the designer shirt…",
+          "Looking for light in the hostel…"
+        ]
+      },
       "strict": true,
-      "features": { "energy": false },
-      "startStats": { "money": 3000, "debt": 0, "energy": 80, "notoriety": 0, "cgpa": 3.8 },
-      "hud": { "meter": { "stat": "cover", "label": "Cover story", "icon": "shield" }, "bar": { "stat": "cgpa", "label": "CGPA" } },
-      "stats": ["money", "schoolFees", "loanDebt", "cgpa", "cover", "conscience", "momBond", "tamaraBond", "dubaiBond", "campusRep", "donsHeat"]
+      "features": {
+        "energy": false
+      },
+      "startStats": {
+        "money": 3000,
+        "debt": 0,
+        "energy": 80,
+        "notoriety": 0,
+        "cgpa": 3.8
+      },
+      "hud": {
+        "meter": {
+          "stat": "cover",
+          "label": "Cover story",
+          "icon": "shield"
+        },
+        "bar": {
+          "stat": "cgpa",
+          "label": "CGPA"
+        }
+      },
+      "stats": [
+        "money",
+        "schoolFees",
+        "loanDebt",
+        "cgpa",
+        "cover",
+        "conscience",
+        "momBond",
+        "tamaraBond",
+        "dubaiBond",
+        "campusRep",
+        "donsHeat"
+      ]
     }
   ]
 }

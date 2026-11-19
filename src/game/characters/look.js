@@ -75,8 +75,18 @@ const EYES_RED = new THREE.Color('#c81a1a')
 const MOUTH_TINT = new THREE.Color('#5a1414')
 const tmp = new THREE.Color()
 
+// Rugged clothes (the JJC, fresh off the night bus): faded and dusty.
+const DUST = new THREE.Color('#8a7356')
+const WORN = new Set(['shirt', 'shirt2', 'trousers', 'shoes', 'accent'])
+
 /** The colour a look gives one body part (slot from peopleIndex.json). */
 export function partColor(part, look) {
+  const c = baseColor(part, look)
+  if (look.rugged && WORN.has(part.slot)) return c.lerp(DUST, 0.28).multiplyScalar(0.88)
+  return c
+}
+
+function baseColor(part, look) {
   switch (part.slot) {
     case 'eyes':
       return tmp.copy(EYES_REST).lerp(EYES_RED, Math.min(1, Math.max(0, look.eyeRed || 0))).clone()

@@ -56,12 +56,16 @@ export default function NewGameScreen({ onStart, onBack }) {
 function HeroScreen({ campaign, onStart, onBack }) {
   const hero = campaign.hero || {}
   const [name, setName] = useState(hero.name || '')
+  // each story dresses its hero its own way (campaigns.json hero.outfits / shirts / style)
+  const outfits = hero.outfits || OUTFITS.map(([id, label]) => [id, label, {}])
+  const shirts = hero.shirts || SHIRTS
   const [skin, setSkin] = useState(hero.look?.skin || SKIN_TONES[2])
-  const [shirt, setShirt] = useState(hero.look?.shirt || SHIRTS[0])
-  const [body, setBody] = useState(LEGACY_BODIES[hero.look?.body] || hero.look?.body || OUTFITS[0][0])
+  const [shirt, setShirt] = useState(hero.look?.shirt || shirts[0])
+  const [body, setBody] = useState(LEGACY_BODIES[hero.look?.body] || hero.look?.body || outfits[0][0])
   const clean = name.trim().slice(0, 20)
   const areaBoy = campaign.id === 'areaBoy'
-  const look = { ...(hero.look || {}), body, skin, shirt, trousers: hero.look?.trousers || '#2c3e50', shoes: '#1e1e1e' }
+  const extra = outfits.find(([id]) => id === body)?.[2] || {}
+  const look = { trousers: '#2c3e50', shoes: '#1e1e1e', ...(hero.look || {}), accessories: [], ...extra, body, skin, shirt }
 
   return (
     <div className="screen new-game-screen hero-screen">
@@ -77,6 +81,7 @@ function HeroScreen({ campaign, onStart, onBack }) {
         ) : (
           campaign.tagline
         )}
+        {hero.styleNote && <span className="hero-style"> {hero.styleNote}</span>}
       </p>
       <form
         className="menu"
@@ -102,7 +107,7 @@ function HeroScreen({ campaign, onStart, onBack }) {
         </div>
         <div className="swatch-row" role="radiogroup" aria-label="Outfit">
           <span>Outfit</span>
-          {OUTFITS.map(([id, label]) => (
+          {outfits.map(([id, label]) => (
             <button type="button" key={id} className={`chip ${body === id ? 'on' : ''}`} onClick={() => setBody(id)} aria-pressed={body === id}>
               {label}
             </button>
@@ -110,7 +115,7 @@ function HeroScreen({ campaign, onStart, onBack }) {
         </div>
         <div className="swatch-row" role="radiogroup" aria-label="Shirt colour">
           <span>Shirt</span>
-          {SHIRTS.map((c) => (
+          {shirts.map((c) => (
             <button type="button" key={c} className={`swatch ${shirt === c ? 'on' : ''}`} style={{ background: c }} onClick={() => setShirt(c)} aria-label={`Shirt ${c}`} aria-pressed={shirt === c} />
           ))}
         </div>

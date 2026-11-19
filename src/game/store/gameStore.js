@@ -252,7 +252,8 @@ export const useGameStore = create((set, get) => {
       const style = styleOf(look)
       const next = {
         ...game,
-        player: { ...game.player, look, nickname: nickname || game.player.nickname },
+        // bought new clothes: no longer the dusty JJC
+        player: { ...game.player, look: cost > 0 ? { ...look, rugged: false } : look, nickname: nickname || game.player.nickname },
         owned: ownedAfter(look, owned),
         stats: { ...game.stats, money: game.stats.money - cost },
         flags: { ...game.flags, ...styleFlags(style) },

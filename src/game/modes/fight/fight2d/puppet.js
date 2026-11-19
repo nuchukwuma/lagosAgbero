@@ -63,17 +63,20 @@ export function makeFighter(lookInput) {
   const look = normalizeLook(lookInput)
   const style = BODY_STYLE[look.body] || BODY_STYLE.mini_male_f
   const acc = Object.fromEntries((look.accessories || []).map((a) => [a.type, a]))
+  // rugged clothes (the JJC): faded towards dust, like the 3D look
+  const dusty = (c) => (look.rugged ? c.map((v, i) => (v * 0.72 + [138, 115, 86][i] * 0.28) * 0.88) : c)
   const skin = rgb(look.skin)
-  const shirt = rgb(look.shirt)
-  const shirt2 = look.shirt2 ? rgb(look.shirt2) : null
-  const pants = rgb(look.trousers)
-  const shoes = rgb(look.shoes)
+  const shirt = dusty(rgb(look.shirt))
+  const shirt2 = look.shirt2 ? dusty(rgb(look.shirt2)) : null
+  const pants = dusty(rgb(look.trousers))
+  const shoes = dusty(rgb(look.shoes))
   const hair = style.grey ? rgb('#c9c4bc') : rgb(look.hair || '#161110')
   const hat = acc.cap ? 'cap' : acc.beanie ? 'beanie' : acc.fila ? 'fila' : acc.gele ? 'gele' : acc.bandana ? 'bandana' : style.hat || null
   const hatColor = rgb((acc.cap || acc.beanie || acc.fila || acc.gele || acc.bandana)?.color || (style.hat === 'hardhat' ? '#f2b705' : style.hat === 'beret' ? '#3d4b2a' : '#c0392b'))
   return {
     look,
     style,
+    rugged: Boolean(look.rugged),
     female: Boolean(style.female),
     w: Math.max(0.85, Math.min(1.25, look.width || 1)), // build
     h: Math.max(0.9, Math.min(1.1, look.height || 1)),
@@ -292,6 +295,33 @@ function shoe(ctx, ank, knee, fx, back, grounded) {
   const c = Math.cos(ang)
   const s = Math.sin(ang)
   const P = (x, y) => [ank[0] + x * c - y * s, ank[1] + x * s + y * c]
+  if (fx.rugged) {
+    // rubber slippers: a bare foot on a thin sole, one strap across
+    ctx.beginPath()
+    ctx.moveTo(...P(-0.06, 0.03))
+    ctx.quadraticCurveTo(...P(-0.07, -0.045), ...P(0.0, -0.05))
+    ctx.lineTo(...P(0.18, -0.05))
+    ctx.quadraticCurveTo(...P(0.21, -0.03), ...P(0.17, -0.005))
+    ctx.quadraticCurveTo(...P(0.08, 0.025), ...P(-0.06, 0.03))
+    ctx.closePath()
+    ctx.lineWidth = B.line * 2
+    ctx.strokeStyle = OUTLINE
+    ctx.stroke()
+    ctx.fillStyle = back ? fx.c.skinB : fx.c.skin
+    ctx.fill()
+    ctx.beginPath()
+    ctx.moveTo(...P(-0.08, -0.058))
+    ctx.lineTo(...P(0.2, -0.062))
+    ctx.lineWidth = 0.026
+    ctx.strokeStyle = back ? fx.c.shoeD : fx.c.shoe
+    ctx.stroke()
+    ctx.beginPath()
+    ctx.moveTo(...P(0.05, -0.05))
+    ctx.lineTo(...P(0.1, -0.0))
+    ctx.lineWidth = 0.018
+    ctx.stroke()
+    return
+  }
   const pts = [P(-0.07, 0.03), P(-0.075, -0.055), P(0.2, -0.065), P(0.215, -0.02), P(0.12, 0.035), P(0.02, 0.05)]
   const path = () => {
     ctx.beginPath()
@@ -363,6 +393,31 @@ function leg(ctx, sk, fx, back, pose) {
   const [hp, kn, an] = back ? [sk.hipB, sk.kneeB, sk.ankB] : [sk.hipF, sk.kneeF, sk.ankF]
   const w = fx.w
   limb(ctx, [[hp, kn, 0.085 * w, 0.064 * w], [kn, an, 0.064 * w, 0.05 * w]], back ? fx.c.pantsB : fx.c.pants, fx.c.pantsD)
+  if (fx.rugged && !back) {
+    // a sewn-on patch on the thigh, and a frayed cuff above the slippers
+    const m = along(hp, kn, 0.55)
+    const a = Math.atan2(kn[1] - hp[1], kn[0] - hp[0])
+    ctx.save()
+    ctx.translate(m[0], m[1])
+    ctx.rotate(a)
+    ctx.fillStyle = 'rgba(120, 92, 60, 0.9)'
+    ctx.fillRect(-0.05, -0.045, 0.1, 0.09)
+    ctx.setLineDash([0.012, 0.01])
+    ctx.lineWidth = 0.006
+    ctx.strokeStyle = 'rgba(240, 230, 200, 0.8)'
+    ctx.strokeRect(-0.042, -0.037, 0.084, 0.074)
+    ctx.setLineDash([])
+    ctx.restore()
+    const c = along(kn, an, 0.9)
+    ctx.beginPath()
+    for (let k = -2; k <= 2; k++) {
+      ctx.moveTo(c[0] + k * 0.018, c[1])
+      ctx.lineTo(c[0] + k * 0.018 + 0.006, c[1] - 0.03)
+    }
+    ctx.lineWidth = 0.008
+    ctx.strokeStyle = fx.c.pantsD
+    ctx.stroke()
+  }
   const grounded = (back ? pose.footB : pose.footF)[1] < 0.05 && !pose.lying
   shoe(ctx, an, kn, fx, back, grounded)
 }
@@ -445,6 +500,22 @@ function torso(ctx, sk, fx) {
       ctx.arc(...P(0.115 * w, T * u), 0.011, 0, Math.PI * 2)
       ctx.fill()
     }
+  }
+  if (fx.rugged) {
+    // dust and sweat stains, and a tear near the hem
+    ctx.fillStyle = 'rgba(95, 70, 40, 0.28)'
+    for (const [v, u, r] of [[0.06, 0.62, 0.05], [-0.04, 0.35, 0.04], [0.1, 0.25, 0.03]]) {
+      ctx.beginPath()
+      ctx.arc(...P(v * w, T * u), r, 0, Math.PI * 2)
+      ctx.fill()
+    }
+    ctx.beginPath()
+    ctx.moveTo(...P(0.02 * w, T * 0.12))
+    ctx.lineTo(...P(0.06 * w, T * 0.2))
+    ctx.lineTo(...P(0.08 * w, T * 0.1))
+    ctx.closePath()
+    ctx.fillStyle = 'rgba(30, 20, 14, 0.55)'
+    ctx.fill()
   }
   // folds where the shirt bunches at the back
   ctx.lineWidth = 0.009
@@ -692,6 +763,18 @@ function face(ctx, fx, pose) {
     ctx.moveTo(ex - 0.03, ey + 0.008)
     ctx.lineTo(-0.035, ey + 0.004)
     ctx.stroke()
+  }
+  if (fx.rugged && !fx.style.beard && !fx.female) {
+    // a few days' stubble along the jaw
+    ctx.fillStyle = 'rgba(25, 15, 10, 0.45)'
+    for (let k = 0; k < 14; k++) {
+      const t = k / 13
+      const x = -0.02 + t * 0.12
+      const y = -0.1 - Math.sin(t * Math.PI) * 0.02 + (k % 2) * 0.008
+      ctx.beginPath()
+      ctx.arc(x, y, 0.0045, 0, Math.PI * 2)
+      ctx.fill()
+    }
   }
   if (fx.style.beard) {
     ctx.beginPath()

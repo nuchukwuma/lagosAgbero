@@ -3230,3 +3230,10 @@ svg .is-chase { fill: #e53935; stroke: #fff; stroke-width: 0.6; animation: map-p
 .powerup.on em {
   color: #8ff0a4;
 }
+.hero-style {
+  display: block;
+  margin-top: 4px;
+  font-style: italic;
+  color: var(--danfo);
+  font-size: 13px;
+}
