@@ -363,6 +363,7 @@
                 "startMode": "chase",
                 "params": {
                   "target": "thief",
+                  "name": "The phone thief",
                   "kind": "okada",
                   "difficulty": 2,
                   "timeLimit": 30

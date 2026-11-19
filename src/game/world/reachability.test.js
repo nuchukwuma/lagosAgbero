@@ -5,6 +5,9 @@ import { getLayout } from './worlds.js'
 // walk to: the scene's "positions" put story-only characters on the map,
 // otherwise they wait off-map (an easy slip: Ike, Grass to Grace chapter 2).
 const chapters = import.meta.glob('../data/story/**/*.json', { eager: true, import: 'default' })
+const worlds = import.meta.glob('../data/world/*.json', { eager: true, import: 'default' })
+import items from '../data/items.json'
+import questsData from '../data/quests.json'
 
 const inside = (c, x, z, pad) => {
   const dx = x - c.x
@@ -58,6 +61,39 @@ describe('story goals can be reached', () => {
           if (!pos) problems.push(`${file} ${sid}: ${id} is never placed`)
           else if (distanceFromWalkable(world, pos[0], pos[1]) > 2.2) problems.push(`${file} ${sid}: ${id} at ${pos} can't be reached`)
         }
+      }
+    }
+    expect(problems).toEqual([])
+  })
+
+  it('every character a scene places stands somewhere you can walk up to', () => {
+    const problems = []
+    for (const [file, ch] of Object.entries(chapters)) {
+      for (const [sid, scene] of Object.entries(ch.scenes || {})) {
+        const world = scene.world || ch.world
+        if (!world || !scene.positions) continue
+        for (const [id, pos] of Object.entries(scene.positions)) if (distanceFromWalkable(world, pos[0], pos[1]) > 2.2) problems.push(`${file} ${sid}: ${id} at ${pos}`)
+      }
+    }
+    expect(problems).toEqual([])
+  })
+
+  it('every activity, shop and quest giver on a map can be reached', () => {
+    const problems = []
+    const quests = Array.isArray(questsData) ? questsData : questsData.quests || []
+    const needed = new Set([...Object.keys(items.vendors || {}), ...quests.map((q) => q.giver).filter(Boolean)])
+    for (const [file, w] of Object.entries(worlds)) {
+      const id = w.id || file.split('/').pop().replace('.json', '')
+      if (!w.spots) continue
+      for (const a of w.activities || []) {
+        const spot = w.spots[a.spot]
+        if (!spot) problems.push(`${id}: activity ${a.id} has no spot ${a.spot}`)
+        else if (distanceFromWalkable(id, spot.pos[0], spot.pos[1]) > 2.5) problems.push(`${id}: activity ${a.id} at ${spot.pos}`)
+      }
+      for (const n of w.npcs || []) {
+        if (!needed.has(n.id)) continue
+        // story-only characters wait off the map on purpose; a shop or quest giver must not
+        if (distanceFromWalkable(id, n.pos[0], n.pos[1]) > 2.2) problems.push(`${id}: ${n.id} (shop or quest giver) at ${n.pos}`)
       }
     }
     expect(problems).toEqual([])

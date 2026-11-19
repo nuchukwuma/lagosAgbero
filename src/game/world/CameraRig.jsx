@@ -103,7 +103,10 @@ export default function CameraRig({ mode = 'follow', speaker = null, ceiling = n
   useFrame((_, delta) => {
     const p = playerState.position
     const portrait = size.height > size.width
-    const npc = speaker ? npcRegistry.get(speaker) : null
+    // someone far off (a phone call, a story character still waiting off the map) is
+    // not filmed: the camera frames you instead
+    const near = speaker ? npcRegistry.get(speaker) : null
+    const npc = near && Math.hypot(near.position.x - playerState.position.x, near.position.z - playerState.position.z) < 25 ? near : null
 
     // photo mode (dev / ?bench tools only): a fixed camera for the menu art
     if (playerState.photo) {

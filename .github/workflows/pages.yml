@@ -32,6 +32,10 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      # a build that fails its checks never reaches the test copy
+      - run: npm run lint
+      - run: npm test
+      - run: npm run story:check
       - run: npm run build
         env:
           BASE_PATH: /${{ github.event.repository.name }}/

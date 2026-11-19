@@ -117,7 +117,7 @@ export default function ChaseDirector() {
     v.x = startX - 9
     v.speed = 3
     vehicleRef.current = v
-    useChase.setState({ targetName: driver?.name || 'the driver', targetKind: kind })
+    useChase.setState({ targetName: chase.params.name || driver?.name || 'the driver', targetKind: kind })
     playerState.speedBoost = has('lightFeet') ? 1.12 : 1
     return undefined
   }, [chase.started]) // eslint-disable-line react-hooks/exhaustive-deps
