@@ -64,8 +64,9 @@ The game is one web page that adapts to the device:
   your standing drops. People you have history with greet you warmly or
   coldly. The crowd cheers or jeers your fights. Lines and effects live in
   `src/game/data/reactions.json`.
-- **Pause menu → Settings:** graphics (Auto / Battery saver / Sharp) and full
-  screen. **Pause menu → Wardrobe** (during free roam): outfits, colours,
+- **Pause menu → Settings:** graphics (Low / Medium / High / Sharpest; the
+  first visit picks Low or Medium for the device) and full screen. The pause
+  menu also shows the chapter and your current objective. **Pause menu → Wardrobe** (during free roam): outfits, colours,
   accessories and earned street names. Looks change how people react.
   Outfits are Kenney Mini Characters (T-shirt, overalls, beanie, hard hat,
   glasses, uniform cap, Owambe suit, top, headband, lab coat...), coloured in
@@ -78,7 +79,11 @@ soft bands (light, half light, shade) instead of a smooth fade, the colours
 are bright, and people are Kenney's blocky Mini Characters with a dark
 outline, dressed in each character's own colours and skin tone. All of it is set in
 `src/game/world/style.js` (band edges, outline width and distance, head size),
-so it can be tuned in one place. Outlines are off in Light mode.
+so it can be tuned in one place. Outlines are off on Low.
+Each story dresses its hero its own way (`campaigns.json` hero outfits and
+colours): Area Boy's JJC is rugged (faded, dusty clothes; in fights a stained
+singlet, patches and rubber slippers until you buy new clothes), Grass to
+Grace's Emeka a village trader, Campus's Somto neat.
 
 ## Fights in 2D
 
@@ -94,8 +99,8 @@ yellow-and-black kerbs, and a crowd that cheers louder with every blow. Hits
 land with sparks, comic words, a split-second freeze and screen shake; the
 knock-out plays in slow motion.
 
-It's drawn at the screen's own sharpness (capped at 1.5x in Light mode, 2x on
-Normal, 3x on Sharp), and the 3D street is switched off and hidden while a
+It's drawn at the screen's own sharpness (capped at 1.5x on Low, 2x on
+Medium, 2.5x on High, 3x on Sharpest), and the 3D street is switched off and hidden while a
 fight is on, so 2 GB phones keep a steady frame rate.
 
 ## Voices
@@ -106,16 +111,43 @@ or browser, so nothing is downloaded: Nigerian English when the device has
 it, then the nearest accent. Every character has their own pitch and pace, set
 by who they are (elders low and slow, hustlers quick) plus a personal touch, and
 no two of the cast match (`src/game/audio/voices.js`; a character can set its
-own with `"voice": { "pitch", "rate", "sex" }` in characters.json). Choices are
-read out too, with their numbers; the speaker button says a line again; music
-dips while someone talks. Hands-free moves the story on by itself once a line
-has been said (you still pick the choices).
+own with `"voice": { "pitch", "rate", "sex" }` in characters.json). Nigerian
+words are respelt so any voice says them right (`src/game/audio/pronounce.js`:
+Pidgin, Yoruba, Igbo, Hausa, Lagos places, the cast's names; add to it). At a
+choice nothing is read until you pick; then your character says your choice and
+the story waits for it. The speaker button says a line again; music dips while
+someone talks. Hands-free moves the story on by itself once a line has been said.
+
+## Sound around you
+
+Each place and activity has its own soundscape (`src/game/audio/audio.js`
+SCENES): danfo horns, idling engines and conductors calling routes at a fee run,
+whistles and "Ole! Hold am!" in a chase, a roaring crowd at a fight, sirens on
+the run, drums at a rally, hawkers in the market, birds and goats in the
+village. The shouts are said quietly by the phone's voices (Voices on), and
+never over dialogue.
+
+## Power-ups, heat and tired drivers
+
+- **Power-ups:** an activity's start screen offers power-ups for watching a
+  short sponsor message (the game pauses): Heavy Hands, Iron Jaw and Full Meter
+  for fights, Second Wind and Light Feet for chases, Lucky Charm and Head Start
+  for runs, Sweet Mouth and Extra Time for fee runs. One run each
+  (`src/game/systems/powerups.js`).
+- **Fee runs over a day:** set your fee on the start screen. Every vehicle you
+  ask today makes the next drivers less willing (more haggling, refusals,
+  runners, the odd shove); it resets each morning. A steady player makes about
+  ₦6,500, ₦5,500 and ₦4,500 in the day's first three runs, so Baba Ticket's
+  ₦15,000 is in reach.
+- **The Gauntlet heats up:** each run within six game hours of the last is
+  harder (faster, more officers), notoriety adds to it, and after four the
+  Task Force stakes out the bridge until it cools (`src/game/systems/heat.js`).
 
 ## Requirements
 
 - **Phones:** Android phones with 2 GB of RAM and up (Chrome), recent
   iPhones (Safari). On phones that report 3 GB or less, the game picks the
-  **Light** version by itself: fewer background people, cars and props, and
+  **Low** graphics by itself: fewer background people, cars and props, and
   lower resolution, and a steady 30 frames a second (smoother than a frame
   rate that jumps around, and kinder to the battery); the stories are the
   same. Players can switch it in Settings.

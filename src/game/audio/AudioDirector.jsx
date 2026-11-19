@@ -2,8 +2,8 @@ import { useEffect } from 'react'
 import { isFemale } from '../characters/look.js'
 import { useGameStore } from '../store/gameStore.js'
 import { useSettings } from '../store/settings.js'
-import { unlock, sfx, setMusic, setAmbience, setVolumes, suspend, duckMusic } from './audio.js'
-import { onSpeaking, voicesSupported } from './voices.js'
+import { unlock, sfx, setMusic, setAmbience, setVolumes, suspend, duckMusic, setScene, onCall } from './audio.js'
+import { onSpeaking, voicesSupported, shout } from './voices.js'
 import characters from '../data/characters.json'
 
 // Connects the game to the sound engine. Nothing else needs to know about
@@ -11,6 +11,9 @@ import characters from '../data/characters.json'
 // plays the right thing. Modes add their own effects with sfx('punch') etc.
 
 const TENSE = new Set(['fight', 'chase', 'runner'])
+// what you hear around you, by activity, then by place (audio.js SCENES)
+const SCENE_OF_MODE = { feeCollection: 'busPark', conductor: 'busPark', chase: 'chase', fight: 'fight', runner: 'runner', drive: 'drive', rally: 'rally', begging: 'market' }
+const SCENE_OF_WORLD = { iyanaWahala: 'market', nkwoAgu: 'village', royalCrest: 'campus' }
 const ROLLING = new Set(['drive', 'conductor'])
 
 function voicePitch(speaker) {
@@ -43,6 +46,11 @@ export default function AudioDirector() {
 
   // music drops while someone speaks
   useEffect(() => onSpeaking(duckMusic), [])
+  // distant calls (conductors, hawkers, the crowd) in voices, if voices are on
+  useEffect(() => {
+    onCall((line) => useSettings.getState().voices !== false && shout(line))
+    return () => onCall(null)
+  }, [])
 
   // settings: music / sound on-off
   useEffect(() => {
@@ -66,6 +74,8 @@ export default function AudioDirector() {
       const dark = view.time === 'night' || view.time === 'dusk'
       setMusic(view.type === 'ending' ? 'night' : TENSE.has(mode) ? 'tension' : ROLLING.has(mode) ? 'drive' : dark ? 'night' : 'street')
       setAmbience({ street: view.type === 'ending' || view.type === 'cutscene' ? 0.25 : 1, rain: game.flags.raining ? 1 : 0, night: view.time === 'night' ? 1 : 0 })
+      // calls only out on the street, not over dialogue or cutscenes
+      setScene(mode ? SCENE_OF_MODE[mode] || 'market' : view.type === 'freeRoam' ? SCENE_OF_WORLD[view.world] || 'market' : 'quiet')
 
       // money in / out
       const money = game.stats.money

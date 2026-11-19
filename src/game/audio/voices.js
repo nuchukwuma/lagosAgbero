@@ -285,3 +285,24 @@ export function speak(text, speaker, opts = {}) {
   next()
   return true
 }
+
+/**
+ * A line shouted somewhere in the street (a conductor, a hawker, the crowd):
+ * quiet, a random stranger's voice, and never over dialogue: skipped if
+ * anyone is talking.
+ */
+export function shout(text) {
+  if (!voicesSupported() || speakingNow || chosen || synth.speaking || synth.pending) return
+  const female = Math.random() < 0.35
+  const pool = poolFor(female ? 'female' : 'male')
+  const u = new window.SpeechSynthesisUtterance(spokenText(text))
+  const voice = pool[Math.floor(Math.random() * pool.length)]
+  if (voice) {
+    u.voice = voice
+    u.lang = voice.lang
+  } else u.lang = 'en-NG'
+  u.volume = 0.32
+  u.rate = 1.05 + Math.random() * 0.2
+  u.pitch = (female ? 1.25 : 0.85) + Math.random() * 0.2
+  synth.speak(u)
+}

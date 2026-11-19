@@ -123,6 +123,7 @@ export default function Fight2D({ params }) {
         look[who === 'player' ? 'o' : 'p'].squash = 0.16
         fx.shake = kind === 'special' ? 14 : kind === 'kick' ? 8 : 5
         fx.cheer = Math.min(1, fx.cheer + (kind === 'special' ? 0.6 : 0.25))
+        if (kind === 'special' || (kind === 'kick' && Math.random() < 0.5)) sfx('crowd') // the crowd roars at the big ones
         if (kind === 'special') fx.flash = 0.18
         // a drop of sweat flies off
         fx.sparks.push({ x: victim.x, y: 1.55, vx: -dir * -1.5, vy: 2.5, life: 0.5, t: 0, color: '#bfe6ff', drop: true })

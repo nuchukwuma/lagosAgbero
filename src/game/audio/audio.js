@@ -18,7 +18,7 @@ let musicBus = null
 let sfxBus = null
 let ambBus = null
 let noiseBuffer = null
-const state = { music: true, sound: true, duck: false, mood: 'none', wantMood: 'none', amb: { street: 0, rain: 0, night: 0 } }
+const state = { music: true, sound: true, duck: false, scene: 'market', onCall: null, mood: 'none', wantMood: 'none', amb: { street: 0, rain: 0, night: 0 } }
 
 export function audioReady() {
   return Boolean(ctx)
@@ -285,28 +285,115 @@ function startAmbience() {
   o.start()
   amb.gen = { g }
   setAmbience(state.amb)
-  // life: a horn, a shout or a bell every few seconds
+  // life: the sounds of wherever you are (setScene), every few seconds
   const life = () => {
-    if (ctx.state === 'running' && state.amb.street > 0.3) {
-      const r = Math.random()
+    const sc = SCENES[state.scene] || SCENES.market
+    if (ctx.state === 'running' && state.amb.street > 0.3 && state.sound) {
       const far = ctx.createGain()
       far.gain.value = 0.35
       far.connect(ambBus)
-      if (r < 0.5) for (const f of [392, 494]) tone({ type: 'sawtooth', f: f * (0.8 + Math.random() * 0.5), a: 0.02, d: 0.14 + Math.random() * 0.25, v: 0.1, bus: far })
-      else if (r < 0.75) for (let i = 0; i < 3; i++) tone({ type: 'square', f: 300 + Math.random() * 250, t: i * 0.09, d: 0.06, v: 0.05, bus: far })
-      else if (r < 0.9) tone({ type: 'sine', f: 1568, d: 0.5, v: 0.05, bus: far })
-      else noise({ a: 0.3, d: 1.2, v: 0.18, f: 300, bus: far }) // a lorry passing
-      setTimeout(() => far.disconnect(), 3000)
+      playEvent(pick(sc.events), far)
+      setTimeout(() => far.disconnect(), 3500)
     }
-    amb.timer = setTimeout(life, 2500 + Math.random() * 6000)
+    amb.timer = setTimeout(life, 1000 * (sc.every[0] + Math.random() * (sc.every[1] - sc.every[0])))
   }
   life()
+  // voices in the distance: conductors, hawkers, the crowd (voices.js, quietly)
+  const calls = () => {
+    const sc = SCENES[state.scene] || SCENES.market
+    if (ctx.state === 'running' && state.sound && sc.calls && state.onCall) state.onCall(sc.calls[Math.floor(Math.random() * sc.calls.length)])
+    amb.callTimer = setTimeout(calls, 1000 * (sc.callEvery?.[0] ?? 20) + Math.random() * 1000 * ((sc.callEvery?.[1] ?? 30) - (sc.callEvery?.[0] ?? 20)))
+  }
+  amb.callTimer = setTimeout(calls, 4000)
   // chatter swells a little, like a real crowd
   amb.swell = setInterval(() => {
     if (ctx.state !== 'running') return
-    amb.chatter.g.gain.setTargetAtTime(state.amb.street * (0.03 + Math.random() * 0.05), ctx.currentTime, 0.8)
+    const busy = (SCENES[state.scene] || SCENES.market).chatter ?? 0.05
+    amb.chatter.g.gain.setTargetAtTime(state.amb.street * (busy * 0.6 + Math.random() * busy), ctx.currentTime, 0.8)
     amb.chatter.filt.frequency.setTargetAtTime(800 + Math.random() * 700, ctx.currentTime, 1.2)
   }, 1800)
+}
+
+// ---------- soundscapes: what you hear around you ----------
+// events: weights of the little sounds below; every: seconds between them;
+// calls: lines shouted in the distance (said quietly by voices.js);
+// chatter: how loud the crowd murmur is.
+const SCENES = {
+  market: { every: [2.5, 6], events: { horn: 3, honk: 1, bell: 1, lorry: 1 }, chatter: 0.06, callEvery: [14, 26], calls: ['Buy your pure water! Pure water!', 'Gala! Gala dey here!', 'Recharge card! MTN, Glo, Airtel!', 'Agege bread! Hot hot!', 'Plantain chips! Fresh one!', 'Okrika! Fine clothes, cheap cheap!'] },
+  busPark: { every: [1.2, 3.5], events: { honk: 4, horn: 2, idle: 2, coins: 1 }, chatter: 0.07, callEvery: [5, 10], calls: ['Oshodi! Oshodi! Enter with your change!', 'C M S! C M S! Two chance!', 'Ojota! Ojota! Oya oya!', 'Obalende! Last two! Last two!', 'Wole! Wole! Enter, we dey go!', 'Oya pay, pay, pay! No change, no enter!'] },
+  chase: { every: [1.5, 3], events: { whistle: 2, horn: 2, honk: 1 }, chatter: 0.08, callEvery: [4, 8], calls: ['Ole! Ole!', 'Hold am! Hold am!', 'Catch am! E dey run!', 'Clear road! Clear road!'] },
+  fight: { every: [1.2, 2.5], events: { swell: 4, whistle: 1 }, chatter: 0.13, callEvery: [4, 7], calls: ['Fight! Fight! Fight!', 'Gbas! Gbos!', 'Hit am! Hit am!', 'Separate dem, abeg!', 'Ehen! Na so!'] },
+  runner: { every: [2, 4], events: { whistle: 3, siren: 1, horn: 1 }, chatter: 0.04, callEvery: [6, 11], calls: ['Task Force! Stop there!', 'Hold that boy!', 'Stop! Stop!'] },
+  drive: { every: [1.5, 4], events: { horn: 3, honk: 2, lorry: 1 }, chatter: 0.03 },
+  rally: { every: [1.2, 2.5], events: { swell: 3, drum: 4 }, chatter: 0.12, callEvery: [5, 9], calls: ['Owo Nla! Owo Nla!', 'Sai! Sai!', 'Forward ever!', 'Our man! Our man!'] },
+  village: { every: [3, 7], events: { bird: 4, goat: 1, rooster: 1 }, chatter: 0.02, callEvery: [25, 40], calls: ['Nna, kedu?', 'Bring the goat back here!', 'Ngwa, come and eat!'] },
+  quiet: { every: [5, 10], events: { horn: 1, bell: 1 }, chatter: 0.04 }, // talking, cutscenes: no calls over the words
+  campus: { every: [4, 8], events: { bird: 3, bell: 1 }, chatter: 0.04, callEvery: [30, 50], calls: ['Who get the past questions?', 'Lecture don start o!', 'Abeg, borrow me your notes!'] },
+}
+
+const pick = (weights) => {
+  const all = Object.entries(weights)
+  let r = Math.random() * all.reduce((s, [, w]) => s + w, 0)
+  for (const [k, w] of all) if ((r -= w) < 0) return k
+  return all[0][0]
+}
+
+function playEvent(kind, bus) {
+  const R = Math.random
+  switch (kind) {
+    case 'horn':
+      for (const f of [392, 494]) tone({ type: 'sawtooth', f: f * (0.8 + R() * 0.5), a: 0.02, d: 0.14 + R() * 0.25, v: 0.1, bus })
+      break
+    case 'honk': // a danfo's double beep
+      for (let i = 0; i < 2; i++) tone({ type: 'square', f: 420 + R() * 60, t: i * 0.22, a: 0.01, d: 0.12, v: 0.07, bus })
+      break
+    case 'bell':
+      tone({ type: 'sine', f: 1568, d: 0.5, v: 0.05, bus })
+      break
+    case 'lorry':
+      noise({ a: 0.3, d: 1.2, v: 0.18, f: 300, bus })
+      break
+    case 'idle': // an engine idling at the stop
+      tone({ type: 'sawtooth', f: 46 + R() * 10, a: 0.2, d: 1.6, v: 0.12, bus })
+      break
+    case 'coins':
+      for (let i = 0; i < 4; i++) tone({ type: 'sine', f: 2600 + R() * 1400, t: i * 0.06, d: 0.05, v: 0.03, bus })
+      break
+    case 'whistle':
+      tone({ type: 'sine', f: 2400, to: 2650, a: 0.01, d: 0.35, v: 0.06, bus })
+      break
+    case 'siren':
+      tone({ type: 'sine', f: 620, to: 900, a: 0.3, d: 1.1, v: 0.04, bus })
+      tone({ type: 'sine', f: 900, to: 620, t: 1.2, a: 0.1, d: 1.1, v: 0.04, bus })
+      break
+    case 'swell': // the crowd roars
+      noise({ a: 0.4, d: 1.3, v: 0.22, type: 'bandpass', f: 700 + R() * 500, q: 0.8, bus })
+      break
+    case 'drum': // talking drum: a pitch that bends down
+      for (let i = 0; i < 4; i++) tone({ type: 'sine', f: 190 + R() * 30, to: 110, t: i * 0.18, a: 0.005, d: 0.16, v: 0.14, bus })
+      break
+    case 'bird':
+      for (let i = 0; i < 3; i++) tone({ type: 'sine', f: 2800 + R() * 900, to: 3600 + R() * 900, t: i * 0.12, a: 0.005, d: 0.07, v: 0.03, bus })
+      break
+    case 'goat':
+      tone({ type: 'sawtooth', f: 380, to: 340, a: 0.05, d: 0.5, v: 0.04, detune: 30, bus })
+      break
+    case 'rooster':
+      tone({ type: 'sawtooth', f: 520, to: 760, a: 0.05, d: 0.35, v: 0.04, bus })
+      tone({ type: 'sawtooth', f: 760, to: 480, t: 0.4, a: 0.05, d: 0.6, v: 0.04, bus })
+      break
+    default:
+      break
+  }
+}
+
+/** Which soundscape: market | busPark | chase | fight | runner | drive | rally | village | campus */
+export function setScene(scene) {
+  state.scene = SCENES[scene] ? scene : 'market'
+}
+/** Who says the distant calls (voices.js), so the sound engine needs no voices of its own. */
+export function onCall(fn) {
+  state.onCall = fn
 }
 
 export function setAmbience(next) {
