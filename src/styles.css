@@ -3237,3 +3237,163 @@ svg .is-chase { fill: #e53935; stroke: #fff; stroke-width: 0.6; animation: map-p
   color: var(--danfo);
   font-size: 13px;
 }
+
+/* ---- 2D fight HUD, cartoon style: round portrait badges, chunky bars,
+   the crowd's money top left, round see-through buttons ---- */
+.fight-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+.fight-bar.right {
+  flex-direction: row-reverse;
+}
+.fight-bar-body {
+  flex: 1;
+  min-width: 0;
+}
+.fight-badge {
+  flex: none;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 4px solid #3fbf3a;
+  background: radial-gradient(circle at 50% 35%, #8fd8ff, #2b6cb0);
+  box-shadow: 0 0 0 3px #120a08, 0 4px 10px rgba(0, 0, 0, 0.45);
+}
+.fight-bar.right .fight-badge {
+  border-color: #e2553a;
+  background: radial-gradient(circle at 50% 35%, #ffb38a, #8e2b22);
+}
+.fight-badge.hurt {
+  animation: badge-shake 0.4s infinite;
+}
+.fight-badge canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+@keyframes badge-shake {
+  25% { transform: translateX(-2px) rotate(-3deg); }
+  75% { transform: translateX(2px) rotate(3deg); }
+}
+.story-screen.fighting .fight-track {
+  height: 16px;
+  border: 3px solid #120a08;
+  border-radius: 10px;
+  background: #22252e;
+}
+.story-screen.fighting .fight-fill {
+  box-shadow: inset 0 4px 0 rgba(255, 255, 255, 0.35);
+  border-radius: 6px;
+}
+.story-screen.fighting .fight-name {
+  font-size: 14px;
+  text-shadow: 0 2px 0 #120a08, 0 0 6px #000;
+}
+.story-screen.fighting .fight-vs {
+  font-size: 20px;
+  -webkit-text-stroke: 1px #120a08;
+}
+.story-screen.fighting .fight-special {
+  top: calc(max(8px, env(safe-area-inset-top)) + 100px);
+  left: 76px;
+  width: min(200px, 36vw);
+  height: 13px;
+  border: 2px solid #120a08;
+}
+.story-screen.fighting .fight-special span {
+  line-height: 9px;
+  font-size: 9px;
+}
+.story-screen.fighting .fight-combo {
+  top: calc(max(8px, env(safe-area-inset-top)) + 120px);
+  left: 76px;
+}
+.fight-purse {
+  position: fixed;
+  top: calc(max(8px, env(safe-area-inset-top)) + 8px);
+  left: 12px;
+  z-index: 9;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 3px 14px 3px 3px;
+  border-radius: 20px;
+  background: rgba(12, 22, 44, 0.78);
+  border: 2px solid #120a08;
+  color: #fff;
+  font-weight: 900;
+  font-size: 16px;
+  animation: purse-pop 0.3s ease-out;
+  pointer-events: none;
+}
+.fight-purse .coin {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(circle at 40% 35%, #ffe680, #f2b705 60%, #b8860b);
+  border: 2px solid #3a2405;
+  color: #8a5a00;
+  font-size: 16px;
+}
+@keyframes purse-pop {
+  from { transform: scale(1.25); }
+  to { transform: scale(1); }
+}
+.story-screen.fighting .fight-btn {
+  width: 66px;
+  min-width: 66px;
+  height: 66px;
+  color: #fff;
+  background: radial-gradient(circle at 50% 38%, rgba(255, 255, 255, 0.26), rgba(255, 255, 255, 0.07) 70%);
+  border: 3px solid rgba(255, 255, 255, 0.62);
+  box-shadow: inset 0 0 0 5px rgba(0, 0, 0, 0.16), 0 4px 10px rgba(0, 0, 0, 0.35);
+  transition: transform 0.06s, background 0.06s;
+}
+.story-screen.fighting .fight-btn .icon {
+  filter: drop-shadow(0 2px 0 rgba(0, 0, 0, 0.65));
+}
+.story-screen.fighting .fight-btn:active {
+  transform: scale(0.9);
+  background: radial-gradient(circle at 50% 38%, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.18) 70%);
+}
+.story-screen.fighting .fight-btn.big {
+  width: 82px;
+  min-width: 82px;
+  height: 82px;
+  border-color: rgba(255, 214, 70, 0.9);
+  background: radial-gradient(circle at 50% 38%, rgba(255, 214, 70, 0.55), rgba(255, 170, 0, 0.18) 70%);
+}
+.story-screen.fighting .fight-btn.block {
+  border-color: rgba(140, 190, 255, 0.85);
+  background: radial-gradient(circle at 50% 38%, rgba(140, 190, 255, 0.45), rgba(80, 130, 255, 0.12) 70%);
+}
+.story-screen.fighting .fight-btn.ready {
+  border-color: #ff6b4a;
+  background: radial-gradient(circle at 50% 38%, rgba(255, 107, 74, 0.75), rgba(200, 40, 20, 0.35) 70%);
+}
+.story-screen.fighting .fight-actions {
+  max-width: 300px;
+  gap: 6px;
+}
+.fee-intro .move-list {
+  list-style: none;
+  padding: 0;
+  margin: 8px auto;
+  max-width: 520px;
+  text-align: left;
+  font-size: 14px;
+  line-height: 1.55;
+}
+.fee-intro .move-list .icon {
+  vertical-align: -3px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .fight-purse,
+  .fight-badge.hurt { animation: none; }
+}

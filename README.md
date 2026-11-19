@@ -87,21 +87,49 @@ Grace's Emeka a village trader, Campus's Somto neat.
 
 ## Fights in 2D
 
-Street fights switch to a 2D fighting game (`src/game/modes/fight/Fight2D.jsx`).
-The fighters are drawn live with the canvas (`fight2d/puppet.js`): a jointed
-figure built from each character's own look (skin tone, hair, clothes, shoes,
-hats, glasses, chains), with outlines, two-tone shading and a face that
-reacts (gritted teeth, a shout, eyes squeezed shut, crosses at a K.O.). Poses
-set the hips, fists and feet; elbows and knees are worked out, so feet stay
-planted. The street behind them (`fight2d/stage.js`) is painted once to match
-the time of day: shopfronts and signboards, water tanks, power lines,
-yellow-and-black kerbs, and a crowd that cheers louder with every blow. Hits
-land with sparks, comic words, a split-second freeze and screen shake; the
-knock-out plays in slow motion.
+Street fights switch to a 2D cartoon brawler (`src/game/modes/fight/Fight2D.jsx`;
+the look is written down in `docs/fight-art-direction.md`). The fighters are
+drawn live with the canvas (`fight2d/puppet.js`): chunky cartoon characters
+with big heads and big eyes, short thick limbs, big fists and shoes, thick
+dark outlines and bright cel shading, built from each character's own look
+(skin tone, hair, clothes, shoes, hats, glasses, chains). Faces react (gritted
+teeth, a shout, eyes squeezed shut, crosses at a K.O.). Poses set the hips,
+fists and feet; elbows and knees are worked out, so feet stay planted. The
+street behind them (`fight2d/stage.js`) is painted once to match the time of
+day; at night there's a big moon over an empty lot, stars, layered blue
+rooftops, palms and a church tower, and street lamps that glow. A crowd of
+big-eyed fans cheers louder with every blow. Hits land with sparks, comic
+words, a split-second freeze and screen shake; the knock-out plays in slow
+motion.
+
+Moves: punch (light, chains into combos), kick (heavy, more reach; if it's
+blocked you're left open for a moment), jump (hop over a kick; attack in the
+air for a flying kick), block, dodge and the Lagos Roundabout special. The
+opponent leaps in now and then too. The crowd throws money for good combos and
+specials: coins spin off the opponent into the purse (top left), and the
+winner keeps it (₦50 a coin). The HUD has round portrait badges of both
+fighters (they wince when health is low) and round see-through buttons.
 
 It's drawn at the screen's own sharpness (capped at 1.5x on Low, 2x on
-Medium, 2.5x on High, 3x on Sharpest), and the 3D street is switched off and hidden while a
-fight is on, so 2 GB phones keep a steady frame rate.
+Medium, 2.5x on High, 3x on Sharpest; Low also draws at most 30 frames a
+second and skips the biggest glows), and the 3D street is switched off and
+hidden while a fight is on, so 2 GB phones keep a steady frame rate.
+
+## Checks that catch broken data
+
+`npm test` includes integrity tests, so slips like a story character left
+somewhere you can't walk to are caught before anyone plays:
+
+- `src/game/world/reachability.test.js`: every "talk to" goal, scene
+  position, activity spot, shop and quest giver is on ground you can walk to
+  from the arrival spot.
+- `src/game/data/consistency.test.js`: every mode, fighter, bluff, quiz bank,
+  route, job, driver, spot and runner chaser named in the story and worlds
+  exists.
+
+`npm run story:check` plays every chapter hundreds of times with random
+choices. The GitHub Pages copy only deploys when lint, tests and the story
+check all pass.
 
 ## Voices
 

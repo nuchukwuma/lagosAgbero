@@ -132,3 +132,78 @@ describe('fight power-ups', () => {
     expect(swing({ taken: 0.65 }, 'opponent')).toBeLessThan(swing({}, 'opponent'))
   })
 })
+
+describe('fight: jump, heavy blows, crowd money', () => {
+  it('a jump goes up and comes back down', () => {
+    const s = createFight(idleOpponent)
+    stepFight(s, { jump: true }, 1 / 30, () => 0.99)
+    let top = 0
+    for (let t = 0; t < 1.2; t += 1 / 30) {
+      stepFight(s, {}, 1 / 30, () => 0.99)
+      top = Math.max(top, s.p.y)
+    }
+    expect(top).toBeGreaterThan(0.8)
+    expect(top).toBeLessThan(1.4)
+    expect(s.p.y).toBe(0)
+  })
+
+  it('jumping over a kick makes it miss', () => {
+    const s = createFight(idleOpponent)
+    s.p.x = -0.8
+    s.o.x = 0.8
+    s.p.y = 0.8 // in the air
+    s.p.vy = 0.1
+    s.o.action = { type: 'kick', t: MOVES.kick.startup, hit: false }
+    const hp = s.p.hp
+    stepFight(s, {}, 1 / 60, () => 0.99)
+    expect(s.p.hp).toBe(hp)
+    expect(s.events.some((e) => e.type === 'jumped')).toBe(true)
+  })
+
+  it('an attack in the air is a flying kick, one a jump, and it lands', () => {
+    const s = createFight(idleOpponent)
+    s.p.x = -0.7
+    s.o.x = 0.7
+    stepFight(s, { jump: true }, 1 / 30, () => 0.99)
+    run(s, () => ({}), 0.15)
+    stepFight(s, { punch: true }, 1 / 30, () => 0.99)
+    expect(s.p.action?.type).toBe('air')
+    run(s, () => ({}), 0.3)
+    expect(s.o.hp).toBe(50 - MOVES.air.dmg)
+    while (s.p.action) stepFight(s, {}, 1 / 60, () => 0.99)
+    expect(s.p.y).toBeGreaterThan(0) // still in the air...
+    stepFight(s, { kick: true }, 1 / 60, () => 0.99)
+    expect(s.p.action).toBe(null) // ...but no second one
+    run(s, () => ({}), 1)
+    expect(s.p.y).toBe(0)
+  })
+
+  it('a blocked kick leaves the kicker open; a blocked punch does not', () => {
+    for (const [move, open] of [['kick', true], ['punch', false]]) {
+      const s = createFight(idleOpponent)
+      s.p.x = -0.6
+      s.o.x = 0.6
+      s.o.blocking = true
+      s.o.ai.blockT = 9
+      s.p.action = { type: move, t: MOVES[move].startup, hit: false }
+      stepFight(s, {}, 1 / 60, () => 0.99)
+      expect(s.p.stunT > 0).toBe(open)
+    }
+  })
+
+  it('the crowd throws money for combos and specials; only the winner keeps it', async () => {
+    const s = createFight({ hp: 500, aggression: 0, block: 0 })
+    s.p.x = -0.6
+    s.o.x = 0.6
+    for (let i = 0; i < 4; i++) {
+      stepFight(s, { punch: true }, 1 / 30, () => 0.99)
+      run(s, () => ({}), 0.65)
+    }
+    expect(s.coins).toBe(3) // hits 2, 3 and 4 of the chain
+    const { useFight } = await import('./fightStore.js')
+    useFight.setState({ coins: s.coins, ended: 'won', stats: { dealt: 0, taken: 0 } })
+    expect(useFight.getState().result().moneyChange).toBe(150)
+    useFight.setState({ ended: 'lost' })
+    expect(useFight.getState().result().moneyChange).toBeUndefined()
+  })
+})

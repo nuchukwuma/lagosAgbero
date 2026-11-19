@@ -7,9 +7,10 @@
 
 import { create } from 'zustand'
 import fighters from '../../data/fighters.json'
+import { COIN } from './fightLogic.js'
 
 // Buttons/keys write here; the director reads and clears the "pressed" ones.
-export const fightInput = { move: 0, block: false, punch: false, kick: false, special: false, dodge: false }
+export const fightInput = { move: 0, block: false, punch: false, kick: false, special: false, dodge: false, jump: false }
 
 export function opponentProfile(id) {
   return fighters[id] || fighters.thug
@@ -22,13 +23,14 @@ export const useFight = create((set, get) => ({
   hud: { php: 100, pmax: 100, ohp: 100, omax: 100, special: 0, name: '' },
   ended: null,
   stats: { dealt: 0, taken: 0 },
+  coins: 0, // thrown by the crowd; the winner keeps them
 
   start(params) {
-    set({ active: true, started: false, params, ended: null, stats: { dealt: 0, taken: 0 }, hud: { php: 100, pmax: 100, ohp: 100, omax: 100, special: 0, name: opponentProfile(params.opponent).name } })
+    set({ active: true, started: false, params, ended: null, coins: 0, stats: { dealt: 0, taken: 0 }, hud: { php: 100, pmax: 100, ohp: 100, omax: 100, special: 0, name: opponentProfile(params.opponent).name } })
   },
   begin: () => set({ started: true }),
   reset: () => {
-    Object.assign(fightInput, { move: 0, block: false, punch: false, kick: false, special: false, dodge: false })
+    Object.assign(fightInput, { move: 0, block: false, punch: false, kick: false, special: false, dodge: false, jump: false })
     set({ active: false, started: false, ended: null })
   },
   end: (outcome) => !get().ended && set({ ended: outcome }),
@@ -37,7 +39,7 @@ export const useFight = create((set, get) => ({
     const s = get()
     const energy = -Math.round(5 + s.stats.taken * 0.15)
     return s.ended === 'won'
-      ? { outcome: 'won', stats: { energy, notoriety: 2 }, flags: ['wonFight'] }
+      ? { outcome: 'won', moneyChange: s.coins * COIN, stats: { energy, notoriety: 2 }, flags: ['wonFight'] }
       : { outcome: 'lost', stats: { energy: energy - 5 }, flags: ['lostFight'] }
   },
 }))

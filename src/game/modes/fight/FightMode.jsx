@@ -1,32 +1,73 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useFight, fightInput } from "./fightStore.js";
 import { useDevice } from "../../../components/hud/useDevice.js";
 import Icon from "../../../components/Icon.jsx";
 import Fight2D from "./Fight2D.jsx";
-import PowerupOffer from '../../../components/hud/PowerupOffer.jsx'
+import PowerupOffer from "../../../components/hud/PowerupOffer.jsx";
+import { drawPortrait } from "./fight2d/puppet.js";
+import { COIN } from "./fightLogic.js";
 
-// Fight overlay: health bars, special meter, buttons (touch) or keys.
-// Keys: A/D or ←/→ move · J punch · K kick · L block (hold) · Space dodge · U special
+// Fight overlay: round portrait badges with health bars, the special meter,
+// the crowd's money (the purse), round see-through buttons (touch) or keys.
+// Keys: A/D or ←/→ move · W/↑ jump · J punch · K kick · L block (hold) · Space dodge · U special
 
 const KEYS = {
   KeyJ: "punch",
   KeyK: "kick",
   KeyU: "special",
   Space: "dodge",
+  KeyW: "jump",
+  ArrowUp: "jump",
 };
 
-function Bar({ value, max, color, label, right }) {
+const MOVE_LIST = [
+  ["fist", "Punch", "quick and light; chain them into a combo"],
+  [
+    "boot",
+    "Kick",
+    "heavy, longer reach; if it's blocked you're open for a moment",
+  ],
+  ["up", "Jump", "hop over a kick; punch or kick in the air for a flying kick"],
+  ["shield", "Block (hold)", "takes most of the sting out of a blow"],
+  ["dodge", "Dodge", "a quick step back: nothing touches you"],
+  ["bolt", "Special", "when the meter is full: the Lagos Roundabout"],
+];
+
+const SIZE = 112; // the badge canvas, drawn sharp then shrunk by CSS
+
+/** A round portrait of a fighter: their own drawn face, worried when hurt. */
+function Badge({ fx, facing, hp, max }) {
+  const ref = useRef();
+  const mood = hp <= 0 ? "out" : hp / max < 0.3 ? "hurt" : "fine";
+  useEffect(() => {
+    const c = ref.current;
+    if (!c || !fx) return;
+    const g = c.getContext("2d");
+    g.clearRect(0, 0, SIZE, SIZE);
+    drawPortrait(g, fx, SIZE, { facing, mood });
+  }, [fx, facing, mood]);
+  return (
+    <div className={`fight-badge ${mood}`}>
+      <canvas ref={ref} width={SIZE} height={SIZE} />
+    </div>
+  );
+}
+
+function Bar({ value, max, color, label, right, fx }) {
   return (
     <div className={`fight-bar ${right ? "right" : ""}`}>
-      <div className="fight-name">{label}</div>
-      <div className="fight-track">
-        <div
-          className="fight-fill"
-          style={{
-            width: `${Math.max(0, (value / max) * 100)}%`,
-            background: color,
-          }}
-        />
+      <Badge fx={fx} facing={right ? -1 : 1} hp={value} max={max} />
+      <div className="fight-bar-body">
+        <div className="fight-name">{label}</div>
+        <div className="fight-track">
+          <div
+            className="fight-fill"
+            style={{
+              width: `${Math.max(0, (value / max) * 100)}%`,
+              background: color,
+            }}
+          />
+        </div>
       </div>
     </div>
   );
@@ -54,7 +95,7 @@ function HoldButton({ action, icon, label, className = "" }) {
         if (action === "left" || action === "right") fightInput.move = 0;
       }}
     >
-      <Icon name={icon} size={className.includes("big") ? 40 : 32} />
+      <Icon name={icon} size={className.includes("big") ? 42 : 30} />
     </button>
   );
 }
@@ -112,18 +153,18 @@ export default function FightMode({ params, onFinish }) {
             unleash the <strong>Lagos Roundabout</strong>. Hits landed close
             together build a <strong>combo</strong>: each one hits harder.
           </p>
+          <ul className="move-list">
+            {MOVE_LIST.map(([icon, name, what]) => (
+              <li key={name}>
+                <Icon name={icon} size={18} /> <strong>{name}</strong>: {what}
+              </li>
+            ))}
+          </ul>
           <p className="muted">
-            {touch ? (
-              <span className="icon-legend">
-                <Icon name="fist" size={18} /> punch{" "}
-                <Icon name="boot" size={18} /> kick{" "}
-                <Icon name="shield" size={18} /> block (hold){" "}
-                <Icon name="dodge" size={18} /> dodge{" "}
-                <Icon name="bolt" size={18} /> special
-              </span>
-            ) : (
-              "Keys: A/D move · J punch · K kick · L block (hold) · Space dodge · U special"
-            )}
+            The crowd throws money for good combos and specials: win, and the
+            purse is yours.
+            {!touch &&
+              " Keys: A/D move · W jump · J punch · K kick · L block (hold) · Space dodge · U special"}
           </p>
           <PowerupOffer mode="fight" />
           <button className="btn btn-primary" onClick={fight.begin}>
@@ -144,6 +185,13 @@ export default function FightMode({ params, onFinish }) {
             Damage dealt {Math.round(fight.stats.dealt)} · taken{" "}
             {Math.round(fight.stats.taken)}
           </p>
+          {fight.coins > 0 && (
+            <p>
+              {result.outcome === "won"
+                ? `The crowd's money: ₦${(fight.coins * COIN).toLocaleString("en-NG")} is yours.`
+                : `The crowd threw ₦${(fight.coins * COIN).toLocaleString("en-NG")}... the winner picks it up.`}
+            </p>
+          )}
           <button className="btn btn-primary" onClick={() => onFinish(result)}>
             Continue
           </button>
@@ -157,9 +205,30 @@ export default function FightMode({ params, onFinish }) {
     <>
       {stage}
       <div className="fight-hud">
-        <Bar value={php} max={pmax} color="#8ff0a4" label="You" />
+        <Bar
+          value={php}
+          max={pmax}
+          color="linear-gradient(#a8f56b, #3fbf3a)"
+          label="You"
+          fx={fight.looks?.p}
+        />
         <div className="fight-vs">VS</div>
-        <Bar value={ohp} max={omax} color="#e2553a" label={name} right />
+        <Bar
+          value={ohp}
+          max={omax}
+          color="linear-gradient(#ff8a5c, #d9342b)"
+          label={name}
+          right
+          fx={fight.looks?.o}
+        />
+      </div>
+      <div
+        className="fight-purse"
+        key={fight.coins}
+        aria-label="The crowd's money"
+      >
+        <span className="coin">₦</span>
+        {(fight.coins * COIN).toLocaleString("en-NG")}
       </div>
       {combo >= 2 && (
         <div className="fight-combo" key={combo}>
@@ -187,6 +256,7 @@ export default function FightMode({ params, onFinish }) {
               className="block"
             />
             <HoldButton action="dodge" icon="dodge" label="Dodge" />
+            <HoldButton action="jump" icon="up" label="Jump" />
             <HoldButton action="kick" icon="boot" label="Kick" />
             <HoldButton
               action="punch"
@@ -204,7 +274,8 @@ export default function FightMode({ params, onFinish }) {
         </div>
       ) : (
         <div className="keyboard-hint">
-          A/D move · J punch · K kick · L block · Space dodge · U special
+          A/D move · W jump · J punch · K kick · L block · Space dodge · U
+          special
         </div>
       )}
       {import.meta.env.DEV && (

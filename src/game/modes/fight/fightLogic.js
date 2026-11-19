@@ -2,8 +2,12 @@
 // left facing right. Cartoon fighting: no blood, knock-outs are a flop to
 // the ground.
 //
-// Moves: punch, kick, special ("Lagos Roundabout"), block (hold), dodge
-// (quick backstep with a moment of no-hit). Hits fill the special meter.
+// Moves: punch (light), kick (heavy), special ("Lagos Roundabout"), block
+// (hold), dodge (quick backstep with a moment of no-hit), jump (hop over a
+// kick; punch or kick in the air for a flying kick). Hits fill the special
+// meter. A heavy blow that's blocked leaves its thrower open for a moment.
+// The crowd dashes money (coins) for good combos and specials: the winner
+// keeps it.
 // Combos: clean hits landed close together count up (x2, x3...) and each
 // step hits harder. Being blocked or dodged, or waiting too long, breaks
 // the chain. Only the player's chain adds damage (the opponent's power
@@ -13,7 +17,14 @@ export const MOVES = {
   punch: { startup: 0.2, active: 0.12, recover: 0.3, range: 1.45, dmg: 8, anim: 'punch', animSpeed: 2.2 },
   kick: { startup: 0.34, active: 0.12, recover: 0.45, range: 1.9, dmg: 12, anim: 'kick', animSpeed: 1.7 },
   special: { startup: 0.45, active: 0.2, recover: 0.6, range: 2.15, dmg: 26, anim: 'roundhouse', animSpeed: 1.95 },
+  air: { startup: 0.07, active: 0.24, recover: 0.12, range: 1.75, dmg: 11, anim: 'kick', animSpeed: 2 },
 }
+const HEAVY = new Set(['kick', 'air'])
+export const JUMP_V = 6.2 // m/s up: about a metre high, 0.7 s in the air
+export const GRAVITY = 18
+const RECOIL = 0.34 // a blocked heavy blow: open for this long
+const OVER_KICK = 0.35 // this high off the ground, a kick passes underneath
+export const COIN = 50 // naira per coin the crowd throws
 const MOVE_SPEED = 2.3
 const DODGE_TIME = 0.42
 const DODGE_COOLDOWN = 1.0
@@ -26,7 +37,7 @@ const COMBO_BONUS = 0.15 // extra damage per step after the first
 const COMBO_MAX = 5
 
 function fighter(x, hp) {
-  return { x, hp, maxHp: hp, action: null, blocking: false, dodgeT: 0, dodgeCd: 0, stunT: 0, special: 0, moving: 0, combo: 0, comboT: 0, ai: { think: 0.6, blockT: 0, move: 0 } }
+  return { x, y: 0, vy: 0, airUsed: false, hp, maxHp: hp, action: null, blocking: false, dodgeT: 0, dodgeCd: 0, stunT: 0, special: 0, moving: 0, combo: 0, comboT: 0, ai: { think: 0.6, blockT: 0, move: 0 } }
 }
 
 /**
@@ -42,14 +53,22 @@ export function createFight(profile, { energy = 70, notoriety = 0, difficulty = 
     time: 0,
     over: null,
     events: [],
+    coins: 0,
   }
 }
 
 const total = (m) => m.startup + m.active + m.recover
 const busy = (f) => Boolean(f.action) || f.stunT > 0
+export const airborne = (f) => f.y > 0 || f.vy > 0
 
 function startMove(f, type) {
   if (busy(f) || f.dodgeT > 0) return false
+  // in the air, any attack is the flying kick (one a jump); on the ground, never
+  if (airborne(f)) {
+    if (f.airUsed) return false
+    type = 'air'
+    f.airUsed = true
+  } else if (type === 'air') return false
   if (type === 'special' && f.special < 100) return false
   if (type === 'special') f.special = 0
   f.action = { type, t: 0, hit: false }
@@ -57,8 +76,16 @@ function startMove(f, type) {
   return true
 }
 
+function tryJump(f) {
+  if (busy(f) || airborne(f) || f.dodgeT > 0) return false
+  f.vy = JUMP_V
+  f.airUsed = false
+  f.blocking = false
+  return true
+}
+
 function tryDodge(f, dir) {
-  if (busy(f) || f.dodgeCd > 0) return false
+  if (busy(f) || f.dodgeCd > 0 || airborne(f)) return false
   f.dodgeT = DODGE_TIME
   f.dodgeCd = DODGE_COOLDOWN
   f.x += dir * 0.9
@@ -72,12 +99,18 @@ function resolveHit(state, attacker, defender, who, power) {
   if (attacker.action.hit || attacker.action.t < m.startup || attacker.action.t > m.startup + m.active) return
   if (dist > m.range) return
   attacker.action.hit = true
+  if (attacker.action.type === 'kick' && defender.y > OVER_KICK) {
+    attacker.combo = 0
+    state.events.push({ type: 'jumped', who })
+    return
+  }
   if (defender.dodgeT > 0) {
     attacker.combo = 0
     state.events.push({ type: 'dodged', who })
     return
   }
-  const blocked = defender.blocking && attacker.action.type !== 'special'
+  const moveType = attacker.action.type
+  const blocked = defender.blocking && moveType !== 'special'
   // a clean hit soon after the last one continues the chain
   attacker.combo = blocked ? 0 : Math.min(COMBO_MAX, attacker.comboT > 0 ? attacker.combo + 1 : 1)
   attacker.comboT = blocked ? 0 : COMBO_WINDOW
@@ -92,7 +125,17 @@ function resolveHit(state, attacker, defender, who, power) {
     const dir = Math.sign(defender.x - attacker.x) || 1
     defender.x += dir * (attacker.action.type === 'special' ? 1.2 : 0.35)
   }
-  state.events.push({ type: blocked ? 'blocked' : 'hit', who, move: attacker.action.type, dmg, combo: attacker.combo })
+  // a heavy blow into a guard: the thrower stumbles back, open for a moment
+  const recoil = blocked && HEAVY.has(attacker.action.type)
+  if (recoil) {
+    attacker.action = null
+    attacker.stunT = RECOIL
+  }
+  // the crowd throws money for the good stuff (only the player's)
+  let coins = 0
+  if (!blocked && who === 'player') coins = moveType === 'special' ? 3 : attacker.combo >= 2 ? 1 : 0
+  if (coins) state.coins += coins
+  state.events.push({ type: blocked ? 'blocked' : 'hit', who, move: moveType, dmg, combo: attacker.combo, recoil, coins })
 }
 
 function think(state, dt, rng) {
@@ -110,6 +153,17 @@ function think(state, dt, rng) {
   if (o.ai.think > 0 || busy(o) || o.blocking) return
   o.ai.think = Math.max(0.18, 0.55 - prof.aggression * 0.3) * (0.7 + rng() * 0.6)
   const dist = o.x - p.x
+  // in the air: the flying kick when it can reach
+  if (airborne(o)) {
+    if (dist < MOVES.air.range && !o.airUsed) startMove(o, 'air')
+    return
+  }
+  // now and then, leap in from just out of reach
+  if (dist > 1.7 && dist < 2.7 && rng() < prof.aggression * 0.22) {
+    o.ai.move = -1
+    o.ai.think = 0.15 // look again soon, while in the air
+    return tryJump(o)
+  }
   if (o.special >= 100 && dist < MOVES.special.range && rng() < 0.6) return startMove(o, 'special')
   if (dist > MOVES.kick.range - 0.05) o.ai.move = -1 // close in
   else if (dist < 0.95) o.ai.move = 1 // too close: step back
@@ -131,6 +185,16 @@ export function stepFight(state, input, dt, rng = Math.random) {
   const { p, o } = state
 
   for (const f of [p, o]) {
+    // the jump: up, down, and an attack ends when the feet touch the road
+    if (airborne(f)) {
+      f.vy -= GRAVITY * dt
+      f.y += f.vy * dt
+      if (f.y <= 0) {
+        f.y = 0
+        f.vy = 0
+        if (f.action?.type === 'air') f.action = null
+      }
+    }
     f.stunT = Math.max(0, f.stunT - dt)
     f.dodgeT = Math.max(0, f.dodgeT - dt)
     f.dodgeCd = Math.max(0, f.dodgeCd - dt)
@@ -147,13 +211,15 @@ export function stepFight(state, input, dt, rng = Math.random) {
   if (input.kick) startMove(p, 'kick')
   if (input.special) startMove(p, 'special')
   if (input.dodge) tryDodge(p, -1)
-  p.blocking = Boolean(input.block) && !busy(p) && p.dodgeT <= 0
-  p.moving = !busy(p) && !p.blocking ? input.move || 0 : 0
+  if (input.jump) tryJump(p)
+  p.blocking = Boolean(input.block) && !busy(p) && p.dodgeT <= 0 && !airborne(p)
+  // you can steer a little in the air, even while kicking
+  p.moving = (!busy(p) || airborne(p)) && !p.blocking ? input.move || 0 : 0
   p.x += p.moving * MOVE_SPEED * dt
 
   // opponent
   think(state, dt, rng)
-  o.moving = !busy(o) && !o.blocking ? o.ai.move : 0
+  o.moving = (!busy(o) || airborne(o)) && !o.blocking ? o.ai.move : 0
   o.x += o.moving * MOVE_SPEED * state.profile.speed * dt
 
   // hits

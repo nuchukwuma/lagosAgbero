@@ -30,6 +30,7 @@ const WORDS = {
   kick: ['KPAU!', 'BOOM!', 'GBOSA!', 'WHUMP!'],
   special: ['LAGOS ROUNDABOUT!', 'KPAKPAKPA!', 'GBAGAUN!'],
   block: ['BLOCK!', 'TCHK!'],
+  air: ['FLYING KICK!', 'GBOSA!', 'WHOOSH-KPA!'],
 }
 const PAN = 4.5 // metres the camera can slide either way
 
@@ -46,6 +47,35 @@ function starPath(ctx, x, y, r, points = 8, inner = 0.45) {
   ctx.closePath()
 }
 
+const ease = (t) => (t < 0 ? 0 : t > 1 ? 1 : t * t * (3 - 2 * t))
+
+/** A gold naira coin, spinning (squashed sideways as it turns). */
+function drawCoin(ctx, x, y, r, spin) {
+  const sx = Math.max(0.15, Math.abs(Math.cos(spin)))
+  ctx.save()
+  ctx.translate(x, y)
+  ctx.scale(sx, 1)
+  ctx.beginPath()
+  ctx.arc(0, 0, r, 0, Math.PI * 2)
+  ctx.fillStyle = '#b8860b'
+  ctx.fill()
+  ctx.lineWidth = Math.max(1.5, r * 0.18)
+  ctx.strokeStyle = '#3a2405'
+  ctx.stroke()
+  ctx.beginPath()
+  ctx.arc(-r * 0.06, -r * 0.06, r * 0.78, 0, Math.PI * 2)
+  ctx.fillStyle = '#ffd23a'
+  ctx.fill()
+  if (sx > 0.5) {
+    ctx.fillStyle = '#9a6a00'
+    ctx.font = `900 ${Math.round(r * 1.1)}px system-ui, sans-serif`
+    ctx.textAlign = 'center'
+    ctx.textBaseline = 'middle'
+    ctx.fillText('₦', 0, r * 0.05)
+  }
+  ctx.restore()
+}
+
 export default function Fight2D({ params }) {
   const canvasRef = useRef()
   const game = useGameStore((s) => s.game)
@@ -56,6 +86,8 @@ export default function Fight2D({ params }) {
     const player = withAllegiance(game?.player.look || {}, game?.flags || {})
     return { p: makeFighter(player), o: makeFighter({ ...base, ...(profile.lookOverride || {}) }) }
   }, [profile]) // eslint-disable-line react-hooks/exhaustive-deps
+  // the HUD draws the same fighters in its round portrait badges
+  useEffect(() => useFight.setState({ looks: fighters }), [fighters])
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -80,7 +112,7 @@ export default function Fight2D({ params }) {
       groundY = H * (portrait ? 0.7 : 0.9)
       // as big as fits: both fighters across, heads clear of the health bars
       const top = portrait ? 150 : 112
-      ppm = Math.min(W / (portrait ? 4.6 : 7.2), (groundY - top) / 1.95)
+      ppm = Math.min(W / (portrait ? 4.6 : 7.2), (groundY - top) / 1.75)
       stage = makeStage({ W, H, ppm, groundY, pan: PAN + 2, time, dpr, light, seed: (params.opponent || 'x').length * 31 + 7 })
     }
     layout()
@@ -91,7 +123,7 @@ export default function Fight2D({ params }) {
       p: { pose: mix(POSES.stance, POSES.stance, 0), squash: 0, ghosts: [], ghostT: 0 },
       o: { pose: mix(POSES.stance, POSES.stance, 0), squash: 0, ghosts: [], ghostT: 0 },
     }
-    const fx = { sparks: [], bursts: [], words: [], shake: 0, flash: 0, hitStop: 0, slow: 0, banner: null, cheer: 0.2 }
+    const fx = { sparks: [], bursts: [], words: [], coins: [], shake: 0, flash: 0, hitStop: 0, slow: 0, banner: null, cheer: 0.2 }
     let camX = 0
     let zoom = 1
     let t = 0
@@ -100,6 +132,7 @@ export default function Fight2D({ params }) {
     let started = false
     let last = performance.now()
     let raf = 0
+    let drawnAt = 0
     let hudTimer = 0
 
     const toScreen = (x, y) => [W / 2 + (x - camX) * ppm, groundY - y * ppm]
@@ -107,8 +140,9 @@ export default function Fight2D({ params }) {
     function impact(kind, attacker, victim, who) {
       const dir = who === 'player' ? 1 : -1
       const x = victim.x - dir * 0.2
-      const y = kind === 'kick' ? 1.05 : kind === 'block' ? 1.3 : 1.42
-      const st = { punch: ['#fff3b0', '#ffb020', 0.36], kick: ['#ffe08a', '#ff7a1a', 0.48], special: ['#ffffff', '#ff3d2e', 0.8], block: ['#d8f1ff', '#5aa9ff', 0.28] }[kind]
+      // the cartoon fighters are shorter: head about 1.2 m, chest about 0.85 m
+      const y = victim.y + (kind === 'kick' ? 0.8 : kind === 'block' ? 1.0 : kind === 'air' ? 1.05 : 1.18)
+      const st = { punch: ['#fff3b0', '#ffb020', 0.36], kick: ['#ffe08a', '#ff7a1a', 0.48], air: ['#ffe08a', '#ff7a1a', 0.5], special: ['#ffffff', '#ff3d2e', 0.8], block: ['#d8f1ff', '#5aa9ff', 0.28] }[kind]
       fx.bursts.push({ x, y, t: 0, color: st[0], ring: st[1], size: st[2] })
       for (let i = 0; i < (light ? 6 : 12); i++) {
         const a = (dir > 0 ? 0 : Math.PI) + (Math.random() - 0.5) * 2.2
@@ -121,12 +155,12 @@ export default function Fight2D({ params }) {
       if (kind !== 'block') {
         fx.hitStop = HIT_STOP[kind] || 0.06
         look[who === 'player' ? 'o' : 'p'].squash = 0.16
-        fx.shake = kind === 'special' ? 14 : kind === 'kick' ? 8 : 5
+        fx.shake = kind === 'special' ? 14 : kind === 'kick' || kind === 'air' ? 8 : 5
         fx.cheer = Math.min(1, fx.cheer + (kind === 'special' ? 0.6 : 0.25))
         if (kind === 'special' || (kind === 'kick' && Math.random() < 0.5)) sfx('crowd') // the crowd roars at the big ones
         if (kind === 'special') fx.flash = 0.18
         // a drop of sweat flies off
-        fx.sparks.push({ x: victim.x, y: 1.55, vx: -dir * -1.5, vy: 2.5, life: 0.5, t: 0, color: '#bfe6ff', drop: true })
+        fx.sparks.push({ x: victim.x, y: victim.y + 1.4, vx: -dir * -1.5, vy: 2.5, life: 0.5, t: 0, color: '#bfe6ff', drop: true })
       }
     }
 
@@ -148,12 +182,20 @@ export default function Fight2D({ params }) {
       if (started && !store.ended && !fight.over) {
         const before = { p: fight.p.hp, o: fight.o.hp }
         stepFight(fight, { ...fightInput }, simDt)
-        fightInput.punch = fightInput.kick = fightInput.special = fightInput.dodge = false
+        fightInput.punch = fightInput.kick = fightInput.special = fightInput.dodge = fightInput.jump = false
         for (const ev of fight.events) {
           const attacker = ev.who === 'player' ? fight.p : fight.o
           const victim = ev.who === 'player' ? fight.o : fight.p
-          if (ev.type === 'hit' || ev.type === 'blocked') impact(ev.type === 'blocked' ? 'block' : ev.move === 'special' ? 'special' : ev.move === 'kick' ? 'kick' : 'punch', attacker, victim, ev.who)
-          if (ev.type === 'dodged') sfx('whoosh')
+          if (ev.type === 'hit' || ev.type === 'blocked') impact(ev.type === 'blocked' ? 'block' : ev.move, attacker, victim, ev.who)
+          if (ev.recoil) fx.words.push({ text: 'OPEN!', x: attacker.x, y: attacker.y + 1.7, t: 0, rot: 0, kind: 'block' })
+          // the crowd throws money: coins spin up off the opponent and fly to the purse
+          for (let i = 0; i < (ev.coins || 0); i++) fx.coins.push({ x: victim.x, y: victim.y + 1.2, vx: (Math.random() - 0.3) * 2.5, vy: 3 + Math.random() * 2, t: -i * 0.08, spin: Math.random() * 6 })
+          if (ev.coins) setTimeout(() => sfx('coin'), 350)
+          if (ev.type === 'jumped') {
+            sfx('whoosh')
+            fx.words.push({ text: 'OVER!', x: victim.x, y: victim.y + 1.6, t: 0, rot: 0.1, kind: 'block' })
+          }
+          if (ev.type === 'dodged' || ev.type === 'jumped') sfx('whoosh')
           else if (ev.type === 'blocked') sfx('block')
           else if (ev.move === 'special') sfx('special')
           else if (ev.who === 'player') sfx(ev.move === 'kick' ? 'kick' : 'punch')
@@ -162,6 +204,7 @@ export default function Fight2D({ params }) {
         const taken = before.p - fight.p.hp
         const dealt = before.o - fight.o.hp
         if (taken || dealt) useFight.setState({ stats: { dealt: store.stats.dealt + dealt, taken: store.stats.taken + taken } })
+        if (fight.coins !== store.coins) setTimeout(() => useFight.setState({ coins: fight.coins }), 650) // when they land in the purse
         hudTimer -= dt
         if (hudTimer <= 0 || taken || dealt) {
           hudTimer = 0.1
@@ -193,10 +236,10 @@ export default function Fight2D({ params }) {
         L.squash = Math.max(0, L.squash - dt)
         // afterimages while dodging or spinning
         L.ghostT -= dt
-        const trail = f.dodgeT > 0 || f.action?.type === 'special'
+        const trail = f.dodgeT > 0 || f.action?.type === 'special' || f.action?.type === 'air' || f.action?.type === 'air'
         if (trail && L.ghostT <= 0) {
           L.ghostT = 0.035
-          L.ghosts.push({ pose: L.pose, x: f.x, life: 0.22 })
+          L.ghosts.push({ pose: L.pose, x: f.x, y: f.y, life: 0.22 })
           if (L.ghosts.length > (light ? 2 : 4)) L.ghosts.shift()
         }
         for (const g of L.ghosts) g.life -= dt
@@ -216,6 +259,15 @@ export default function Fight2D({ params }) {
         s.vy -= 9 * dt
       }
       fx.sparks = fx.sparks.filter((s) => s.t < s.life)
+      for (const c of fx.coins) {
+        c.t += dt
+        if (c.t > 0 && c.t < 0.35) {
+          c.x += c.vx * dt
+          c.y += c.vy * dt
+          c.vy -= 9 * dt
+        }
+      }
+      fx.coins = fx.coins.filter((c) => c.t < 0.75)
       for (const b of fx.bursts) b.t += dt
       fx.bursts = fx.bursts.filter((b) => b.t < 0.3)
       for (const w of fx.words) w.t += dt
@@ -233,12 +285,19 @@ export default function Fight2D({ params }) {
       return Array.from({ length: light ? 5 : 10 }, (_, i) => ({ x: x - 0.6 + (i / 10) * 1.2, y: 0.05, vx: (Math.random() - 0.5) * 2, vy: 0.6 + Math.random(), life: 0.6, t: 0, color: 'rgba(200,185,160,0.8)', dust: true }))
     }
 
-    function drawPuppet(k, f, facing, alpha = 1, pose = look[k].pose, x = f.x) {
+    // the lunge carries a blow to its target, but never through the other fighter
+    const lunge = (pose) => {
+      const room = Math.max(0.08, fight.o.x - fight.p.x - 1.0)
+      return pose.dx > room ? { ...pose, dx: room } : pose
+    }
+
+    function drawPuppet(k, f, facing, alpha = 1, pose0 = look[k].pose, x = f.x, y = f.y) {
       const L = look[k]
-      const [sx] = toScreen(x, 0)
+      const pose = lunge(pose0)
+      const [sx, sy] = toScreen(x, y)
       const sq = alpha === 1 && L.squash > 0 ? Math.sin((L.squash / 0.16) * Math.PI) * 0.16 : 0
       ctx.save()
-      ctx.translate(sx, groundY)
+      ctx.translate(sx, sy)
       ctx.scale(ppm * facing * (1 + sq), -ppm * (1 - sq))
       drawFighter(ctx, fighters[k], pose, { alpha })
       ctx.restore()
@@ -258,10 +317,11 @@ export default function Fight2D({ params }) {
       // shadows on the road
       for (const k of ['p', 'o']) {
         const f = fight[k]
-        const [sx] = toScreen(f.x + (look[k].pose.dx || 0) * (k === 'p' ? 1 : -1), 0) // follows the lunge
-        ctx.fillStyle = 'rgba(0,0,0,0.32)'
+        const [sx] = toScreen(f.x + (lunge(look[k].pose).dx || 0) * (k === 'p' ? 1 : -1), 0) // follows the lunge
+        const lift = Math.max(0.35, 1 - f.y * 0.5) // smaller under a jumper
+        ctx.fillStyle = `rgba(0,0,0,${0.36 * lift})`
         ctx.beginPath()
-        ctx.ellipse(sx, groundY + 2, ppm * 0.45, ppm * 0.08, 0, 0, Math.PI * 2)
+        ctx.ellipse(sx, groundY + 2, ppm * 0.48 * lift, ppm * 0.09 * lift, 0, 0, Math.PI * 2)
         ctx.fill()
       }
       // the attacker in front, so the blow lands over the other one
@@ -269,7 +329,7 @@ export default function Fight2D({ params }) {
       for (const k of order) {
         const f = fight[k]
         const facing = k === 'p' ? 1 : -1
-        look[k].ghosts.forEach((g, i) => drawPuppet(k, f, facing, 0.12 + i * 0.05, g.pose, g.x))
+        look[k].ghosts.forEach((g, i) => drawPuppet(k, f, facing, 0.12 + i * 0.05, g.pose, g.x, g.y))
         drawPuppet(k, f, facing)
       }
       // hit bursts: a star of light and a ring
@@ -341,6 +401,19 @@ export default function Fight2D({ params }) {
         ctx.fillText(w.text, 0, 0)
         ctx.restore()
       }
+      // coins: up off the opponent, then a swoop to the purse (top left)
+      for (const c of fx.coins) {
+        if (c.t < 0) continue
+        let [x, y] = toScreen(c.x, c.y)
+        x = W / 2 + (x - W / 2) * zoom
+        y = groundY + (y - groundY) * zoom
+        if (c.t > 0.35) {
+          const k = ease((c.t - 0.35) / 0.4)
+          x += (40 - x) * k // the purse, top left
+          y += (30 - y) * k
+        }
+        drawCoin(ctx, x, y, Math.max(9, ppm * 0.13) * (c.t > 0.35 ? 1 - (c.t - 0.35) * 0.9 : 1), c.spin + c.t * 14)
+      }
       // banners: FIGHT! / K.O.!
       if (fx.banner) {
         const k = fx.banner.t / 1.3
@@ -373,6 +446,9 @@ export default function Fight2D({ params }) {
       const dt = Math.min(0.05, (now - last) / 1000)
       last = now
       if (!isPaused()) step(dt) // paused: the picture holds
+      // Light mode (budget phones): draw at most 30 times a second, like the 3D street
+      if (light && now - drawnAt < 30) return
+      drawnAt = now
       render()
     }
     raf = requestAnimationFrame(frame)
