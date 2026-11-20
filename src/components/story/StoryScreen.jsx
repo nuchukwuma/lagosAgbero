@@ -152,7 +152,7 @@ export default function StoryScreen() {
   }
 
   return (
-    <div className={`story-screen ${modeName === 'fight' ? 'fighting' : ''}`}>
+    <div className={`story-screen ${modeName === 'fight' || modeName === 'dance' ? 'fighting' : ''}`}>
       <CanvasGuard onBack={quitToTitle}>{(safeGl) => <GameCanvas view={view} game={game} activity={activity} paused={paused} onGoalReached={advance} safeGl={safeGl} />}</CanvasGuard>
       {raining && <div className="rain" aria-hidden="true" />}
       <div id="speech-layer" className="speech-layer" aria-live="polite" />

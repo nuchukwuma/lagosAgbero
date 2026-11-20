@@ -6,8 +6,7 @@ import { makePixelFighter, frameFor, flashOf, tintOf, reachOf, M_PER_PX, CW, CH,
 import { makePixelStage, backdropFor } from './fight2d/pixelStage.js'
 import { useGameStore } from '../../store/gameStore.js'
 import { useSettings, effectiveQuality } from '../../store/settings.js'
-import { playerState } from '../../world/worldState.js'
-import { getLayout } from '../../world/worlds.js'
+import { placeHere } from './fight2d/where.js'
 import { isPaused, usePause } from '../../store/pauseStore.js'
 import { randomLook, withAllegiance } from '../../characters/look.js'
 import characters from '../../data/characters.json'
@@ -34,22 +33,6 @@ const WORDS = {
   air: ['FLYING KICK!', 'GBOSA!', 'WHOOSH-KPA!'],
 }
 const PAN = 4.5 // metres the camera can slide either way
-
-// which place the fight is in: the activity's own spot, or the spot nearest the player
-function fightPlace(world, activitySpot) {
-  if (activitySpot) return activitySpot
-  const spots = getLayout(world)?.spots || {}
-  let best = null
-  let bestD = Infinity
-  for (const [id, sp] of Object.entries(spots)) {
-    const d = Math.hypot(sp.pos[0] - playerState.position.x, sp.pos[1] - playerState.position.z)
-    if (d < bestD) {
-      bestD = d
-      best = id
-    }
-  }
-  return best
-}
 
 /** A naira coin in pixels: u is one coin pixel on screen; it squashes sideways as it spins. */
 const COIN_ROWS = ['..###..', '.#lll#.', '#lyyyl#', '#yynyy#', '#yyyyd#', '.#ddd#.', '..###..']
@@ -107,7 +90,7 @@ export default function Fight2D({ params }) {
     let PX = 8 // screen pixels per sprite pixel
     let groundY = 0
     let stage = null
-    const { kind, place } = backdropFor(world, fightPlace(world, activitySpot))
+    const { kind, place } = backdropFor(world, placeHere(world, activitySpot))
     const layout = () => {
       const rect = canvas.getBoundingClientRect()
       W = Math.max(1, Math.round(rect.width))

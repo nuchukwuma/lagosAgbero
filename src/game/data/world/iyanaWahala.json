@@ -1687,6 +1687,20 @@
         "difficulty": 1
       },
       "where": "Under-Bridge"
+    },
+    {
+      "id": "owambeDance",
+      "label": "OWAMBE DANCE-OFF",
+      "icon": "music",
+      "spot": "mamaPut",
+      "mode": "dance",
+      "minutes": 60,
+      "params": {
+        "name": "DJ Spinall's cousin",
+        "skill": 0.55,
+        "prize": 3000
+      },
+      "where": "Mama Put"
     }
   ],
   "rows": [

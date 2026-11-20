@@ -1376,6 +1376,20 @@
           }
         }
       }
+    },
+    {
+      "id": "freshersDance",
+      "label": "FRESHERS' DANCE-OFF",
+      "icon": "music",
+      "spot": "quad",
+      "mode": "dance",
+      "minutes": 60,
+      "params": {
+        "name": "Big Tunde",
+        "skill": 0.6,
+        "prize": 3000
+      },
+      "where": "The Quad"
     }
   ],
   "mapLabels": {

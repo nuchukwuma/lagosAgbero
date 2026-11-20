@@ -409,6 +409,27 @@ export const FRAMES = {
     { b: [0, 1], aF: [5, -9], aB: [-4, -9], lF: [3, -1], lB: [-3, -1], mouth: 'grin' },
     { b: [0, 0], aF: [4, -16], aB: [-4, -16], lF: [3, -1], lB: [-3, -1], mouth: 'open' },
   ],
+  // dance battle moves: two frames each, swapped on the half beat
+  dance_shaku: [
+    { b: [0, 1], aF: [6, -6], aB: [3, -5], lF: [4, -3], kF: [5, -6], lB: [-3, -1], mouth: 'grin' },
+    { b: [1, 0], aF: [-2, -6], aB: [-5, -7], lF: [3, -1], lB: [-3, -3], kB: [-2, -6], mouth: 'grin' },
+  ],
+  dance_zanku: [
+    { b: [-1, 0], aF: [5, -12], aB: [-5, -9], lF: [9, -3], lB: [-3, -1], mouth: 'open' },
+    { b: [1, 0], aF: [3, -9], aB: [-6, -12], lF: [2, -1], lB: [-8, -3], mouth: 'open' },
+  ],
+  dance_gwara: [
+    { b: [0, 0], aF: [5, -16], aB: [-6, -8], lF: [5, -1], lB: [-3, -1], mouth: 'grin' },
+    { b: [0, 1], aF: [6, -8], aB: [-4, -16], lF: [3, -1], lB: [-5, -1], mouth: 'grin' },
+  ],
+  dance_shoki: [
+    { b: [0, 3], hd: [1, 0], aF: [5, -8], aB: [2, -7], lF: [4, -1], lB: [-4, -1], mouth: 'grin' },
+    { b: [0, 1], hd: [-1, 0], aF: [6, -10], aB: [3, -9], lF: [4, -1], lB: [-4, -1], mouth: 'grin' },
+  ],
+  dance_azonto: [
+    { b: [0, 0], aF: [9, -12], aB: [2, -8], lF: [4, -1], lB: [-3, -1], mouth: 'open' },
+    { b: [0, 1], aF: [4, -6], aB: [8, -11], lF: [3, -1], lB: [-4, -1], mouth: 'open' },
+  ],
   stand: [
     { b: [0, 0], aF: [3, -6], aB: [-3, -6], lF: [2, -1], lB: [-2, -1] },
     { b: [0, 1], aF: [3, -5], aB: [-3, -5], lF: [2, -1], lB: [-2, -1] },

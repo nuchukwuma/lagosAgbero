@@ -3696,3 +3696,92 @@ svg .is-chase { fill: #e53935; stroke: #fff; stroke-width: 0.6; animation: map-p
   padding: 2px;
 }
 .stars .star.on { color: #ffd23a; text-shadow: 0 0 10px rgba(255, 210, 58, 0.6); }
+/* dance battle: score and hype at the top, the routine, the move pad */
+.dance-hud {
+  position: fixed;
+  top: calc(max(8px, env(safe-area-inset-top)) + 54px);
+  left: 12px;
+  right: 12px;
+  z-index: 7;
+  display: grid;
+  gap: 6px;
+  justify-items: center;
+  pointer-events: none;
+  font-family: ui-monospace, Menlo, Consolas, monospace;
+}
+.dance-score {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 900;
+  text-shadow: 2px 2px 0 #0e0d1e;
+}
+.dance-hype {
+  width: min(260px, 40vw);
+  height: 14px;
+  border: 3px solid #0e0d1e;
+  background: #2a2638;
+}
+.dance-hype div {
+  height: 100%;
+  background: linear-gradient(90deg, #ff8a2a, #ffd23a);
+  transition: width 0.2s steps(4);
+}
+.dance-routine {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.dance-step {
+  min-width: 48px;
+  padding: 2px 6px;
+  border: 3px solid #0e0d1e;
+  background: #3b3650;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 900;
+  text-align: center;
+  text-shadow: 1px 1px 0 #0e0d1e;
+}
+.dance-step.now { transform: translateY(-3px); box-shadow: 0 0 0 3px #fff; }
+.dance-step.perfect { box-shadow: 0 0 0 3px #8ff0a4; }
+.dance-step.good { box-shadow: 0 0 0 3px #ffd23a; }
+.dance-step.miss { opacity: 0.45; }
+.dance-turn {
+  font-weight: 900;
+  color: #ffd23a;
+  text-shadow: 2px 2px 0 #0e0d1e;
+}
+.dance-pad {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: max(12px, env(safe-area-inset-bottom));
+  z-index: 8;
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding: 0 8px;
+}
+.dance-btn {
+  position: relative;
+  min-width: 76px;
+  height: 56px;
+  border: 3px solid #0e0d1e;
+  color: #fff;
+  font: 900 13px ui-monospace, Menlo, Consolas, monospace;
+  text-shadow: 1px 1px 0 #0e0d1e;
+  box-shadow: inset 0 3px 0 rgba(255, 255, 255, 0.35), 3px 3px 0 rgba(14, 13, 30, 0.6);
+  touch-action: none;
+  user-select: none;
+}
+.dance-btn:active { transform: translateY(2px); }
+.dance-btn small {
+  position: absolute;
+  top: 2px;
+  left: 4px;
+  font-size: 9px;
+  opacity: 0.8;
+}

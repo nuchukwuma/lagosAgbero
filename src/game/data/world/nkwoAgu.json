@@ -1337,6 +1337,20 @@
         "customers": 5
       },
       "where": "The palm-wine shade"
+    },
+    {
+      "id": "newYamDance",
+      "label": "DANCE AT THE SQUARE",
+      "icon": "music",
+      "spot": "square",
+      "mode": "dance",
+      "minutes": 60,
+      "params": {
+        "name": "Okwudili",
+        "skill": 0.5,
+        "prize": 2500
+      },
+      "where": "The village square"
     }
   ],
   "mapLabels": {

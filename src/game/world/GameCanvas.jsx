@@ -100,7 +100,8 @@ export default function GameCanvas({ view, game, activity = null, paused = false
   const feeRunActive = useFeeRun((s) => s.active && s.started && !s.ended)
   const chaseActive = useChase((s) => s.active && s.started && !s.ended)
   const fightOn = useFight((s) => s.active)
-  const fight2d = fightOn && modeName === 'fight'
+  // the 2D scenes (the fights, dance battles) draw over a frozen, hidden street
+  const fight2d = (fightOn && modeName === 'fight') || modeName === 'dance'
   const runnerOn = useRunner((s) => s.active) && modeName === 'runner'
   const busOn = useBus((s) => s.active) && modeName === 'conductor'
   const driveOn = useDrive((s) => s.active) && modeName === 'drive'
