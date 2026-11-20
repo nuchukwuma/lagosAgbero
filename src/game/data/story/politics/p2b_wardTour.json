@@ -1,0 +1,228 @@
+{
+  "id": "p2b_wardTour",
+  "campaign": "politics",
+  "world": "iyanaWahala",
+  "act": 2,
+  "number": 5,
+  "title": "Chapter 5 — Ward Tour",
+  "description": "Seyi wants rallies. Mama Titi says walk. Four corners of the ward you have driven past for eleven years.",
+  "startScene": "plan",
+  "scenes": {
+    "plan": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "seyi",
+          "text": "Ward tour. Four stops. At each one you listen, you promise ONE thing, and you leave before they ask for two."
+        },
+        {
+          "type": "freeRoam",
+          "objective": "Stop 1: under the bridge, where the people without houses live.",
+          "goal": {
+            "reach": "underBridge"
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "bridge"
+        }
+      ],
+      "location": "frontStop",
+      "time": "dawn"
+    },
+    "bridge": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Under the bridge: mattresses in a row, a church in a tent, a barber with a mirror nailed to a pillar. A woman is bathing a child in a basin."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "garba",
+          "text": "(who sells tea here at dawn too) They don't vote, Teacher. No address. Owó Ńlá never came here, because they don't vote."
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "One promise.",
+          "options": [
+            {
+              "text": "\"A shelter with an address. Then you can vote.\"",
+              "effects": {
+                "changeStat": {
+                  "publicTrust": 6,
+                  "conscience": 4
+                },
+                "setFlag": "promiseShelter"
+              }
+            },
+            {
+              "text": "Promise nothing. Pay for the barber's new mirror and listen.",
+              "cost": 3000,
+              "effects": {
+                "changeStat": {
+                  "conscience": 3
+                },
+                "setFlag": "barberMirror"
+              }
+            },
+            {
+              "text": "Leave quickly. Seyi is right: they don't vote.",
+              "effects": {
+                "changeStat": {
+                  "conscience": -4
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "freeRoam",
+          "objective": "Stop 2: Shell House, the old compound on South Street.",
+          "goal": {
+            "reach": "shellHouse"
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "shell"
+        }
+      ],
+      "location": "underBridge",
+      "time": "dawn"
+    },
+    "shell": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Shell House. Forty rooms, one tap, a landlord nobody has seen since 2009. The children have drawn a football pitch on the wall because there isn't one on the ground."
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "An old man shows you the tap. It coughs.",
+          "options": [
+            {
+              "text": "\"A borehole for Shell House. First quarter.\"",
+              "effects": {
+                "changeStat": {
+                  "votes": 3,
+                  "publicTrust": 3
+                },
+                "setFlag": "promiseBorehole"
+              }
+            },
+            {
+              "text": "\"A football pitch for the children.\"",
+              "effects": {
+                "changeStat": {
+                  "votes": 2,
+                  "publicTrust": 4
+                },
+                "setFlag": "promisePitch"
+              }
+            }
+          ]
+        },
+        {
+          "type": "freeRoam",
+          "objective": "Stop 3: the motor park, where Baba Ticket holds court.",
+          "goal": {
+            "reach": "motorPark"
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "park"
+        }
+      ],
+      "location": "shellHouse",
+      "time": "day"
+    },
+    "park": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "babaTicket",
+          "text": "Teacher. My drivers pay eleven different \"tickets\" a day. Council, state, union, task force, the boy with the stick. Can your promise reduce it to ten?"
+        },
+        {
+          "type": "choice",
+          "speaker": "babaTicket",
+          "text": "The drivers have stopped arguing to listen.",
+          "options": [
+            {
+              "text": "\"One ticket. One receipt. Printed. I will put it on the council website.\"",
+              "effects": {
+                "changeStat": {
+                  "votes": 4,
+                  "publicTrust": 3
+                },
+                "setFlag": "promiseOneTicket"
+              }
+            },
+            {
+              "text": "\"I can't fix this alone, Baba Ticket. But I will publish who collects what.\"",
+              "effects": {
+                "changeStat": {
+                  "publicTrust": 5,
+                  "conscience": 2
+                },
+                "setFlag": "promisePublish"
+              }
+            }
+          ]
+        },
+        {
+          "type": "freeRoam",
+          "objective": "Stop 4: the market, at closing time.",
+          "goal": {
+            "reach": "market"
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "market"
+        }
+      ],
+      "location": "motorPark",
+      "time": "day"
+    },
+    "market": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "mamaTiti",
+          "text": "Four stops in one day. (She looks at your shoes.) You walked? (She doesn't say anything else, but she gives you a free pepper.)",
+          "variants": [
+            {
+              "if": "listenedTiti",
+              "text": "Four stops, and you have the notebook. (She takes it, reads the new pages, nods.) Under the bridge. Shell House. You walked where Owó Ńlá drives past with the windows up."
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "seyi",
+          "text": "(that night, counting) The tour cost us nothing and the WhatsApp groups are talking about your shoes. Teacher, maybe walking is the new rice."
+        },
+        {
+          "type": "changeStat",
+          "stats": {
+            "votes": 2
+          }
+        },
+        {
+          "type": "endChapter",
+          "title": "Ward Tour",
+          "summary": "Four corners, four promises. The ward watched you walk. Now it will watch what you remember.",
+          "next": "p2c_rumour"
+        }
+      ],
+      "location": "market",
+      "time": "dusk"
+    }
+  }
+}

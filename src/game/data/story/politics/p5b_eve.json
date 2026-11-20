@@ -1,0 +1,219 @@
+{
+  "id": "p5b_eve",
+  "campaign": "politics",
+  "world": "iyanaWahala",
+  "act": 3,
+  "number": 12,
+  "title": "Chapter 12 — The Eve",
+  "description": "The night before the election: envelopes moving in the dark, agents who need feeding, and a family that wants you home.",
+  "startScene": "agents",
+  "scenes": {
+    "agents": {
+      "beats": [
+        {
+          "type": "newsBroadcast",
+          "source": "Wahala FM 99.9",
+          "headline": "MOVEMENT RESTRICTED FROM MIDNIGHT",
+          "text": "The police have announced a restriction of movement from midnight till the end of voting. Okada riders are asked to \"rest\". They are not resting."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "seyi",
+          "text": "Forty polling agents. Each one needs food, water, airtime and ₦5,000, or they sleep at noon and the other side changes the sheets. ₦200,000.",
+          "variants": [
+            {
+              "if": "stayed",
+              "text": "You stayed. Good. Now feed the people who stayed with you. Forty agents, ₦5,000 each, food and airtime. ₦200,000."
+            }
+          ]
+        },
+        {
+          "type": "choice",
+          "speaker": "seyi",
+          "text": "Agents who don't eat, don't watch.",
+          "options": [
+            {
+              "text": "Pay the agents properly.",
+              "cost": 200000,
+              "effects": {
+                "changeStat": {
+                  "votes": 4
+                },
+                "setFlag": "agentsPaid"
+              }
+            },
+            {
+              "text": "Pay half. Promise the rest after.",
+              "cost": 100000,
+              "effects": {
+                "changeStat": {
+                  "votes": 2
+                },
+                "setFlag": "agentsHalf"
+              }
+            },
+            {
+              "text": "\"Volunteers only. Ask the market women and Tolú's classmates' parents.\"",
+              "effects": {
+                "changeStat": {
+                  "publicTrust": 3,
+                  "votes": 1
+                },
+                "setFlag": "volunteerAgents"
+              }
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "envelopes"
+        }
+      ],
+      "location": "frontStop",
+      "time": "night"
+    },
+    "envelopes": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "11 p.m. Seyi comes back with a Ghana-must-go bag. ₦1,000 notes in stacks, with rubber bands."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "seyi",
+          "text": "Tomorrow, at each polling unit, our boys will \"thank\" voters after they vote. ₦2,000 each. Show the ballot, collect the thank-you. Everybody does it. Owó Ńlá's nephew is doing ₦3,000."
+        },
+        {
+          "type": "choice",
+          "speaker": "seyi",
+          "text": "The bag is open on the table.",
+          "options": [
+            {
+              "text": "\"Distribute it.\"",
+              "effects": {
+                "changeStat": {
+                  "votes": 8,
+                  "scandal": 12,
+                  "conscience": -14
+                },
+                "setFlag": "boughtVotes"
+              }
+            },
+            {
+              "text": "\"Take it back to whoever gave it.\"",
+              "effects": {
+                "changeStat": {
+                  "conscience": 8,
+                  "seyiBond": -3
+                },
+                "setFlag": "refusedVoteBuying"
+              }
+            },
+            {
+              "text": "Call Ifeoma. Tell her the nephew is doing ₦3,000, and where.",
+              "requires": {
+                "stats": {
+                  "ifeomaBond": ">= 20"
+                }
+              },
+              "showLocked": true,
+              "lockedText": "Ifeoma doesn't trust you enough",
+              "effects": {
+                "changeStat": {
+                  "conscience": 4,
+                  "ifeomaBond": 6
+                },
+                "setFlag": "tippedIfeoma"
+              }
+            }
+          ]
+        },
+        {
+          "type": "newsBroadcast",
+          "source": "Wahala FM 99.9",
+          "headline": "LIVE: CASH AT THE POLLS",
+          "text": "Our reporter is at three polling units where a candidate's agents are \"thanking\" voters with ₦3,000. Police are... watching with interest.",
+          "if": "tippedIfeoma"
+        },
+        {
+          "type": "goto",
+          "scene": "home"
+        }
+      ],
+      "location": "frontStop",
+      "time": "night"
+    },
+    "home": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "2 a.m. Home. Tolú is asleep on the couch with your old manifesto on her chest. Funke is awake.",
+          "variants": [
+            {
+              "if": "funkeLeft",
+              "text": "2 a.m. Home. The house is quiet the way houses are when someone has left. Tolú is asleep on the couch with your manifesto on her chest."
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "funke",
+          "text": "Whatever happens tomorrow, come home the same man who left. That's all I ask. (She pulls the blanket over Tolú.) She made a sign. \"MY DAD FOR COUNCILLOR (HONEST)\". The brackets were her idea.",
+          "if": {
+            "notFlags": [
+              "funkeLeft"
+            ]
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "tolu",
+          "text": "(waking up) Daddy? Mummy called. She said to tell you good luck. (She looks at you.) She said it like she meant it. Mostly.",
+          "if": "funkeLeft"
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "Four hours to the polls.",
+          "options": [
+            {
+              "text": "Sleep.",
+              "effects": {
+                "changeStat": {
+                  "energy": 30
+                }
+              }
+            },
+            {
+              "text": "Sit up with the manifesto. Read it again, every promise.",
+              "effects": {
+                "changeStat": {
+                  "conscience": 2,
+                  "energy": -10
+                },
+                "setFlag": "rereadManifesto"
+              }
+            }
+          ]
+        },
+        {
+          "type": "endChapter",
+          "title": "The Eve",
+          "summary": "Envelopes moved in the dark, or didn't. Your daughter made a sign with brackets. In four hours, the ward decides.",
+          "next": "p6_election"
+        }
+      ],
+      "location": "mamaPut",
+      "time": "night",
+      "positions": {
+        "funke": [
+          -6.8,
+          8.6,
+          200
+        ]
+      }
+    }
+  }
+}

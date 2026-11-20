@@ -2,9 +2,9 @@
   "id": "p4_debate",
   "campaign": "politics",
   "world": "iyanaWahala",
-  "act": 1,
-  "number": 4,
-  "title": "Chapter 4 — The Debate",
+  "act": 3,
+  "number": 9,
+  "title": "Chapter 9 — The Debate",
   "description": "The motor park debate, a conversation with the man you are trying to replace, and a journalist holding a folder.",
   "startScene": "debate",
   "scenes": {
@@ -341,7 +341,7 @@
           "type": "endChapter",
           "title": "The Debate",
           "summary": "You won something or lost something in front of the motor park. And now you know who owns both horses.",
-          "next": "p5_rigging"
+          "next": "p4b_endorsements"
         }
       ],
       "location": "mamaPut",
@@ -392,7 +392,7 @@
           "type": "endChapter",
           "title": "The Debate",
           "summary": "You won something or lost something in front of the motor park. And now you know who owns both horses.",
-          "next": "p5_rigging"
+          "next": "p4b_endorsements"
         }
       ],
       "location": "paraga",
@@ -426,7 +426,7 @@
           "type": "endChapter",
           "title": "The Debate",
           "summary": "You won something or lost something in front of the motor park. And now you know who owns both horses.",
-          "next": "p5_rigging"
+          "next": "p4b_endorsements"
         }
       ],
       "location": "market",

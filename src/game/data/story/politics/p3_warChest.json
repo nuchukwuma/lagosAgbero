@@ -2,9 +2,9 @@
   "id": "p3_warChest",
   "campaign": "politics",
   "world": "iyanaWahala",
-  "act": 1,
-  "number": 3,
-  "title": "Chapter 3 — The War Chest",
+  "act": 2,
+  "number": 7,
+  "title": "Chapter 7 — The War Chest",
   "description": "Campaigns eat money. Donors want favours, Baba Oko wants a contract, Funke finds an envelope, and Owó Ńlá sends his boys.",
   "startScene": "broke",
   "scenes": {
@@ -426,7 +426,7 @@
           "type": "endChapter",
           "title": "The War Chest",
           "summary": "You found the money, one way or another. Everybody who gave it is keeping a receipt in their head.",
-          "next": "p4_debate"
+          "next": "p3b_birthday"
         }
       ],
       "location": "frontStop",

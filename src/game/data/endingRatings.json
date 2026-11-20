@@ -175,5 +175,17 @@
   "u_akaraEmpire": {
     "tier": "good",
     "comment": "No degree, three shops and a supermarket deal. Mama's name is on the sign. Not bad for a boy who pretended to live in Lekki. There's still a convocation ending waiting if you want the paper too."
+  },
+  "p_steppedDown": {
+    "tier": "early",
+    "comment": "You won a primary and then sold it for a car with no battery. Chief Lanre thanks you for your sacrifice. There were thirteen chapters of campaign ahead of you: go and see what the ward thinks of you."
+  },
+  "p_classroom": {
+    "tier": "early",
+    "comment": "You chose the blackboard over the ballot in chapter three. Noble, quiet, and very short. Your students would want you to find out if you could have won."
+  },
+  "p_deputy": {
+    "tier": "bad",
+    "comment": "Three a.m., a power-sharing deal, and the ward's votes went into somebody else's pocket with your signature on the receipt. Deputy is not a consolation prize. It's a price."
   }
 }

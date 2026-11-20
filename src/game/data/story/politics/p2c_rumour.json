@@ -1,0 +1,194 @@
+{
+  "id": "p2c_rumour",
+  "campaign": "politics",
+  "world": "iyanaWahala",
+  "act": 2,
+  "number": 6,
+  "title": "Chapter 6 — The Rumour",
+  "description": "Somebody is saying you beat a student in 2016. Somebody else is printing it. Seyi wants to start a rumour back.",
+  "startScene": "rumour",
+  "scenes": {
+    "rumour": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Tuesday morning. Every WhatsApp group in the ward has the same message: \"TEACHER FLOGGED A JSS 1 GIRL UNCONSCIOUS IN 2016. ASK HIM.\" There is a blurry photo of a girl who is not from your school."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "funke",
+          "text": "Mrs. Adeyemi has forwarded it to me four times. With prayer emojis."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "seyi",
+          "text": "Owó Ńlá's boys. Classic. We hit back. I know a girl who will say his nephew got her pregnant. Truth is optional, Teacher. Speed is not."
+        },
+        {
+          "type": "choice",
+          "speaker": "seyi",
+          "text": "He has the phone in his hand.",
+          "options": [
+            {
+              "text": "\"No. We answer with the truth: my record, my students, my principal.\"",
+              "effects": {
+                "changeStat": {
+                  "publicTrust": 4,
+                  "conscience": 4
+                },
+                "setFlag": "answeredTruth",
+                "goto": "truth"
+              }
+            },
+            {
+              "text": "\"Do it. Fire with fire.\"",
+              "effects": {
+                "changeStat": {
+                  "scandal": 8,
+                  "conscience": -10,
+                  "votes": 2
+                },
+                "setFlag": "counterRumour",
+                "goto": "poster"
+              }
+            },
+            {
+              "text": "\"Ignore it. Rumours die if you don't feed them.\"",
+              "effects": {
+                "changeStat": {
+                  "votes": -3
+                },
+                "setFlag": "ignoredRumour",
+                "goto": "poster"
+              }
+            }
+          ]
+        }
+      ],
+      "location": "mamaPut",
+      "time": "day",
+      "positions": {
+        "funke": [
+          -6.8,
+          8.6,
+          200
+        ]
+      }
+    },
+    "truth": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "principal",
+          "text": "(on a voice note, which goes viral) I am Mrs. Bánkọ́lé. Mr. {name} taught at my school for eleven years. He resigned to run. In eleven years, he never raised his hand at a child. He raised their hands. To answer questions.",
+          "if": "resignedTeaching"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "principal",
+          "text": "(on a voice note, which goes viral) I am Mrs. Bánkọ́lé, his principal. He is on leave to run. In eleven years he never raised his hand at a child. He raised their hands. To answer questions.",
+          "if": {
+            "notFlags": [
+              "resignedTeaching"
+            ]
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "tolu",
+          "text": "(at dinner, scrolling) Daddy, my class is making TikToks of your old students thanking you. One of them is crying. (She shows you.) This is so embarrassing. I'm so proud."
+        },
+        {
+          "type": "goto",
+          "scene": "poster"
+        }
+      ],
+      "location": "mamaPut",
+      "time": "night",
+      "positions": {
+        "funke": [
+          -6.8,
+          8.6,
+          200
+        ]
+      }
+    },
+    "poster": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Midnight. Someone is pasting the rumour as posters, right on top of yours, along the Front Stop."
+        },
+        {
+          "type": "startMode",
+          "mode": "chase",
+          "params": {
+            "target": "thief",
+            "name": "The poster boy",
+            "kind": "okada",
+            "difficulty": 1,
+            "timeLimit": 30
+          },
+          "results": {
+            "won": {
+              "setFlag": "caughtPosterBoy",
+              "toast": "You catch him by the bucket of paste. He is sixteen. He was paid ₦1,500. He has a receipt. Owó Ńlá's campaign gives receipts."
+            },
+            "lost": {
+              "changeStat": {
+                "votes": -1
+              }
+            }
+          }
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "The boy is shaking. His hands are white with paste.",
+          "options": [
+            {
+              "text": "Pay him ₦3,000 to paste your posters instead, honestly.",
+              "cost": 3000,
+              "effects": {
+                "changeStat": {
+                  "votes": 1,
+                  "conscience": 2
+                },
+                "setFlag": "hiredPosterBoy"
+              }
+            },
+            {
+              "text": "Take the receipt to Wahala FM.",
+              "effects": {
+                "changeStat": {
+                  "votes": 3,
+                  "scandal": -3
+                },
+                "setFlag": "receiptToRadio"
+              }
+            },
+            {
+              "text": "Let him go. He's a child.",
+              "effects": {
+                "changeStat": {
+                  "conscience": 3
+                }
+              }
+            }
+          ],
+          "if": "caughtPosterBoy"
+        },
+        {
+          "type": "endChapter",
+          "title": "The Rumour",
+          "summary": "A lie went round the ward in a morning. The truth took a week, with its shoes on. You chose what to chase it with.",
+          "next": "p3_warChest"
+        }
+      ],
+      "location": "frontStop",
+      "time": "night"
+    }
+  }
+}

@@ -1,0 +1,188 @@
+{
+  "id": "p3b_birthday",
+  "campaign": "politics",
+  "world": "iyanaWahala",
+  "act": 2,
+  "number": 8,
+  "title": "Chapter 8 — Baba Oko at Seventy",
+  "description": "Every politician in the ward is invited to the godfather's seventieth birthday. Nobody is invited to leave early.",
+  "startScene": "party",
+  "scenes": {
+    "party": {
+      "beats": [
+        {
+          "type": "setFlag",
+          "flags": [
+            "babaOkoAround"
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Baba Oko is seventy. The party fills Rich Street: three canopies, two live bands, a cake shaped like his house. Every politician in the ward is here, smiling at each other like knives."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "seyi",
+          "text": "You are not his candidate, but you are invited. That is how he tells you he is still watching. Go. Smile. Leave alive.",
+          "if": "noGodfather"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "funke",
+          "text": "(at home, earlier) I am not coming. I will not kneel to that man's cake.",
+          "variants": [
+            {
+              "if": "truthEnvelope",
+              "text": "(at home, earlier) After the envelope? I am not coming. But go. See him with your own eyes, so you remember."
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "gift"
+        }
+      ],
+      "location": "richStreet",
+      "time": "night"
+    },
+    "gift": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "babaOko",
+          "text": "(on a throne-shaped chair) Teacher! My boy! (Or \"the Teacher who thinks he has feet\", depending on who is listening.) Come. What did you bring me?"
+        },
+        {
+          "type": "choice",
+          "speaker": "babaOko",
+          "text": "Everyone is watching the gift table.",
+          "options": [
+            {
+              "text": "A framed photo of the market women, with a note: \"They are the ward.\"",
+              "effects": {
+                "changeStat": {
+                  "godfather": -6,
+                  "publicTrust": 4,
+                  "conscience": 3
+                },
+                "setFlag": "giftWomen"
+              }
+            },
+            {
+              "text": "A gold-plated pen. ₦45,000.",
+              "cost": 45000,
+              "effects": {
+                "changeStat": {
+                  "godfather": 8
+                },
+                "setFlag": "giftPen"
+              }
+            },
+            {
+              "text": "Prostrate flat in front of everybody.",
+              "effects": {
+                "changeStat": {
+                  "godfather": 12,
+                  "conscience": -6,
+                  "publicTrust": -4
+                },
+                "setFlag": "prostratedOko"
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "babaOko",
+          "text": "(laughing) Dance for me, Teacher! The big men of this ward always dance for me on my birthday!"
+        },
+        {
+          "type": "startMode",
+          "mode": "dance",
+          "params": {
+            "name": "Chief Lanre",
+            "rival": "chiefLanre",
+            "skill": 0.6
+          },
+          "results": {
+            "won": {
+              "changeStat": {
+                "godfather": 4,
+                "votes": 2
+              },
+              "toast": "The band sings your name. Baba Oko sprays you with dollar notes. Your agbada has never been so heavy."
+            },
+            "lost": {
+              "changeStat": {
+                "godfather": -2
+              },
+              "toast": "Chief Lanre dances like he has done this every year. He has."
+            }
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "owo"
+        }
+      ],
+      "location": "richStreet",
+      "time": "night"
+    },
+    "owo": {
+      "beats": [
+        {
+          "type": "setFlag",
+          "flags": [
+            "owoNlaAround"
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Behind the generator, away from the music, Owó Ńlá is smoking. He doesn't smoke. He is smoking anyway."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "owoNla",
+          "text": "Seventy years. Thirty of them owning this ward. Do you know what he gives for his birthday, Teacher? A list. Who danced, who didn't, who brought what."
+        },
+        {
+          "type": "choice",
+          "speaker": "owoNla",
+          "text": "He offers you a cigarette. You don't smoke either.",
+          "options": [
+            {
+              "text": "\"Why do you still dance for him?\"",
+              "effects": {
+                "changeStat": {
+                  "conscience": 2
+                },
+                "setFlag": "askedOwoDance"
+              }
+            },
+            {
+              "text": "Take the cigarette. Stand with him in silence.",
+              "effects": {
+                "setFlag": "stoodWithOwo"
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "owoNla",
+          "text": "Because the alternative to dancing is a long trip abroad. Or a short trip to the cemetery. (He drops the cigarette.) Enjoy the cake. It's very good. He makes sure."
+        },
+        {
+          "type": "endChapter",
+          "title": "Baba Oko at Seventy",
+          "summary": "You brought a gift, danced or didn't, and stood with your opponent behind a generator. The godfather wrote everything down.",
+          "next": "p4_debate"
+        }
+      ],
+      "location": "richStreet",
+      "time": "night"
+    }
+  }
+}

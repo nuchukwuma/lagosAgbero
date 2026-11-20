@@ -1515,5 +1515,42 @@
       "Dr. Adébáyọ̀ uses your shops as a case study. Students come to interview Mama. She charges them for the akara."
     ],
     "hint": "Sometimes the business is the degree."
+  },
+  "p_steppedDown": {
+    "campaign": "politics",
+    "title": "Party Unity",
+    "epilogue": [
+      "You stepped down for Chief Lanre \"in the interest of party unity\". The Supervisor for Education job arrived eight months late.",
+      "The official car has no battery. Your driver pushes it to the office every morning. The JSS 2 students you used to teach wave at you from the bus stop.",
+      {
+        "if": {
+          "stats": {
+            "wifeBond": ">= 60"
+          }
+        },
+        "text": "Funke forgives you on the condition that you never say \"party unity\" in her house again."
+      }
+    ]
+  },
+  "p_classroom": {
+    "campaign": "politics",
+    "title": "The Classroom",
+    "epilogue": [
+      "You went back to JSS 2 and wiped the crown off the blackboard.",
+      "Owó Ńlá keeps the seat. The market keeps the padlock. Your students keep asking why.",
+      "Twenty years later, one of them, a girl from the market, runs for councillor. She wins clean. She tells the newspapers who taught her civics."
+    ]
+  },
+  "p_deputy": {
+    "campaign": "politics",
+    "title": "The Deputy",
+    "epilogue": [
+      "Deputy Leader of the council. An office, a car, a budget line. The nephew signs everything; you countersign it.",
+      "Mama Titi doesn't greet you at the market any more. The toilet key is in the nephew's drawer.",
+      {
+        "if": "blockedVan",
+        "text": "Seyi tells you, once, drunk: \"They were losing, Teacher. You had them. You blinked.\" He never says it again."
+      }
+    ]
   }
 }

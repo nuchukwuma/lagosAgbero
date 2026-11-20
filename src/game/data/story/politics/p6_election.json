@@ -2,9 +2,9 @@
   "id": "p6_election",
   "campaign": "politics",
   "world": "iyanaWahala",
-  "act": 1,
-  "number": 6,
-  "title": "Chapter 6 — Election Day",
+  "act": 4,
+  "number": 13,
+  "title": "Chapter 13 — Election Day",
   "description": "Three polling units, ballot snatchers, Mama Titi's market, and a long night of counting.",
   "startScene": "dawn",
   "scenes": {
@@ -258,7 +258,7 @@
           "type": "endChapter",
           "title": "Election Day",
           "summary": "The boxes are counted. Somewhere in a locked room, a man in a safari suit is adding up what you are worth.",
-          "next": "p7_declaration"
+          "next": "p6b_collation"
         }
       ],
       "location": "frontStop",

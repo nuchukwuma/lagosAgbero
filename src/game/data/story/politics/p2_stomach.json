@@ -2,9 +2,9 @@
   "id": "p2_stomach",
   "campaign": "politics",
   "world": "iyanaWahala",
-  "act": 1,
-  "number": 2,
-  "title": "Chapter 2 — Stomach Infrastructure",
+  "act": 2,
+  "number": 4,
+  "title": "Chapter 4 — Stomach Infrastructure",
   "description": "Rice or a town hall, a rally that needs a crowd, a radio interview with teeth, and an owambe where the votes dance.",
   "startScene": "office",
   "scenes": {
@@ -407,7 +407,7 @@
           "type": "endChapter",
           "title": "Stomach Infrastructure",
           "summary": "The ward has seen your face: on rice, on a stage, on the radio, on a dance floor. Now they are deciding what it means.",
-          "next": "p3_warChest"
+          "next": "p2b_wardTour"
         }
       ],
       "location": "mamaPut",

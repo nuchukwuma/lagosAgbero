@@ -2,9 +2,9 @@
   "id": "p7_declaration",
   "campaign": "politics",
   "world": "iyanaWahala",
-  "act": 1,
-  "number": 7,
-  "title": "Chapter 7 — The Declaration",
+  "act": 4,
+  "number": 15,
+  "title": "Chapter 15 — The Declaration",
   "description": "The returning officer clears his throat. Whatever he says, you will have to live in it.",
   "startScene": "hall",
   "scenes": {

@@ -1,0 +1,244 @@
+{
+  "id": "p1c_homeFront",
+  "campaign": "politics",
+  "world": "iyanaWahala",
+  "act": 1,
+  "number": 3,
+  "title": "Chapter 3 — Home Front",
+  "description": "A teacher can't campaign from a classroom. A daughter can't hide from her father's posters. A wife's landlord has heard you're rich now.",
+  "startScene": "principal",
+  "scenes": {
+    "principal": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Monday. Iyana-Wahala Community Secondary School. Your JSS 2 class has drawn your campaign poster on the blackboard, with a crown."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "principal",
+          "text": "Mr. {name}. (Mrs. Bánkọ́lé, the principal, closes the door.) Civil servants cannot be candidates. You must resign, or take leave without pay. The Ministry is already asking."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "principal",
+          "text": "Eleven years. The best civics teacher I have. (She sighs.) Don't make me sign your exit letter, please."
+        },
+        {
+          "type": "choice",
+          "speaker": "principal",
+          "text": "Your class is singing your jingle outside the door. Badly.",
+          "options": [
+            {
+              "text": "Resign. Burn the boat.",
+              "effects": {
+                "changeStat": {
+                  "conscience": 2,
+                  "votes": 1
+                },
+                "setFlag": "resignedTeaching"
+              }
+            },
+            {
+              "text": "Take leave without pay. Keep the door open.",
+              "effects": {
+                "changeStat": {
+                  "money": -10000
+                },
+                "setFlag": "leaveWithoutPay"
+              }
+            },
+            {
+              "text": "Withdraw from the race. The classroom is enough.",
+              "effects": {
+                "goto": "classroom"
+              }
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "tolu"
+        }
+      ],
+      "location": "teaTable",
+      "time": "day"
+    },
+    "classroom": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "You walk back into JSS 2. You wipe the crown off the blackboard. You teach the Constitution, chapter four: fundamental rights. Thirty-eight children listen like it's news."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "funke",
+          "text": "(that evening, with jollof, the good one) I was ready for the election. I'm more ready for this. (She puts more meat on your plate than the recipe allows.)"
+        },
+        {
+          "type": "endChapter",
+          "title": "The Classroom",
+          "summary": "You stepped off the ballot and back to the blackboard. In twenty years, one of your students runs for councillor. She wins clean. She tells the newspapers who taught her.",
+          "ending": "p_classroom"
+        }
+      ],
+      "location": "mamaPut",
+      "time": "night",
+      "positions": {
+        "funke": [
+          -6.8,
+          8.6,
+          200
+        ]
+      }
+    },
+    "tolu": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Evening. Your daughter Tolú, fifteen, comes home with her school shirt torn at the pocket."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "tolu",
+          "text": "They put your poster in the girls' toilet. With a moustache. Some boy said you will steal like the rest. I hit him. (She lifts her chin.) I'm not sorry."
+        },
+        {
+          "type": "choice",
+          "speaker": "tolu",
+          "text": "She is waiting to see which father you will be.",
+          "options": [
+            {
+              "text": "\"Hitting is wrong. But tell me what he said, exactly.\"",
+              "effects": {
+                "changeStat": {
+                  "wifeBond": 3
+                },
+                "setFlag": "listenedTolu"
+              }
+            },
+            {
+              "text": "\"You defended your father. Good girl.\"",
+              "effects": {
+                "setFlag": "praisedTolu"
+              }
+            },
+            {
+              "text": "\"Maybe he's right to worry. Ask me anything. I'll tell you the truth.\"",
+              "effects": {
+                "changeStat": {
+                  "conscience": 4
+                },
+                "setFlag": "toluQuestions"
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "tolu",
+          "text": "(She thinks.) Okay. Did Baba Oko give you money? (She waits.) ...You took a long time. That's an answer, Daddy.",
+          "variants": [
+            {
+              "if": "noGodfather",
+              "text": "(She thinks.) Okay. Did Baba Oko give you money? ...No? (She looks at you hard, then smiles.) Okay. I believe you. Barely."
+            }
+          ],
+          "if": "toluQuestions"
+        },
+        {
+          "type": "goto",
+          "scene": "rent"
+        }
+      ],
+      "location": "mamaPut",
+      "time": "dusk",
+      "positions": {
+        "funke": [
+          -6.8,
+          8.6,
+          200
+        ]
+      }
+    },
+    "rent": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "funke",
+          "text": "The landlord of my shop came today. Rent is now ₦240,000, not ₦120,000. Because my husband is \"a politician now\". (She folds a wrapper too hard.)"
+        },
+        {
+          "type": "choice",
+          "speaker": "funke",
+          "text": "Her shop. Twelve years at a table, two years with a door.",
+          "options": [
+            {
+              "text": "Go and see the landlord yourself. Politely. With a lawyer's letterhead.",
+              "effects": {
+                "changeStat": {
+                  "wifeBond": 6
+                },
+                "setFlag": "facedLandlord"
+              }
+            },
+            {
+              "text": "Pay the difference from campaign money. Just this once.",
+              "cost": 60000,
+              "effects": {
+                "changeStat": {
+                  "wifeBond": 4,
+                  "scandal": 2,
+                  "conscience": -2
+                },
+                "setFlag": "campaignRent"
+              }
+            },
+            {
+              "text": "\"After the election, Funke.\"",
+              "effects": {
+                "changeStat": {
+                  "wifeBond": -8
+                },
+                "setFlag": "rentAfter"
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "funke",
+          "text": "Thank you.",
+          "variants": [
+            {
+              "if": "facedLandlord",
+              "text": "(Later.) He reduced it back. He said, \"I didn't know Teacher was so... legal.\" (She laughs.) Neither did I."
+            },
+            {
+              "if": "rentAfter",
+              "text": "\"After the election.\" (She writes it on a piece of paper and sticks it on the fridge.) I am collecting your promises. For the museum."
+            }
+          ]
+        },
+        {
+          "type": "endChapter",
+          "title": "Home Front",
+          "summary": "A classroom you may not see again, a daughter who fights for you, and a landlord who discovered politics. Campaigns start at home.",
+          "next": "p2_stomach"
+        }
+      ],
+      "location": "mamaPut",
+      "time": "night",
+      "positions": {
+        "funke": [
+          -6.8,
+          8.6,
+          200
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,282 @@
+{
+  "id": "p1b_primary",
+  "campaign": "politics",
+  "world": "iyanaWahala",
+  "act": 1,
+  "number": 2,
+  "title": "Chapter 2 — The Primary",
+  "description": "A party ticket in your pocket is not a ticket on the ballot. The delegates have to \"affirm\" you, and so does Chief Lanre, who wanted it first.",
+  "startScene": "start",
+  "scenes": {
+    "start": {
+      "beats": [
+        {
+          "type": "goto",
+          "scene": "delegates",
+          "if": "tookTicket"
+        },
+        {
+          "type": "goto",
+          "scene": "signatures"
+        }
+      ],
+      "location": "frontStop",
+      "time": "day"
+    },
+    "delegates": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "The party primary. Ninety-one delegates in a hired hall with ceiling fans that only spin when somebody important walks under them."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "chiefLanre",
+          "text": "(a big man in a bigger cap, the other aspirant) Teacher! Welcome to politics. (He hugs you. His cologne hugs you separately.) The delegates are... expensive this year. Inflation. I hope your Baba is generous."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "seyi",
+          "text": "Delegates want \"mobilisation\". ₦1,000 each is an insult. ₦2,000 is a greeting. Lanre is paying ₦3,000. Your call."
+        },
+        {
+          "type": "choice",
+          "speaker": "seyi",
+          "text": "Ninety-one hands. Ninety-one stomachs.",
+          "options": [
+            {
+              "text": "Pay ₦2,000 each. It's how primaries work.",
+              "cost": 60000,
+              "effects": {
+                "changeStat": {
+                  "scandal": 4,
+                  "conscience": -4,
+                  "votes": 2
+                },
+                "setFlag": "paidDelegates"
+              }
+            },
+            {
+              "text": "Ask Baba Oko to \"handle\" the delegates.",
+              "effects": {
+                "changeStat": {
+                  "godfather": 10
+                },
+                "setFlag": "okoHandledDelegates"
+              }
+            },
+            {
+              "text": "Give a speech instead. Make them ashamed to take Lanre's money.",
+              "effects": {
+                "setFlag": "speechDelegates",
+                "goto": "speech"
+              }
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "result"
+        }
+      ],
+      "location": "richStreet",
+      "time": "day"
+    },
+    "speech": {
+      "beats": [
+        {
+          "type": "startMode",
+          "mode": "exam",
+          "params": {
+            "bank": "debate",
+            "count": 4,
+            "seconds": 15
+          },
+          "results": {
+            "perfect": {
+              "changeStat": {
+                "votes": 3,
+                "publicTrust": 4
+              },
+              "setFlag": "delegatesMoved",
+              "toast": "Two delegates give Lanre's envelopes back. On camera. The hall goes very quiet."
+            },
+            "passed": {
+              "changeStat": {
+                "votes": 1
+              },
+              "setFlag": "delegatesMoved"
+            },
+            "failed": {
+              "changeStat": {
+                "votes": -1
+              }
+            },
+            "attacked": {}
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "result"
+        }
+      ],
+      "location": "richStreet",
+      "time": "day"
+    },
+    "result": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "The count. Lanre's people count loudly. Your people count carefully. The returning officer counts whatever he is told to."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "chiefLanre",
+          "text": "(after the result, very friendly) Teacher, you won. Fine. But listen: step down for me, and when I am councillor, you will be Supervisor for Education. A car. An office. A driver. Think of your pension."
+        },
+        {
+          "type": "choice",
+          "speaker": "chiefLanre",
+          "text": "He means it. He has done this deal before.",
+          "options": [
+            {
+              "text": "\"No, Chief. The ward knows my face.\"",
+              "effects": {
+                "changeStat": {
+                  "conscience": 3,
+                  "votes": 1
+                },
+                "setFlag": "refusedLanre"
+              }
+            },
+            {
+              "text": "Step down. Take the Supervisor job.",
+              "effects": {
+                "goto": "stepDown"
+              }
+            }
+          ]
+        },
+        {
+          "type": "endChapter",
+          "title": "The Primary",
+          "summary": "The party has affirmed you, at a price. Chief Lanre is smiling at you from across the hall in a way that has nothing to do with happiness.",
+          "next": "p1c_homeFront"
+        }
+      ],
+      "location": "richStreet",
+      "time": "night"
+    },
+    "stepDown": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "You step down \"in the interest of party unity\". Chief Lanre wins the ward. The Supervisor job arrives eight months late, with a car that has no battery."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "funke",
+          "text": "(at home, very calm) You gave away the ward for a car with no battery. (She laughs until she cries, then just cries.)"
+        },
+        {
+          "type": "endChapter",
+          "title": "Party Unity",
+          "summary": "You stepped aside for a promise. The promise kept you waiting, and then kept you quiet.",
+          "ending": "p_steppedDown"
+        }
+      ],
+      "location": "mamaPut",
+      "time": "night",
+      "positions": {
+        "funke": [
+          -6.8,
+          8.6,
+          200
+        ]
+      }
+    },
+    "signatures": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Independent candidates need five hundred signatures from registered voters in the ward. By Friday. Seyi has a clipboard and a theory: \"People will sign anything if you hold the pen out confidently.\""
+        },
+        {
+          "type": "freeRoam",
+          "objective": "Collect signatures: start at the Front Stop.",
+          "goal": {
+            "reach": "frontStop"
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Front Stop: a hundred and forty signatures, mostly from people waiting for the danfo who were bored."
+        },
+        {
+          "type": "freeRoam",
+          "objective": "Now the Market.",
+          "goal": {
+            "reach": "market"
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Market: two hundred, after Mama Titi shouts \"Sign for the Teacher, he wrote things in a notebook!\" from her stall."
+        },
+        {
+          "type": "freeRoam",
+          "objective": "And the Motor Park.",
+          "goal": {
+            "reach": "motorPark"
+          }
+        },
+        {
+          "type": "choice",
+          "speaker": "babaTicket",
+          "text": "(at the motor park) Drivers sign for drivers' friends. Are you our friend, Teacher? A union office in the new market, maybe?",
+          "options": [
+            {
+              "text": "\"If I win, the union gets a desk at every council meeting. Not an office. A voice.\"",
+              "effects": {
+                "changeStat": {
+                  "votes": 2,
+                  "publicTrust": 2
+                },
+                "setFlag": "unionVoice"
+              }
+            },
+            {
+              "text": "\"Whatever you want, Baba Ticket.\"",
+              "effects": {
+                "changeStat": {
+                  "votes": 3,
+                  "scandal": 2
+                },
+                "setFlag": "unionPromise"
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Five hundred and twelve signatures. Seyi kisses the clipboard. \"Independent and legal. Owó Ńlá will hate it.\""
+        },
+        {
+          "type": "endChapter",
+          "title": "The Primary",
+          "summary": "No party, no godfather: just five hundred and twelve signatures and a clipboard Seyi now considers lucky.",
+          "next": "p1c_homeFront"
+        }
+      ],
+      "location": "motorPark",
+      "time": "day"
+    }
+  }
+}

@@ -1,0 +1,237 @@
+{
+  "id": "p4b_endorsements",
+  "campaign": "politics",
+  "world": "iyanaWahala",
+  "act": 3,
+  "number": 10,
+  "title": "Chapter 10 — Endorsements",
+  "description": "The imam, the pastor and the unions all have votes in their pockets. Each one wants something for theirs.",
+  "startScene": "mosque",
+  "scenes": {
+    "mosque": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Friday. The central mosque. Imam Sule has received three candidates this week. All three promised a borehole. None of them knew where the mosque's well was."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "imamSule",
+          "text": "Teacher. My congregation is two thousand voters. I don't tell them how to vote. (He pauses.) I just tell them who visited."
+        },
+        {
+          "type": "choice",
+          "speaker": "imamSule",
+          "text": "He is waiting for your promise.",
+          "options": [
+            {
+              "text": "\"Show me the well. If it's broken, the council fixes it, for everyone, not for votes.\"",
+              "effects": {
+                "changeStat": {
+                  "publicTrust": 5,
+                  "votes": 3
+                },
+                "setFlag": "wellPromise"
+              }
+            },
+            {
+              "text": "Donate ₦30,000 to the mosque's Ramadan feeding.",
+              "cost": 30000,
+              "effects": {
+                "changeStat": {
+                  "votes": 4,
+                  "scandal": 1
+                },
+                "setFlag": "mosqueDonation"
+              }
+            },
+            {
+              "text": "\"I respect the mosque too much to bargain in it.\"",
+              "effects": {
+                "changeStat": {
+                  "conscience": 3,
+                  "votes": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "freeRoam",
+          "objective": "Sunday: the Redeemed Light church at the Front Stop.",
+          "goal": {
+            "reach": "frontStop"
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "church"
+        }
+      ],
+      "location": "market",
+      "time": "day"
+    },
+    "church": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "pastorFemi",
+          "text": "(after service, in his office, which has a better chair than Baba Oko's) Teacher! God has shown me you will win. (Pause.) God has also shown me the church needs the land behind the motor park. For a crusade ground."
+        },
+        {
+          "type": "choice",
+          "speaker": "pastorFemi",
+          "text": "The land behind the motor park is where the danfo drivers park at night.",
+          "options": [
+            {
+              "text": "\"That land belongs to the drivers. I can't give it to you, Pastor.\"",
+              "effects": {
+                "changeStat": {
+                  "votes": -1,
+                  "conscience": 4,
+                  "publicTrust": 3
+                },
+                "setFlag": "refusedPastorLand"
+              }
+            },
+            {
+              "text": "\"After the election, Pastor. Let's pray about it.\"",
+              "effects": {
+                "changeStat": {
+                  "votes": 4,
+                  "scandal": 3
+                },
+                "setFlag": "promisedPastorLand"
+              }
+            },
+            {
+              "text": "Ask him to pray for all the candidates, publicly.",
+              "effects": {
+                "changeStat": {
+                  "votes": 1
+                },
+                "setFlag": "prayForAll"
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "babaTicket",
+          "text": "(on the phone, an hour later) Teacher. Somebody told me you promised our parking ground to Pastor Femi. Tell me that somebody is a liar.",
+          "if": "promisedPastorLand"
+        },
+        {
+          "type": "goto",
+          "scene": "unions"
+        }
+      ],
+      "location": "frontStop",
+      "time": "day"
+    },
+    "unions": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Monday. The okada riders' union, the market women, the road transport workers, all in one room at the motor park. Endorsement day."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "mamaTiti",
+          "text": "We will announce together. Whoever we endorse wins this ward. (She looks around the room.) So, Teacher. Convince the room."
+        },
+        {
+          "type": "startMode",
+          "mode": "exam",
+          "params": {
+            "bank": "debate",
+            "count": 5,
+            "seconds": 14
+          },
+          "results": {
+            "perfect": {
+              "changeStat": {
+                "votes": 8,
+                "publicTrust": 4
+              },
+              "setFlag": "unionsEndorsed",
+              "toast": "Three unions, one voice: \"TEACHER!\" Somebody beats a drum on a plastic chair."
+            },
+            "passed": {
+              "changeStat": {
+                "votes": 4
+              },
+              "setFlag": "unionsEndorsed"
+            },
+            "failed": {
+              "changeStat": {
+                "votes": 1
+              },
+              "setFlag": "unionsSplit"
+            },
+            "attacked": {
+              "setFlag": "unionsSplit"
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "babaTicket",
+          "text": "(standing up) The drivers endorse him. On one condition: the parking ground stays ours. Say it in front of everybody, Teacher.",
+          "if": {
+            "flags": [
+              "promisedPastorLand"
+            ],
+            "notFlags": [
+              "unionsSplit"
+            ]
+          }
+        },
+        {
+          "type": "choice",
+          "speaker": "babaTicket",
+          "text": "Pastor Femi's deacon is in the room, writing.",
+          "options": [
+            {
+              "text": "\"The ground stays with the drivers.\"",
+              "effects": {
+                "changeStat": {
+                  "votes": 2,
+                  "conscience": 2
+                },
+                "setFlag": "brokePastorPromise"
+              }
+            },
+            {
+              "text": "\"We will find a solution for everybody.\"",
+              "effects": {
+                "changeStat": {
+                  "votes": -3
+                },
+                "setFlag": "dodgedDrivers"
+              }
+            }
+          ],
+          "if": {
+            "flags": [
+              "promisedPastorLand"
+            ],
+            "notFlags": [
+              "unionsSplit"
+            ]
+          }
+        },
+        {
+          "type": "endChapter",
+          "title": "Endorsements",
+          "summary": "The mosque, the church and the unions all weighed you. Some of the promises you made this week will outlive the election.",
+          "next": "p5_rigging"
+        }
+      ],
+      "location": "motorPark",
+      "time": "day"
+    }
+  }
+}

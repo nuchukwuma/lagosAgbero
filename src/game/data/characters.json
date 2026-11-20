@@ -1229,5 +1229,67 @@
       "shirt": "#2874a6",
       "trousers": "#1c2833"
     }
+  },
+  "tolu": {
+    "name": "Tolú",
+    "fullName": "Tolú, your daughter (15)",
+    "color": "#e74c3c",
+    "role": "family",
+    "look": {
+      "body": "mini_female_c",
+      "skin": "#5a3a22",
+      "shirt": "#f4f6f7",
+      "trousers": "#1a5276",
+      "height": 0.92
+    }
+  },
+  "principal": {
+    "name": "Mrs. Bánkọ́lé",
+    "fullName": "Mrs. Bánkọ́lé, school principal",
+    "color": "#7d3c98",
+    "role": "elder",
+    "look": {
+      "body": "mini_female_d",
+      "skin": "#4a2c1a",
+      "shirt": "#7d3c98",
+      "trousers": "#2c3e50"
+    }
+  },
+  "chiefLanre": {
+    "name": "Chief Lanre",
+    "fullName": "Chief Lanre Àjàdí, party aspirant",
+    "color": "#d4ac0d",
+    "role": "politician",
+    "look": {
+      "body": "mini_male_e",
+      "skin": "#4a2c1a",
+      "shirt": "#d4ac0d",
+      "trousers": "#7e5109",
+      "height": 1.08
+    }
+  },
+  "imamSule": {
+    "name": "Imam Sule",
+    "fullName": "Imam Sule, central mosque",
+    "color": "#ecf0f1",
+    "role": "elder",
+    "look": {
+      "body": "mini_male_f",
+      "skin": "#5a3a22",
+      "shirt": "#fdfefe",
+      "trousers": "#fdfefe"
+    }
+  },
+  "pastorFemi": {
+    "name": "Pastor Femi",
+    "fullName": "Pastor Femi, Redeemed Light church",
+    "color": "#2e4053",
+    "role": "pastor",
+    "look": {
+      "body": "mini_male_g",
+      "skin": "#4a2c1a",
+      "shirt": "#2e4053",
+      "trousers": "#17202a"
+    }
   }
 }

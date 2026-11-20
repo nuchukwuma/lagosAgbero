@@ -511,7 +511,7 @@
           "type": "endChapter",
           "title": "The Ticket",
           "summary": "You have a name on a ballot, a campaign manager with a strange past, and a market that is watching you with its arms folded.",
-          "next": "p2_stomach"
+          "next": "p1b_primary"
         }
       ],
       "location": "market",

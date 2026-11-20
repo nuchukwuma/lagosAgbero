@@ -1,0 +1,180 @@
+{
+  "id": "p6b_collation",
+  "campaign": "politics",
+  "world": "iyanaWahala",
+  "act": 4,
+  "number": 14,
+  "title": "Chapter 14 — Collation Night",
+  "description": "The boxes are counted. The sheets travel to the collation centre. Between the two, numbers can change their minds.",
+  "startScene": "centre",
+  "scenes": {
+    "centre": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "The collation centre is the primary school on South Street. Your agents phone in the polling unit results one by one: Front Stop, Market, Motor Park, and six others."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "seyi",
+          "text": "(holding three phones) Our sheets say we're ahead by four thousand. The nephew's sheets say he's ahead by two thousand. Both sheets have stamps. Somebody's stamp is lying."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "mrAdjust",
+          "text": "(passing you in the corridor, without stopping) Everything is fluctuating nicely, sir. Very nicely.",
+          "if": "rigged"
+        },
+        {
+          "type": "goto",
+          "scene": "van"
+        }
+      ],
+      "location": "southStreet",
+      "time": "night"
+    },
+    "van": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Midnight. A white Hiace with no number plate stops behind the school. Two men carry ballot sheets in from the back door, not the front."
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "Your agents are watching you to see what you do.",
+          "options": [
+            {
+              "text": "Block the back door with your agents. Film everything.",
+              "effects": {
+                "goto": "block"
+              }
+            },
+            {
+              "text": "Call the police commissioner's line. Let them deal with it.",
+              "effects": {
+                "changeStat": {
+                  "publicTrust": 1
+                },
+                "setFlag": "calledPolice",
+                "goto": "deal"
+              }
+            },
+            {
+              "text": "Let it go. Your own sheets will be enough.",
+              "effects": {
+                "goto": "deal"
+              }
+            }
+          ]
+        }
+      ],
+      "location": "southStreet",
+      "time": "night"
+    },
+    "block": {
+      "beats": [
+        {
+          "type": "startMode",
+          "mode": "fight",
+          "params": {
+            "opponent": "thug",
+            "difficulty": 2
+          },
+          "results": {
+            "won": {
+              "changeStat": {
+                "votes": 6,
+                "publicTrust": 4
+              },
+              "setFlag": "blockedVan",
+              "toast": "The van leaves without unloading. Your agents sing the national anthem at the back door, badly."
+            },
+            "lost": {
+              "changeStat": {
+                "votes": -2,
+                "energy": -20
+              },
+              "setFlag": "vanUnloaded"
+            }
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "deal"
+        }
+      ],
+      "location": "southStreet",
+      "time": "night"
+    },
+    "deal": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "3 a.m. A message from the nephew's camp, through Seyi: they will accept a \"power-sharing arrangement\". The nephew is declared winner. You become Deputy Leader of the council, with an office, a car and a budget line. Everybody goes home happy."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "seyi",
+          "text": "They're offering because they're frightened, Teacher. The van went home empty. That means they're losing.",
+          "if": "blockedVan"
+        },
+        {
+          "type": "choice",
+          "speaker": "seyi",
+          "text": "Seyi is not telling you what to do. For once.",
+          "options": [
+            {
+              "text": "\"No deals. Let the returning officer read what the people wrote.\"",
+              "effects": {
+                "changeStat": {
+                  "conscience": 4
+                },
+                "setFlag": "noCollationDeal"
+              }
+            },
+            {
+              "text": "Accept the deal. Deputy is something. Deputy is safe.",
+              "effects": {
+                "goto": "deputy"
+              }
+            }
+          ]
+        },
+        {
+          "type": "endChapter",
+          "title": "Collation Night",
+          "summary": "You guarded the sheets, or watched them change. At dawn the returning officer clears his throat.",
+          "next": "p7_declaration"
+        }
+      ],
+      "location": "southStreet",
+      "time": "night"
+    },
+    "deputy": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "At dawn the nephew is declared winner. At noon you are announced as Deputy Leader of the council. At four o'clock the nephew's people take the market toilet key, the one Mama Titi brought, \"for safekeeping\"."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "mamaTiti",
+          "text": "(at your new office door, not coming in) Deputy. (She says it the way you say a disease.) We voted for a teacher. We got a deputy."
+        },
+        {
+          "type": "endChapter",
+          "title": "The Deputy",
+          "summary": "You shared power with the people who stole it. You have an office. The market has a padlock.",
+          "ending": "p_deputy"
+        }
+      ],
+      "location": "southStreet",
+      "time": "day"
+    }
+  }
+}

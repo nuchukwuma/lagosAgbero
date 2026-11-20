@@ -2,9 +2,9 @@
   "id": "p5_rigging",
   "campaign": "politics",
   "world": "iyanaWahala",
-  "act": 1,
-  "number": 5,
-  "title": "Chapter 5 — Rigging Season",
+  "act": 3,
+  "number": 11,
+  "title": "Chapter 11 — Rigging Season",
   "description": "Mr. Adjust offers fifteen percent. Funke draws a line. The motor park boils over. And there is always a flight to London.",
   "startScene": "adjust",
   "scenes": {
@@ -279,7 +279,7 @@
           "type": "endChapter",
           "title": "Rigging Season",
           "summary": "Everyone has shown you their price. Now you have to show them yours.",
-          "next": "p6_election"
+          "next": "p5b_eve"
         }
       ],
       "location": "frontStop",
