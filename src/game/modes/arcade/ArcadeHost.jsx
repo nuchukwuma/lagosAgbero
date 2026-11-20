@@ -102,7 +102,7 @@ export function makeArcadeMode(game) {
         if (st === 'play' && s.over && !ended) {
           ended = true
           const res = game.result(s, params)
-          sfx(res.outcome === 'won' ? 'win' : 'lose')
+          sfx(res.outcome === (game.winOutcome || 'won') ? 'win' : 'lose')
           setTimeout(() => setStage('done'), 700)
         }
         if (st !== 'play') ended = false
@@ -122,33 +122,66 @@ export function makeArcadeMode(game) {
       canvas.addEventListener('pointerdown', down)
       canvas.addEventListener('pointermove', move)
       canvas.addEventListener('pointerup', up)
+      // held buttons (walking left and right) send down and up; the others just a press
+      const holds = new Set(game.holdIds || [])
       const onKey = (e) => {
         const { stage: st, state: s } = live.current
         if (st !== 'play' || s.over || isPaused()) return
         const id = game.keys?.[e.code]
         if (id != null) {
-          game.input(s, { type: 'button', id }, v)
           e.preventDefault()
+          if (holds.has(id) && e.repeat) return
+          game.input(s, { type: 'button', id, down: true }, v)
         } else if (game.onKey) game.input(s, { type: 'key', code: e.code }, v)
       }
+      const onKeyUp = (e) => {
+        const id = game.keys?.[e.code]
+        if (id != null && holds.has(id)) game.input(live.current.state, { type: 'button', id, down: false }, v)
+      }
+      const releaseAll = () => {
+        for (const id of holds) game.input(live.current.state, { type: 'button', id, down: false }, v)
+      }
       window.addEventListener('keydown', onKey)
+      window.addEventListener('keyup', onKeyUp)
+      window.addEventListener('blur', releaseAll)
       if (import.meta.env.DEV) window.__arcade = { game, live }
       return () => {
         cancelAnimationFrame(raf)
         window.removeEventListener('resize', layout)
         window.removeEventListener('keydown', onKey)
+        window.removeEventListener('keyup', onKeyUp)
+        window.removeEventListener('blur', releaseAll)
         canvas.removeEventListener('pointerdown', down)
         canvas.removeEventListener('pointermove', move)
         canvas.removeEventListener('pointerup', up)
       }
     }, []) // eslint-disable-line react-hooks/exhaustive-deps -- one loop for the mode's life; it reads live state through refs
 
-    const press = (id) => {
+    const press = (id, down = true) => {
       const s = live.current.state
-      if (live.current.stage !== 'play' || s.over || isPaused()) return
-      game.input(s, { type: 'button', id }, viewFor(1, 1))
+      if (down && (live.current.stage !== 'play' || s.over || isPaused())) return
+      game.input(s, { type: 'button', id, down }, viewFor(1, 1))
       setButtons(game.buttons?.(s) || [])
     }
+    const padButton = (b) => (
+      <button
+        key={b.id}
+        className={`arcade-btn ${b.on ? 'on' : ''} ${b.big ? 'big' : ''}`}
+        style={b.color ? { background: b.color } : undefined}
+        disabled={b.disabled}
+        onPointerDown={(e) => {
+          e.preventDefault()
+          if (b.hold) e.currentTarget.setPointerCapture?.(e.pointerId)
+          press(b.id, true)
+        }}
+        onPointerUp={b.hold ? () => press(b.id, false) : undefined}
+        onPointerCancel={b.hold ? () => press(b.id, false) : undefined}
+        onLostPointerCapture={b.hold ? () => press(b.id, false) : undefined}
+      >
+        {b.key && <small>{b.key}</small>}
+        {b.label}
+      </button>
+    )
 
     const res = stage === 'done' ? game.result(state, params) : null
     useEffect(() => {
@@ -201,30 +234,20 @@ export function makeArcadeMode(game) {
                 ))}
               </div>
             )}
-            {buttons.length > 0 && (
-              <div className="arcade-pad">
-                {buttons.map((b) => (
-                  <button
-                    key={b.id}
-                    className={`arcade-btn ${b.on ? 'on' : ''}`}
-                    style={b.color ? { background: b.color } : undefined}
-                    disabled={b.disabled}
-                    onPointerDown={(e) => {
-                      e.preventDefault()
-                      press(b.id)
-                    }}
-                  >
-                    {b.key && <small>{b.key}</small>}
-                    {b.label}
-                  </button>
-                ))}
-              </div>
-            )}
+            {buttons.length > 0 &&
+              (buttons.some((b) => b.side) ? (
+                <div className="arcade-pad split">
+                  <div className="pad-side">{buttons.filter((b) => b.side === 'left').map(padButton)}</div>
+                  <div className="pad-side">{buttons.filter((b) => b.side !== 'left').map(padButton)}</div>
+                </div>
+              ) : (
+                <div className="arcade-pad">{buttons.map(padButton)}</div>
+              ))}
           </>
         )}
         {res && (
           <div className="fee-intro arcade-result">
-            <h2>{res.headline || (res.outcome === 'won' ? 'You did it!' : 'Not this time.')}</h2>
+            <h2>{res.headline || (res.outcome === (game.winOutcome || 'won') ? 'You did it!' : 'Not this time.')}</h2>
             {res.line && <p>{res.line}</p>}
             <p>
               {game.scoreLabel ? `${res.score} ${game.scoreLabel}` : `Score ${res.score}`}
@@ -235,7 +258,7 @@ export function makeArcadeMode(game) {
               <button className="btn btn-primary" onClick={() => onFinish(res)}>
                 Continue
               </button>
-              {res.outcome !== 'won' && (
+              {res.outcome !== (game.winOutcome || 'won') && (
                 <button
                   className="btn"
                   onClick={() => {

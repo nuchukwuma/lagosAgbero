@@ -73,7 +73,7 @@ export default function RunnerMode({ params, onFinish }) {
             {bestDistance() > 0 && <> Your best: <strong>{bestDistance()} m</strong>.</>}
           </p>
         ) : (
-          <p>{(CHASERS[params.chaser] || CHASERS.taskForce).text} Reach {params.goal ?? 320} m to escape. Grab naira notes on the way.</p>
+          <p>{(CHASERS[params.chaser] || CHASERS.taskForce).text} Reach {params.goal ?? 540} m to escape. Grab naira notes on the way.</p>
         )}
         {params.endless && (params.heat > 0 || params.notoriety >= 25) && (
           <p className="warn">

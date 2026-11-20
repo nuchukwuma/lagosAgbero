@@ -396,7 +396,7 @@
           "mode": "runner",
           "params": {
             "chaser": "fellowship",
-            "goal": 260,
+            "goal": 440,
             "difficulty": 2
           },
           "results": {

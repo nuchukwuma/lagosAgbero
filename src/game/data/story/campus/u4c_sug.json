@@ -191,7 +191,7 @@
           "mode": "runner",
           "params": {
             "chaser": "hyenas",
-            "goal": 280,
+            "goal": 480,
             "difficulty": 2,
             "seed": 181
           },

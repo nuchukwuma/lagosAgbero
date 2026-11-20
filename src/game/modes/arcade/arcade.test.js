@@ -17,11 +17,16 @@ import * as posters from './games/posters.js'
 import * as parts from './games/fakeParts.js'
 import * as penalty from './games/penalty.js'
 import campaigns from '../../data/campaigns.json'
+import escapeGame from '../platformer/escape.js'
 
 const V = viewFor(800, 450)
 
 // turn-based games: a bot that makes a random legal move on its turn
 const BOTS = {
+  escape: (s, r) => {
+    s.held.right = true
+    if (r() < 0.2) escapeGame.input(s, { type: 'button', id: r() < 0.7 ? 'jump' : r() < 0.5 ? 'hit' : 'roll', down: true })
+  },
   draughts: (s, r) => {
     if (s.turn !== 'p') return
     const ms = draughts.legalMoves(s.board, 'p', s.chain)
@@ -66,7 +71,7 @@ function mash(game, seed) {
 describe('arcade mini-games', () => {
   it('three games for every story', () => {
     const stories = (campaigns.campaigns || campaigns).map((c) => c.id)
-    for (const id of stories) expect(ARCADE_BY_STORY[id], id).toHaveLength(3)
+    for (const id of stories) expect(ARCADE_BY_STORY[id].length, id).toBeGreaterThanOrEqual(3)
     const ids = ARCADE_GAMES.map((g) => g.id)
     expect(new Set(ids).size).toBe(ids.length)
     for (const list of Object.values(ARCADE_BY_STORY)) for (const id of list) expect(ids).toContain(id)
@@ -78,7 +83,7 @@ describe('arcade mini-games', () => {
         const s = mash(g, seed)
         expect(s.over, `${g.id} #${seed} never ended`).toBe(true)
         const res = g.result(s, {})
-        expect(['won', 'lost'], g.id).toContain(res.outcome)
+        expect(['won', 'lost', 'escaped', 'caught'], g.id).toContain(res.outcome)
         expect(Number.isFinite(res.score), g.id).toBe(true)
         expect(g.hud(s).length, g.id).toBeGreaterThan(0)
         expect(g.rules.length ?? g.rules({}).length, g.id).toBeGreaterThan(0)

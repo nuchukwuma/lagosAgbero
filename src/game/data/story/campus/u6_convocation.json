@@ -519,7 +519,7 @@
           "mode": "runner",
           "params": {
             "chaser": "taskForce",
-            "goal": 260,
+            "goal": 440,
             "difficulty": 2
           },
           "results": {

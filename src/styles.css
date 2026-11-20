@@ -3869,3 +3869,9 @@ svg .is-chase { fill: #e53935; stroke: #fff; stroke-width: 0.6; animation: map-p
   box-shadow: 2px 2px 0 rgba(14, 13, 30, 0.6);
 }
 .activity-chip:active { transform: translateY(1px); }
+.arcade-pad.split { justify-content: space-between; padding: 0 max(12px, env(safe-area-inset-left)); }
+.arcade-pad.split .pad-side { display: flex; gap: 8px; align-items: flex-end; }
+.arcade-btn.big { min-width: 74px; height: 64px; font-size: 15px; }
+@media (max-height: 430px) {
+  .arcade-btn.big { min-width: 62px; height: 54px; }
+}

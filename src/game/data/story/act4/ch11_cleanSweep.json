@@ -150,11 +150,11 @@
         },
         {
           "type": "startMode",
-          "mode": "runner",
+          "mode": "escape",
           "params": {
-            "chaser": "taskForce",
-            "goal": 360,
+            "metres": 900,
             "difficulty": 3,
+            "to": "Under the Bridge",
             "seed": 111
           },
           "results": {
@@ -201,11 +201,11 @@
             {
               "text": "RUN!",
               "effects": {
-                "startMode": "runner",
+                "startMode": "escape",
                 "params": {
-                  "chaser": "taskForce",
-                  "goal": 320,
+                  "metres": 750,
                   "difficulty": 2,
+                  "to": "Under the Bridge",
                   "seed": 112
                 },
                 "results": {

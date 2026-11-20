@@ -70,7 +70,7 @@
                 "startMode": "runner",
                 "params": {
                   "chaser": "taskForce",
-                  "goal": 280,
+                  "goal": 480,
                   "difficulty": 1
                 },
                 "results": {

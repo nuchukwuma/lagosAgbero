@@ -2162,6 +2162,38 @@
           }
         }
       }
+    },
+    {
+      "id": "escapeRun",
+      "label": "ESCAPE",
+      "icon": "run",
+      "spot": "backSide",
+      "if": {
+        "flags": [
+          "dayLoop"
+        ]
+      },
+      "mode": "escape",
+      "minutes": 90,
+      "params": {
+        "metres": 700,
+        "difficulty": 1,
+        "to": "Under the Bridge"
+      },
+      "where": "Task Force sweep",
+      "results": {
+        "escaped": {
+          "changeStat": {
+            "policeHeat": -2
+          }
+        },
+        "caught": {
+          "changeStat": {
+            "arrests": 1,
+            "money": -3000
+          }
+        }
+      }
     }
   ],
   "rows": [

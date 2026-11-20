@@ -133,7 +133,7 @@
           "mode": "runner",
           "params": {
             "chaser": "taskForce",
-            "goal": 300,
+            "goal": 510,
             "difficulty": 2,
             "seed": 191
           },

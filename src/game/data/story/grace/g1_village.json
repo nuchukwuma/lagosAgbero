@@ -439,7 +439,7 @@
           "mode": "runner",
           "params": {
             "chaser": "villagers",
-            "goal": 200,
+            "goal": 340,
             "difficulty": 1
           },
           "results": {

@@ -211,7 +211,7 @@
           "type": "startMode",
           "mode": "runner",
           "params": {
-            "goal": 260,
+            "goal": 440,
             "chaser": "mob",
             "difficulty": 2
           },

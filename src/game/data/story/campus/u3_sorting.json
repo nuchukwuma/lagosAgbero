@@ -273,7 +273,7 @@
           "mode": "runner",
           "params": {
             "chaser": "dons",
-            "goal": 220,
+            "goal": 370,
             "difficulty": 1
           },
           "results": {

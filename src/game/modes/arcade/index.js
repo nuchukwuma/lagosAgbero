@@ -16,12 +16,13 @@ import riceQueue from './games/riceQueue.js'
 import pepperSoup from './games/pepperSoup.js'
 import barRush from './games/barRush.js'
 import whot from './games/whot.js'
+import escape from '../platformer/escape.js'
 
-export const ARCADE_GAMES = [change, draughts, traffic, ayo, palmClimb, fakeParts, akara, sneak, penalty, posters, ballots, riceQueue, pepperSoup, barRush, whot]
+export const ARCADE_GAMES = [escape, change, draughts, traffic, ayo, palmClimb, fakeParts, akara, sneak, penalty, posters, ballots, riceQueue, pepperSoup, barRush, whot]
 
 /** Which story each game belongs to (and is first met in). */
 export const ARCADE_BY_STORY = {
-  areaBoy: ['change', 'draughts', 'traffic'],
+  areaBoy: ['escape', 'change', 'draughts', 'traffic'],
   grace: ['ayo', 'palmClimb', 'fakeParts'],
   campus: ['akara', 'sneak', 'penalty'],
   politics: ['posters', 'ballots', 'riceQueue'],

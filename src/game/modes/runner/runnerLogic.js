@@ -98,7 +98,7 @@ export function addPickups(items, seed, chance = 0.08) {
 
 const withTraffic = (items, seed, density, traffic) => addPickups(traffic ? items.concat(makeTraffic(items, seed, density)) : items, seed)
 
-export function createRun({ goal = 320, seed = 1, difficulty = 1, energy = 70, endless = false, traffic = true } = {}) {
+export function createRun({ goal = 540, seed = 1, difficulty = 1, energy = 70, endless = false, traffic = true } = {}) {
   const density = 0.9 + difficulty * 0.15
   return {
     goal: endless ? Infinity : goal,

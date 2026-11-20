@@ -164,7 +164,7 @@
                 "startMode": "runner",
                 "params": {
                   "chaser": "taskForce",
-                  "goal": 260,
+                  "goal": 440,
                   "difficulty": 1,
                   "seed": 11
                 },

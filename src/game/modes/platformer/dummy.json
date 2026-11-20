@@ -1,0 +1,113 @@
+{
+ "source": "Craftpix Free Pixel Art Prototype Character Sprites (craftpix.net/file-licenses)",
+ "anims": {
+  "idle": {
+   "x": 0,
+   "y": 0,
+   "w": 27,
+   "h": 69,
+   "frames": 1,
+   "ax": 11,
+   "ay": 69
+  },
+  "walk": {
+   "x": 0,
+   "y": 69,
+   "w": 37,
+   "h": 68,
+   "frames": 12,
+   "ax": 19,
+   "ay": 68
+  },
+  "run": {
+   "x": 0,
+   "y": 137,
+   "w": 54,
+   "h": 69,
+   "frames": 12,
+   "ax": 24,
+   "ay": 69
+  },
+  "stop": {
+   "x": 0,
+   "y": 206,
+   "w": 34,
+   "h": 69,
+   "frames": 5,
+   "ax": 17,
+   "ay": 69
+  },
+  "jump": {
+   "x": 0,
+   "y": 275,
+   "w": 69,
+   "h": 68,
+   "frames": 10,
+   "ax": 34,
+   "ay": 68
+  },
+  "double": {
+   "x": 0,
+   "y": 343,
+   "w": 58,
+   "h": 108,
+   "frames": 11,
+   "ax": 23,
+   "ay": 113
+  },
+  "land": {
+   "x": 0,
+   "y": 451,
+   "w": 44,
+   "h": 69,
+   "frames": 6,
+   "ax": 16,
+   "ay": 69
+  },
+  "roll": {
+   "x": 0,
+   "y": 520,
+   "w": 56,
+   "h": 68,
+   "frames": 9,
+   "ax": 36,
+   "ay": 68
+  },
+  "strike": {
+   "x": 0,
+   "y": 588,
+   "w": 44,
+   "h": 57,
+   "frames": 3,
+   "ax": 15,
+   "ay": 57
+  },
+  "crouch": {
+   "x": 0,
+   "y": 645,
+   "w": 39,
+   "h": 64,
+   "frames": 3,
+   "ax": 25,
+   "ay": 64
+  },
+  "knocked": {
+   "x": 0,
+   "y": 709,
+   "w": 82,
+   "h": 74,
+   "frames": 11,
+   "ax": 39,
+   "ay": 74
+  },
+  "vault": {
+   "x": 0,
+   "y": 783,
+   "w": 90,
+   "h": 75,
+   "frames": 7,
+   "ax": 39,
+   "ay": 75
+  }
+ }
+}

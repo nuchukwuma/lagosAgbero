@@ -201,7 +201,7 @@ export default function RunnerScene({ playerLook }) {
   const params = useRunner((s) => s.params)
   const started = useRunner((s) => s.started)
   const energy = useGameStore((s) => s.game?.stats.energy ?? 70)
-  const run = useMemo(() => createRun({ goal: params.goal ?? 320, seed: params.seed ?? Math.floor(Math.random() * 1000), difficulty: params.difficulty ?? 1, energy, endless: Boolean(params.endless) }), [params]) // eslint-disable-line react-hooks/exhaustive-deps
+  const run = useMemo(() => createRun({ goal: params.goal ?? 540, seed: params.seed ?? Math.floor(Math.random() * 1000), difficulty: params.difficulty ?? 1, energy, endless: Boolean(params.endless) }), [params]) // eslint-disable-line react-hooks/exhaustive-deps
   if (import.meta.env.DEV && typeof window !== 'undefined') window.__run = run // dev bots: read the run
   const [builtTo, setBuiltTo] = useState(run.builtTo) // endless runs: redraw the road when more is built
   const player = useRef()

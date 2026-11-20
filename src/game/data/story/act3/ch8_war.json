@@ -266,7 +266,7 @@
           "mode": "runner",
           "params": {
             "chaser": "hyenas",
-            "goal": 300,
+            "goal": 510,
             "difficulty": 2,
             "seed": 81
           },
@@ -431,11 +431,11 @@
             {
               "text": "RUN!",
               "effects": {
-                "startMode": "runner",
+                "startMode": "escape",
                 "params": {
-                  "chaser": "taskForce",
-                  "goal": 320,
+                  "metres": 600,
                   "difficulty": 2,
+                  "to": "The Back Side",
                   "seed": 83
                 },
                 "results": {

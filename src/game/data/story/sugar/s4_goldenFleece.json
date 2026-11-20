@@ -140,7 +140,7 @@
           "type": "startMode",
           "mode": "runner",
           "params": {
-            "goal": 240,
+            "goal": 410,
             "chaser": "taskForce",
             "difficulty": 1
           },
