@@ -65,6 +65,10 @@ export const ARCADE_BOOSTS = {
     { id: 'wh_tired', name: 'Bassey Is Tired', text: 'He plays a lot worse', icon: 'star', apply: (p) => ({ skill: Math.max(0.15, (p.skill ?? 0.6) - 0.3) }) },
     { id: 'wh_whot', name: 'Lucky Hand', text: 'Start with a Whot card', icon: 'star', apply: () => ({ startWhot: true }) },
   ],
+  dance: [
+    { id: 'dn_slow', name: 'Slow Jam', text: 'The beat is 15% slower', icon: 'music', apply: (p) => ({ bpm: Math.round((p.bpm ?? 100) * 0.85) }) },
+    { id: 'dn_wide', name: 'Good Ears', text: 'Timing is 50% more forgiving', icon: 'music', apply: (p) => ({ windows: (p.windows ?? 1) * 1.5 }) },
+  ],
   escape: [
     { id: 'esc_life', name: 'Nine Lives', text: 'Two more lives', icon: 'run', apply: (p) => ({ lives: (p.lives ?? 3) + 2 }) },
     { id: 'esc_tough', name: 'Thick Skin', text: 'Seven hearts instead of five', icon: 'shield', apply: () => ({ hp: 7 }) },
@@ -132,6 +136,10 @@ export function tuneParams(id, params = {}, level = 0, boosts = []) {
       break
     case 'whot':
       p.skill = clamp(n(params.skill, 0.6) + (L - 0.4) * 0.35, 0.3, 0.9)
+      break
+    case 'dance':
+      p.skill = clamp(n(params.skill, 0.55) + (L - 0.4) * 0.3, 0.3, 0.85)
+      p.bpm = Math.round(n(params.bpm, 100) * lerp(0.92, 1.08, L))
       break
     case 'escape':
       p.difficulty = clamp(n(params.difficulty, 1) + L * 0.8, 1, 3.5)

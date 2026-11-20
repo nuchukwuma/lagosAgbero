@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { createBattle, phaseAt, tap, advanceTo, battleResult, MOVES, MOVE_IDS } from './danceLogic.js'
+import { createBattle, phaseAt, tap, advanceTo, battleResult, LANES } from './danceLogic.js'
 import { makePixelFighter, M_PER_PX, CW, CH, AX, AY } from '../fight/fight2d/pixel.js'
 import { makePixelStage, backdropFor } from '../fight/fight2d/pixelStage.js'
 import { placeHere } from '../fight/fight2d/where.js'
@@ -12,41 +12,57 @@ import characters from '../../data/characters.json'
 import { sfx } from '../../audio/audio.js'
 import { formatNaira } from '../../narrative/stats.js'
 import { seenIntro, markIntroSeen } from '../../systems/records.js'
+import { storyCtx } from '../../narrative/storyData.js'
+import { storyLevel } from '../../systems/progress.js'
+import { usePowerups } from '../../systems/powerups.js'
+import PowerupOffer from '../../../components/hud/PowerupOffer.jsx'
+import { tuneParams } from '../arcade/tuning.js'
 
-// A dance battle, seen like the pixel fights: you and the rival on a stage in
-// front of wherever this is (the bus stop, the village square, the hostel),
-// the crowd behind jumping and cheering as the hype rises. The rival dances a
-// routine on the beat (each move shown as they dance it); then you repeat
-// it, tapping each move on its beat, and your dancer dances what you tap.
+// A dance battle as a 4-lane rhythm game, on a stage in front of wherever
+// this is (the bus stop, the village square, the hostel), the crowd behind
+// jumping as the hype rises. Arrows fall down four lanes; tap each lane as
+// its arrow reaches the line. The rival dances a phrase first (watch their
+// arrows), then it's your turn. Every arrow you hit is a dance move, so your
+// dancer dances what you tap: ← Shaku, ↓ Gwara, ↑ Zanku, → Azonto.
 // Story params:
 //   rival   a character id (their look) or nothing (a stranger)
 //   name    what to call the rival
-//   rounds  (3) · length (4: moves in the first routine) · bpm (96) · skill (0.6)
+//   rounds  (3) · length (8 beats in the first phrase) · bpm (100) · skill (0.6)
 //   prize   naira for winning (paid with the result)
+// Harder as the story goes on; ad power-ups slow the beat or widen the timing.
 // Outcomes: won | lost
-// Keys: 1-5 for the moves.
+// Keys: arrows, or D F J K.
 
-const KEYS = { Digit1: 0, Digit2: 1, Digit3: 2, Digit4: 3, Digit5: 4 }
+const KEYS = { ArrowLeft: 0, ArrowDown: 1, ArrowUp: 2, ArrowRight: 3, KeyD: 0, KeyF: 1, KeyJ: 2, KeyK: 3 }
+const LOOKAHEAD = 2.6 // beats of arrows on screen above the line
 
-export default function DanceMode({ params, onFinish }) {
+export default function DanceMode({ params: given, onFinish }) {
   const canvasRef = useRef()
   const game = useGameStore((s) => s.game)
   const time = useGameStore((s) => s.view?.time || 'day')
   const world = useGameStore((s) => s.view?.world || 'iyanaWahala')
   const activitySpot = useGameStore((s) => s.activity?.spot)
-  const bpm = params.bpm ?? 96
-  const battle = useMemo(() => createBattle({ rounds: params.rounds ?? 3, length: params.length ?? 4, skill: params.skill ?? 0.6, seed: params.seed ?? Math.floor(Math.random() * 999) }), []) // eslint-disable-line react-hooks/exhaustive-deps
+  const level = useMemo(() => given.level ?? storyLevel(useGameStore.getState().game, storyCtx.chapters), []) // eslint-disable-line react-hooks/exhaustive-deps
+  const [round, setRound] = useState(0)
+  // settings for this battle: the story's, tuned to the story level and any power-ups bought
+  const params = useMemo(() => tuneParams('dance', given, level, usePowerups.getState().active), [round]) // eslint-disable-line react-hooks/exhaustive-deps
+  const bpm = params.bpm ?? 100
+  const windows = params.windows ?? 1
+  const battle = useMemo(() => createBattle({ rounds: params.rounds ?? 3, length: params.length ?? 8, skill: params.skill ?? 0.6, level: params.level ?? 0.3, seed: (params.seed ?? Math.floor(Math.random() * 999)) + round * 13 }), [round]) // eslint-disable-line react-hooks/exhaustive-deps
   const dancers = useMemo(() => {
-    const rivalLook = params.rival && characters[params.rival] ? characters[params.rival].look : randomLook(params.seed ?? 77, 'male')
+    const rivalLook = given.rival && characters[given.rival] ? characters[given.rival].look : randomLook(given.seed ?? 77, 'male')
     return { p: makePixelFighter(withAllegiance(game?.player.look || {}, game?.flags || {})), o: makePixelFighter(rivalLook) }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
-  const rivalName = params.name || (params.rival && characters[params.rival]?.name) || 'The rival'
+  const rivalName = given.name || (given.rival && characters[given.rival]?.name) || 'The rival'
   const [stage, setStage] = useState('intro') // intro | dancing | done
-  const [hud, setHud] = useState({ phase: 'count', round: 0, step: -1, you: 0, rival: 0, hype: 0.3, marks: [], beat: 0 })
-  const clock = useRef({ beats: -2, lastTap: null, playerMove: null, playerAt: -9 })
+  const [hud, setHud] = useState({ phase: 'count', you: 0, rival: 0, hype: 0.3, combo: 0, round: 0 })
+  const clock = useRef({ beats: -2, started: false, pressed: [0, 0, 0, 0], youMove: null, youAt: -9, judge: null, judgeAt: -9, rivalMove: null, rivalAt: -9 })
+  const live = useRef(battle)
+  live.current = battle
+  const tempo = useRef({ bpm, windows })
+  tempo.current = { bpm, windows }
   const firstTime = useState(() => !seenIntro('dance'))[0]
 
-  // the dance floor
   useEffect(() => {
     const canvas = canvasRef.current
     const ctx = canvas.getContext('2d')
@@ -57,6 +73,7 @@ export default function DanceMode({ params, onFinish }) {
     let PX = 6
     let groundY = 0
     let backdrop = null
+    let lane = { x: 0, w: 0, top: 0, hitY: 0 }
     const layout = () => {
       const r = canvas.getBoundingClientRect()
       W = Math.max(1, Math.round(r.width))
@@ -64,10 +81,14 @@ export default function DanceMode({ params, onFinish }) {
       canvas.width = W
       canvas.height = H
       const portrait = H > W
-      groundY = H * (portrait ? 0.62 : 0.8)
-      PX = Math.max(2, Math.round(Math.min((H * 0.3) / 21, (W / (portrait ? 4.6 : 7.4)) * M_PER_PX)))
+      groundY = H * (portrait ? 0.58 : 0.74)
+      PX = Math.max(2, Math.round(Math.min((H * 0.26) / 21, (W / (portrait ? 5.5 : 8)) * M_PER_PX)))
       groundY = Math.round(groundY / PX) * PX
       backdrop = makePixelStage({ W, H, PX, groundY: groundY + PX * 6, pan: 1, time, kind, place, light, seed: 41 })
+      // the arrow highway, in the middle, ending just above the buttons
+      const w = Math.min(W * (portrait ? 0.66 : 0.4), 360)
+      const top = Math.max(96, H * 0.2)
+      lane = { x: (W - w) / 2, w, top, hitY: H - Math.max(100, H * 0.19) }
     }
     layout()
     window.addEventListener('resize', layout)
@@ -76,14 +97,11 @@ export default function DanceMode({ params, onFinish }) {
     let t = 0
     let lastBeat = -99
     let hudT = 0
-    // which of a move's two frames: swapped every half beat (the count-in starts below zero: keep it positive)
     const half = (beats) => ((Math.floor(beats * 2) % 2) + 2) % 2
-    const frameOf = (fighter, move, beats) => {
+    const drawDancer = (fighter, frameName, x, facing, beats) => {
       const F = fighter.frames
-      if (move) return F[`dance_${move}`][half(beats)]
-      return F.stand[half(beats)]
-    }
-    const drawDancer = (fighter, frame, x, facing) => {
+      const frames = F[frameName] || F.stand
+      const frame = frames[half(beats) % frames.length]
       ctx.save()
       ctx.imageSmoothingEnabled = false
       ctx.translate(Math.round(x), groundY)
@@ -91,45 +109,78 @@ export default function DanceMode({ params, onFinish }) {
       ctx.drawImage(frame.canvas, -AX, -AY, CW, CH)
       ctx.restore()
     }
-    const label = (text, color, x, y, alpha) => {
+    const label = (text, color, x, y, alpha, size = Math.max(14, PX * 3)) => {
       ctx.save()
-      ctx.globalAlpha = alpha
-      ctx.font = `900 ${Math.max(14, PX * 3)}px ui-monospace, Menlo, Consolas, monospace`
+      ctx.globalAlpha = Math.max(0, Math.min(1, alpha))
+      ctx.font = `900 ${size}px ui-monospace, Menlo, Consolas, monospace`
       ctx.textAlign = 'center'
-      ctx.lineWidth = Math.max(3, PX)
+      ctx.textBaseline = 'middle'
+      ctx.lineWidth = Math.max(3, size / 5)
       ctx.strokeStyle = '#0e0d1e'
       ctx.strokeText(text, x, y)
       ctx.fillStyle = color
       ctx.fillText(text, x, y)
       ctx.restore()
     }
+    // an arrow tile: a chunky square with the arrow on it
+    const arrowTile = (li, cx, cy, size, { fill, dim = false, glow = false } = {}) => {
+      const L = LANES[li]
+      const s = Math.round(size)
+      ctx.save()
+      ctx.globalAlpha = dim ? 0.55 : 1
+      ctx.fillStyle = '#0e0d1e'
+      ctx.fillRect(Math.round(cx - s / 2) - 2, Math.round(cy - s / 2) - 2, s + 4, s + 4)
+      ctx.fillStyle = fill || L.color
+      ctx.fillRect(Math.round(cx - s / 2), Math.round(cy - s / 2), s, s)
+      if (glow) {
+        ctx.fillStyle = 'rgba(255,255,255,0.45)'
+        ctx.fillRect(Math.round(cx - s / 2), Math.round(cy - s / 2), s, Math.round(s / 3))
+      }
+      ctx.restore()
+      label(L.arrow, '#ffffff', cx, cy + 1, dim ? 0.6 : 1, Math.round(s * 0.62))
+    }
     const frame = (now) => {
       raf = requestAnimationFrame(frame)
       const dt = Math.max(0, Math.min(0.05, (now - last) / 1000))
       last = now
       const c = clock.current
-      const running = c.started && !battle.over && !isPaused()
-      if (running) c.beats += (dt * bpm) / 60
-      if (c.started) advanceTo(battle, c.beats)
+      const b = live.current
+      const running = c.started && !b.over && !isPaused()
+      if (running) c.beats += (dt * tempo.current.bpm) / 60
+      if (c.started) {
+        // the rival dances their arrows as they reach the line
+        for (const n of b.notes) if (n.who === 'rival' && !n.mark && c.beats >= n.beat) {
+          c.rivalMove = LANES[n.lane].move
+          c.rivalAt = c.beats
+          c.rivalMiss = n.rivalMark === 'miss'
+        }
+        const before = b.counts.miss
+        advanceTo(b, c.beats, tempo.current.windows)
+        if (b.counts.miss > before) {
+          c.judge = 'MISS'
+          c.judgeAt = c.beats
+          c.youMove = null
+          c.stumble = c.beats
+          sfx('wrong')
+        }
+      }
       t += isPaused() ? 0 : dt
-      const ph = phaseAt(battle, c.beats)
-      // a click on every beat, a little louder on the rival's and yours
+      const ph = phaseAt(b, c.beats)
       const beatNow = Math.floor(c.beats)
       if (running && beatNow !== lastBeat) {
         lastBeat = beatNow
         if (ph.phase !== 'done') sfx('click')
       }
-      if (battle.over && c.started && !c.ended) {
+      if (b.over && c.started && !c.ended) {
         c.ended = true
-        sfx(battleResult(battle).outcome === 'won' ? 'win' : 'lose')
+        sfx(battleResult(b).outcome === 'won' ? 'win' : 'lose')
         setTimeout(() => setStage('done'), 600)
       }
-      // draw
+      // the stage
       ctx.setTransform(1, 0, 0, 1, 0, 0)
       ctx.clearRect(0, 0, W, H)
-      if (backdrop) backdrop.draw(ctx, 0, t, battle.hype)
-      // the stage: planks on trestles, a light rig at dusk and night
-      const sw = Math.min(W * 0.86, PX * 120)
+      if (backdrop) backdrop.draw(ctx, 0, t, b.hype)
+      const sw = Math.min(W * 0.94, PX * 150)
       const sx = Math.round((W - sw) / 2 / PX) * PX
       ctx.fillStyle = '#1a1630'
       ctx.fillRect(sx - PX, groundY - PX, sw + 2 * PX, PX * 7)
@@ -137,16 +188,11 @@ export default function DanceMode({ params, onFinish }) {
       ctx.fillRect(sx, groundY, sw, PX * 2)
       ctx.fillStyle = '#6b4f30'
       ctx.fillRect(sx, groundY + PX * 2, sw, PX * 4)
-      for (let x = sx; x < sx + sw; x += PX * 8) {
-        ctx.fillStyle = '#4a3420'
-        ctx.fillRect(x, groundY + PX * 2, PX, PX * 4)
-      }
       if (time === 'night' || time === 'dusk') {
-        // two spotlights sweeping with the beat
         for (const side of [0, 1]) {
           const a = Math.sin(c.beats * Math.PI * 0.5 + side * Math.PI) * 0.25
           ctx.save()
-          ctx.globalAlpha = 0.18 + battle.hype * 0.15
+          ctx.globalAlpha = 0.16 + b.hype * 0.14
           ctx.fillStyle = side ? '#ffd23a' : '#7fd0ff'
           ctx.beginPath()
           const top = side ? W * 0.85 : W * 0.15
@@ -158,51 +204,95 @@ export default function DanceMode({ params, onFinish }) {
           ctx.restore()
         }
       }
-      // the dancers: the rival dances the routine on their turn; you dance what you tap
-      const pX = W / 2 - PX * 22
-      const oX = W / 2 + PX * 22
-      const rivalMove = ph.phase === 'rival' ? battle.plan[ph.round].moves[Math.max(0, ph.step)] : null
-      const youMove = c.playerMove && c.beats - c.playerAt < 0.9 ? c.playerMove : null
-      drawDancer(dancers.o, frameOf(dancers.o, rivalMove, c.beats), oX, -1)
-      drawDancer(dancers.p, frameOf(dancers.p, youMove, c.beats), pX, 1)
-      if (rivalMove) label(MOVES[rivalMove].name.toUpperCase(), MOVES[rivalMove].color, oX, groundY - PX * 24, 1)
-      if (youMove) label(MOVES[youMove].name.toUpperCase(), c.lastMark === 'miss' ? '#bbbbbb' : MOVES[youMove].color, pX, groundY - PX * 24, Math.max(0, 1 - (c.beats - c.playerAt)))
-      if (c.lastMark && c.beats - c.playerAt < 0.8) label(c.lastMark === 'perfect' ? 'PERFECT!' : c.lastMark === 'good' ? 'GOOD' : 'MISS', c.lastMark === 'miss' ? '#ff6b4a' : '#ffffff', pX, groundY - PX * 29, 1 - (c.beats - c.playerAt))
-      if (ph.phase === 'count' && c.started) {
-        const p = battle.plan[ph.round]
-        const nextAt = c.beats < p.rivalAt ? p.rivalAt : p.youAt
-        const n = Math.ceil(nextAt - c.beats)
-        label(n <= 3 ? String(n) : c.beats < p.rivalAt ? `ROUND ${ph.round + 1}` : 'YOUR TURN', '#ffd23a', W / 2, groundY - PX * 38, 1)
+      // the dancers, either side of the arrows: you dance what you hit; they dance theirs
+      // each dancer in the middle of the space beside the arrows
+      const pX = Math.max(PX * 12, lane.x / 2)
+      const oX = Math.min(W - PX * 12, lane.x + lane.w + (W - lane.x - lane.w) / 2)
+      const youFrame = c.stumble != null && c.beats - c.stumble < 0.6 ? 'hit' : c.youMove && c.beats - c.youAt < 0.8 ? `dance_${c.youMove}` : 'stand'
+      const rivalFrame = c.rivalMove && c.beats - c.rivalAt < 0.8 ? (c.rivalMiss ? 'hit' : `dance_${c.rivalMove}`) : 'stand'
+      drawDancer(dancers.p, youFrame, pX, 1, c.beats)
+      drawDancer(dancers.o, rivalFrame, oX, -1, c.beats)
+      label('YOU', '#ffd23a', pX, groundY + PX * 10, 0.9, Math.max(11, PX * 2.4))
+      label(rivalName.toUpperCase(), '#bfe8ff', oX, groundY + PX * 10, 0.9, Math.max(11, PX * 2.4))
+      // the arrow highway
+      const lw = lane.w / 4
+      ctx.save()
+      ctx.globalAlpha = 0.55
+      ctx.fillStyle = '#0e0d1e'
+      ctx.fillRect(lane.x, lane.top, lane.w, lane.hitY - lane.top + lw * 0.6)
+      ctx.restore()
+      for (let i = 1; i < 4; i++) {
+        ctx.fillStyle = 'rgba(255,255,255,0.08)'
+        ctx.fillRect(Math.round(lane.x + i * lw), lane.top, 1, lane.hitY - lane.top)
       }
+      const yours = ph.phase === 'you' || (ph.phase === 'count' && b.plan[ph.round] && c.beats > b.plan[ph.round].rivalAt)
+      // the receptors at the line
+      const size = Math.min(lw * 0.72, (lane.hitY - lane.top) / 4.2, 58)
+      for (let i = 0; i < 4; i++) {
+        const lit = c.pressed[i] > 0
+        arrowTile(i, lane.x + lw * (i + 0.5), lane.hitY, size, { fill: lit ? LANES[i].color : '#2a2540', glow: lit })
+        if (c.pressed[i] > 0) c.pressed[i] -= dt
+      }
+      // the falling arrows: theirs during their phrase (danced for them), yours during yours
+      const ppb = (lane.hitY - lane.top) / LOOKAHEAD
+      for (const n of b.notes) {
+        const ahead = n.beat - c.beats
+        if (ahead > LOOKAHEAD + 0.2 || ahead < -0.6) continue
+        if (n.mark && (n.who === 'rival' || n.mark !== 'miss')) continue
+        const y = lane.hitY - ahead * ppb
+        const x = lane.x + lw * (n.lane + 0.5)
+        arrowTile(n.lane, x, y, size * 0.9, { dim: n.who === 'rival' || n.mark === 'miss' })
+      }
+      // what you just got
+      if (c.judge && c.beats - c.judgeAt < 0.9) {
+        const col = c.judge === 'PERFECT' ? '#8ff0a4' : c.judge === 'GOOD' ? '#ffd23a' : '#ff6b4a'
+        label(c.judge, col, lane.x + lane.w / 2, lane.hitY - ppb * 1.1, 1 - (c.beats - c.judgeAt), Math.max(16, PX * 4))
+        if (b.combo >= 4) label(`${b.combo} COMBO`, '#ffffff', lane.x + lane.w / 2, lane.hitY - ppb * 1.1 + Math.max(18, PX * 4.5), 1 - (c.beats - c.judgeAt), Math.max(12, PX * 2.8))
+      }
+      // the count-in and whose turn
+      if (ph.phase === 'count' && c.started) {
+        const p = b.plan[ph.round]
+        const nextAt = c.beats < p.rivalAt ? p.rivalAt : p.youAt
+        const left = Math.ceil(nextAt - c.beats)
+        label(left <= 3 ? String(left) : c.beats < p.rivalAt ? `ROUND ${ph.round + 1}` : 'YOUR TURN!', '#ffd23a', lane.x + lane.w / 2, lane.top + (lane.hitY - lane.top) * 0.4, 1, Math.max(22, PX * 6))
+      } else if (ph.phase === 'rival') label(`${rivalName.toUpperCase()}: WATCH`, '#bfe8ff', lane.x + lane.w / 2, lane.top + 12, 1, Math.max(12, PX * 2.4))
+      else if (yours && ph.phase === 'you') label('YOUR TURN!', '#ffd23a', lane.x + lane.w / 2, lane.top + 12, 1, Math.max(12, PX * 2.4))
       hudT -= dt
       if (hudT <= 0) {
         hudT = 0.1
-        setHud({ phase: ph.phase, round: ph.round, step: ph.step, you: battle.you, rival: battle.rival, hype: battle.hype, marks: battle.marks[ph.round] || [], beat: c.beats })
+        setHud({ phase: ph.phase, you: b.you, rival: b.rival, hype: b.hype, combo: b.combo, round: ph.round })
       }
     }
     raf = requestAnimationFrame(frame)
-    if (import.meta.env.DEV) window.__dance = { battle, clock }
+    if (import.meta.env.DEV) window.__dance = { battle: live, clock }
     return () => {
       cancelAnimationFrame(raf)
       window.removeEventListener('resize', layout)
     }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  const dance = (move) => {
+  const hit = (li) => {
     const c = clock.current
-    if (!c.started || battle.over) return
-    const r = tap(battle, c.beats, move)
-    if (!r) return
-    c.playerMove = move
-    c.playerAt = c.beats
-    c.lastMark = r.mark
-    sfx(r.mark === 'miss' ? 'wrong' : 'correct')
-    if (r.mark === 'perfect' && battle.hype > 0.7) sfx('crowd')
+    const b = live.current
+    if (!c.started || b.over || isPaused()) return
+    c.pressed[li] = 0.12
+    const r = tap(b, c.beats, li, windows)
+    if (r.mark === 'stray') return
+    c.youMove = LANES[li].move
+    c.youAt = c.beats
+    c.judge = r.mark.toUpperCase()
+    c.judgeAt = c.beats
+    c.stumble = null
+    sfx(r.mark === 'perfect' ? 'correct' : 'click')
+    if (r.mark === 'perfect' && b.combo % 10 === 0 && b.hype > 0.6) sfx('crowd')
   }
 
   useEffect(() => {
     const onKey = (e) => {
-      if (KEYS[e.code] != null) dance(MOVE_IDS[KEYS[e.code]])
+      if (KEYS[e.code] != null && !e.repeat) {
+        e.preventDefault()
+        hit(KEYS[e.code])
+      }
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
@@ -210,8 +300,13 @@ export default function DanceMode({ params, onFinish }) {
 
   const host = typeof document !== 'undefined' ? document.querySelector('.story-screen') : null
   const floor = <canvas ref={canvasRef} className="fight2d-canvas" aria-label="Dance battle" />
-  const res = stage === 'done' ? battleResult(battle) : null
-  const round = battle.plan[hud.round]
+  const res = stage === 'done' ? battleResult(live.current) : null
+  const start = () => {
+    markIntroSeen('dance')
+    setRound((n) => n + 1) // a fresh battle, with any power-ups just bought
+    clock.current = { ...clock.current, beats: -2, started: true, ended: false, pressed: [0, 0, 0, 0], youMove: null, rivalMove: null, judge: null, stumble: null }
+    setStage('dancing')
+  }
   return (
     <>
       {host ? createPortal(floor, host) : floor}
@@ -220,23 +315,20 @@ export default function DanceMode({ params, onFinish }) {
           <h2>Dance battle: {rivalName}</h2>
           {firstTime ? (
             <ul>
-              <li>{rivalName} dances a routine on the beat. Watch the moves.</li>
-              <li>Then it's your turn: tap the same moves, one a beat, in the same order.</li>
-              <li>On the beat is PERFECT, a little off is GOOD; the wrong move or a missed beat cools the crowd.</li>
-              <li>Three rounds, each routine one move longer. The bigger score wins.</li>
+              <li>Arrows fall down four lanes. Tap the lane (← ↓ ↑ →) as each arrow reaches the line at the bottom.</li>
+              <li>On the line is PERFECT, a little off is GOOD; let one pass and it's a MISS, and your combo starts again.</li>
+              <li>{rivalName} dances a phrase first (watch their arrows), then it's your turn. Every arrow you hit is a move your dancer does.</li>
+              <li>Three rounds, each busier than the last. The bigger score wins.</li>
             </ul>
           ) : (
-            <p>Watch, then repeat it on the beat. Three rounds.</p>
+            <p>Tap each lane as its arrow reaches the line. Watch them, then your turn.</p>
           )}
-          {params.prize ? <p>Prize: {formatNaira(params.prize)}</p> : null}
-          <button
-            className="btn btn-primary"
-            onClick={() => {
-              markIntroSeen('dance')
-              clock.current.started = true
-              setStage('dancing')
-            }}
-          >
+          {given.prize ? <p>Prize: {formatNaira(given.prize)}</p> : null}
+          <p className="arcade-level">
+            Difficulty <strong>{'★'.repeat(1 + Math.round(level * 4))}{'☆'.repeat(4 - Math.round(level * 4))}</strong>
+          </p>
+          <PowerupOffer mode="dance" />
+          <button className="btn btn-primary" onClick={start}>
             Oya, dance!
           </button>
         </div>
@@ -253,27 +345,12 @@ export default function DanceMode({ params, onFinish }) {
                 {rivalName.toUpperCase()} {hud.rival}
               </span>
             </div>
-            {round && (
-              <div className="dance-routine">
-                {round.moves.map((m, i) => {
-                  const shown = hud.phase === 'you' || (hud.phase === 'rival' && i <= hud.step) || (hud.phase === 'count' && hud.beat > round.rivalAt + round.moves.length - 1)
-                  const now = (hud.phase === 'rival' || hud.phase === 'you') && i === hud.step
-                  const mark = hud.marks[i]
-                  return (
-                    <span key={i} className={`dance-step ${now ? 'now' : ''} ${mark || ''}`} style={{ background: shown ? MOVES[m].color : undefined }}>
-                      {shown ? MOVES[m].name : '?'}
-                    </span>
-                  )
-                })}
-              </div>
-            )}
-            <div className="dance-turn">{hud.phase === 'rival' ? `${rivalName} is dancing: watch!` : hud.phase === 'you' ? 'Your turn: repeat it on the beat!' : 'Get ready…'}</div>
           </div>
-          <div className="dance-pad">
-            {MOVE_IDS.map((m, i) => (
-              <button key={m} className="dance-btn" style={{ background: MOVES[m].color }} onPointerDown={(e) => (e.preventDefault(), dance(m))}>
-                <small>{i + 1}</small>
-                {MOVES[m].name}
+          <div className="dance-pad lanes">
+            {LANES.map((L, i) => (
+              <button key={L.id} className="dance-btn lane" style={{ background: L.color }} onPointerDown={(e) => (e.preventDefault(), hit(i))} aria-label={L.name}>
+                <span className="lane-arrow">{L.arrow}</span>
+                <small>{L.name}</small>
               </button>
             ))}
           </div>
@@ -285,10 +362,20 @@ export default function DanceMode({ params, onFinish }) {
           <p>
             You {res.you} · {rivalName} {res.rival}
           </p>
-          {res.outcome === 'won' && params.prize ? <p>Prize: {formatNaira(params.prize)}</p> : null}
-          <button className="btn btn-primary" onClick={() => onFinish({ ...res, moneyChange: res.outcome === 'won' ? params.prize || 0 : 0 })}>
-            Continue
-          </button>
+          <p className="muted">
+            {res.counts.perfect} perfect · {res.counts.good} good · {res.counts.miss} missed · best combo {res.best}
+          </p>
+          {res.outcome === 'won' && given.prize ? <p>Prize: {formatNaira(given.prize)}</p> : null}
+          <div className="result-actions">
+            <button className="btn btn-primary" onClick={() => onFinish({ ...res, moneyChange: res.outcome === 'won' ? given.prize || 0 : 0 })}>
+              Continue
+            </button>
+            {res.outcome !== 'won' && (
+              <button className="btn" onClick={start}>
+                Try again
+              </button>
+            )}
+          </div>
         </div>
       )}
     </>

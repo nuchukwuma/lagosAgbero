@@ -3877,3 +3877,13 @@ svg .is-chase { fill: #e53935; stroke: #fff; stroke-width: 0.6; animation: map-p
 }
 .arcade-level { margin: 2px 0 6px; font-size: 13px; opacity: 0.9; }
 .arcade-level strong { color: #ffd23a; letter-spacing: 2px; }
+
+/* the dance battle's four lane buttons: ← ↓ ↑ → */
+.dance-pad.lanes { gap: 8px; }
+.dance-btn.lane { min-width: 0; width: min(21vw, 92px); height: 66px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0; }
+.dance-btn.lane .lane-arrow { font-size: 30px; line-height: 1; }
+.dance-btn.lane small { position: static; font-size: 9px; opacity: 0.85; }
+@media (max-height: 430px) {
+  .dance-btn.lane { height: 56px; }
+  .dance-btn.lane .lane-arrow { font-size: 24px; }
+}
