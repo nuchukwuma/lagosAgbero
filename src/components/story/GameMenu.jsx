@@ -7,7 +7,7 @@ const TITLES = { main: 'Paused', save: 'Save game', load: 'Load game', wardrobe:
 
 // Pause menu: resume, the rules of the game you're in, wardrobe, save, load,
 // settings, quit to title. Paused in the middle of a game, it opens on the rules.
-export default function GameMenu({ onClose, onSave, onLoad, onQuit, onMap, canDress = true, objective = null, chapter = null, activity = null, howTo = null }) {
+export default function GameMenu({ onClose, onSave, onLoad, onQuit, onMap, canDress = true, objective = null, chapter = null, activity = null, howTo = null, onRetry = null, onTutorial = null }) {
   const [tab, setTab] = useState(howTo ? 'rules' : 'main')
   return (
     <div className="overlay" onClick={onClose}>
@@ -35,12 +35,24 @@ export default function GameMenu({ onClose, onSave, onLoad, onQuit, onMap, canDr
         )}
         {tab === 'main' && (
           <div className="menu">
-            <button className="btn btn-primary" onClick={onClose}>
-              Resume
-            </button>
+            <div className="pause-actions">
+              <button className="btn btn-primary" onClick={onClose}>
+                Resume
+              </button>
+              {onRetry && (
+                <button className="btn" onClick={onRetry}>
+                  ↻ Retry
+                </button>
+              )}
+            </div>
             {howTo && (
               <button className="btn" onClick={() => setTab('rules')}>
                 How to play
+              </button>
+            )}
+            {onTutorial && (
+              <button className="btn" onClick={onTutorial}>
+                Tutorial
               </button>
             )}
             {onMap && (
@@ -76,9 +88,16 @@ export default function GameMenu({ onClose, onSave, onLoad, onQuit, onMap, canDr
                 <li key={r}>{r}</li>
               ))}
             </ul>
-            <button className="btn btn-primary" onClick={onClose}>
-              Resume
-            </button>
+            <div className="pause-actions">
+              <button className="btn btn-primary" onClick={onClose}>
+                Resume
+              </button>
+              {onRetry && (
+                <button className="btn" onClick={onRetry}>
+                  ↻ Retry
+                </button>
+              )}
+            </div>
           </div>
         )}
         {tab === 'wardrobe' && <WardrobePanel onDone={onClose} />}

@@ -43,6 +43,47 @@ const pickupGeos = {
   star: new THREE.OctahedronGeometry(0.38),
   charm: new THREE.IcosahedronGeometry(0.3),
 }
+// empty bottles to throw: on the road, and spinning down the lane
+const bottleMat = new THREE.MeshLambertMaterial({ color: '#2e7d4f' })
+const bottleGeo = new THREE.CylinderGeometry(0.09, 0.12, 0.42, 8)
+const bottleRing = new THREE.MeshBasicMaterial({ color: '#ffd23a', transparent: true, opacity: 0.6, side: THREE.DoubleSide })
+const ringGeo = new THREE.RingGeometry(0.32, 0.42, 16)
+
+function Bottles({ run, from, to }) {
+  const refs = useRef([])
+  const list = useMemo(() => run.items.filter((it) => it.kind === 'bottle' && it.d >= from && it.d < to), [run, from, to])
+  useFrame((state) => {
+    list.forEach((n, i) => {
+      const g = refs.current[i]
+      if (!g) return
+      g.visible = !n.done
+      g.rotation.y = state.clock.elapsedTime * 2
+    })
+  })
+  return list.map((n, i) => (
+    <group key={i} ref={(el) => (refs.current[i] = el)} position={[n.lane * LANE_W, 0.25, -n.d]}>
+      <mesh material={bottleMat} geometry={bottleGeo} />
+      <mesh material={bottleRing} geometry={ringGeo} rotation-x={-Math.PI / 2} position-y={-0.2} />
+    </group>
+  ))
+}
+
+const SHOT_POOL = 3
+function Shots({ run }) {
+  const refs = useRef([])
+  useFrame(() => {
+    for (let i = 0; i < SHOT_POOL; i++) {
+      const m = refs.current[i]
+      if (!m) continue
+      const sh = run.shots[i]
+      m.visible = Boolean(sh)
+      if (!sh) continue
+      m.position.set(sh.lane * LANE_W, Y + sh.y, -sh.d)
+      m.rotation.x = sh.spin
+    }
+  })
+  return Array.from({ length: SHOT_POOL }, (_, i) => <mesh key={i} ref={(el) => (refs.current[i] = el)} material={bottleMat} geometry={bottleGeo} visible={false} />)
+}
 
 // The course is drawn for the stretch [from, to): the whole run for a normal
 // escape; for an endless run, the current two stretches only (it is rebuilt,
@@ -187,7 +228,7 @@ function Officers({ run, look }) {
       if (!it) continue
       g.position.set(it.lane * LANE_W, Y, -it.d)
       g.rotation.y = 0 // running towards you (+Z)
-      g.rotation.x = it.grabbed ? -0.5 : 0 // missed you and went sprawling
+      g.rotation.x = it.downed ? -1.45 : it.grabbed ? -0.5 : 0 // knocked flat by a bottle, or missed you and went sprawling
     }
   })
   return Array.from({ length: OFFICER_POOL }, (_, i) => (
@@ -239,14 +280,17 @@ export default function RunnerScene({ playerLook }) {
           sfx(ev.kind === 'car' ? 'crash' : ev.kind === 'officer' ? 'hurt' : 'bump')
           sfx('whistle') // and they're on you
         } else if (ev.type === 'power') sfx('special')
+        else if (ev.type === 'throw') sfx('whoosh')
+        else if (ev.type === 'down') sfx('punch')
+        else if (ev.type === 'ammo') sfx('click')
         else if (ev.type === 'saved' || ev.type === 'smash') sfx('block')
         else sfx(ev.type === 'note' ? 'coin' : 'jump')
       }
-      runnerInput.left = runnerInput.right = runnerInput.jump = runnerInput.slide = false
+      runnerInput.left = runnerInput.right = runnerInput.jump = runnerInput.slide = runnerInput.throw = false
       hudTimer.current -= dt
       if (hudTimer.current <= 0 || run.events.length) {
         hudTimer.current = 0.15
-        useRunner.setState({ hud: { distance: run.distance, goal: run.goal, hits: run.hits, maxHits: run.maxHits, notes: run.notes, pursuer: run.pursuer, endless: run.endless, close: run.closeT > 0, magnet: run.magnetT, star: run.invT, charms: run.charms } })
+        useRunner.setState({ hud: { distance: run.distance, goal: run.goal, hits: run.hits, maxHits: run.maxHits, notes: run.notes, pursuer: run.pursuer, endless: run.endless, close: run.closeT > 0, magnet: run.magnetT, star: run.invT, charms: run.charms, ammo: run.ammo } })
       }
       if (run.builtTo !== builtTo) setBuiltTo(run.builtTo)
       for (const ev of run.events) if (ev.type === 'hit') shake(0.35, 0.3)
@@ -282,6 +326,7 @@ export default function RunnerScene({ playerLook }) {
           <Course key={builtTo} run={run} from={Math.max(-24, builtTo - 480)} to={builtTo + 40} />
           <Notes key={`n${builtTo}`} run={run} from={Math.max(0, builtTo - 480)} to={builtTo + 40} />
           <Pickups key={`p${builtTo}`} run={run} from={Math.max(0, builtTo - 480)} to={builtTo + 40} />
+          <Bottles key={`b${builtTo}`} run={run} from={Math.max(0, builtTo - 480)} to={builtTo + 40} />
           <Cars key={`c${builtTo}`} run={run} from={Math.max(0, builtTo - 480)} to={builtTo + 40} />
         </>
       ) : (
@@ -289,12 +334,14 @@ export default function RunnerScene({ playerLook }) {
           <Course run={run} from={-24} to={run.goal + 60} />
           <Notes run={run} from={0} to={run.goal + 60} />
           <Pickups run={run} from={0} to={run.goal + 60} />
+          <Bottles run={run} from={0} to={run.goal + 60} />
           <Cars run={run} from={0} to={run.goal + 60} />
         </>
       )}
       <Suspense fallback={null}>
         <Character ref={player} look={playerLook} animation={anim} speed={anim === 'run' ? 1.2 : anim === 'roll' ? 1.6 : 1.4} />
         <Officers run={run} look={characters.bassey.look} />
+        <Shots run={run} />
         <group ref={chasers}>
           {chaser.vehicle && <Model name={chaser.vehicle} position={[2.6, 0, 5]} rotation-y={Math.PI} />}
           <Character look={chaserLook} animation="run" speed={1.2} position={[-1.3, 0, 0]} rotation-y={Math.PI} />

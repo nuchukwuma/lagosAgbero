@@ -38,6 +38,7 @@ const STORY_MODES = {
       'Swipe, or use the arrows: left/right change lane, up jumps cartons, down slides under banners.',
       'Danfos and Task Force men come at you: get out of their lane.',
       'Power-ups: the red magnet pulls in notes, the gold star makes you untouchable, the blue charm forgives a stumble.',
+      'Empty bottles lie on the road: pick them up (up to 3) and THROW one (T) down your lane to knock over a Task Force man running at you.',
     ],
   }),
   conductor: () => ({

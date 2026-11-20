@@ -55,6 +55,7 @@ export default function RunnerMode({ params, onFinish }) {
       else if (e.code === 'ArrowRight' || e.code === 'KeyD') runnerInput.right = true
       else if (e.code === 'ArrowUp' || e.code === 'KeyW' || e.code === 'Space') runnerInput.jump = true
       else if (e.code === 'ArrowDown' || e.code === 'KeyS') runnerInput.slide = true
+      else if (e.code === 'KeyT' || e.code === 'KeyF') runnerInput.throw = true
       else return
       e.preventDefault()
     }
@@ -85,7 +86,7 @@ export default function RunnerMode({ params, onFinish }) {
         {firstTime && (
           <>
             <p className="muted">{touch ? 'Swipe, or tap the arrows: left/right change lane, up jumps cartons, down slides under banners. Danfos and Task Force men coming at you: get out of their lane!' : '←/→ or A/D change lane · ↑/W/Space jump · ↓/S slide · dodge the danfos and officers coming at you'}</p>
-            <p className="muted">Grab power-ups on the way: the red magnet pulls in notes, the gold star makes you untouchable, the blue charm forgives a stumble.</p>
+            <p className="muted">Grab power-ups on the way: the red magnet pulls in notes, the gold star makes you untouchable, the blue charm forgives a stumble. Pick up empty bottles (up to 3) and THROW one down your lane to knock over a Task Force man running at you.</p>
           </>
         )}
         <PowerupOffer mode="runner" />
@@ -131,7 +132,7 @@ export default function RunnerMode({ params, onFinish }) {
       </div>
     )
 
-  const { distance, goal, hits, maxHits, notes, pursuer, endless, close, magnet = 0, star = 0, charms = 0 } = runner.hud
+  const { distance, goal, hits, maxHits, notes, pursuer, endless, close, magnet = 0, star = 0, charms = 0, ammo = 0 } = runner.hud
   return (
     <>
       <div
@@ -170,7 +171,7 @@ export default function RunnerMode({ params, onFinish }) {
           </div>
         )}
         <div className="fee-row">
-          <span>Stumbles {hits}/{maxHits} · ₦ notes {notes}</span>
+          <span>Stumbles {hits}/{maxHits} · ₦ notes {notes} · bottles {'🍾'.repeat(ammo) || '0'}</span>
           <span className={close || pursuer < 6 ? 'warn' : 'muted'}>{close ? 'On your back!' : `They're ${Math.max(0, Math.round(pursuer))} m behind`}</span>
         </div>
       </TaskPanel>
@@ -191,9 +192,12 @@ export default function RunnerMode({ params, onFinish }) {
           <button className="fight-btn" aria-label="Lane right" onPointerDown={() => (runnerInput.right = true)}>
             <Icon name="right" size={30} />
           </button>
+          <button className={`fight-btn throw ${ammo ? 'ready' : 'dim'}`} aria-label={`Throw a bottle (${ammo} left)`} disabled={!ammo} onPointerDown={() => (runnerInput.throw = true)}>
+            THROW {ammo}
+          </button>
         </div>
       ) : (
-        <div className="keyboard-hint">←/→ change lane · ↑ jump · ↓ slide</div>
+        <div className="keyboard-hint">←/→ change lane · ↑ jump · ↓ slide · T throw a bottle ({ammo})</div>
       )}
       {import.meta.env.DEV && (
         <button className="btn btn-small dev-end" onClick={() => runner.end('escaped')}>

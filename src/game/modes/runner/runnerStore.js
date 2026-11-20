@@ -26,7 +26,7 @@ function recordBest(metres) {
   return best
 }
 
-export const runnerInput = { left: false, right: false, jump: false, slide: false }
+export const runnerInput = { left: false, right: false, jump: false, slide: false, throw: false }
 
 export const useRunner = create((set, get) => ({
   active: false,
@@ -41,7 +41,7 @@ export const useRunner = create((set, get) => ({
   start: (params) => set({ active: true, started: false, params, ended: null, revives: 0, reviveReq: false, hud: { distance: 0, goal: params.goal ?? 320, hits: 0, maxHits: 3, notes: 0, pursuer: 18 } }),
   begin: () => set({ started: true }),
   reset: () => {
-    Object.assign(runnerInput, { left: false, right: false, jump: false, slide: false })
+    Object.assign(runnerInput, { left: false, right: false, jump: false, slide: false, throw: false })
     set({ active: false, started: false, ended: null })
   },
   end: (outcome) => !get().ended && set({ ended: outcome }),

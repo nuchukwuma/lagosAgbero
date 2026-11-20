@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react'
 
 // The status box of an activity (fee run, chase, runner, rally...). On a
-// phone it takes up a lot of the view, so a tap shrinks it to its first line
-// (and back), and it shrinks by itself a few seconds after the activity
-// starts. The choice is remembered for the next activity.
+// phone it takes up a lot of the view, so a tap shrinks it to a small pill
+// with its first line, docked at the top-left out of the way (tap again for
+// the whole box). It shrinks by itself a few seconds after the activity
+// starts, and the choice is remembered for the next activity.
 const KEY = 'naijavice.taskPanelMin'
 const small = () => typeof window !== 'undefined' && window.matchMedia?.('(pointer: coarse)').matches && Math.min(window.innerWidth, window.innerHeight) < 600
 

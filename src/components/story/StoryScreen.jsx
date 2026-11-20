@@ -18,6 +18,8 @@ import { usePause } from '../../game/store/pauseStore.js'
 import { useAd } from '../../game/services/adService.js'
 import ChoiceMenu from './ChoiceMenu.jsx'
 import { howToPlay } from '../../game/modes/howToPlay.js'
+import Tutorial, { useTutorial, useFirstTimeTutorial, showTutorial } from '../hud/Tutorial.jsx'
+import { tutorialFor } from '../../game/modes/tutorials.js'
 import NewsBroadcast from './NewsBroadcast.jsx'
 import CutsceneCards from './CutsceneCards.jsx'
 import ChapterEndCard from './ChapterEndCard.jsx'
@@ -37,18 +39,18 @@ const MAP_MODES = new Set(['feeCollection', 'chase']) // (fights are 2D: no map)
 
 // The story screen: the 3D street + HUD + whatever the engine says to show.
 // During a freeRoam beat the player walks; otherwise the story has the floor.
-function ActivityHost({ activity, onFinish }) {
+function ActivityHost({ activity, onFinish, retryN }) {
   const Mode = modeComponent(activity.mode)
   // 2D modes put their canvas into .story-screen; when the screen and the
   // activity start together (the games menu) it isn't in the page on the first
   // render, so the mode waits one commit for it
   const [mounted, setMounted] = useState(false)
   useLayoutEffect(() => setMounted(true), [])
-  return <div className="story-content">{mounted && <Mode key={activity.key} mode={activity.mode} params={activity.params} outcomes={[]} onFinish={onFinish} />}</div>
+  return <div className="story-content">{mounted && <Mode key={`${activity.key}-${retryN}`} mode={activity.mode} params={activity.params} outcomes={[]} onFinish={onFinish} />}</div>
 }
 
 export default function StoryScreen() {
-  const { game, view, toasts, error, advance, choose, save, load, quitToTitle, dismissToast, goTo, activity, startActivity, finishActivity, lastChoice, undoChoice, raiseMoney, roamFirst } = useGameStore()
+  const { game, view, toasts, error, advance, choose, save, load, quitToTitle, dismissToast, goTo, activity, startActivity, finishActivity, lastChoice, undoChoice, raiseMoney, roamFirst, retryN, retryGame } = useGameStore()
   const [overlay, setOverlay] = useState(null) // 'status' | 'menu' | 'shop:<vendor>' | null
   // phones: hold the screen the way the player chose (Settings → Screen)
   const orientation = useSettings((s) => s.orientation)
@@ -58,7 +60,8 @@ export default function StoryScreen() {
   const turnTo = useTurnHint()
   // a panel over the game, or the phone needs turning: everything holds still
   const adPlaying = useAd((s) => Boolean(s.playing)) // a sponsor message is showing
-  const paused = Boolean(overlay || turnTo || adPlaying)
+  const touring = useTutorial((s) => Boolean(s.mode)) // a game's guided tour is showing
+  const paused = Boolean(overlay || turnTo || adPlaying || touring)
   // the last objective you were given (activities and dialogue don't carry one)
   const [lastObjective, setLastObjective] = useState(null)
   useEffect(() => {
@@ -91,6 +94,7 @@ export default function StoryScreen() {
   // talking, and in the street modes that happen on this map (not the drive
   // or the escape run, which have their own roads)
   const modeName = activity ? activity.mode : view?.type === 'mode' ? view.mode : null
+  useFirstTimeTutorial(modeName)
   const showMini = Boolean(view?.world) && (modeName ? MAP_MODES.has(modeName) : ['freeRoam', 'dialogue', 'choice'].includes(view?.type))
   useEffect(() => {
     if (!canMap) return undefined
@@ -131,7 +135,7 @@ export default function StoryScreen() {
       content = <ChapterEndCard view={view} onNext={advance} onMap={() => setOverlay('map')} onRoam={roamFirst} />
       break
     case 'mode':
-      content = <ModeHost key={view.key} view={view} />
+      content = <ModeHost key={`${view.key}-${retryN}`} view={view} />
       break
     case 'freeRoam':
       content = null
@@ -174,7 +178,7 @@ export default function StoryScreen() {
         />
       )}
       {view.type === 'freeRoam' && view.detour && !overlay && !activity && <DetourBar view={view} />}
-      {activity && <ActivityHost activity={activity} onFinish={finishActivity} />}
+      {activity && <ActivityHost activity={activity} onFinish={finishActivity} retryN={retryN} />}
       {view.type === 'freeRoam' && !overlay && <Confrontation />}
       <EnergyTicker active={(view.type === 'freeRoam' || streetMode) && !overlay} />
       <FavourButton view={view} activity={activity} overlay={overlay} />
@@ -193,6 +197,7 @@ export default function StoryScreen() {
       {overlay === 'map' && <StoryMap game={game} onClose={() => setOverlay(null)} />}
       {overlay === 'worldMap' && view.world && <MapScreen layout={getLayout(view.world)} goal={view.type === 'freeRoam' ? view.goal : null} onClose={() => setOverlay(null)} />}
       {overlay?.startsWith('shop:') && <ShopPanel vendor={overlay.slice(5)} onClose={() => setOverlay(null)} />}
+      <Tutorial />
       {overlay === 'menu' && (
         <GameMenu
           onClose={() => setOverlay(null)}
@@ -208,6 +213,14 @@ export default function StoryScreen() {
           chapter={view.chapterTitle}
           activity={activity?.label || null}
           howTo={modeName ? howToPlay(modeName, (activity ? activity.params : view.params) || {}) : null}
+          onTutorial={modeName && tutorialFor(modeName) ? () => {
+            setOverlay(null)
+            showTutorial(modeName)
+          } : null}
+          onRetry={modeName ? () => {
+            setOverlay(null)
+            retryGame()
+          } : null}
         />
       )}
     </div>

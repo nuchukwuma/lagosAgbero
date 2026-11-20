@@ -211,6 +211,39 @@ describe('arcade mini-games', () => {
     }
   })
 
+  it('sneak: torch beams stop at walls, hedges hide you, the ? fills before you are caught, the gate moves you on', () => {
+    const s = sneak.create({}, 1)
+    const lv = s.lv
+    // a guard in the open sees ahead, not through a wall
+    const g = { x: 1.5, y: 3.5, fx: 1, fy: 0 }
+    expect(sneak.inBeam(lv, g, 3.5, 3.5)).toBe(true)
+    expect(sneak.inBeam(lv, g, 1.5, 1.5)).toBe(false) // behind the wall above, and off to the side
+    expect(sneak.inBeam(lv, g, 1.5 + sneak.RANGE + 0.5, 3.5)).toBe(false) // too far
+    // standing in a beam: caught only after the ? has filled
+    s.guards = [{ path: [[1, 3], [2, 3], [3, 3], [4, 3]], kind: 'security', u: 0, dir: 1, wait: 0, x: 1.5, y: 3.5, fx: 1, fy: 0 }]
+    s.pos = [3.5, 3.5]
+    sneak.step(s, 0.1)
+    expect(s.lives).toBe(3)
+    expect(s.spot).toBeGreaterThan(0)
+    for (let i = 0; i < 10; i++) sneak.step(s, 0.1)
+    expect(s.lives).toBe(2)
+    // in a hedge, nobody sees you
+    const h = sneak.create({}, 1)
+    h.guards = [{ path: [[1, 3], [2, 3]], kind: 'security', u: 0, dir: 1, wait: 99, x: 3.5, y: 3.5, fx: 1, fy: 0 }]
+    h.pos = [5.5, 3.5] // the B at (5, 3)
+    h.guards[0].wait = 0
+    h.guards[0].path = [[3, 3], [4, 3]]
+    for (let i = 0; i < 4; i++) sneak.step(h, 0.1)
+    expect(h.lives).toBe(3)
+    // the stick walks you; reaching the gate is the next level
+    const w = sneak.create({}, 1)
+    w.guards = []
+    w.pos = [9.5, 5.5]
+    w.stick = { x: 1, y: 0 }
+    for (let i = 0; i < 30 && w.level === 0; i++) sneak.step(w, 0.1)
+    expect(w.level).toBe(1)
+  })
+
   it('akara: flip at golden, lift at golden, and orders fill', () => {
     const s = akara.create({}, 2)
     const need = s.orders[0].n
@@ -225,15 +258,34 @@ describe('arcade mini-games', () => {
     expect(s.perfect).toBe(need)
   })
 
-  it('palm climb: the clear side climbs, a hazard side stings', () => {
-    const s = palm.create({}, 3)
-    s.trunk[1] = { side: 'L', kind: 'ants' }
-    palm.climb(s, 'R')
-    expect(s.at).toBe(1)
-    s.trunk[2] = { side: 'R', kind: 'wasps' }
-    s.slip = 0
-    palm.climb(s, 'R')
-    expect(s.stings).toBe(1)
+  it('palm climb: a platformer up the fronds; every level can be reached; hazards sting; falling slips back', () => {
+    const pm = palm.buildPalm({ height: 32, seed: 4 })
+    // each level's frond is within a jump (and a double jump) of the one below
+    expect(palm.JUMP_V ** 2 / (2 * palm.G) + palm.DOUBLE_V ** 2 / (2 * palm.G)).toBeGreaterThan(palm.GAP * 1.6)
+    const levels = new Set(pm.fronds.map((f) => Math.round(-f.y / palm.GAP)))
+    for (let i = 0; i <= 32; i++) expect(levels.has(i)).toBe(true)
+    expect(pm.fronds.some((f) => f.top)).toBe(true)
+    // a jump goes up; landing on the frond above counts as climbing
+    const s = palm.create({ height: 8 }, 3)
+    s.fruitNext = 99
+    s.gustNext = 99
+    const above = s.palm.fronds.find((f) => Math.round(-f.y / palm.GAP) === 1)
+    s.p.x = above.x + above.w / 2
+    palm.press(s, 'jump')
+    for (let i = 0; i < 90; i++) palm.step(s, 1 / 60)
+    expect(s.best).toBeGreaterThanOrEqual(1)
+    // an ant on your frond stings
+    s.palm.ants = [{ frond: s.palm.fronds.indexOf(above), t: 0, speed: 0 }]
+    s.p.invul = 0
+    for (let i = 0; i < 30; i++) palm.step(s, 1 / 60)
+    expect(s.stings).toBeGreaterThanOrEqual(1)
+    // falling out of the view sends you back to the last wide frond
+    const before = s.stings
+    s.p.invul = 0
+    s.camY = -2000
+    palm.step(s, 1 / 60)
+    expect(s.stings).toBe(before + 1)
+    expect(s.p.y).toBe(s.checkpoint.y)
   })
 
   it('a perfect player wins the sorting games', () => {

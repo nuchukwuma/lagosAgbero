@@ -10,6 +10,9 @@
 // Right after a hit they're at your back for a few seconds (closeT), where
 // you can see them.
 // Reach `goal` metres = escaped.
+// Power-ups lie on the road (magnet, star, charm), and so do empty bottles:
+// pick bottles up (up to 3) and THROW one down your lane to knock over a
+// Task Force man running at you.
 //
 // Jumps are real arcs (launch speed + gravity): jump too late and the carton
 // still gets you. Slide in the air to drop straight down.
@@ -89,10 +92,17 @@ export const PICKUPS = {
   charm: { name: 'Free stumble', time: 0 }, // the next stumble doesn't count
 }
 const PICKUP_KINDS = Object.keys(PICKUPS)
-export function addPickups(items, seed, chance = 0.08) {
+export const MAX_AMMO = 3
+export const SHOT_SPEED = 24 // m/s down your lane
+export function addPickups(items, seed, chance = 0.2) {
   let s = (seed * 13 + 4271) % 233280
   const rnd = () => ((s = (s * 9301 + 49297) % 233280) / 233280)
-  for (const it of items) if (it.kind === 'note' && it.d > 40 && rnd() < chance) it.kind = PICKUP_KINDS[Math.floor(rnd() * PICKUP_KINDS.length)]
+  for (const it of items) {
+    if (it.kind !== 'note' || it.d <= 40) continue
+    const roll = rnd()
+    if (roll < chance) it.kind = PICKUP_KINDS[Math.floor(rnd() * PICKUP_KINDS.length)]
+    else if (roll < chance + 0.2) it.kind = 'bottle' // something to throw
+  }
   return items
 }
 
@@ -125,6 +135,9 @@ export function createRun({ goal = 540, seed = 1, difficulty = 1, energy = 70, e
     magnetT: 0, // power-ups picked up on the way
     invT: 0,
     charms: 0,
+    ammo: 1, // bottles to throw (you start with one)
+    shots: [], // bottles in the air
+    downed: 0, // officers knocked over
     closeT: 0, // > 0: the pursuers are right at your back (just after a hit)
     items: withTraffic(makeCourse(endless ? SEGMENT : goal, seed, density), seed, density, traffic),
     over: null,
@@ -147,7 +160,7 @@ function hit(r, kind) {
   r.events.push({ type: 'hit', kind })
 }
 
-/** input: { left, right, jump, slide } (pressed this frame) */
+/** input: { left, right, jump, slide, throw } (pressed this frame) */
 export function stepRun(r, input, dt) {
   if (r.over) return r
   r.events = []
@@ -157,6 +170,11 @@ export function stepRun(r, input, dt) {
   if (input.jump && grounded && r.slideT <= 0) {
     r.vy = JUMP_SPEED
     r.events.push({ type: 'jump' })
+  }
+  if (input.throw && r.ammo > 0) {
+    r.ammo--
+    r.shots.push({ d: r.distance + 1, lane: Math.round(r.laneX), y: 1.2, spin: 0 })
+    r.events.push({ type: 'throw' })
   }
   if (input.slide && !grounded) r.vy = Math.min(r.vy, -12) // drop out of the air
   else if (input.slide && r.slideT <= 0) r.slideT = SLIDE_TIME
@@ -190,12 +208,30 @@ export function stepRun(r, input, dt) {
   // pursuers run at a steady pace; stumbling lets them close in
   r.pursuer = Math.max(0, r.pursuer + (speed - (r.speed * 0.92)) * dt)
 
+  // bottles fly down their lane: an officer coming that way goes down
+  for (const sh of r.shots) {
+    sh.d += SHOT_SPEED * dt
+    sh.spin += dt * 16
+    for (const it of r.items) {
+      if (it.kind !== 'officer' || it.done || !it.active || it.lane !== sh.lane) continue
+      if (Math.abs(it.d - sh.d) < 1.2) {
+        it.done = true
+        it.downed = true
+        sh.hit = true
+        r.downed++
+        r.notes += 2 // the crowd likes it
+        r.events.push({ type: 'down', lane: it.lane })
+        break
+      }
+    }
+  }
+  r.shots = r.shots.filter((sh) => !sh.hit && sh.d < r.distance + 45)
   // oncoming cars and officers: set off in time, come down their lane, knock
   // you over (or grab you) if you're in it
   for (const it of r.items) {
     if (!MOVERS.has(it.kind)) continue
     if (it.done) {
-      if (it.grabbed) it.d -= Math.max(0, (it.v -= 12 * dt)) * dt // stumbles to a stop behind you
+      if (it.grabbed || it.downed) it.d -= Math.max(0, (it.v -= 12 * dt)) * dt // stumbles to a stop (or skids, knocked over)
       // knocked you over: it brakes and swerves off to the roadside
       if (it.swerve) {
         it.d -= it.v * dt
@@ -235,6 +271,13 @@ export function stepRun(r, input, dt) {
       r.events.push({ type: 'note' })
       continue
     }
+    if (it.kind === 'bottle') {
+      if (r.ammo < MAX_AMMO) {
+        r.ammo++
+        r.events.push({ type: 'ammo' })
+      } else it.done = false // hands full: leave it
+      continue
+    }
     if (PICKUPS[it.kind]) {
       if (it.kind === 'magnet') r.magnetT = PICKUPS.magnet.time
       else if (it.kind === 'star') r.invT = PICKUPS.star.time
@@ -264,5 +307,5 @@ export function reviveRun(r) {
   r.closeT = 0
   r.pursuer = Math.max(r.pursuer, 16)
   r.invT = 2.5
-  for (const it of r.items) if (!it.done && it.kind !== 'note' && !PICKUPS[it.kind] && it.d > r.distance - 2 && it.d < r.distance + 30) it.done = true
+  for (const it of r.items) if (!it.done && it.kind !== 'note' && it.kind !== 'bottle' && !PICKUPS[it.kind] && it.d > r.distance - 2 && it.d < r.distance + 30) it.done = true
 }

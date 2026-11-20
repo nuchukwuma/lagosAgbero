@@ -114,7 +114,7 @@ export default function ChaseDirector() {
     const kind = chase.params.kind || driver?.kind || 'danfo'
     const open = kind === 'keke' || kind === 'okada' // you can see who is riding
     const v = spawnVehicle({ kind, lane: 'west', slogan: kind === 'danfo' ? driver?.slogan || "GOD'S TIME IS THE BEST" : null, riderLook: open ? randomLook(77, 'male') : null, color: kind === 'keke' ? '#e8c21c' : null, tag: { chaseTarget: true }, force: true })
-    v.x = startX - 9
+    v.x = startX - 6 // a short head start: he's only just pulling away
     v.speed = 3
     vehicleRef.current = v
     useChase.setState({ targetName: chase.params.name || driver?.name || 'the driver', targetKind: kind })
@@ -143,7 +143,8 @@ export default function ChaseDirector() {
     const diff = s.params.difficulty ?? 1
     if (elapsed.current > profile.current.until) {
       const r = Math.random()
-      const speed = r < 0.25 ? 0.6 : r < 0.7 ? 3 + diff * 0.5 : 5.5 + diff
+      // mostly crawling and stop-start (it's a go-slow), now and then a burst
+      const speed = r < 0.35 ? 0.6 : r < 0.78 ? 3 + diff * 0.4 : 5 + diff * 0.8
       profile.current = { until: elapsed.current + 1 + Math.random() * 1.5, speed }
     }
     v.maxSpeed = profile.current.speed
@@ -168,7 +169,7 @@ export default function ChaseDirector() {
     else if (stamina > s.maxStamina * 0.25) playerState.canRun = true
 
     const d = sideDistance(p, v)
-    const timeLeft = Math.max(0, (s.params.timeLimit ?? 45) - elapsed.current)
+    const timeLeft = Math.max(0, (s.params.timeLimit ?? 60) - elapsed.current)
     useChase.setState({ stamina, staminaUsed: used, distance: d, canGrab: d < GRAB_DISTANCE, timeLeft })
 
     if (v.x < escapeX) s.end('lost', 'escaped')

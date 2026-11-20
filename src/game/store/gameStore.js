@@ -96,6 +96,11 @@ export const useGameStore = create((set, get) => {
       set({ activity: { id: `games-${mode}`, label: label || mode.toUpperCase(), mode, params, minutes: 0, fromGames: true, key: `games-${mode}-${Date.now()}` } })
     },
 
+    // Pause → Retry: the game you're in starts again from the beginning (its
+    // host remounts with a new key)
+    retryN: 0,
+    retryGame: () => set((s) => ({ retryN: s.retryN + 1 })),
+
     // Jump straight into any chapter (used by the dev chapter picker).
     startChapter: (chapterId) => dispatch((g) => engine.startChapter(storyCtx, g, chapterId)),
 

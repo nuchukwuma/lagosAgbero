@@ -3,10 +3,15 @@ import { useGameStore } from '../game/store/gameStore.js'
 import { ARCADE_GAMES, ARCADE_BY_STORY } from '../game/modes/arcade/index.js'
 import campaigns from '../game/data/campaigns.json'
 
-// Developer: play any game without the story. Every mini-game and every story
-// mode, at any point of the story (the slider sets how far in you'd be, so
-// you can feel the difficulty rise). Each one runs in the sandbox street and
-// comes back here when it's done.
+// Games: play any game without the story. Every mini-game and every story
+// mode, at Easy, Normal or Hard (developers get a slider for the exact point
+// in the story). Each one runs in the sandbox street and comes back here when
+// it's done; practice still makes each game harder (and better paid).
+const LEVELS = [
+  ['Easy', 0.1],
+  ['Normal', 0.45],
+  ['Hard', 0.85],
+]
 
 const CORE = [
   { mode: 'dance', label: 'Dance battle (rhythm)', params: { name: 'Sweet Mother', prize: 5000 } },
@@ -31,17 +36,28 @@ const titleOf = (g) => (typeof g.title === 'function' ? g.title({}) : g.title)
 
 export default function GamesScreen({ onBack }) {
   const playGame = useGameStore((s) => s.playGame)
-  const [level, setLevel] = useState(0.3)
+  const [level, setLevel] = useState(0.1)
+  const dev = devToolsOn()
   const stories = (campaigns.campaigns || campaigns).map((c) => ({ id: c.id, title: c.title }))
   const byId = Object.fromEntries(ARCADE_GAMES.map((g) => [g.id, g]))
   const play = (mode, label, params = {}) => playGame({ mode, label, params: { ...params, level } })
   return (
     <div className="screen games-screen">
-      <h2>All games</h2>
-      <p className="muted">Play anything without the story. The slider is how far into the story you are: games get harder as it goes.</p>
-      <label className="games-level">
-        Story point <input type="range" min="0" max="1" step="0.05" value={level} onChange={(e) => setLevel(Number(e.target.value))} /> <strong>{Math.round(level * 100)}%</strong>
-      </label>
+      <h2>Games</h2>
+      <p className="muted">Play any game on its own, no story needed. Every game gets a little harder (and pays a little more) the more you play it.</p>
+      <div className="games-level" role="radiogroup" aria-label="Difficulty">
+        <span>Difficulty</span>
+        {LEVELS.map(([name, v]) => (
+          <button key={name} className={`chip ${Math.abs(level - v) < 0.01 ? 'on' : ''}`} onClick={() => setLevel(v)} aria-pressed={Math.abs(level - v) < 0.01}>
+            {name}
+          </button>
+        ))}
+      </div>
+      {dev && (
+        <label className="games-level">
+          Story point (dev) <input type="range" min="0" max="1" step="0.05" value={level} onChange={(e) => setLevel(Number(e.target.value))} /> <strong>{Math.round(level * 100)}%</strong>
+        </label>
+      )}
       <div className="games-groups">
         {stories.map((s) => (
           <section key={s.id} className="games-group">

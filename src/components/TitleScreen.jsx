@@ -79,11 +79,9 @@ export default function TitleScreen({ onNavigate, onContinue }) {
         <button className="btn" onClick={() => onNavigate('about')}>
           About
         </button>
-        {devToolsOn() && (
-          <button className="btn" onClick={() => onNavigate('games')}>
-            All games (dev)
-          </button>
-        )}
+        <button className="btn" onClick={() => onNavigate('games')}>
+          Games
+        </button>
         {import.meta.env.DEV && (
           <button className="btn btn-small" onClick={() => onNavigate('assets')}>
             Asset Check (dev)

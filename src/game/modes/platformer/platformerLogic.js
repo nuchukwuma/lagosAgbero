@@ -9,7 +9,10 @@
 // running too, and they sprint at you faster than you can run: get up where
 // they can't climb, roll past the baton, or fight. Three strikes (or one stomp)
 // put an officer down; strike one who hasn't seen you and he goes down at once
-// (a sneak takedown). Every officer down pays a bounty. Lose all your health, or fall in a drain, and you start again
+// (a sneak takedown). Every officer down pays a bounty.
+// Along the way: power-ups (a heart heals, a star makes you untouchable and
+// bowls officers over, a magnet pulls in notes) and empty bottles: carry up
+// to three and THROW them (a bottle stuns an officer and hurts him twice). Lose all your health, or fall in a drain, and you start again
 // from the last bus stop; lose every life and you're caught.
 //
 // World units are the sprite's pixels (the runner is about 68 tall), y grows
@@ -35,6 +38,10 @@ export const CREEP = 70 // moving slower than this (or standing still) is sneaki
 export const HEAR = 320 // a whistle brings the officers this close
 // what an officer down is worth (naira), before the run's reward multiplier
 export const BOUNTY = { fight: 250, stomp: 300, sneak: 400 }
+export const MAX_AMMO = 3
+export const STAR_TIME = 6
+export const MAGNET_TIME = 9
+const POWERS = ['heart', 'star', 'magnet']
 // vehicle sizes (crop sizes from the atlas, before scaling): width, height
 export const VEHICLES = {
   danfo: [46, 25], corolla: [49, 20], datsun: [49, 20], blueCar: [47, 27], jeep: [50, 27],
@@ -161,6 +168,15 @@ export function buildLevel({ metres = 700, seed = 1, difficulty = 1 } = {}) {
   x = Math.max(x, L - 200)
   lv.ground.push({ x0: groundFrom, x1: L + 600 })
   lv.goal = L
+  // some notes are swapped for things to pick up: bottles to throw, and now and then a power-up
+  lv.pickups = []
+  lv.notes = lv.notes.filter((n, i) => {
+    if (n.x < 150) return true
+    if (i % 7 === 3) lv.pickups.push({ x: n.x, y: n.y, kind: 'bottle', got: false })
+    else if (i % 19 === 9) lv.pickups.push({ x: n.x, y: n.y, kind: POWERS[Math.floor(i / 19) % POWERS.length], got: false })
+    else return true
+    return false
+  })
   return lv
 }
 
@@ -177,6 +193,10 @@ export function createEscape(params = {}, seed = 1) {
     bounty: 0,
     sneaks: 0,
     pops: [],
+    ammo: 1, // bottles to throw
+    shots: [],
+    starT: 0,
+    magnetT: 0,
     checkpoint: 0,
     held: { left: false, right: false },
     notes: 0,
@@ -237,6 +257,14 @@ export function press(s, id, down = true) {
       p.roll = ROLL_TIME
       s.sound.push('slide')
     }
+  } else if (id === 'throw') {
+    if (s.ammo > 0 && p.roll <= 0) {
+      s.ammo--
+      s.shots.push({ x: p.x + p.dir * 12, y: p.y - 42, vx: p.dir * 380 + p.vx * 0.3, vy: -120, spin: 0 })
+      p.attack = 0.2 // the throwing arm
+      p.struck = true // (not a punch)
+      s.sound.push('whoosh')
+    }
   } else if (id === 'hit') {
     if (p.attack <= 0 && p.roll <= 0) {
       p.attack = 0.36
@@ -248,7 +276,7 @@ export function press(s, id, down = true) {
 
 function hurt(s, dmg, from) {
   const p = s.p
-  if (p.invul > 0 || p.dead > 0) return
+  if (p.invul > 0 || p.dead > 0 || s.starT > 0) return
   p.hp -= dmg
   p.hit = 0.35
   p.invul = 1.1
@@ -373,6 +401,58 @@ export function stepEscape(s, dt) {
       s.notes++
       s.sound.push('coin')
     }
+  // the magnet: notes nearby fly to you
+  s.magnetT = Math.max(0, s.magnetT - dt)
+  s.starT = Math.max(0, s.starT - dt)
+  if (s.magnetT > 0)
+    for (const n of lv.notes)
+      if (!n.got && Math.abs(n.x - p.x) < 140 && Math.abs(n.y - (p.y - 30)) < 160) {
+        n.x += (p.x - n.x) * Math.min(1, dt * 6)
+        n.y += (p.y - 30 - n.y) * Math.min(1, dt * 6)
+      }
+  // power-ups and bottles
+  for (const u of lv.pickups || []) {
+    if (u.got || Math.abs(u.x - p.x) > 16 || u.y < p.y - runnerH(p) - 10 || u.y > p.y + 6) continue
+    if (u.kind === 'bottle') {
+      if (s.ammo >= MAX_AMMO) continue // hands full
+      s.ammo++
+      s.sound.push('click')
+    } else if (u.kind === 'heart') {
+      p.hp = Math.min(s.maxHp, p.hp + 2)
+      s.msg = 'Puff-puff from a kind mama: +2 health'
+      s.sound.push('special')
+    } else if (u.kind === 'star') {
+      s.starT = STAR_TIME
+      s.msg = 'UNTOUCHABLE! Run through them!'
+      s.sound.push('special')
+    } else {
+      s.magnetT = MAGNET_TIME
+      s.msg = 'Money magnet: the notes come to you'
+      s.sound.push('special')
+    }
+    if (u.kind !== 'bottle') s.msgT = 1.6
+    u.got = true
+  }
+  // bottles in the air: they arc, break on the road, and stun an officer they hit
+  for (const sh of s.shots) {
+    sh.vy += G * 0.5 * dt
+    sh.x += sh.vx * dt
+    sh.y += sh.vy * dt
+    sh.spin += dt * 18
+    if (sh.y > 0) sh.gone = true
+    for (const o of lv.officers) {
+      if (sh.gone || o.state === 'down' || Math.abs(o.x - sh.x) > 14 || sh.y < o.y - STAND_H - 4 || sh.y > o.y) continue
+      sh.gone = true
+      o.hp -= 2
+      o.stun = 1
+      o.windup = 0
+      s.sound.push('punch')
+      s.pops.push({ x: o.x, y: o.y - STAND_H - 10, text: 'BOTTLE!', t: 0 })
+      if (o.hp <= 0) knockDown(s, o, 'fight')
+      else if (o.state === 'patrol') raiseAlarm(s, o)
+    }
+  }
+  s.shots = s.shots.filter((sh) => !sh.gone && Math.abs(sh.x - p.x) < 700)
   for (const q of s.pops) q.t += dt
   s.pops = s.pops.filter((q) => q.t < 1.2)
   // bus stops
@@ -490,6 +570,11 @@ function stepOfficers(s, dt) {
       p.vy = -460
       p.jumps = 1
       s.sound.push('kick')
+    }
+    // untouchable: running into them bowls them over
+    if (s.starT > 0 && o.state !== 'down' && Math.abs(o.x - p.x) < 16 && Math.abs(o.y - p.y) < 30) {
+      knockDown(s, o, 'stomp')
+      continue
     }
     // walking into an officer who's chasing knocks you about
     if (o.state === 'chase' && o.alertT <= 0 && Math.abs(o.x - p.x) < 14 && Math.abs(o.y - p.y) < 30 && p.roll <= 0) hurt(s, 1, o.x)

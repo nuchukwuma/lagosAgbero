@@ -23,7 +23,7 @@ export const ARCADE_BOOSTS = {
   ayo: [{ id: 'ayo_tired', name: 'Palm Wine for Him', text: 'He plays a lot worse', icon: 'star', apply: (p) => ({ skill: Math.max(0.15, (p.skill ?? 0.6) - 0.3) }) }],
   palmClimb: [
     { id: 'pc_gloves', name: 'Thick Gloves', text: 'Five stings before you slip', icon: 'shield', apply: () => ({ stingMax: 5 }) },
-    { id: 'pc_time', name: 'Early Start', text: '20 more seconds', icon: 'up', apply: (p) => ({ seconds: (p.seconds ?? 45) + 20 }) },
+    { id: 'pc_time', name: 'Early Start', text: '20 more seconds', icon: 'up', apply: (p) => ({ seconds: (p.seconds ?? 60) + 20 }) },
   ],
   fakeParts: [
     { id: 'fp_slow', name: 'Slow Customers', text: '50% longer per box', icon: 'people', apply: (p) => ({ timeMul: (p.timeMul ?? 1) * 1.5 }) },

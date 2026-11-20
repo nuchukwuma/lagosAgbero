@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { createEscape, stepEscape, press, buildLevel, surfaceUnder, canSee, metresLeft, PX_PER_M, RUN, G, JUMP_V, DOUBLE_V, OFFICER_RUN, BOUNTY, SIGHT } from './platformerLogic.js'
+import { createEscape, stepEscape, press, buildLevel, surfaceUnder, canSee, metresLeft, PX_PER_M, RUN, G, JUMP_V, DOUBLE_V, OFFICER_RUN, BOUNTY, SIGHT, MAX_AMMO } from './platformerLogic.js'
 import { earned } from './escape.js'
 import dummy from './dummy.json'
 import vehicles from './vehicles.json'
@@ -176,5 +176,44 @@ describe('escape platformer', () => {
     s.stick = 1
     run(s, 1)
     expect(s.p.vx).toBeGreaterThan(RUN * 0.9)
+  })
+
+  it('the street has bottles and power-ups to pick up', () => {
+    const lv = buildLevel({ metres: 700, seed: 3 })
+    const kinds = lv.pickups.map((u) => u.kind)
+    expect(kinds.filter((k) => k === 'bottle').length).toBeGreaterThan(3)
+    expect(kinds.some((k) => k !== 'bottle')).toBe(true)
+  })
+
+  it('a thrown bottle stuns an officer and hurts him; ammo is limited', () => {
+    const s = createEscape({}, 11)
+    s.level.officers = [cop(160, -1)]
+    s.p.x = 60
+    s.p.invul = 99
+    press(s, 'throw')
+    expect(s.ammo).toBe(0)
+    press(s, 'throw') // nothing left
+    expect(s.shots).toHaveLength(1)
+    run(s, 0.6)
+    const o = s.level.officers[0]
+    expect(o.hp).toBe(1)
+    s.ammo = MAX_AMMO
+    s.level.pickups = [{ x: s.p.x, y: s.p.y - 10, kind: 'bottle', got: false }]
+    run(s, 0.05)
+    expect(s.ammo).toBe(MAX_AMMO) // hands full: it stays on the road
+    expect(s.level.pickups[0].got).toBe(false)
+  })
+
+  it('the star makes you untouchable and bowls officers over', () => {
+    const s = createEscape({}, 12)
+    s.level.officers = [cop(80, -1, { state: 'chase' })]
+    s.p.x = 40
+    s.p.invul = 0
+    s.level.pickups = [{ x: 40, y: -10, kind: 'star', got: false }]
+    s.held.right = true
+    run(s, 0.8)
+    expect(s.starT).toBeGreaterThan(0)
+    expect(s.p.hp).toBe(s.maxHp)
+    expect(s.level.officers[0].state).toBe('down')
   })
 })

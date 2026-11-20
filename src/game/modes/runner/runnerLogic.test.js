@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { createRun, stepRun, makeCourse, makeTraffic, LANES, CLOSE_TIME, reviveRun, addPickups } from './runnerLogic.js'
+import { createRun, stepRun, makeCourse, makeTraffic, LANES, CLOSE_TIME, reviveRun, addPickups, MAX_AMMO } from './runnerLogic.js'
 
 describe('runner', () => {
   it('every row of obstacles leaves a lane free', () => {
@@ -172,5 +172,28 @@ describe('runner power-ups and revive', () => {
     expect(a.some((it) => it.kind === 'magnet' || it.kind === 'star' || it.kind === 'charm')).toBe(true)
     const blocks = (items) => items.filter((it) => ['block', 'low', 'high'].includes(it.kind)).map((it) => `${it.d}:${it.lane}`)
     expect(blocks(a)).toEqual(blocks(addPickups(makeCourse(2000, 5, a.density || 1.05), 5, 0)))
+  })
+
+  it('a thrown bottle knocks over an officer running down your lane; bottles on the road are ammo', () => {
+    const r = createRun({ goal: 400, seed: 3, traffic: false })
+    r.items = [{ d: 60, meet: 60, lane: 0, kind: 'officer', v: 3, active: true }]
+    expect(r.ammo).toBe(1)
+    stepRun(r, { throw: true }, 1 / 60)
+    expect(r.ammo).toBe(0)
+    for (let i = 0; i < 180 && !r.downed; i++) stepRun(r, {}, 1 / 60)
+    expect(r.downed).toBe(1)
+    expect(r.items[0].downed).toBe(true)
+    expect(r.hits).toBe(0)
+    const s = createRun({ goal: 400, seed: 3, traffic: false })
+    s.items = [5, 7, 9, 11].map((d) => ({ d, lane: 0, kind: 'bottle' }))
+    for (let i = 0; i < 120; i++) stepRun(s, {}, 1 / 60)
+    expect(s.ammo).toBe(MAX_AMMO)
+  })
+
+  it('power-ups and bottles are common enough to find on a run', () => {
+    const r = createRun({ goal: 800, seed: 9 })
+    const kinds = r.items.map((i) => i.kind)
+    expect(kinds.filter((k) => ['magnet', 'star', 'charm'].includes(k)).length).toBeGreaterThan(3)
+    expect(kinds.filter((k) => k === 'bottle').length).toBeGreaterThan(2)
   })
 })

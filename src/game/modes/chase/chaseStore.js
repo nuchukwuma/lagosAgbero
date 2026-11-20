@@ -7,7 +7,7 @@
 //   difficulty  1 (gentle) .. 3 (hard): how fast the vehicle weaves through go-slow
 //   kind        vehicle kind (default "danfo")
 //   escapeX     the vehicle gets away once it passes this x (default -52, past the motor park)
-//   timeLimit   seconds (default 45)
+//   timeLimit   seconds (default 60)
 
 import { create } from 'zustand'
 import { has } from '../../systems/powerups.js'
@@ -29,7 +29,7 @@ export const useChase = create((set, get) => ({
   start(params, stats) {
     const energy = stats?.energy ?? 70
     const max = Math.round(40 + energy * 0.6)
-    set({ active: true, started: false, params, stamina: max, maxStamina: max, staminaUsed: 0, distance: null, canGrab: false, timeLeft: params.timeLimit ?? 45, ended: null, reason: '', bumps: 0 })
+    set({ active: true, started: false, params, stamina: max, maxStamina: max, staminaUsed: 0, distance: null, canGrab: false, timeLeft: params.timeLimit ?? 60, ended: null, reason: '', bumps: 0 })
   },
   begin: () => {
     // power-ups: more stamina (Second Wind); faster legs are in ChaseDirector (Light Feet)

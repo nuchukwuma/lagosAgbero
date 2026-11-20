@@ -3080,10 +3080,19 @@ svg .is-chase { fill: #e53935; stroke: #fff; stroke-width: 0.6; animation: map-p
 }
 .task-panel.is-min {
   width: auto !important;
-  max-width: min(70vw, 380px);
-  padding-top: 4px !important;
-  padding-bottom: 4px !important;
-  opacity: 0.92;
+  max-width: min(46vw, 260px);
+  padding-top: 3px !important;
+  padding-bottom: 3px !important;
+  opacity: 0.9;
+  font-size: 12px;
+  /* shrunk: out of the middle of the view, docked at the top-left under your money */
+  left: max(8px, env(safe-area-inset-left)) !important;
+  transform: none !important;
+}
+.task-panel.is-min .fee-row > * {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .task-panel.is-min .fee-row {
   gap: 12px;
@@ -3950,3 +3959,19 @@ svg .is-chase { fill: #e53935; stroke: #fff; stroke-width: 0.6; animation: map-p
 .arcade-mul { color: #8ff0a4; letter-spacing: 0; }
 /* the THROW button appears beside the others while you stand by something */
 .fight-btn.throw { font: 900 13px/1 system-ui, sans-serif; color: #1a1408; background: #f2c230; border-color: #fff3b0; letter-spacing: 0.5px; }
+.pause-actions { display: flex; gap: 8px; }
+.pause-actions .btn { flex: 1; }
+/* the guided tour of a game (hud/Tutorial.jsx) */
+.tutorial { position: fixed; inset: 0; z-index: 60; }
+.tutorial-block { position: absolute; inset: 0; }
+.tutorial-dim { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.6); pointer-events: none; }
+.tutorial-spot { position: fixed; border-radius: 12px; box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.62), 0 0 0 3px #ffd23a inset; pointer-events: none; transition: all 0.25s ease; animation: tut-pulse 1.2s ease-in-out infinite; }
+@keyframes tut-pulse { 50% { box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.62), 0 0 0 5px #ffd23a inset; } }
+.tutorial-bubble { position: fixed; left: 50%; transform: translateX(-50%); width: min(440px, calc(100% - 24px)); background: #fff8e6; color: #1a1408; border: 3px solid #ffd23a; border-radius: 14px; padding: 12px 14px; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5); }
+.tutorial-bubble p { margin: 0 0 10px; font-size: 16px; line-height: 1.4; }
+.tutorial-row { display: flex; align-items: center; gap: 8px; justify-content: flex-end; }
+.tutorial-row small { margin-right: auto; opacity: 0.7; }
+.tutorial-row .btn { color: inherit; }
+.tutorial-row .btn-primary { color: #1a1408; }
+@media (max-height: 460px) { .tutorial-bubble p { font-size: 14px; margin-bottom: 6px; } .tutorial-bubble { padding: 8px 12px; } }
+.tutorial-row .btn:not(.btn-primary) { background: transparent; color: #1a1408; border-color: rgba(26, 20, 8, 0.5); }

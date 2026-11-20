@@ -186,6 +186,7 @@ export function makeArcadeMode(game) {
     const padButton = (b) => (
       <button
         key={b.id}
+        data-tut={b.id}
         className={`arcade-btn ${b.on ? 'on' : ''} ${b.big ? 'big' : ''}`}
         style={b.color ? { background: b.color } : undefined}
         disabled={b.disabled}

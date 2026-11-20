@@ -284,6 +284,21 @@ export function draw(ctx, s, v, t) {
     box(ctx, X(n.x - 5), Y(n.y - 3 + bob), 10 * k, 6 * k, '#4caf50', Math.max(1, k / 2))
     rect(ctx, X(n.x - 1), Y(n.y - 1 + bob), 2 * k, 2 * k, '#c8e6c9')
   }
+  // things to pick up: bottles (to throw) and power-ups, bobbing with a glow
+  for (const u of lv.pickups || []) {
+    if (u.got || !onScreen(u.x, u.x)) continue
+    const bob = Math.sin(t * 3 + u.x) * 2
+    drawPickup(ctx, u.kind, X(u.x), Y(u.y + bob), k, t)
+  }
+  // bottles in the air
+  for (const sh of s.shots) {
+    ctx.save()
+    ctx.translate(X(sh.x), Y(sh.y))
+    ctx.rotate(sh.spin)
+    rect(ctx, -1.5 * k, -5 * k, 3 * k, 10 * k, '#2e7d4f')
+    rect(ctx, -1 * k, -7 * k, 2 * k, 2 * k, '#2e7d4f')
+    ctx.restore()
+  }
   // the goal: the bridge
   if (onScreen(lv.goal - 60, lv.goal + 200)) {
     rect(ctx, X(lv.goal + 30), Y(-220), 30 * k, 220 * k, '#8a8f99')
@@ -310,6 +325,13 @@ export function draw(ctx, s, v, t) {
     else if (o.state === 'patrol' && o.seenT > 0.05) label(ctx, '?', X(o.x), Y(o.y - STAND_H - 16), { size: 11 * k, color: '#ffd23a' })
     else if (o.stun > 0) label(ctx, '✶', X(o.x), Y(o.y - STAND_H - 12), { size: 9 * k, color: '#ffd23a' })
   }
+  // untouchable: a golden glow round you
+  if (s.starT > 0) {
+    ctx.save()
+    ctx.globalAlpha = 0.3 + 0.2 * Math.sin(t * 12)
+    rect(ctx, X(p.x - 16), Y(p.y - STAND_H - 8), 32 * k, (STAND_H + 10) * k, '#ffd23a')
+    ctx.restore()
+  }
   // you
   const you = tinted(s.look?.shirt || '#2f8f83', s.look?.trousers || '#2c3e50')
   const blink = p.invul > 0 && p.dead <= 0 && Math.floor(t * 12) % 2 ? 0.35 : 1
@@ -330,12 +352,43 @@ export function draw(ctx, s, v, t) {
   for (const c of lv.checkpoints) rect(ctx, W * 0.2 + W * 0.6 * (c / lv.goal) - 1, 4, 3, 9, c <= s.checkpoint ? '#2e9e4f' : '#ffffff')
 }
 
+function drawPickup(ctx, kind, x, y, k, t) {
+  ctx.save()
+  ctx.globalAlpha = 0.35 + 0.15 * Math.sin(t * 5)
+  rect(ctx, x - 9 * k, y - 9 * k, 18 * k, 18 * k, kind === 'bottle' ? '#8ff0a4' : '#ffd23a')
+  ctx.restore()
+  if (kind === 'bottle') {
+    rect(ctx, x - 2 * k, y - 6 * k, 4 * k, 11 * k, '#2e7d4f')
+    rect(ctx, x - 1 * k, y - 9 * k, 2 * k, 3 * k, '#2e7d4f')
+    rect(ctx, x - 1 * k, y - 4 * k, 1 * k, 5 * k, '#9fe3b5')
+  } else if (kind === 'heart') {
+    rect(ctx, x - 6 * k, y - 4 * k, 5 * k, 5 * k, '#e74c3c')
+    rect(ctx, x + 1 * k, y - 4 * k, 5 * k, 5 * k, '#e74c3c')
+    rect(ctx, x - 5 * k, y, 10 * k, 3 * k, '#e74c3c')
+    rect(ctx, x - 3 * k, y + 3 * k, 6 * k, 2 * k, '#e74c3c')
+  } else if (kind === 'star') {
+    rect(ctx, x - 1.5 * k, y - 7 * k, 3 * k, 14 * k, '#ffd23a')
+    rect(ctx, x - 7 * k, y - 1.5 * k, 14 * k, 3 * k, '#ffd23a')
+    rect(ctx, x - 4 * k, y - 4 * k, 8 * k, 8 * k, '#ffe680')
+  } else {
+    // the magnet: a red U with silver tips
+    rect(ctx, x - 6 * k, y - 6 * k, 3 * k, 10 * k, '#e74c3c')
+    rect(ctx, x + 3 * k, y - 6 * k, 3 * k, 10 * k, '#e74c3c')
+    rect(ctx, x - 6 * k, y + 2 * k, 12 * k, 3 * k, '#e74c3c')
+    rect(ctx, x - 6 * k, y - 8 * k, 3 * k, 2 * k, '#d8d8d8')
+    rect(ctx, x + 3 * k, y - 8 * k, 3 * k, 2 * k, '#d8d8d8')
+  }
+}
+
 export const hud = (s) => [
   { label: s.to.toUpperCase(), value: `${metresLeft(s)} m` },
   { label: 'HEALTH', value: '♥'.repeat(Math.max(0, s.p.hp)) || '✖', warn: s.p.hp <= 2 },
   { label: 'LIVES', value: s.lives, warn: s.lives <= 1 },
   { label: '₦', value: earned(s).toLocaleString('en-NG') },
+  { label: 'BOTTLES', value: s.ammo },
   ...(s.downed ? [{ label: 'DOWN', value: s.downed }] : []),
+  ...(s.starT > 0 ? [{ label: '★', value: `${Math.ceil(s.starT)}s` }] : []),
+  ...(s.magnetT > 0 ? [{ label: 'MAGNET', value: `${Math.ceil(s.magnetT)}s` }] : []),
 ]
 
 /** Notes picked up plus the bounty for every officer down. */
@@ -347,6 +400,7 @@ export const buttons = (s) => [
   { id: 'creep', label: 'CREEP', hold: true, side: 'left', key: '⇧', color: s?.held?.creep ? '#2e6b3a' : '#3a3a4a', move: true },
   { id: 'roll', label: 'ROLL', color: '#5a4a8a', key: 'S' },
   { id: 'hit', label: 'HIT', color: '#b3261e', key: 'J' },
+  { id: 'throw', label: `THROW ${s?.ammo ?? 0}`, color: s?.ammo ? '#2e7d4f' : '#555', key: 'T', disabled: !s?.ammo },
   { id: 'jump', label: 'JUMP', color: '#1e8449', big: true, key: 'W' },
 ]
 
@@ -369,12 +423,13 @@ export default {
     'The Task Force sees what\'s in front of them, and sees a running man from further away than a creeping one. Once one spots you he whistles, the others nearby come too, and they all rush you faster than you can run: get up where they can\'t climb, roll past, or fight.',
     'Creep up behind an officer who hasn\'t seen you and HIT: he goes down in one blow (a sneak takedown). Otherwise it takes three hits, or land on his head.',
     'Every officer down pays: ₦250 in a fight, ₦300 for a stomp, ₦400 from behind. Watch an ad at the end to double it, or two to triple it.',
+    'Pick things up as you go: bottles (carry 3; THROW one to stun an officer and hurt him twice), a heart (+2 health), a star (untouchable for 6 s: run through them) and a magnet (the notes fly to you).',
     'Lose all your health or fall in a gutter and you start again from the last bus stop.',
   ],
   short: 'Move, jump, roll, hit. Over their heads is safest.',
   stick: true,
   scalesReward: true, // the bounty and the notes already use params.rewardMul
-  keys: { ShiftLeft: 'creep', ShiftRight: 'creep', ArrowLeft: 'left', KeyA: 'left', ArrowRight: 'right', KeyD: 'right', ArrowUp: 'jump', KeyW: 'jump', Space: 'jump', ArrowDown: 'roll', KeyS: 'roll', KeyJ: 'hit', KeyK: 'hit', KeyF: 'hit' },
+  keys: { ShiftLeft: 'creep', ShiftRight: 'creep', KeyT: 'throw', KeyE: 'throw', ArrowLeft: 'left', KeyA: 'left', ArrowRight: 'right', KeyD: 'right', ArrowUp: 'jump', KeyW: 'jump', Space: 'jump', ArrowDown: 'roll', KeyS: 'roll', KeyJ: 'hit', KeyK: 'hit', KeyF: 'hit' },
   holdIds: ['left', 'right', 'creep'],
   winOutcome: 'escaped',
   create, step, input, draw, hud, buttons, result,

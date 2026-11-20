@@ -27,7 +27,7 @@ export default function StreetScene({ layout }) {
   return (
     <group>
       <Ground bounds={layout.bounds} />
-      <Barriers bounds={layout.bounds} />
+      <Barriers bounds={layout.bounds} roads={raw.roads} />
       <Pavements list={raw.pavements || []} />
       <GroundDetail layout={layout} />
       <group userData={{ tag: 'static' }}>

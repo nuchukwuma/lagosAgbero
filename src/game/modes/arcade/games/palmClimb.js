@@ -1,262 +1,419 @@
-// GRASS TO GRACE · Palm Climb. Up the palm in a rope loop to bring down the
-// calabash of palm wine. Tap LEFT or RIGHT to move your hands up that side of
-// the trunk; soldier ants and wasp nests sit on one side or the other, so climb
-// the clear side. When the wind gusts, hold still. Three stings and you slide
-// all the way down. Reach the top before the sun gets hot.
-// Params: height (rings to climb, 32) · seconds (45)
+// GRASS TO GRACE · Palm Climb, a vertical platformer. Up the old palm at the
+// edge of the farm to bring down the calabash of fresh palm wine. Jump from
+// frond to frond (and jump again in the air), up and up: the camera climbs
+// with you. Soldier ants march along some fronds, wasps zip back and forth
+// under their nests, and ripe palm fruit drops from the crown (a shadow at
+// the top shows where). When the wind comes, stand still on a frond and hold
+// on: in the air or moving, it blows you sideways. Every sting costs one of
+// your three; fall off the bottom of the view and you slide back down to the
+// last rest frond, stung. Reach the calabash at the top before time runs out.
+// Palm nuts on the way are a bonus.
+// Params: height (fronds to the top, 32) · seconds (60) · hazard (0..1, 0.62) · stingMax (3)
 // Outcomes: won | lost
 import { rng, rect, box, label, clamp } from '../px.js'
 import { lookFor } from '../people.js'
+import { drawEris } from '../../../characters/eris.js'
 
-export function makeTrunk(r, n, hazard = 0.62) {
-  const h = [null, null, null]
-  let last = null
-  for (let i = 3; i < n; i++) {
-    let x = null
-    if (r() < hazard) x = r() < 0.5 ? 'L' : 'R'
-    if (x && x === last && r() < 0.3) x = null // breathing space
-    h.push(x ? { side: x, kind: r() < 0.7 ? 'ants' : 'wasps' } : null)
-    last = x
+// world units: 10 to a metre; y grows downwards and the farm is y = 0
+export const G = 1500
+export const RUN = 135
+export const JUMP_V = 560 // about 100 up
+export const DOUBLE_V = 470
+export const GAP = 62 // between frond levels
+export const HALF = 120 // fronds reach this far either side of the trunk
+const PW = 14
+const STAND_H = 52
+const WIND_PUSH = 160
+const REST_EVERY = 8 // a wide rest frond (a checkpoint) every so many levels
+const FALL_LINE = 320 // this far below the camera you've fallen out of the view
+
+/** The palm: fronds (platforms) up both sides, ants, wasps, palm nuts, the calabash at the top. */
+export function buildPalm({ height = 32, hazard = 0.62, seed = 1 } = {}) {
+  const r = rng(seed)
+  const fronds = [{ x: -HALF, w: HALF * 2, y: 0, ground: true }] // the farm
+  const ants = []
+  const wasps = []
+  const nuts = []
+  let side = r() < 0.5 ? -1 : 1
+  for (let i = 1; i <= height; i++) {
+    const y = -i * GAP
+    if (i % REST_EVERY === 0 || i === height) {
+      fronds.push({ x: -55, w: 110, y, rest: true, top: i === height })
+      continue
+    }
+    // mostly alternating sides, sometimes two on a level
+    side = r() < 0.75 ? -side : side
+    const w = 46 + r() * 30
+    const x = side < 0 ? -HALF + r() * 30 : HALF - w - r() * 30
+    const f = { x, w, y, sway: r() < 0.25 + hazard * 0.2 ? 6 + r() * 10 : 0, ph: r() * 6 }
+    fronds.push(f)
+    if (r() < 0.3) fronds.push({ x: -16 - r() * 10, w: 32, y: y - GAP / 2, stub: true }) // an old frond stub on the trunk
+    if (i > 2 && r() < hazard * 0.45) ants.push({ frond: fronds.length - 1, t: r() * 10, speed: 18 + r() * 14 })
+    if (i > 4 && r() < hazard * 0.3) wasps.push({ y: y + GAP * 0.45, x0: -HALF + 10, x1: HALF - 10, t: r() * 6, speed: 0.5 + r() * 0.5 })
+    if (r() < 0.45) nuts.push({ x: x + w / 2, y: y - 22, got: false })
   }
-  return h
+  return { fronds, ants, wasps, nuts, top: -height * GAP, height }
+}
+
+function freshClimber(x = 0, y = 0) {
+  return { x, y, vx: 0, vy: 0, dir: 1, ground: true, jumps: 0, coyote: 0, invul: 0, hit: 0 }
 }
 
 export function create(params = {}, seed = 1) {
   const r = rng(seed)
-  const top = params.height ?? 32
-  // vis: where the climber is drawn (eases after `at`); climbT: time since the last move (the climbing motion)
-  return { r, you: params.you || 7, top, trunk: makeTrunk(r, top + 4, params.hazard ?? 0.62), stingMax: params.stingMax ?? 3, at: 0, vis: 0, climbT: 9, time: params.seconds ?? 45, stings: 0, gust: 0, gustNext: 6 + r() * 4, warn: 0, slip: 0, lastSide: 'L', msg: '', msgT: 0, over: false, reached: false, sound: [] }
+  const palm = buildPalm({ height: params.height ?? 32, hazard: params.hazard ?? 0.62, seed })
+  return {
+    r,
+    you: params.you || 7,
+    palm,
+    p: freshClimber(),
+    held: { left: false, right: false },
+    stick: null,
+    stings: 0,
+    stingMax: params.stingMax ?? 3,
+    time: params.seconds ?? 60,
+    best: 0, // highest frond level reached
+    checkpoint: { x: 0, y: 0 },
+    nuts: 0,
+    fruit: [], // ripe palm fruit falling
+    fruitNext: 4 + r() * 3,
+    gust: 0,
+    gustDir: 1,
+    warn: 0,
+    gustNext: 7 + r() * 4,
+    camY: -150,
+    t: 0,
+    msg: 'Up the palm! Jump from frond to frond.',
+    msgT: 2.5,
+    reached: false,
+    over: false,
+    sound: [],
+  }
 }
 
-/** Tap a side: climb one ring, unless that side of the next ring has a hazard (or the wind is blowing). */
+const level = (y) => Math.max(0, Math.round(-y / GAP))
+/** Where a frond is right now (some sway in the breeze). */
+const frondX = (f, t) => f.x + (f.sway ? Math.sin(t * 1.4 + f.ph) * f.sway : 0)
+
+export function press(s, id, down = true) {
+  if (id === 'left' || id === 'right') {
+    s.held[id] = down
+    return
+  }
+  if (id !== 'jump' || !down || s.over) return
+  const p = s.p
+  if (p.ground || p.coyote > 0) {
+    p.vy = -JUMP_V
+    p.ground = false
+    p.coyote = 0
+    p.jumps = 1
+    s.sound.push('jump')
+  } else if (p.jumps < 2) {
+    p.vy = -DOUBLE_V
+    p.jumps = 2
+    s.sound.push('jump')
+  }
+}
+
+/** Kept for the old tap game's API (and the tests): a tap on a side is a jump that way. */
 export function climb(s, side) {
-  if (s.over || s.slip > 0) return
-  s.lastSide = side
-  if (s.gust > 0) {
-    s.stings++
-    s.at = Math.max(0, s.at - 2)
-    s.slip = 0.5
-    s.msg = 'The wind! Hold on, don\'t climb!'
-    s.msgT = 1.2
-    s.sound.push('wrong')
-    return checkFall(s)
-  }
-  const next = s.trunk[s.at + 1]
-  if (next && next.side === side) {
-    s.stings++
-    s.at = Math.max(0, s.at - 2)
-    s.slip = 0.5
-    s.msg = next.kind === 'ants' ? 'Soldier ants! Ah, my hand!' : 'Wasps! Yeee!'
-    s.msgT = 1.2
-    s.sound.push('hurt')
-    return checkFall(s)
-  }
-  s.at++
-  s.climbT = 0
-  s.sound.push('click')
-  if (s.at >= s.top) {
-    s.reached = true
-    s.over = true
-    s.sound.push('win')
-  }
+  s.held.left = side === 'L'
+  s.held.right = side === 'R'
+  press(s, 'jump')
 }
 
-function checkFall(s) {
+function sting(s, from, why) {
+  const p = s.p
+  if (p.invul > 0 || s.over) return
+  s.stings++
+  p.invul = 1.3
+  p.hit = 0.4
+  p.vx = (p.x > from ? 1 : -1) * 160
+  p.vy = Math.min(p.vy, -200)
+  s.msg = why
+  s.msgT = 1.4
+  s.sound.push('hurt')
   if (s.stings >= s.stingMax) {
     s.over = true
-    s.at = 0
-    s.msg = 'You slide all the way down the trunk.'
+    s.msg = 'Too many stings: you slide all the way down the trunk.'
     s.msgT = 3
   }
 }
 
 export function step(s, dt) {
+  if (s.over) return
+  s.t += dt
   s.time -= dt
   s.msgT -= dt
-  s.climbT += dt
-  // the body follows the rope up (or slides down) smoothly
-  s.vis += (s.at - s.vis) * Math.min(1, dt * (s.slip > 0 ? 7 : 11))
-  s.slip = Math.max(0, s.slip - dt)
+  const p = s.p
+  const pm = s.palm
+  p.invul = Math.max(0, p.invul - dt)
+  p.hit = Math.max(0, p.hit - dt)
+  // the wind: a warning, then a gust that blows anyone not standing still on a frond
   if (s.gust > 0) s.gust -= dt
   else if (s.warn > 0) {
     s.warn -= dt
     if (s.warn <= 0) {
-      s.gust = 1.4
+      s.gust = 1.5
+      s.gustDir = s.r() < 0.5 ? -1 : 1
       s.sound.push('whoosh')
     }
+  } else if ((s.gustNext -= dt) <= 0) {
+    s.warn = 1.1
+    s.gustNext = 6 + s.r() * 5
+  }
+  // moving: the stick or the buttons
+  const want = s.stick != null && Math.abs(s.stick) > 0.15 ? s.stick : (s.held.right ? 1 : 0) - (s.held.left ? 1 : 0)
+  if (want) p.dir = Math.sign(want)
+  if (p.hit <= 0) p.vx += (want * RUN - p.vx) * Math.min(1, dt * (p.ground ? 14 : 6))
+  const holding = p.ground && !want
+  if (s.gust > 0 && !holding) p.vx += s.gustDir * WIND_PUSH * dt * 4
+  // gravity, landing on fronds from above (they're one-way)
+  const oldY = p.y
+  p.vy = Math.min(p.vy + G * dt, 1000)
+  let ny = p.y + p.vy * dt
+  let landed = null
+  if (p.vy >= 0)
+    for (const f of pm.fronds) {
+      const fx = frondX(f, s.t)
+      if (p.x + PW / 2 > fx && p.x - PW / 2 < fx + f.w && f.y >= oldY - 0.01 && f.y <= ny + 0.01) landed = !landed || f.y < landed.y ? f : landed
+    }
+  if (landed) {
+    ny = landed.y
+    p.vy = 0
+    p.ground = true
+    p.jumps = 0
+    p.coyote = 0.1
+    // riding a swaying frond
+    if (landed.sway) p.x += frondX(landed, s.t) - frondX(landed, s.t - dt)
+    const lv = level(landed.y)
+    if (lv > s.best) s.best = lv
+    if (landed.rest && landed.y < s.checkpoint.y) {
+      s.checkpoint = { x: frondX(landed, s.t) + landed.w / 2, y: landed.y }
+      s.msg = 'A good wide frond: if you fall, you start again from here.'
+      s.msgT = 1.6
+      s.sound.push('correct')
+    }
+    if (landed.top && !s.reached) {
+      s.reached = true
+      s.over = true
+      s.sound.push('win')
+    }
   } else {
-    s.gustNext -= dt
-    if (s.gustNext <= 0) {
-      s.warn = 0.9
-      s.gustNext = 5 + s.r() * 5
+    if (p.ground) p.coyote = 0.1
+    p.ground = false
+  }
+  p.coyote = Math.max(0, p.coyote - dt)
+  p.y = ny
+  p.x = clamp(p.x + p.vx * dt, -HALF - 30, HALF + 30)
+  // the camera climbs with you, and doesn't come back down
+  const target = p.y - 150
+  if (target < s.camY) s.camY += (target - s.camY) * Math.min(1, dt * 5)
+  // fell off the bottom of the view: slide back to the last rest frond, stung
+  if (p.y > s.camY + FALL_LINE) {
+    const cp = s.checkpoint
+    s.p = freshClimber(cp.x, cp.y)
+    s.camY = cp.y - 150
+    sting(s, cp.x, 'You slip down the trunk to the last wide frond.')
+    s.p.vx = 0
+    s.p.vy = 0
+  }
+  // soldier ants along their fronds
+  for (const a of pm.ants) {
+    a.t += dt
+    const f = pm.fronds[a.frond]
+    const fx = frondX(f, s.t)
+    const ax = fx + 6 + ((Math.sin(a.t * a.speed * 0.05) + 1) / 2) * (f.w - 12)
+    a.x = ax
+    a.y = f.y
+    if (Math.abs(ax - p.x) < 12 && Math.abs(f.y - p.y) < 8) sting(s, ax, 'Soldier ants! Ah, my leg!')
+  }
+  // wasps zipping back and forth
+  for (const w of pm.wasps) {
+    w.t += dt
+    w.x = w.x0 + ((Math.sin(w.t * w.speed) + 1) / 2) * (w.x1 - w.x0)
+    if (Math.abs(w.x - p.x) < 12 && p.y - STAND_H < w.y + 6 && p.y > w.y - 6) sting(s, w.x, 'Wasp! Yeee!')
+  }
+  // ripe palm fruit drops from the crown, above you
+  if ((s.fruitNext -= dt) <= 0) {
+    s.fruit.push({ x: clamp(p.x + (s.r() - 0.5) * 140, -HALF + 10, HALF - 10), y: s.camY - 60, vy: 0, warn: 0.9 })
+    s.fruitNext = 3 + s.r() * 3
+  }
+  for (const f of s.fruit) {
+    if (f.warn > 0) {
+      f.warn -= dt
+      continue
+    }
+    f.vy += G * 0.6 * dt
+    f.y += f.vy * dt
+    if (Math.abs(f.x - p.x) < 12 && f.y > p.y - STAND_H && f.y < p.y + 4) {
+      f.gone = true
+      sting(s, f.x, 'Palm fruit on the head! Ouch.')
     }
   }
+  s.fruit = s.fruit.filter((f) => !f.gone && f.y < s.camY + 400)
+  // palm nuts
+  for (const n of pm.nuts)
+    if (!n.got && Math.abs(n.x - p.x) < 14 && n.y > p.y - STAND_H && n.y < p.y + 6) {
+      n.got = true
+      s.nuts++
+      s.sound.push('coin')
+    }
   if (s.time <= 0) s.over = true
 }
 
-export function input(s, ev, v) {
-  if (ev.type === 'button') climb(s, ev.id)
-  else if (ev.type === 'down') climb(s, ev.x < v.W / 2 ? 'L' : 'R')
+export function input(s, ev) {
+  if (ev.type === 'button') press(s, ev.id, ev.down !== false)
+  else if (ev.type === 'stick') {
+    s.stick = ev.x
+    if (ev.y > 0.6 && !s.stickUp) press(s, 'jump')
+    s.stickUp = ev.y > 0.6
+  }
 }
 
-// ---------------------------------------------------------------- the climber
-// Seen from behind, hugging the trunk inside the climbing loop (a thick rope
-// ring round the trunk and the small of the back). One move: the hand on the
-// tapped side reaches up and grips, he flicks the loop up the trunk, then
-// bends his knees and pushes with his feet so his body rises one ring.
-const CLIMB = 0.32 // seconds a move takes
-function limb(ctx, x0, y0, x1, y1, w, color) {
-  // a chunky pixel limb from (x0, y0) to (x1, y1)
-  const n = Math.max(2, Math.ceil(Math.hypot(x1 - x0, y1 - y0) / (w * 0.6)))
-  for (let i = 0; i <= n; i++) rect(ctx, x0 + ((x1 - x0) * i) / n - w / 2, y0 + ((y1 - y0) * i) / n - w / 2, w, w, color)
-}
-export function climberPose(s, t) {
-  const m = clamp(s.climbT / CLIMB, 0, 1) // 0 = just tapped, 1 = settled
-  const reach = s.lastSide
-  const ease = (x) => x * x * (3 - 2 * x)
-  return {
-    reach,
-    reachUp: m < 0.45 ? ease(m / 0.45) : 1 - ease((m - 0.45) / 0.55) * 0.35, // the reaching hand goes high, then settles a little
-    loopUp: m < 0.3 ? 0 : m < 0.6 ? ease((m - 0.3) / 0.3) : 1 - ease((m - 0.6) / 0.4), // the rope flicks up the trunk
-    knees: m < 0.5 ? ease(m / 0.5) : 1 - ease((m - 0.5) / 0.5), // bend, then push straight
-    breathe: Math.sin(t * 3) * 0.5,
-    slipping: s.slip > 0,
+// ---------------------------------------------------------------- drawing
+function frond(ctx, x, y, w, k, t, rest) {
+  // a palm frond seen side-on: the stalk, leaflets drooping off it
+  const thick = rest ? 6 : 4
+  rect(ctx, x, y, w, thick * k, '#6b8a2a')
+  rect(ctx, x, y + thick * k, w, 2 * k, '#4a6a1e')
+  for (let i = 0; i < w / (6 * k); i++) {
+    const lx = x + i * 6 * k + 2 * k
+    const droop = (6 + ((i * 7) % 5)) * k
+    rect(ctx, lx, y + thick * k, 2 * k, droop, i % 2 ? '#3f8a2a' : '#5aa63a')
   }
-}
-function drawClimber(ctx, look, cx, y, P, tw, pose, t) {
-  const skin = look.skin || '#5c3a24'
-  const shirt = look.shirt || '#c0392b'
-  const trousers = look.trousers || '#2c3e50'
-  const hair = look.hair || '#161110'
-  const dark = '#1a120a'
-  const half = tw / 2
-  const flail = pose.slipping ? Math.sin(t * 30) * P * 2 : 0
-  const by = y + pose.breathe * P * 0.4 // the small of the back, where the rope sits
-  // legs: knees out round the trunk, soles flat against it
-  const kneeOut = P * (5 + pose.knees * 3)
-  const kneeY = by + P * (6 - pose.knees * 3)
-  const footY = by + P * (12 - pose.knees * 4)
-  for (const sd of [-1, 1]) {
-    limb(ctx, cx + sd * P * 3, by + P, cx + sd * (half + kneeOut - P * 2), kneeY, P * 3.2, trousers)
-    limb(ctx, cx + sd * (half + kneeOut - P * 2), kneeY, cx + sd * (half + P * 0.5), footY, P * 3, trousers)
-    rect(ctx, cx + sd * (half + P * 0.5) - (sd > 0 ? 0 : P * 3), footY - P, P * 3, P * 2.5, dark) // bare sole against the bark
-  }
-  // the body: shirt, a crease down the back
-  box(ctx, cx - P * 5, by - P * 12, P * 10, P * 13, shirt, Math.max(1, P / 2))
-  rect(ctx, cx - P * 0.5, by - P * 11, P, P * 9, 'rgba(0,0,0,0.18)')
-  // arms: one reaching high on its side of the trunk, the other gripping lower
-  for (const sd of [-1, 1]) {
-    const reaching = (sd < 0 ? 'L' : 'R') === pose.reach
-    const up = pose.slipping ? 0.2 : reaching ? pose.reachUp : 0.1
-    const hx = cx + sd * (half + P * 1.5) + (pose.slipping ? sd * flail : 0)
-    const hy = by - P * (13 + up * 12)
-    const sx = cx + sd * P * 4.5
-    const sy = by - P * 11
-    const ex = cx + sd * (half + P * 4.5)
-    const ey = (sy + hy) / 2 + P * 2
-    limb(ctx, sx, sy, ex, ey, P * 2.8, shirt) // sleeve
-    limb(ctx, ex, ey, hx, hy, P * 2.4, skin) // forearm
-    rect(ctx, hx - P * 1.5, hy - P * 1.5, P * 3, P * 3, skin) // the hand round the bark
-    rect(ctx, hx - P * 1.5, hy - P * 1.5, P * 3, P, 'rgba(0,0,0,0.25)')
-  }
-  // head from behind: hair, ears
-  rect(ctx, cx - P * 3.5, by - P * 19, P * 7, P * 7, hair)
-  rect(ctx, cx - P * 4.5, by - P * 16, P, P * 2, skin)
-  rect(ctx, cx + P * 3.5, by - P * 16, P, P * 2, skin)
-  rect(ctx, cx - P * 2, by - P * 12.5, P * 4, P * 1.5, skin) // the neck
+  void t
 }
 
 export function draw(ctx, s, v, t) {
   const { W, H, P } = v
-  const ring = P * 7
-  // the climber stays at about two-thirds height; the trunk scrolls under them
-  const climberY = H * 0.66
-  const sway = s.gust > 0 ? Math.sin(t * 20) * P * 2 : s.warn > 0 ? Math.sin(t * 9) * P * 0.6 : 0
-  const at = s.vis
-  rect(ctx, 0, 0, W, H, '#8fd3ff')
-  rect(ctx, 0, H * 0.75 + at * ring * 0.15, W, H, '#5e8c3a') // the ground drops away as you climb
-  // other palms far away
-  for (let i = 0; i < 5; i++) {
-    const x = ((i * 0.23 + 0.06) % 1) * W
-    rect(ctx, x, H * 0.35 + at * P * 0.5, P * 2, H, '#7a6a4a')
-    rect(ctx, x - P * 6, H * 0.35 + at * P * 0.5, P * 14, P * 2, '#3f7a2a')
+  // the view: the palm's width fits the screen; the camera follows you up
+  const k = Math.max(1, Math.min(W / (HALF * 2 + 80), H / 300))
+  const cx = W / 2
+  const X = (x) => cx + x * k
+  const Y = (y) => H * 0.62 + (y - s.camY - 150) * k // you climb at about two-thirds down the screen
+  const pm = s.palm
+  const hgt = clamp(-s.camY / -pm.top, 0, 1)
+  // sky: deeper blue the higher you climb
+  rect(ctx, 0, 0, W, H, hgt > 0.6 ? '#6cc3f2' : '#8fd3ff')
+  // far palms and the farm, drifting slower than the trunk
+  for (let i = 0; i < 6; i++) {
+    const fx = ((i * 0.19 + 0.05) % 1) * W
+    const base = H * 0.95 + (-s.camY) * k * 0.25
+    rect(ctx, fx, base - H * 0.6, P * 2, H, '#7a6a4a')
+    rect(ctx, fx - P * 7, base - H * 0.6, P * 16, P * 3, '#3f7a2a')
   }
-  const cx = W / 2 + sway
-  const tw = P * 12
-  const base = Math.floor(at)
-  const frac = at - base
-  // the trunk: rings, hazards on either side (scrolling smoothly as you go up)
-  for (let i = -3; i < 17; i++) {
-    const k = base + i
-    const y = climberY - (i - frac) * ring
-    if (y < -ring || y > H + ring) continue
-    if (k > s.top || k < -6) continue
-    rect(ctx, cx - tw / 2, y - ring, tw, ring, k % 2 ? '#8a6a44' : '#7a5c3a')
-    rect(ctx, cx - tw / 2, y - P, tw, P, '#5a4024')
-    rect(ctx, cx - tw / 2, y - ring, P, ring, '#5a4024')
-    rect(ctx, cx + tw / 2 - P, y - ring, P, ring, '#6a4a2c')
-    const hz = s.trunk[k]
-    if (hz) {
-      const hx = hz.side === 'L' ? cx - tw / 2 - P * 5 : cx + tw / 2 + P
-      if (hz.kind === 'ants') for (let a = 0; a < 6; a++) rect(ctx, hx + ((a * 3 + Math.floor(t * 6)) % 4) * P, y - ring + P + a * P, P, P, '#b3261e')
-      else {
-        box(ctx, hx, y - ring + P, P * 4, P * 5, '#c9b07a', Math.max(1, P / 2))
-        const bz = Math.sin(t * 15 + k) * P
-        rect(ctx, hx + P * 2 + bz, y - ring - P, P, P, '#ffd23a')
-      }
+  const ground = Y(0)
+  if (ground < H) rect(ctx, 0, ground, W, H - ground, '#5e8c3a')
+  // the trunk, ringed
+  const tw = 30 * k
+  const top = Y(pm.top - 40)
+  rect(ctx, cx - tw / 2, Math.max(0, top), tw, Math.min(H, ground) - Math.max(0, top), '#7a5c3a')
+  for (let y = Math.floor(s.camY / 14) * 14 - 40; y < s.camY + 400; y += 14) {
+    if (y < pm.top - 40 || y > 0) continue
+    rect(ctx, cx - tw / 2, Y(y), tw, 2 * k, '#5a4024')
+    rect(ctx, cx - tw / 2 + ((y / 14) % 2 ? 4 : 10) * k, Y(y) + 4 * k, 6 * k, 2 * k, '#8a6a44')
+  }
+  // the crown and the calabash
+  const cy = Y(pm.top)
+  if (cy > -60 * k) {
+    for (let f = -4; f <= 4; f++) rect(ctx, cx + f * 14 * k - 10 * k, cy - 40 * k - Math.abs(f) * 4 * k, 24 * k, 5 * k, '#2f7a2a')
+    box(ctx, cx - 9 * k, cy - 28 * k, 18 * k, 16 * k, '#c8a46a', k)
+    rect(ctx, cx - 3 * k, cy - 32 * k, 6 * k, 4 * k, '#8a6a44')
+    label(ctx, 'PALM WINE', cx, cy - 50 * k, { size: Math.max(10, 5 * k), color: '#fff' })
+  }
+  // fronds
+  for (const f of pm.fronds) {
+    if (f.ground) continue
+    const y = Y(f.y)
+    if (y < -20 || y > H + 20) continue
+    frond(ctx, X(frondX(f, s.t)), y, f.w * k, k, t, f.rest)
+  }
+  // palm nuts
+  for (const n of pm.nuts) {
+    if (n.got) continue
+    const y = Y(n.y)
+    if (y < -10 || y > H + 10) continue
+    rect(ctx, X(n.x) - 3 * k, y - 3 * k, 6 * k, 6 * k, '#e05a1a')
+    rect(ctx, X(n.x) - 1 * k, y - 2 * k, 2 * k, 2 * k, '#ffb070')
+  }
+  // ants and wasps
+  for (const a of pm.ants) {
+    if (a.x == null) continue
+    const y = Y(a.y)
+    if (y < -10 || y > H + 10) continue
+    for (let i = 0; i < 4; i++) rect(ctx, X(a.x - 6 + i * 4), y - 2 * k - (i % 2) * k, 2 * k, 2 * k, '#b3261e')
+  }
+  for (const w of pm.wasps) {
+    if (w.x == null) continue
+    const y = Y(w.y)
+    if (y < -10 || y > H + 10) continue
+    rect(ctx, X(w.x) - 4 * k, y - 2 * k, 8 * k, 4 * k, '#ffd23a')
+    rect(ctx, X(w.x) - 1 * k, y - 2 * k, 2 * k, 4 * k, '#1a1a1a')
+    rect(ctx, X(w.x) - 3 * k, y - 5 * k + Math.sin(t * 40) * k, 6 * k, 2 * k, 'rgba(255,255,255,0.8)')
+  }
+  // falling fruit (a red warning at the top first)
+  for (const f of s.fruit) {
+    if (f.warn > 0) {
+      label(ctx, '!', X(f.x), 10 + P * 3, { size: P * 6, color: '#ff4d3a' })
+      continue
     }
+    rect(ctx, X(f.x) - 4 * k, Y(f.y) - 4 * k, 8 * k, 8 * k, '#c0391b')
+    rect(ctx, X(f.x) - 2 * k, Y(f.y) - 6 * k, 4 * k, 2 * k, '#2e7a3a')
   }
-  // the crown of fronds and the calabash at the top
-  const topY = climberY - (s.top - at) * ring
-  if (topY > -P * 30) {
-    for (let f = -3; f <= 3; f++) rect(ctx, cx + f * P * 6 - P * 3, topY - ring - Math.abs(f) * P * 2, P * 9, P * 3, '#2f7a2a')
-    box(ctx, cx - P * 4, topY - ring + P * 2, P * 8, P * 6, '#c8a46a', P)
+  // you
+  const p = s.p
+  const blink = p.invul > 0 && Math.floor(t * 12) % 2 ? 0.4 : 1
+  const anim = !p.ground ? 'jump' : Math.abs(p.vx) > 20 ? 'run' : 'idle'
+  const frame = !p.ground ? (p.vy < -150 ? 1 : p.vy < 200 ? 2 : 3) : t * (anim === 'run' ? 12 : 4)
+  if (!drawEris(ctx, lookFor(s.you), anim, frame, X(p.x), Y(p.y), (STAND_H / 25) * k, { dir: p.dir, alpha: blink, rotate: p.hit > 0 ? -0.3 * p.dir : 0 })) rect(ctx, X(p.x) - 6 * k, Y(p.y) - STAND_H * k, 12 * k, STAND_H * k, '#2f8f83')
+  // the wind
+  if (s.warn > 0) label(ctx, 'WIND COMING… STAND STILL ON A FROND!', W / 2, H * 0.14, { size: Math.max(11, P * 3.8), color: '#ffd23a' })
+  if (s.gust > 0) {
+    label(ctx, s.gustDir > 0 ? 'HOLD ON! →→→' : '←←← HOLD ON!', W / 2, H * 0.14, { size: Math.max(12, P * 4.6), color: '#ff6b4a' })
+    for (let i = 0; i < 6; i++) rect(ctx, ((t * 400 * s.gustDir + i * 137) % W + W) % W, (i * 71) % H, P * 8, P, 'rgba(255,255,255,0.6)')
   }
-  // the climber in the rope loop
-  const pose = climberPose(s, t)
-  const ropeY = climberY - P * 2 - pose.loopUp * ring * 0.8
-  // the loop's far side, behind the trunk, shows as a band across the bark above the hips
-  rect(ctx, cx - tw / 2, ropeY - P * 1.5, tw, P * 1.5, '#a8844a')
-  drawClimber(ctx, lookFor(s.you), cx, climberY, P, tw, pose, t)
-  // the near side of the loop across the small of the back, its ends round the trunk
-  rect(ctx, cx - tw / 2 - P * 2, climberY - P * 2.5, tw + P * 4, P * 1.6, '#c8a46a')
-  rect(ctx, cx - tw / 2 - P * 2, climberY - P * 2.5, P * 1.6, climberY - ropeY + P, '#c8a46a')
-  rect(ctx, cx + tw / 2 + P * 0.4, climberY - P * 2.5 - (climberY - ropeY), P * 1.6, climberY - ropeY + P, '#c8a46a')
-  if (pose.slipping) label(ctx, '!!', cx + tw, climberY - P * 22, { size: P * 4, color: '#ff6b4a' })
-  if (s.warn > 0) label(ctx, 'WIND COMING… HOLD!', W / 2, H * 0.16, { size: P * 4.5, color: '#ffd23a' })
-  if (s.gust > 0) label(ctx, 'HOLD ON!', W / 2, H * 0.16, { size: P * 6, color: '#ff6b4a' })
-  if (s.msgT > 0) label(ctx, s.msg, W / 2, H * 0.9, { size: Math.max(12, P * 3.6), alpha: clamp(s.msgT, 0, 1) })
-  // height gauge
-  const gh = H * 0.5
-  rect(ctx, W - P * 6, H * 0.25, P * 3, gh, '#2a1808')
-  rect(ctx, W - P * 6, H * 0.25 + gh * (1 - at / s.top), P * 3, gh * (at / s.top), '#ffd23a')
+  if (s.msgT > 0) label(ctx, s.msg, W / 2, H * 0.92, { size: Math.max(11, P * 3.4), alpha: clamp(s.msgT, 0, 1) })
+  // the height gauge
+  const gh = H * 0.6
+  rect(ctx, W - P * 6, H * 0.2, P * 3, gh, '#2a1808')
+  rect(ctx, W - P * 6, H * 0.2 + gh * (1 - s.best / pm.height), P * 3, gh * (s.best / pm.height), '#ffd23a')
 }
 
 export const hud = (s) => [
-  { label: 'TIME', value: Math.max(0, Math.ceil(s.time)), warn: s.time < 8 },
-  { label: 'HEIGHT', value: `${s.at}/${s.top}` },
-  { label: 'STINGS', value: '✖'.repeat(s.stings) || '–', warn: s.stings >= 2 },
+  { label: 'TIME', value: Math.max(0, Math.ceil(s.time)), warn: s.time < 10 },
+  { label: 'HEIGHT', value: `${s.best}/${s.palm.height}` },
+  { label: 'STINGS', value: '✖'.repeat(s.stings) || '–', warn: s.stings >= s.stingMax - 1 },
+  { label: 'NUTS', value: s.nuts },
 ]
-export const buttons = (s) => [
-  { id: 'L', label: '◀ LEFT', color: s.gust > 0 ? '#555' : '#7a5c3a', key: '←' },
-  { id: 'R', label: 'RIGHT ▶', color: s.gust > 0 ? '#555' : '#7a5c3a', key: '→' },
+export const buttons = () => [
+  { id: 'left', label: '◀', hold: true, side: 'left', big: true, key: 'A', move: true },
+  { id: 'right', label: '▶', hold: true, side: 'left', big: true, key: 'D', move: true },
+  { id: 'jump', label: 'JUMP', color: '#1e8449', big: true, key: 'W' },
 ]
 
 export function result(s) {
   const won = s.reached
   return {
     outcome: won ? 'won' : 'lost',
-    score: s.reached ? s.top + Math.ceil(s.time) : s.at,
-    moneyChange: won ? 3000 : 0,
-    headline: won ? 'Fresh palm wine, straight from the tree!' : s.stings >= 3 ? 'Down you come, faster than you went up.' : 'The sun is too hot to climb now.',
-    line: won ? 'The calabash is full and still fizzing. Papa Ngwo would have approved.' : 'The old men under the shade pretend they didn\'t see.',
+    score: s.best * 3 + s.nuts * 2 + (won ? Math.ceil(s.time) : 0),
+    moneyChange: won ? 3000 + s.nuts * 100 : 0,
+    headline: won ? 'Fresh palm wine, straight from the tree!' : s.stings >= s.stingMax ? 'Down you come, faster than you went up.' : 'The sun is too hot to climb now.',
+    line: won ? `The calabash is full and still fizzing. ${s.nuts} palm nuts in your pocket too.` : `You got ${s.best} fronds up. The old men under the shade pretend they didn't see.`,
   }
 }
 
 export default {
-  id: 'palmClimb', title: 'Palm Climb', scoreLabel: 'rings', start: 'Tie the rope loop',
-  rules: ['Tap LEFT or RIGHT (or the left and right of the screen) to climb that side of the trunk.', 'Soldier ants and wasp nests sit on one side of a ring: climb the clear side.', '"WIND COMING" means stop tapping until it passes.', 'Three stings and you slide down. Reach the calabash at the top before time runs out.'],
-  short: 'Climb the clear side. Hold still in the wind.',
-  keys: { ArrowLeft: 'L', ArrowRight: 'R', KeyA: 'L', KeyD: 'R' },
+  id: 'palmClimb', title: 'Palm Climb', scoreLabel: 'points', start: 'Start climbing',
+  rules: [
+    'Move with the stick or ◀ ▶, and JUMP from frond to frond (press again in the air to jump higher). The camera climbs with you.',
+    'Soldier ants march along some fronds, wasps zip back and forth, and ripe palm fruit drops from the top (watch for the red !). Each one stings.',
+    '"WIND COMING" means stand still on a frond: anyone moving or in the air gets blown sideways.',
+    'Fall off the bottom and you slide back to the last wide frond, stung. Three stings and you\'re down. Reach the calabash at the top before time runs out.',
+  ],
+  short: 'Frond to frond to the top. Stand still in the wind.',
+  stick: true,
+  keys: { ArrowLeft: 'left', KeyA: 'left', ArrowRight: 'right', KeyD: 'right', ArrowUp: 'jump', KeyW: 'jump', Space: 'jump' },
+  holdIds: ['left', 'right'],
   create, step, input, draw, hud, buttons, result,
 }
