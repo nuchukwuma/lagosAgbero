@@ -62,9 +62,11 @@ export function label(ctx, text, x, y, { size = 12, color = '#fff', align = 'cen
   const dark = isDark(color)
   ctx.lineWidth = dark ? Math.max(2, size / 6) : Math.max(3, size / 4)
   ctx.strokeStyle = dark ? 'rgba(255,255,255,0.75)' : INK
-  ctx.strokeText(text, x, y)
+  // never wider than the screen: long lines squeeze rather than run off the edge
+  const max = ctx.canvas.width * 0.94
+  ctx.strokeText(text, x, y, max)
   ctx.fillStyle = color
-  ctx.fillText(text, x, y)
+  ctx.fillText(text, x, y, max)
   ctx.restore()
 }
 

@@ -98,9 +98,9 @@ export function step(s, dt) {
 }
 
 export function slotPos(v, i) {
-  const pw = Math.min(v.W * 0.62, v.H * 0.95)
+  const pw = Math.min(v.W * 0.62, v.H * 0.8)
   const cx = v.W * 0.58
-  const cy = v.H * 0.55
+  const cy = v.H * 0.5
   const col = i % 3
   const row = Math.floor(i / 3)
   return { x: cx + (col - 1) * pw * 0.26, y: cy + (row - 0.5) * pw * 0.2, r: pw * 0.085 }
@@ -121,8 +121,8 @@ export function draw(ctx, s, v, t) {
   rect(ctx, 0, 0, W, H * 0.3, '#ffb36b') // dawn
   rect(ctx, 0, H * 0.3, W, P * 2, '#7a4a24')
   // the big black pan on its stand, firewood glowing beneath
-  const pw = Math.min(W * 0.62, H * 0.95)
-  const cy = H * 0.55
+  const pw = Math.min(W * 0.62, H * 0.8)
+  const cy = H * 0.5
   const px0 = W * 0.58
   for (let i = 0; i < 8; i++) rect(ctx, px0 - pw * 0.4 + i * pw * 0.1, cy + pw * 0.3 + Math.sin(t * 9 + i) * P, P * 3, P * 3, i % 2 ? '#ff8a24' : '#ffd23a')
   disc(ctx, px0, cy, pw * 0.48, '#2a2a2a', P)
