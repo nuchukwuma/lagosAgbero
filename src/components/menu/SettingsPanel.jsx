@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { useSettings, fullscreenSupported, toggleFullscreen, effectiveQuality } from '../../game/store/settings.js'
-import { useDevice } from '../hud/useDevice.js'
 import { ORIENTATIONS, isPhone, applyOrientation } from '../../game/systems/orientation.js'
 import Icon from '../Icon.jsx'
 import { voicesSupported, speak } from '../../game/audio/voices.js'
@@ -19,7 +18,6 @@ export default function SettingsPanel() {
   const orientation = useSettings((s) => s.orientation || 'landscape')
   const voiceMode = useSettings((s) => (s.voices === false ? 'off' : s.handsFree ? 'hands' : 'on'))
   const update = useSettings((s) => s.update)
-  const { touch } = useDevice()
   const [full, setFull] = useState(Boolean(document.fullscreenElement))
   useEffect(() => {
     const on = () => setFull(Boolean(document.fullscreenElement || document.webkitFullscreenElement))
@@ -84,29 +82,12 @@ export default function SettingsPanel() {
             </button>
           ))}
         </div>
-      ) : (
-        <p className="footnote">Voices: this browser has no built-in voices, so the story is text only here.</p>
-      )}
-      {voiceMode === 'hands' && <p className="footnote">Hands-free: every line is read aloud and the story moves on by itself. You still pick the choices.</p>}
-      <p className="footnote">
-        {
-          {
-            low: 'Low: made for 2 GB phones. Fewer background people, cars and props, lower resolution, a steady 30 frames a second; the story is the same.',
-            medium: 'Medium: smoothed edges and a sharper picture. Good for most phones.',
-            high: 'High: sharper still and a busier street. For newer phones.',
-            sharpest: "Sharpest: your screen's full resolution, the whole crowd and the furthest view. For strong phones and computers: it uses more battery.",
-          }[level]
-        }
-        {quality === 'auto' && ' (Picked for this device.)'}
-      </p>
-      {fullscreenSupported() ? (
+      ) : null}
+      {fullscreenSupported() && (
         <button className="btn" onClick={toggleFullscreen}>
           {full ? 'Exit full screen' : 'Full screen'}
         </button>
-      ) : (
-        <p className="footnote">Full screen: use your browser's "Add to Home Screen" to play without bars.</p>
       )}
-      <p className="footnote">Controls: {touch ? 'joystick on the left, buttons on the right.' : 'WASD / arrows to move, Shift to run, E to talk or act.'}</p>
     </div>
   )
 }

@@ -3585,3 +3585,13 @@ svg .is-chase { fill: #e53935; stroke: #fff; stroke-width: 0.6; animation: map-p
 .runner-powers .magnet { background: #ff8a7a; }
 .runner-powers .star { background: #ffd23a; }
 .runner-powers .charm { background: #9cc3ff; }
+/* how-to-play and result cards: never pushed up under the top bar; they sit
+   just below it and scroll if they're taller than the screen */
+.fee-intro {
+  margin-bottom: 0;
+  max-height: calc(100dvh - 72px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+}
+.story-content:has(> .fee-intro) {
+  top: calc(max(8px, env(safe-area-inset-top)) + 56px);
+  align-items: center;
+}
