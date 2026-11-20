@@ -65,7 +65,7 @@ export function createBattle({ rounds = 3, length = 8, skill = 0.6, level = 0.3,
   let beat = 0
   for (let i = 0; i < rounds; i++) {
     const beats = length + i * 4
-    const density = Math.min(1, level * 0.7 + i * 0.22)
+    const density = Math.min(1, level * 0.6 + i * 0.12) // off-beats and doubles creep in round by round
     const rivalAt = beat + LEAD
     const youAt = rivalAt + beats + 2
     for (const n of phrase(r, rivalAt, beats, density)) notes.push({ ...n, who: 'rival', round: i, mark: null })
@@ -76,6 +76,18 @@ export function createBattle({ rounds = 3, length = 8, skill = 0.6, level = 0.3,
   // the rival's marks, decided by their skill
   for (const n of notes) if (n.who === 'rival') n.rivalMark = r() < skill ? 'perfect' : r() < 0.65 ? 'good' : 'miss'
   return { plan, notes, end: beat + 2, you: 0, rival: 0, combo: 0, best: 0, hype: 0.3, counts: { perfect: 0, good: 0, miss: 0 }, over: false }
+}
+
+/**
+ * The tempo of a round: the arrows start slow so you get used to them, and each
+ * round is a little quicker (72% of the battle's tempo, then 82%, 92%, 100%).
+ */
+export const roundTempo = (bpm, round) => bpm * Math.min(1, 0.72 + round * 0.1)
+
+/** Which round beat t is in (the count-in before a round belongs to it). */
+export function roundAt(b, t) {
+  for (let i = 0; i < b.plan.length; i++) if (t < b.plan[i].youAt + b.plan[i].beats) return i
+  return b.plan.length - 1
 }
 
 /** Where we are at beat t: { round, phase: 'count'|'rival'|'you'|'done' } */

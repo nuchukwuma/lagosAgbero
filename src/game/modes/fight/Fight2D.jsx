@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { useFight, fightInput, opponentProfile } from './fightStore.js'
-import { createFight, stepFight, MOVES } from './fightLogic.js'
+import { createFight, stepFight, MOVES, ARENA, itemNear } from './fightLogic.js'
+import { storyLevel } from '../../systems/progress.js'
+import { storyCtx } from '../../narrative/storyData.js'
 import { makePixelFighter, frameFor, flashOf, tintOf, reachOf, M_PER_PX, CW, CH, AX, AY } from './fight2d/pixel.js'
 import { makePixelStage, backdropFor } from './fight2d/pixelStage.js'
 import { useGameStore } from '../../store/gameStore.js'
@@ -82,7 +84,10 @@ export default function Fight2D({ params }) {
     const canvas = canvasRef.current
     const ctx = canvas.getContext('2d')
     const stats = useGameStore.getState().game?.stats
-    const fight = createFight(profile, { energy: stats?.energy ?? 70, notoriety: stats?.notoriety ?? 0, difficulty: params.difficulty ?? 1 })
+    // harder (and a little quicker) as the story goes on; free-roam fights come already scaled (heat.js)
+    const L = params.level ?? storyLevel(useGameStore.getState().game, storyCtx.chapters)
+    const difficulty = params.storyScaled ? params.difficulty ?? 1 : Math.min(3.5, (params.difficulty ?? 1) + L * 1.2)
+    const fight = createFight(profile, { energy: stats?.energy ?? 70, notoriety: stats?.notoriety ?? 0, difficulty, pace: 0.72 + L * 0.16, seed: (params.opponent || 'x').length + Math.floor(Math.random() * 9) })
     const light = effectiveQuality(useSettings.getState().quality) === 'low'
     let W = 0
     let H = 0
@@ -133,7 +138,7 @@ export default function Fight2D({ params }) {
       const x = victim.x - dir * 0.2
       // the pixel fighters: head about 1.1 m, chest about 0.65 m
       const y = victim.y + (kind === 'kick' ? 0.62 : kind === 'block' ? 0.85 : kind === 'air' ? 0.75 : kind === 'special' ? 1.0 : 0.9)
-      const st = { punch: ['#fff3b0', '#ffb020', 0.36], kick: ['#ffe08a', '#ff7a1a', 0.48], air: ['#ffe08a', '#ff7a1a', 0.5], special: ['#ffffff', '#ff3d2e', 0.8], block: ['#d8f1ff', '#5aa9ff', 0.28] }[kind]
+      const st = { throw: ['#fff3b0', '#ffb020', 0.42], punch: ['#fff3b0', '#ffb020', 0.36], kick: ['#ffe08a', '#ff7a1a', 0.48], air: ['#ffe08a', '#ff7a1a', 0.5], special: ['#ffffff', '#ff3d2e', 0.8], block: ['#d8f1ff', '#5aa9ff', 0.28] }[kind]
       fx.bursts.push({ x, y, t: 0, color: st[0], ring: st[1], size: st[2] })
       fx.rings.push({ x, y, t: 0, color: st[1], big: kind === 'special' || kind === 'kick' })
       if (kind === 'block') fx.shields.push({ x: victim.x - dir * 0.35, y: victim.y + 0.75, t: 0, dir })
@@ -190,7 +195,7 @@ export default function Fight2D({ params }) {
       if (started && !store.ended && !fight.over) {
         const before = { p: fight.p.hp, o: fight.o.hp }
         stepFight(fight, { ...fightInput }, simDt)
-        fightInput.punch = fightInput.kick = fightInput.special = fightInput.dodge = fightInput.jump = false
+        fightInput.punch = fightInput.kick = fightInput.special = fightInput.dodge = fightInput.jump = fightInput.throw = false
         for (const ev of fight.events) {
           const attacker = ev.who === 'player' ? fight.p : fight.o
           const victim = ev.who === 'player' ? fight.o : fight.p
@@ -206,6 +211,10 @@ export default function Fight2D({ params }) {
             sfx('whoosh')
             fx.words.push({ text: 'OVER!', x: victim.x, y: victim.y + 1.6, t: 0, rot: 0.1, kind: 'block' })
           }
+          if (ev.type === 'throw') {
+            sfx('whoosh')
+            continue
+          }
           if (ev.type === 'dodged' || ev.type === 'jumped' || ev.type === 'ducked') sfx('whoosh')
           else if (ev.type === 'blocked') sfx('block')
           else if (ev.move === 'special') sfx('special')
@@ -216,6 +225,9 @@ export default function Fight2D({ params }) {
         const dealt = before.o - fight.o.hp
         if (taken || dealt) useFight.setState({ stats: { dealt: store.stats.dealt + dealt, taken: store.stats.taken + taken } })
         if (fight.coins !== store.coins) setTimeout(() => useFight.setState({ coins: fight.coins }), 650) // when they land in the purse
+        // the THROW button shows only while you stand by something
+        const canThrow = Boolean(itemNear(fight, fight.p))
+        if (canThrow !== store.canThrow) useFight.setState({ canThrow })
         hudTimer -= dt
         if (hudTimer <= 0 || taken || dealt) {
           hudTimer = 0.1
@@ -310,6 +322,73 @@ export default function Fight2D({ params }) {
       }
     }
 
+    // a wall of blocks with a hazard stripe: the end of the arena
+    function drawWall(x, side) {
+      const [sx] = toScreen(x, 0)
+      const w = Math.max(PX * 4, ppm * 0.45)
+      const h = ppm * 2.4
+      const x0 = Math.round((sx - w / 2) / PX) * PX
+      ctx.fillStyle = 'rgba(0,0,0,0.3)'
+      ctx.fillRect(x0 - side * PX * 2, groundY - h + PX * 2, w, h)
+      const rows = 6
+      for (let r = 0; r < rows; r++) {
+        const y = groundY - ((r + 1) * h) / rows
+        ctx.fillStyle = r % 2 ? '#8a8378' : '#9d968a'
+        ctx.fillRect(x0, Math.round(y), w, Math.ceil(h / rows))
+        ctx.fillStyle = '#5f594f'
+        ctx.fillRect(x0, Math.round(y), w, PX)
+        ctx.fillRect(x0 + (r % 2 ? w / 2 : w / 4), Math.round(y), PX, Math.ceil(h / rows))
+      }
+      // the yellow and black stripe that says "no further"
+      for (let i = 0; i < 4; i++) {
+        ctx.fillStyle = i % 2 ? '#1a1a1a' : '#f2c230'
+        ctx.fillRect(x0, Math.round(groundY - h * 0.55 + i * PX * 2), w, PX * 2)
+      }
+    }
+
+    // the things you can throw, in pixel art (on the road, or spinning in the air)
+    function drawItem(kind, x, y, spin, glow) {
+      const [sx, sy] = toScreen(x, y)
+      const u = PX
+      ctx.save()
+      ctx.translate(Math.round(sx), Math.round(sy))
+      if (y > 0.05 && kind !== 'tyre') ctx.rotate(spin)
+      if (glow) {
+        ctx.fillStyle = 'rgba(255,210,58,0.35)'
+        ctx.fillRect(-u * 5, -u * 7, u * 10, u * 8)
+      }
+      if (kind === 'bottle') {
+        ctx.fillStyle = '#2e7d4f'
+        ctx.fillRect(-u, -u * 6, u * 2, u * 2)
+        ctx.fillRect(-u * 2, -u * 4, u * 4, u * 4)
+        ctx.fillStyle = '#9fe3b5'
+        ctx.fillRect(-u, -u * 3, u, u * 2)
+      } else if (kind === 'stone') {
+        ctx.fillStyle = '#7d7468'
+        ctx.fillRect(-u * 2, -u * 3, u * 4, u * 3)
+        ctx.fillRect(-u * 3, -u * 2, u * 6, u * 2)
+        ctx.fillStyle = '#a39a8c'
+        ctx.fillRect(-u, -u * 3, u * 2, u)
+      } else if (kind === 'crate') {
+        ctx.fillStyle = '#a0662e'
+        ctx.fillRect(-u * 3, -u * 5, u * 6, u * 5)
+        ctx.fillStyle = '#6b4220'
+        ctx.fillRect(-u * 3, -u * 5, u * 6, u)
+        ctx.fillRect(-u * 3, -u * 3, u * 6, u)
+        ctx.fillRect(-u * 3, -u, u * 6, u)
+      } else {
+        // the tyre: a ring that rolls
+        ctx.fillStyle = '#1e1e22'
+        ctx.fillRect(-u * 3, -u * 6, u * 6, u * 6)
+        ctx.fillStyle = '#55555e'
+        ctx.fillRect(-u, -u * 4, u * 2, u * 2)
+        ctx.fillStyle = '#3a3a42'
+        const k = Math.floor(spin * 2) % 2
+        ctx.fillRect(-u * 3 + k * u * 4, -u * 6, u * 2, u)
+      }
+      ctx.restore()
+    }
+
     function dustPuff(x, n = 10) {
       return Array.from({ length: light ? Math.ceil(n / 2) : n }, (_, i) => ({ x: x - 0.6 + (i / n) * 1.2, y: 0.05, vx: (Math.random() - 0.5) * 2, vy: 0.6 + Math.random(), life: 0.6, t: 0, color: 'rgba(200,185,160,0.8)', dust: true }))
     }
@@ -374,6 +453,11 @@ export default function Fight2D({ params }) {
         ctx.fillRect(Math.round(sx / PX) * PX - half * PX, groundY, half * 2 * PX, PX)
         ctx.fillRect(Math.round(sx / PX) * PX - (half - 2) * PX, groundY + PX, (half - 2) * 2 * PX, PX)
       }
+      // the walls at both ends of the arena: nobody goes past them
+      for (const sd of [-1, 1]) drawWall(sd * (ARENA + 0.55), sd)
+      // things lying about, and things in the air
+      for (const it of fight.items) drawItem(it.kind, it.x, 0, 0, itemNear(fight, fight.p) === it)
+      for (const q of fight.flying) drawItem(q.kind, q.x, q.y, q.spin, false)
       // the attacker in front, so the blow lands over the other one
       const order = fight.o.action && !fight.p.action ? ['p', 'o'] : ['o', 'p']
       for (const k of order) {

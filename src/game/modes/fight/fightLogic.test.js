@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { createFight, stepFight, animOf, MOVES } from './fightLogic.js'
+import { createFight, stepFight, animOf, MOVES, ARENA, THROWABLES, itemNear } from './fightLogic.js'
 
 const idleOpponent = { hp: 50, aggression: 0, block: 0 }
 const run = (s, input, seconds, rng = () => 0.99) => {
@@ -248,5 +248,71 @@ describe('fight: guarding and squatting', () => {
     const hp = s.p.hp
     stepFight(s, { crouch: true }, 1 / 60, () => 0.99)
     expect(s.p.hp).toBeLessThan(hp)
+  })
+
+  describe('throwing things', () => {
+    const idle = { move: 0 }
+    const still = () => 0.99 // the opponent never decides anything
+    const setup = (kind, gap = 3) => {
+      const s = createFight({ hp: 100, aggression: 0, block: 0 }, { items: false })
+      s.p.x = -1.5
+      s.o.x = -1.5 + gap
+      s.items = [{ id: 1, kind, x: -1.4 }]
+      return s
+    }
+    const run = (s, sec, input = idle) => {
+      for (let i = 0; i < sec * 60; i++) stepFight(s, i === 0 ? { ...input } : idle, 1 / 60, still)
+    }
+
+    it('only works standing by something, and the thing flies slowly enough to react to', () => {
+      const s = setup('bottle')
+      expect(itemNear(s, s.p)).toBeTruthy()
+      s.items[0].x = 2
+      expect(itemNear(s, s.p)).toBeNull()
+      for (const T of Object.values(THROWABLES)) expect(T.speed).toBeLessThan(6.5) // 3 m takes about half a second or more
+    })
+
+    it('a thrown bottle hits; a guard takes most of the sting; a squat ducks it', () => {
+      const a = setup('bottle')
+      run(a, 1.5, { throw: true })
+      expect(a.o.hp).toBe(100 - THROWABLES.bottle.dmg)
+      expect(a.items).toHaveLength(0) // it broke
+      const b = setup('bottle')
+      b.o.ai.blockT = 99
+      run(b, 1.5, { throw: true })
+      expect(100 - b.o.hp).toBeLessThan(THROWABLES.bottle.dmg / 2)
+      const c = setup('bottle')
+      run(c, 0.1, { throw: true })
+      c.o.crouching = true
+      const hp = c.o.hp
+      for (let i = 0; i < 90; i++) {
+        c.o.crouching = true
+        stepFight(c, idle, 1 / 60, still)
+        c.o.crouching = true
+      }
+      expect(c.o.hp).toBe(hp)
+    })
+
+    it('a stone that hits falls to the ground to be thrown again; a tyre rolls under a jump', () => {
+      const s = setup('stone')
+      run(s, 1.5, { throw: true })
+      expect(s.items.map((i) => i.kind)).toEqual(['stone'])
+      const t = setup('tyre')
+      run(t, 0.6, { throw: true }) // the tyre is on its way
+      t.o.y = 0.5
+      t.o.vy = 4 // ...and they hop it
+      const hp = t.o.hp
+      run(t, 0.5)
+      expect(t.o.hp).toBe(hp)
+    })
+
+    it('runs at its pace, and nobody goes through the walls', () => {
+      const slow = createFight({ hp: 100 }, { pace: 0.5 })
+      stepFight(slow, idle, 1, still)
+      expect(slow.time).toBeCloseTo(0.5)
+      const s = createFight({ hp: 100 }, {})
+      for (let i = 0; i < 400; i++) stepFight(s, { move: -1 }, 1 / 60, still)
+      expect(s.p.x).toBeGreaterThanOrEqual(-ARENA)
+    })
   })
 })

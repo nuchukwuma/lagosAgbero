@@ -10,6 +10,12 @@
 // meter. A heavy blow that's blocked leaves its thrower open for a moment.
 // The crowd dashes money (coins) for good combos and specials: the winner
 // keeps it.
+// Things lie about the arena (bottles, stones, a crate, an old tyre): stand by
+// one and THROW it. It flies slowly enough to see coming, so it can be
+// blocked, ducked (bottles and stones fly high), jumped (a tyre rolls along
+// the road) or dodged; the opponent picks them up and throws them too.
+// The arena has walls at both ends (ARENA): nobody goes past them.
+// The whole fight runs at `pace` (slower early in the story).
 // Combos: clean hits landed close together count up (x2, x3...) and each
 // step hits harder. Being blocked or dodged, or waiting too long, breaks
 // the chain. Only the player's chain adds damage (the opponent's power
@@ -20,7 +26,16 @@ export const MOVES = {
   kick: { startup: 0.32, active: 0.16, recover: 0.42, range: 2.05, dmg: 12, anim: 'kick', animSpeed: 1.7 },
   special: { startup: 0.45, active: 0.24, recover: 0.6, range: 2.25, dmg: 26, anim: 'roundhouse', animSpeed: 1.95 },
   air: { startup: 0.07, active: 0.28, recover: 0.12, range: 1.85, dmg: 11, anim: 'kick', animSpeed: 2 },
+  throw: { startup: 0.3, active: 0.04, recover: 0.36, range: 0, dmg: 0, anim: 'punch', animSpeed: 1.4 },
 }
+// what can be thrown: damage, speed (m/s: slow enough to react to), height it flies at, whether it breaks
+export const THROWABLES = {
+  bottle: { dmg: 9, speed: 5.2, y: 1.05, breaks: true },
+  stone: { dmg: 8, speed: 5.8, y: 0.95, breaks: false },
+  crate: { dmg: 13, speed: 4.4, y: 0.8, breaks: true },
+  tyre: { dmg: 10, speed: 4.6, y: 0.22, breaks: false }, // rolls along the road: jump it
+}
+export const PICK_RANGE = 0.75 // stand this close to an item to throw it
 const HEAVY = new Set(['kick', 'air'])
 export const JUMP_V = 6.2 // m/s up: about a metre high, 0.7 s in the air
 export const GRAVITY = 18
@@ -32,7 +47,7 @@ const DODGE_TIME = 0.42
 const DODGE_COOLDOWN = 1.0
 const STUN_TIME = 0.38
 const MIN_GAP = 0.85
-const ARENA = 5.5 // metres either side of the centre
+export const ARENA = 5.5 // metres either side of the centre: the walls
 const BLOCK_FACTOR = 0.2
 const SPECIAL_CHIP = 0.35 // a blocked special still stings a little
 const HIGH = new Set(['punch', 'special']) // what a squat ducks under
@@ -48,9 +63,16 @@ function fighter(x, hp) {
  * profile: opponent { hp, power, speed, block, aggression }
  * opts: { energy, notoriety, difficulty }
  */
-export function createFight(profile, { energy = 70, notoriety = 0, difficulty = 1 } = {}) {
+export function createFight(profile, { energy = 70, notoriety = 0, difficulty = 1, pace = 1, items = true, seed = 1 } = {}) {
   const scale = 1 + notoriety / 200 + (difficulty - 1) * 0.15
+  // a few things lying about, away from where the fighters start
+  const kinds = Object.keys(THROWABLES)
+  const spots = [-4.4, -3, 3, 4.4]
+  const placed = items ? spots.map((x, i) => ({ id: i, kind: kinds[(seed + i * 3) % kinds.length], x: x + (((seed * 7 + i * 13) % 10) - 5) * 0.04 })) : []
   return {
+    pace,
+    items: placed,
+    flying: [],
     p: fighter(-1.6, Math.round(70 + energy * 0.3)),
     o: fighter(1.6, Math.round((profile.hp || 90) * scale)),
     profile: { speed: 1, block: 0.25, aggression: 0.5, ...profile, power: (profile.power || 1) * scale },
@@ -65,8 +87,24 @@ const total = (m) => m.startup + m.active + m.recover
 const busy = (f) => Boolean(f.action) || f.stunT > 0
 export const airborne = (f) => f.y > 0 || f.vy > 0
 
-function startMove(f, type) {
+/** The item on the ground within reach of this fighter, if any. */
+export function itemNear(state, f) {
+  if (airborne(f)) return null
+  let best = null
+  for (const it of state.items || []) if (Math.abs(it.x - f.x) < PICK_RANGE && (!best || Math.abs(it.x - f.x) < Math.abs(best.x - f.x))) best = it
+  return best
+}
+
+function startMove(f, type, state = null) {
   if (busy(f) || f.dodgeT > 0) return false
+  if (type === 'throw') {
+    const it = state && itemNear(state, f)
+    if (!it) return false
+    state.items = state.items.filter((x) => x !== it)
+    f.action = { type, t: 0, hit: false, item: it.kind }
+    f.blocking = false
+    return true
+  }
   // in the air, any attack is the flying kick (one a jump); on the ground, never
   if (airborne(f)) {
     if (f.airUsed) return false
@@ -158,6 +196,9 @@ function think(state, dt, rng) {
     if (rng() < 0.3) tryDodge(o, 1)
     else o.ai.blockT = 0.55
   }
+  // something thrown at them: they may see it coming and guard
+  const incoming = (state.flying || []).find((q) => q.owner === 'p' && q.x < o.x && o.x - q.x < 2.4)
+  if (incoming && !busy(o) && o.ai.blockT <= 0 && rng() < prof.block * dt * 6) o.ai.blockT = 0.6
   o.blocking = o.ai.blockT > 0 && !busy(o)
   if (o.ai.think > 0 || busy(o) || o.blocking) return
   o.ai.think = Math.max(0.18, 0.55 - prof.aggression * 0.3) * (0.7 + rng() * 0.6)
@@ -174,6 +215,16 @@ function think(state, dt, rng) {
     return tryJump(o)
   }
   if (o.special >= 100 && dist < MOVES.special.range && rng() < 0.6) return startMove(o, 'special')
+  // standing by something to throw, and not too close: let it fly
+  if (dist > 1.6 && itemNear(state, o) && rng() < prof.aggression * 0.6) return startMove(o, 'throw', state)
+  // walk over to pick something up now and then
+  if (dist > 2.2 && rng() < prof.aggression * 0.15) {
+    const it = (state.items || []).filter((x) => x.x > p.x + 1).sort((a, b) => Math.abs(a.x - o.x) - Math.abs(b.x - o.x))[0]
+    if (it && Math.abs(it.x - o.x) < 2.5) {
+      o.ai.move = Math.sign(it.x - o.x)
+      return
+    }
+  }
   if (dist > MOVES.kick.range - 0.05) o.ai.move = -1 // close in
   else if (dist < 0.95) o.ai.move = 1 // too close: step back
   else if (rng() < prof.aggression) {
@@ -183,6 +234,50 @@ function think(state, dt, rng) {
   } else o.ai.move = dist > MOVES.punch.range ? -1 : rng() < 0.5 ? 1 : 0
 }
 
+/** Thrown things fly; whoever they reach blocks, ducks, jumps, dodges or takes it. */
+function stepFlying(state, dt) {
+  if (!state.flying?.length) return
+  const keep = []
+  for (const q of state.flying) {
+    q.x += q.vx * dt
+    q.spin += dt * (q.kind === 'tyre' ? 9 : 14)
+    const T = THROWABLES[q.kind]
+    const target = q.owner === 'p' ? state.o : state.p
+    const who = q.owner === 'p' ? 'player' : 'opponent'
+    const thrower = q.owner === 'p' ? state.p : state.o
+    const reached = !q.passed && Math.abs(q.x - target.x) < 0.35
+    const off = Math.abs(q.x) > ARENA + 0.3
+    const drop = (x) => !T.breaks && state.items.push({ id: `${q.kind}${state.time}`, kind: q.kind, x: Math.max(-ARENA + 0.3, Math.min(ARENA - 0.3, x)) })
+    if (off) {
+      drop(Math.sign(q.x) * (ARENA - 0.4)) // it hits the wall and falls
+      continue
+    }
+    if (!reached) {
+      keep.push(q)
+      continue
+    }
+    const high = T.y > 0.6
+    if (target.dodgeT > 0 || (high && target.crouching) || (!high && target.y > 0.3)) {
+      state.events.push({ type: target.dodgeT > 0 ? 'dodged' : high ? 'ducked' : 'jumped', who })
+      q.passed = true // it sails on past
+      keep.push(q)
+      continue
+    }
+    const power = q.owner === 'p' ? state.mods?.dealt ?? 1 : state.profile.power * (state.mods?.taken ?? 1)
+    const blocked = target.blocking
+    const dmg = Math.round(T.dmg * power * (blocked ? BLOCK_FACTOR : 1))
+    target.hp = Math.max(0, target.hp - dmg)
+    thrower.special = Math.min(100, thrower.special + dmg * 1.5)
+    if (!blocked) {
+      target.stunT = STUN_TIME
+      target.action = null
+    }
+    state.events.push({ type: blocked ? 'blocked' : 'hit', who, move: 'throw', item: q.kind, dmg, combo: 0, coins: 0 })
+    drop(target.x + Math.sign(q.vx) * 0.6)
+  }
+  state.flying = keep
+}
+
 /**
  * Advance the fight. input: { move: -1..1, punch, kick, special, dodge (pressed this frame), block (held) }
  * Returns the same (mutated) state; read state.events for what happened this step.
@@ -190,6 +285,7 @@ function think(state, dt, rng) {
 export function stepFight(state, input, dt, rng = Math.random) {
   if (state.over) return state
   state.events = []
+  dt *= state.pace ?? 1 // the whole fight runs at its pace
   state.time += dt
   const { p, o } = state
 
@@ -210,20 +306,31 @@ export function stepFight(state, input, dt, rng = Math.random) {
     f.comboT = Math.max(0, f.comboT - dt)
     if (f.comboT <= 0) f.combo = 0
     if (f.action) {
+      const before = f.action.t
       f.action.t += dt
-      if (f.action.t >= total(MOVES[f.action.type])) f.action = null
+      // the throw lets go at the end of its wind-up
+      if (f.action.type === 'throw' && before < MOVES.throw.startup && f.action.t >= MOVES.throw.startup) {
+        const dir = f === p ? 1 : -1
+        const T = THROWABLES[f.action.item]
+        state.flying = state.flying || []
+        state.flying.push({ kind: f.action.item, x: f.x + dir * 0.45, y: T.y, vx: dir * T.speed, owner: f === p ? 'p' : 'o', spin: 0 })
+        state.events.push({ type: 'throw', who: f === p ? 'player' : 'opponent', item: f.action.item })
+      }
+      if (f.action && f.action.t >= total(MOVES[f.action.type])) f.action = null
     }
   }
+  stepFlying(state, dt)
 
   // player intent
   if (input.punch) startMove(p, 'punch')
   if (input.kick) startMove(p, 'kick')
   if (input.special) startMove(p, 'special')
+  if (input.throw) startMove(p, 'throw', state)
   if (input.dodge) tryDodge(p, -1)
   if (input.jump) tryJump(p)
   // guarding: the shield, or holding back while their blow is coming. A guard
   // also cuts short the end of your own swing or the tail of a stagger.
-  const threat = o.action && o.action.t < MOVES[o.action.type].startup + MOVES[o.action.type].active
+  const threat = (o.action && o.action.t < MOVES[o.action.type].startup + MOVES[o.action.type].active) || (state.flying || []).some((q) => q.owner === 'o' && q.x > p.x && q.x - p.x < 2.5)
   const wantsGuard = Boolean(input.block) || ((input.move || 0) < 0 && threat)
   if (wantsGuard && p.action && p.action.t > MOVES[p.action.type].startup + MOVES[p.action.type].active && !airborne(p)) p.action = null
   if (wantsGuard && p.stunT > 0 && p.stunT < 0.15) p.stunT = 0

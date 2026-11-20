@@ -216,6 +216,12 @@ export function draw(ctx, s, v, t) {
     prev = Math.max(prev, g.x1)
   }
   const onScreen = (x0, x1) => x1 > camX - 40 && x0 < camX + vw + 40
+  // where the run starts: a brick wall (you can't go back past it)
+  if (onScreen(-60, 0)) {
+    rect(ctx, X(-60), Y(-150), 60 * k, 150 * k, '#8a4a32')
+    for (let wy = 0; wy < 150; wy += 10) for (let wx = (wy / 10) % 2 ? -60 : -55; wx < 0; wx += 10) rect(ctx, X(wx), Y(-wy - 10), 9 * k, 9 * k, (wx + wy) % 20 ? '#a0583c' : '#94503a')
+    for (let i = 0; i < 6; i++) rect(ctx, X(-6), Y(-70 + i * 6), 6 * k, 6 * k, i % 2 ? '#1a1a1a' : '#f2c230') // the no-further stripe
+  }
   // scenery props
   for (const pr of lv.props) {
     if (!onScreen(pr.x - 20, pr.x + 20)) continue

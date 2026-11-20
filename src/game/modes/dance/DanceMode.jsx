@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { createBattle, phaseAt, tap, advanceTo, battleResult, LANES } from './danceLogic.js'
+import { createBattle, phaseAt, tap, advanceTo, battleResult, LANES, roundTempo, roundAt } from './danceLogic.js'
 import { makePixelFighter, M_PER_PX, CW, CH, AX, AY } from '../fight/fight2d/pixel.js'
 import { makePixelStage, backdropFor } from '../fight/fight2d/pixelStage.js'
 import { placeHere } from '../fight/fight2d/where.js'
@@ -146,7 +146,7 @@ export default function DanceMode({ params: given, onFinish }) {
       const c = clock.current
       const b = live.current
       const running = c.started && !b.over && !isPaused()
-      if (running) c.beats += (dt * tempo.current.bpm) / 60
+      if (running) c.beats += (dt * roundTempo(tempo.current.bpm, roundAt(live.current, c.beats))) / 60
       if (c.started) {
         // the rival dances their arrows as they reach the line
         for (const n of b.notes) if (n.who === 'rival' && !n.mark && c.beats >= n.beat) {

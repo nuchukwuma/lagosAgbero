@@ -141,7 +141,7 @@ export function tuneParams(id, params = {}, level = 0, boosts = []) {
       break
     case 'dance':
       p.skill = clamp(n(params.skill, 0.55) + (L - 0.4) * 0.3, 0.3, 0.85)
-      p.bpm = Math.round(n(params.bpm, 100) * lerp(0.92, 1.08, L))
+      p.bpm = Math.round(n(params.bpm, 100) * lerp(0.85, 1.05, L)) // gentle early in the story; each round also starts slower (danceLogic: roundTempo)
       break
     case 'escape':
       p.difficulty = clamp(n(params.difficulty, 1) + L * 0.8, 1, 3.5)

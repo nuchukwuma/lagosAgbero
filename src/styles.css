@@ -3948,3 +3948,5 @@ svg .is-chase { fill: #e53935; stroke: #fff; stroke-width: 0.6; animation: map-p
 .arcade-pay strong { color: #8ff0a4; }
 .btn-ad { width: 100%; margin: 4px 0 8px; background: #2e6b3a; border-color: #8ff0a4; color: #fff; }
 .arcade-mul { color: #8ff0a4; letter-spacing: 0; }
+/* the THROW button appears beside the others while you stand by something */
+.fight-btn.throw { font: 900 13px/1 system-ui, sans-serif; color: #1a1408; background: #f2c230; border-color: #fff3b0; letter-spacing: 0.5px; }

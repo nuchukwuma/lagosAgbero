@@ -1,8 +1,9 @@
 // CAMPUS · Hostel Cup Penalties. The inter-hostel final went to penalties.
 // You take a kick, then you keep goal, five each. Shooting: tap where in the
 // goal you're aiming, then stop the power bar in the green. Keeping: watch the
-// kicker's run-up (their body leans the way they'll shoot, most of the time)
-// and dive LEFT, STAY or RIGHT. Level after five: sudden death.
+// kicker (their body leans the way they'll shoot, most of the time) and choose
+// where to dive: LEFT, STAY or RIGHT, or tap the box in the goal you'll cover.
+// They wait for your choice, then run up and shoot. Level after five: sudden death.
 // Params: skill (the other team, 0.5) · name (the other hostel)
 // Outcomes: won | lost
 import { rng, rect, box, label, disc, clamp, inside, ui } from '../px.js'
@@ -38,13 +39,14 @@ function afterKick(s) {
   }
   if (s.kicks.you.length > s.kicks.them.length) {
     s.phase = 'keep'
-    s.runup = 1.6
+    s.runup = 0 // they wait at the spot until you've chosen
     // where they'll shoot, and whether their lean tells the truth
     s.theirZone = ZONES[Math.floor(s.r() * 6)]
     s.leanTrue = s.r() < 0.75
     const c = col(s.theirZone)
     s.lean = s.leanTrue ? c : [0, 1, 2].filter((x) => x !== c)[Math.floor(s.r() * 2)]
     s.dive = null
+    s.diveRow = null
   } else s.phase = 'aim'
 }
 
@@ -73,15 +75,21 @@ export function shoot(s) {
   s.nextIsKeep = true
 }
 
-export function dive(s, c) {
+/** Choose where to dive (column 0-2, and the row if you tapped a box); then they run up and shoot. */
+export function dive(s, c, row = null) {
   if (s.phase !== 'keep' || s.dive != null) return
   s.dive = c
+  s.diveRow = row
+  s.runup = 1 // the run-up
+  s.sound.push('click')
 }
 
 function theirKick(s) {
   const c = col(s.theirZone)
   const miss = s.r() > 0.75 + s.skill * 0.2
-  const saved = !miss && s.dive === c && (s.theirZone[0] === 'B' || s.r() < 0.55)
+  // the right side saves the low ones and most high ones; picking the exact box saves nearly all
+  const rowOk = s.diveRow == null ? s.theirZone[0] === 'B' || s.r() < 0.55 : s.diveRow === s.theirZone[0] ? s.r() < 0.92 : s.r() < 0.3
+  const saved = !miss && s.dive === c && rowOk
   const goal = !miss && !saved
   s.result = miss ? 'Wide! Their striker holds his head.' : saved ? 'SAVED! The hostel goes mad!' : 'They score.'
   s.keeperCol = s.dive ?? 1
@@ -104,7 +112,7 @@ export function step(s, dt) {
       s.pdir = 1
     }
   }
-  if (s.phase === 'keep') {
+  if (s.phase === 'keep' && s.dive != null) {
     s.runup -= dt
     if (s.runup <= 0) theirKick(s)
   }
@@ -152,7 +160,11 @@ export function input(s, ev, v) {
         return
       }
   } else if (s.phase === 'power') shoot(s)
-  else if (s.phase === 'keep') dive(s, ev.x < v.W / 3 ? 0 : ev.x > (v.W * 2) / 3 ? 2 : 1)
+  else if (s.phase === 'keep') {
+    const z = ZONES.find((zz) => inside(ev.x, ev.y, zoneRect(v, zz)))
+    if (z) dive(s, col(z), z[0])
+    else dive(s, ev.x < v.W / 3 ? 0 : ev.x > (v.W * 2) / 3 ? 2 : 1)
+  }
 }
 
 export function draw(ctx, s, v, t) {
@@ -170,7 +182,7 @@ export function draw(ctx, s, v, t) {
   rect(ctx, g.x - P * 2, g.y - P * 2, g.w + P * 4, P * 2, '#ffffff')
   rect(ctx, g.x - P * 2, g.y, P * 2, g.h, '#ffffff')
   rect(ctx, g.x + g.w, g.y, P * 2, g.h, '#ffffff')
-  if (s.phase === 'aim') for (const z of ZONES) {
+  if (s.phase === 'aim' || (s.phase === 'keep' && s.dive == null)) for (const z of ZONES) {
     const zr = zoneRect(v, z)
     ctx.save()
     ctx.globalAlpha = 0.25 + 0.15 * Math.sin(t * 4 + col(z))
@@ -189,9 +201,11 @@ export function draw(ctx, s, v, t) {
   // the kicker at the spot: you, or them leaning which way they'll go
   const spotY = H * 0.86
   if (s.phase === 'keep') {
-    const leanX = (s.lean - 1) * P * 3 * clamp(1.6 - s.runup, 0, 1)
-    drawPerson(ctx, 102, W / 2 + leanX, spotY - (s.runup > 0 ? s.runup * P * 6 : 0), Math.round(P * 1.3), { pose: 'stroll', t })
-    label(ctx, s.dive == null ? 'Read the lean… DIVE!' : ['◀ diving left', '● staying', 'diving right ▶'][s.dive], W / 2, H * 0.66, { size: P * 4.2, color: '#ffd23a' })
+    // waiting at the spot, leaning (the tell); once you've chosen, the run-up
+    const leanX = (s.lean - 1) * P * 3
+    const run = s.dive == null ? 0 : clamp(s.runup, 0, 1)
+    drawPerson(ctx, 102, W / 2 + leanX, spotY + run * P * 6, Math.round(P * 1.3), { pose: s.dive == null ? 'stand' : 'stroll', t })
+    label(ctx, s.dive == null ? 'Read his lean, then choose: tap a box or DIVE' : `${['◀ diving left', '● staying', 'diving right ▶'][s.dive]}${s.diveRow ? (s.diveRow === 'T' ? ', high' : ', low') : ''}`, W / 2, H * 0.66, { size: P * 4.2, color: '#ffd23a' })
   } else if (s.phase !== 'flight' || s.kicks.you.length > s.kicks.them.length) drawPerson(ctx, s.you, W / 2 - P * 6, spotY, Math.round(P * 1.3), { pose: 'stand', t })
   // the ball
   let bx = W / 2
@@ -258,7 +272,7 @@ export function result(s) {
 
 export default {
   id: 'penalty', title: 'Hostel Cup Penalties', scoreLabel: 'points', start: 'Place the ball',
-  rules: ['Shooting: tap where in the goal you want to shoot, then tap again (or KICK) to stop the power bar in the green.', 'Too soft is easy to save; in the red it flies over the bar. Top corners are hard to reach.', 'Keeping: watch their run-up. Their body usually leans the way they\'ll shoot. Dive LEFT, STAY or RIGHT before they kick.', 'Five each. Level? Sudden death.'],
+  rules: ['Shooting: tap where in the goal you want to shoot, then tap again (or KICK) to stop the power bar in the green.', 'Too soft is easy to save; in the red it flies over the bar. Top corners are hard to reach.', 'Keeping: their striker waits at the spot until you choose. His body usually leans the way he\'ll shoot. Dive LEFT, STAY or RIGHT, or tap the box you\'ll cover (the exact box saves nearly everything).', 'Five each. Level? Sudden death.'],
   short: 'Aim, stop the bar in the green. Read the lean.',
   keys: { Space: 'kick', Enter: 'kick', ArrowLeft: '0', ArrowDown: '1', ArrowRight: '2' },
   create, step, input, draw, hud, buttons, result,

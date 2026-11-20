@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { createBattle, phaseAt, tap, advanceTo, battleResult, LANES } from './danceLogic.js'
+import { createBattle, phaseAt, tap, advanceTo, battleResult, LANES, roundTempo, roundAt } from './danceLogic.js'
 
 describe('dance battle (4 lanes)', () => {
   it('the rival dances a phrase first, then it is your turn; each phrase longer', () => {
@@ -49,5 +49,16 @@ describe('dance battle (4 lanes)', () => {
     const n = b.notes.find((x) => x.who === 'you' && lonely(x))
     expect(tap(b, n.beat + 0.35, n.lane).mark).toBe('stray')
     expect(tap(b, n.beat + 0.35, n.lane, 1.5).mark).toBe('good')
+  })
+
+  it('starts slow and speeds up a little each round', () => {
+    const b = createBattle({ rounds: 4, level: 0.2, seed: 5 })
+    const tempos = b.plan.map((p) => roundTempo(100, roundAt(b, p.youAt + 1)))
+    expect(tempos[0]).toBeCloseTo(72)
+    for (let i = 1; i < tempos.length; i++) {
+      expect(tempos[i]).toBeGreaterThan(tempos[i - 1])
+      expect(tempos[i] - tempos[i - 1]).toBeLessThanOrEqual(10.01)
+    }
+    expect(roundTempo(100, 9)).toBe(100)
   })
 })

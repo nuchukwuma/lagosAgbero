@@ -25,6 +25,8 @@ const KEYS = {
   Space: "dodge",
   KeyW: "jump",
   ArrowUp: "jump",
+  KeyT: "throw",
+  KeyI: "throw",
 };
 
 const MOVE_LIST = [
@@ -39,6 +41,7 @@ const MOVE_LIST = [
   ["down", "Squat (stick down)", "duck under punches and the spin kick; kicks still land"],
   ["dodge", "Dodge", "a quick step back: nothing touches you"],
   ["bolt", "Special", "when the meter is full: the Lagos Roundabout"],
+  ["up", "Throw (stand by a bottle, stone, crate or tyre)", "it flies slowly: block it, duck the high ones, jump the tyre"],
 ];
 
 const SIZE = 64; // the badge canvas: a pixel portrait, scaled up crisply
@@ -204,7 +207,7 @@ export default function FightMode({ params, onFinish }) {
                 The crowd throws money for good combos and specials: win, and the
                 purse is yours.
                 {!touch &&
-                  " Keys: A/D move · W jump · S squat · J punch · K kick · L block (hold) · Space dodge · U special"}
+                  " Keys: A/D move · W jump · S squat · J punch · K kick · L block (hold) · Space dodge · U special · T throw"}
               </p>
             </>
           ) : (
@@ -342,12 +345,25 @@ export default function FightMode({ params, onFinish }) {
               label="Special move"
               className={special >= 100 ? "ready" : "dim"}
             />
+            {fight.canThrow && (
+              <button
+                className="fight-btn throw ready"
+                aria-label="Throw"
+                title="Throw"
+                onPointerDown={(e) => {
+                  e.preventDefault();
+                  fightInput.throw = true;
+                }}
+              >
+                THROW
+              </button>
+            )}
           </div>
         </div>
       ) : (
         <div className="keyboard-hint">
           A/D move · W jump · S squat · J punch · K kick · L block · Space dodge
-          · U special
+          · U special{fight.canThrow ? " · T THROW" : " · (stand by something to throw it: T)"}
         </div>
       )}
       {import.meta.env.DEV && (

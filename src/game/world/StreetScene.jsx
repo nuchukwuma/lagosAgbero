@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import { Flyover, Wires, BusShelter } from './StreetBits.jsx'
 import { StaticWorld, Props, Skyline, NightGlows, Ground, Pavements, GroundDetail } from './Scenery.jsx'
 import { FakeShadows } from './Shadows.jsx'
+import Barriers from './Barriers.jsx'
 import MarketStall from './MarketStall.jsx'
 import Sign from './Sign.jsx'
 
@@ -26,6 +27,7 @@ export default function StreetScene({ layout }) {
   return (
     <group>
       <Ground bounds={layout.bounds} />
+      <Barriers bounds={layout.bounds} />
       <Pavements list={raw.pavements || []} />
       <GroundDetail layout={layout} />
       <group userData={{ tag: 'static' }}>
