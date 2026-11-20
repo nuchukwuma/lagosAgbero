@@ -3981,3 +3981,28 @@ svg .is-chase { fill: #e53935; stroke: #fff; stroke-width: 0.6; animation: map-p
 .games-best { font-style: normal; font-size: 11px; color: #8ff0a4; }
 .hud-games { pointer-events: none; }
 .hud-games .hud-right { pointer-events: auto; }
+/* the taxi game's panel, shrunk: fuel and the next stop only, top-left */
+.drive-hud { cursor: pointer; }
+.drive-hud-min {
+  position: fixed;
+  top: calc(env(safe-area-inset-top, 0px) + 64px);
+  left: max(8px, env(safe-area-inset-left));
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: min(60vw, 320px);
+  padding: 4px 26px 4px 8px;
+  border-radius: 10px;
+  border: 1px solid var(--danfo);
+  background: rgba(26, 20, 8, 0.88);
+  color: var(--ink);
+  font: 600 12px system-ui, sans-serif;
+  cursor: pointer;
+}
+.drive-hud-min .drive-meter { display: inline-flex; align-items: center; gap: 4px; }
+.drive-hud-min .bar { display: inline-block; width: 46px; height: 7px; border-radius: 4px; background: rgba(255, 255, 255, 0.15); overflow: hidden; }
+.drive-hud-min .bar > span { display: block; height: 100%; background: #2ecc71; }
+.drive-hud-min .drive-meter.low .bar > span { background: #e2553a; }
+.drive-next-min { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.drive-hud-min .task-toggle { position: absolute; right: 8px; }

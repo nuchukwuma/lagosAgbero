@@ -82,6 +82,10 @@ export function makeArcadeMode(game) {
       }
       layout()
       window.addEventListener('resize', layout)
+      // the canvas can change size without a window resize (fullscreen, the page settling after loading)
+      const watch = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(() => layout()) : null
+      watch?.observe(canvas)
+      let failed = false // a drawing error shows once in the console and the game keeps going
       let raf = 0
       let last = performance.now()
       let t = 0
@@ -95,7 +99,12 @@ export function makeArcadeMode(game) {
         const running = st === 'play' && !s.over && !isPaused()
         if (running) {
           t += dt
-          game.step(s, dt)
+          try {
+            game.step(s, dt)
+          } catch (err) {
+            if (!failed) console.error(`[${game.id}] step`, err)
+            failed = true
+          }
           if (s.sound) {
             for (const name of s.sound) sfx(name)
             s.sound.length = 0
@@ -110,7 +119,12 @@ export function makeArcadeMode(game) {
         ctx.rect(0, band.top, W, v.H)
         ctx.clip()
         ctx.translate(0, band.top)
-        game.draw(ctx, s, v, t)
+        try {
+          game.draw(ctx, s, v, t)
+        } catch (err) {
+          if (!failed) console.error(`[${game.id}] draw`, err)
+          failed = true
+        }
         ctx.restore()
         hudT -= dt
         if (hudT <= 0) {
@@ -168,6 +182,7 @@ export function makeArcadeMode(game) {
       return () => {
         cancelAnimationFrame(raf)
         window.removeEventListener('resize', layout)
+        watch?.disconnect()
         window.removeEventListener('keydown', onKey)
         window.removeEventListener('keyup', onKeyUp)
         window.removeEventListener('blur', releaseAll)

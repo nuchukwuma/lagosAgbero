@@ -7,6 +7,8 @@ import { formatNaira } from '../../narrative/stats.js'
 import Icon from '../../../components/Icon.jsx'
 import { sfx } from '../../audio/audio.js'
 
+const HUD_KEY = 'naijavice.driveHudMin'
+
 // Danfo driving: HUD, pedals, steering, horn, and the choices at filling
 // stations and checkpoints. Keyboard: W/↑ gas · S/↓ brake · A/D or ←/→ steer
 // · Space or H horn.
@@ -37,6 +39,38 @@ function Hold({ k, icon, label, className = '' }) {
 const MARK_ICON = { stop: 'people', fuel: 'fuel', checkpoint: 'shield' }
 
 export default function DriveMode({ params, onFinish }) {
+  // the driving panel shrinks to fuel + next stop (tap it); on a phone it shrinks by itself after a few seconds
+  const [hudMin, setHudMin] = useState(() => {
+    try {
+      return window.localStorage.getItem(HUD_KEY) === '1'
+    } catch {
+      return false
+    }
+  })
+  const [hudTouched, setHudTouched] = useState(false)
+  useEffect(() => {
+    let chosen = null
+    try {
+      chosen = window.localStorage.getItem(HUD_KEY)
+    } catch {
+      chosen = null
+    }
+    if (chosen !== null || hudTouched || !window.matchMedia?.('(pointer: coarse)').matches) return undefined
+    const id = setTimeout(() => setHudMin(true), 6000)
+    return () => clearTimeout(id)
+  }, [hudTouched])
+  const toggleHud = (e) => {
+    e.stopPropagation()
+    setHudTouched(true)
+    setHudMin((m) => {
+      try {
+        window.localStorage.setItem(HUD_KEY, m ? '0' : '1')
+      } catch {
+        // storage blocked: the choice lasts for this drive
+      }
+      return !m
+    })
+  }
   const store = useDrive()
   const { touch } = useDevice()
   const money = useGameStore((s) => s.game?.stats.money ?? 0)
@@ -144,8 +178,25 @@ export default function DriveMode({ params, onFinish }) {
 
   return (
     <>
-      {h && (
-        <div className="drive-hud">
+      {h && hudMin && (
+        // shrunk: just the fuel and where to stop next, out of the way (tap for everything)
+        <button className="drive-hud-min" onClick={toggleHud} aria-label="Show the full driving panel">
+          <span className={`drive-meter ${h.fuel < 15 ? 'low' : ''}`}>
+            <Icon name="fuel" size={14} />
+            <span className="bar">
+              <span style={{ width: `${h.fuel}%` }} />
+            </span>
+          </span>
+          {h.next[0] && (
+            <span className="drive-next-min">
+              <Icon name={MARK_ICON[h.next[0].type]} size={13} /> {h.next[0].type === 'stop' ? h.next[0].name : h.next[0].type === 'fuel' ? 'Fuel' : 'Checkpoint'} · {h.next[0].m} m
+            </span>
+          )}
+          <span className="task-toggle">▾</span>
+        </button>
+      )}
+      {h && !hudMin && (
+        <div className="drive-hud" onClick={toggleHud} role="button" title="Tap to shrink">
           <div className="drive-speed">
             <strong>{h.kmh}</strong>
             <small>km/h · gear {h.gear || 1}</small>

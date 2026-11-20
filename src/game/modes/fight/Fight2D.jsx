@@ -113,6 +113,9 @@ export default function Fight2D({ params }) {
     }
     layout()
     window.addEventListener('resize', layout)
+    // the canvas can change size without a window resize (fullscreen, the page settling after loading)
+    const watch = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(() => layout()) : null
+    watch?.observe(canvas)
 
     // per fighter: the drawn pose (eased towards the rules' pose), squash, afterimages
     const look = {
@@ -663,6 +666,7 @@ export default function Fight2D({ params }) {
       cancelAnimationFrame(raf)
       unPause()
       window.removeEventListener('resize', layout)
+      watch?.disconnect()
     }
   }, [fighters]) // eslint-disable-line react-hooks/exhaustive-deps
 

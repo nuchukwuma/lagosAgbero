@@ -92,6 +92,9 @@ export default function DanceMode({ params: given, onFinish }) {
     }
     layout()
     window.addEventListener('resize', layout)
+    // the canvas can change size without a window resize (fullscreen, the page settling after loading)
+    const watch = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(() => layout()) : null
+    watch?.observe(canvas)
     let raf = 0
     let last = performance.now()
     let t = 0
@@ -268,6 +271,7 @@ export default function DanceMode({ params: given, onFinish }) {
     return () => {
       cancelAnimationFrame(raf)
       window.removeEventListener('resize', layout)
+      watch?.disconnect()
     }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
