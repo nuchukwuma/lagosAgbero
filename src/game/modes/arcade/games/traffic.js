@@ -18,7 +18,7 @@ const KINDS = [
 export const MAX_QUEUE = 8
 
 export function create(params = {}, seed = 1) {
-  const s = { r: rng(seed), time: params.seconds ?? 60, total: params.seconds ?? 60, target: params.target ?? 30, green: 'NS', amber: 0, q: { N: [], S: [], E: [], W: [] }, gapLeft: { N: 0, S: 0, E: 0, W: 0 }, spawn: 0.5, passed: 0, strikes: 0, siren: null, sirenNext: 14, flash: 0, msg: '', msgT: 0, over: false, gridlock: null, sound: [] }
+  const s = { r: rng(seed), maxQueue: params.maxQueue ?? MAX_QUEUE, spawnMul: params.spawnMul ?? 1, time: params.seconds ?? 60, total: params.seconds ?? 60, target: params.target ?? 30, green: 'NS', amber: 0, q: { N: [], S: [], E: [], W: [] }, gapLeft: { N: 0, S: 0, E: 0, W: 0 }, spawn: 0.5, passed: 0, strikes: 0, siren: null, sirenNext: 14, flash: 0, msg: '', msgT: 0, over: false, gridlock: null, sound: [] }
   for (const d of DIRS) for (let i = 0; i < 2; i++) s.q[d].push(pickOf(s.r, KINDS))
   return s
 }
@@ -40,7 +40,7 @@ export function step(s, dt) {
   if (s.spawn <= 0) {
     const d = pickOf(s.r, DIRS)
     s.q[d].push(pickOf(s.r, KINDS))
-    s.spawn = clamp(1.05 - elapsed * 0.012, 0.42, 1.05) * (0.7 + s.r() * 0.6)
+    s.spawn = (clamp(1.05 - elapsed * 0.012, 0.42, 1.05) * (0.7 + s.r() * 0.6)) / s.spawnMul
   }
   // the green road drains, one vehicle at a time
   if (s.amber > 0) s.amber -= dt
@@ -79,7 +79,7 @@ export function step(s, dt) {
     }
   }
   for (const d of DIRS)
-    if (s.q[d].length >= MAX_QUEUE) {
+    if (s.q[d].length >= s.maxQueue) {
       s.gridlock = d
       s.over = true
       s.sound.push('hornLong')
@@ -125,7 +125,7 @@ export function draw(ctx, s, v) {
       dist += len + P * 2
     })
     // how full this road is
-    const full = s.q[d].length / MAX_QUEUE
+    const full = s.q[d].length / s.maxQueue
     if (full > 0.6) label(ctx, '!', cx + dx * (rw / 2 + P * 4) - dy * rw * 0.9, cy + dy * (rw / 2 + P * 4) + dx * rw * 0.9, { size: P * 6, color: full > 0.85 ? '#ff4d3a' : '#ffd23a' })
   }
   // the warden in the middle, arms out along the flowing road

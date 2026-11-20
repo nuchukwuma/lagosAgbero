@@ -37,6 +37,10 @@ export function create(params = {}, seed = 1) {
   const deck = shuffle(r, makeDeck())
   const deal = params.cards ?? 5
   const hands = { p: deck.splice(0, deal), o: deck.splice(0, deal) }
+  if (params.startWhot && !hands.p.some((c) => c.n === 20)) {
+    const k = deck.findIndex((c) => c.n === 20)
+    if (k >= 0) hands.p[0] = deck.splice(k, 1)[0]
+  }
   let i = deck.findIndex((c) => !isSpecial(c))
   const top = deck.splice(i, 1)[0]
   return { r, deck, top, need: null, hands, turn: 'p', choosing: false, aiWait: 0, skill: params.skill ?? 0.6, name: params.name || 'Commander Bassey', msg: 'Your turn. Match the shape or the number.', msgT: 99, over: false, winner: null, sound: [] }

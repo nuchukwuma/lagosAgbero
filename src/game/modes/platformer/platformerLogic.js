@@ -163,9 +163,10 @@ export function createEscape(params = {}, seed = 1) {
   const level = buildLevel({ metres: params.metres ?? 700, seed, difficulty: params.difficulty ?? 1 })
   return {
     level,
-    p: freshRunner(0),
+    p: freshRunner(0, params.hp ?? 5),
     lives: params.lives ?? 3,
-    maxHp: 5,
+    maxHp: params.hp ?? 5,
+    sightMul: params.sightMul ?? 1,
     checkpoint: 0,
     held: { left: false, right: false },
     notes: 0,
@@ -180,8 +181,8 @@ export function createEscape(params = {}, seed = 1) {
   }
 }
 
-function freshRunner(x) {
-  return { x, y: 0, vx: 0, vy: 0, dir: 1, ground: true, jumps: 0, coyote: 0, roll: 0, attack: 0, hit: 0, invul: 1, hp: 5, dead: 0, landT: 0 }
+function freshRunner(x, hp = 5) {
+  return { x, y: 0, vx: 0, vy: 0, dir: 1, ground: true, jumps: 0, coyote: 0, roll: 0, attack: 0, hit: 0, invul: 1, hp, dead: 0, landT: 0 }
 }
 
 export const runnerH = (p) => (p.roll > 0 ? LOW_H : STAND_H)
@@ -260,7 +261,7 @@ function die(s, why) {
 }
 
 function respawn(s) {
-  s.p = freshRunner(s.checkpoint + 20)
+  s.p = freshRunner(s.checkpoint + 20, s.maxHp)
   // officers near the bus stop calm down
   for (const o of s.level.officers) if (o.state !== 'down') Object.assign(o, { state: 'patrol', alertT: 0, windup: 0, seenT: 0, lostT: 0 })
 }
@@ -378,10 +379,10 @@ export function stepEscape(s, dt) {
 
 // ---------------------------------------------------------------- the Task Force
 /** Can this officer see the runner? In front of them, near, on about their level; rolling or crouching is harder to spot. */
-export function canSee(o, p) {
+export function canSee(o, p, mul = 1) {
   const dx = p.x - o.x
   if (Math.sign(dx) !== o.dir && Math.abs(dx) > 12) return false
-  const range = p.roll > 0 ? SIGHT * 0.5 : SIGHT
+  const range = (p.roll > 0 ? SIGHT * 0.5 : SIGHT) * mul
   return Math.abs(dx) < range && Math.abs(p.y - o.y) < 40
 }
 
@@ -396,7 +397,7 @@ function stepOfficers(s, dt) {
       continue
     }
     const dx = p.x - o.x
-    const sees = p.dead <= 0 && canSee(o, p)
+    const sees = p.dead <= 0 && canSee(o, p, s.sightMul)
     if (o.state === 'patrol') {
       // walk the beat, turning at the ends (and sometimes just looking around)
       const nx = o.x + o.dir * OFFICER_WALK * dt

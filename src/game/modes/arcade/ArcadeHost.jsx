@@ -6,6 +6,11 @@ import { sfx } from '../../audio/audio.js'
 import { formatNaira } from '../../narrative/stats.js'
 import { seenIntro, markIntroSeen, bestScore, recordScore } from '../../systems/records.js'
 import { useGameStore } from '../../store/gameStore.js'
+import { storyCtx } from '../../narrative/storyData.js'
+import { storyLevel } from '../../systems/progress.js'
+import { usePowerups } from '../../systems/powerups.js'
+import PowerupOffer from '../../../components/hud/PowerupOffer.jsx'
+import { tuneParams } from './tuning.js'
 
 // Runs one arcade mini-game (games/*.js) full screen over the frozen street:
 // the how-to-play intro (in full the first time, then your best score), the
@@ -20,9 +25,12 @@ export function makeArcadeMode(game) {
     // games that show you get your look as params.you
     const you = useGameStore((s) => s.game?.player?.look)
     const params = useMemo(() => ({ ...given, you: given.you || you || null }), []) // eslint-disable-line react-hooks/exhaustive-deps
+    // harder as the story goes on (0 = the first chapter, 1 = the last)
+    const level = useMemo(() => given.level ?? storyLevel(useGameStore.getState().game, storyCtx.chapters), []) // eslint-disable-line react-hooks/exhaustive-deps
     const seed = useMemo(() => params.seed ?? Math.floor(Math.random() * 99999), []) // eslint-disable-line react-hooks/exhaustive-deps
     const [round, setRound] = useState(0) // "Try again" starts a new round
-    const state = useMemo(() => game.create(params, seed + round * 101), [round]) // eslint-disable-line react-hooks/exhaustive-deps
+    // the run's settings: what the story asked, tuned to the story level and the power-ups bought on the start screen
+    const state = useMemo(() => game.create(tuneParams(game.id, params, level, usePowerups.getState().active), seed + round * 101), [round]) // eslint-disable-line react-hooks/exhaustive-deps
     const [stage, setStage] = useState('intro') // intro | play | done
     const [hud, setHud] = useState(() => game.hud?.(state) || [])
     const [buttons, setButtons] = useState(() => game.buttons?.(state) || [])
@@ -212,10 +220,15 @@ export function makeArcadeMode(game) {
               </p>
             )}
             {params.prize ? <p>Prize: {formatNaira(params.prize)}</p> : null}
+            <p className="arcade-level" title="Rises as the story goes on">
+              Difficulty <strong>{'★'.repeat(1 + Math.round(level * 4))}{'☆'.repeat(4 - Math.round(level * 4))}</strong>
+            </p>
+            <PowerupOffer mode={game.id} />
             <button
               className="btn btn-primary"
               onClick={() => {
                 markIntroSeen(game.id)
+                setRound((n) => n + 1) // build the run now, with any power-ups just bought
                 setStage('play')
               }}
             >

@@ -12,7 +12,7 @@ export const ZONES = ['TL', 'TC', 'TR', 'BL', 'BC', 'BR']
 const col = (z) => ({ L: 0, C: 1, R: 2 })[z[1]]
 
 export function create(params = {}, seed = 1) {
-  return { r: rng(seed), you: params.you || 3, skill: params.skill ?? 0.5, name: params.name || 'Kings Hall', phase: 'aim', kicks: { you: [], them: [] }, aim: null, power: 0, pdir: 1, anim: 0, ball: null, keeperCol: 1, lean: 1, leanTrue: true, runup: 0, result: '', over: false, sound: [] }
+  return { r: rng(seed), powerMul: params.powerMul ?? 1, you: params.you || 3, skill: params.skill ?? 0.5, name: params.name || 'Kings Hall', phase: 'aim', kicks: { you: [], them: [] }, aim: null, power: 0, pdir: 1, anim: 0, ball: null, keeperCol: 1, lean: 1, leanTrue: true, runup: 0, result: '', over: false, sound: [] }
 }
 
 const goals = (list) => list.filter(Boolean).length
@@ -94,7 +94,7 @@ function theirKick(s) {
 
 export function step(s, dt) {
   if (s.phase === 'power') {
-    s.power += s.pdir * dt * 1.25
+    s.power += s.pdir * dt * 1.25 * s.powerMul
     if (s.power >= 1) {
       s.power = 1
       s.pdir = -1

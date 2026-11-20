@@ -3875,3 +3875,5 @@ svg .is-chase { fill: #e53935; stroke: #fff; stroke-width: 0.6; animation: map-p
 @media (max-height: 430px) {
   .arcade-btn.big { min-width: 62px; height: 54px; }
 }
+.arcade-level { margin: 2px 0 6px; font-size: 13px; opacity: 0.9; }
+.arcade-level strong { color: #ffd23a; letter-spacing: 2px; }

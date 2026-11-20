@@ -8,12 +8,12 @@
 import { rng, rect, box, label, clamp } from '../px.js'
 import { drawPerson } from '../people.js'
 
-export function makeTrunk(r, n) {
+export function makeTrunk(r, n, hazard = 0.62) {
   const h = [null, null, null]
   let last = null
   for (let i = 3; i < n; i++) {
     let x = null
-    if (r() < 0.62) x = r() < 0.5 ? 'L' : 'R'
+    if (r() < hazard) x = r() < 0.5 ? 'L' : 'R'
     if (x && x === last && r() < 0.3) x = null // breathing space
     h.push(x ? { side: x, kind: r() < 0.7 ? 'ants' : 'wasps' } : null)
     last = x
@@ -24,7 +24,7 @@ export function makeTrunk(r, n) {
 export function create(params = {}, seed = 1) {
   const r = rng(seed)
   const top = params.height ?? 32
-  return { r, you: params.you || 7, top, trunk: makeTrunk(r, top + 4), at: 0, time: params.seconds ?? 45, stings: 0, gust: 0, gustNext: 6 + r() * 4, warn: 0, slip: 0, lastSide: 'L', msg: '', msgT: 0, over: false, reached: false, sound: [] }
+  return { r, you: params.you || 7, top, trunk: makeTrunk(r, top + 4, params.hazard ?? 0.62), stingMax: params.stingMax ?? 3, at: 0, time: params.seconds ?? 45, stings: 0, gust: 0, gustNext: 6 + r() * 4, warn: 0, slip: 0, lastSide: 'L', msg: '', msgT: 0, over: false, reached: false, sound: [] }
 }
 
 /** Tap a side: climb one ring, unless that side of the next ring has a hazard (or the wind is blowing). */
@@ -60,7 +60,7 @@ export function climb(s, side) {
 }
 
 function checkFall(s) {
-  if (s.stings >= 3) {
+  if (s.stings >= s.stingMax) {
     s.over = true
     s.at = 0
     s.msg = 'You slide all the way down the trunk.'

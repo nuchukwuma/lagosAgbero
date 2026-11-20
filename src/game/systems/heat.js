@@ -25,7 +25,16 @@ export function coolsIn(game, id) {
   return runs.length ? Math.max(0, COOL_MINUTES - (t - Math.min(...runs))) : 0
 }
 
-export function tunedActivity(game, activity) {
+// free-roam activities that get harder as the story goes on (level 0..1); the
+// arcade games scale themselves the same way (modes/arcade/tuning.js)
+const STORY_SCALED = { fight: 1.2, runner: 1.2, chase: 1.2 }
+
+export function tunedActivity(game, activity, level = 0) {
+  if (STORY_SCALED[activity.mode] && !activity.params?.endless) {
+    const base = activity.params?.difficulty ?? 1
+    return { ...activity, params: { ...activity.params, difficulty: Math.min(3.5, base + level * STORY_SCALED[activity.mode]) } }
+  }
+  if (activity.mode === 'dance') return { ...activity, params: { ...activity.params, skill: Math.min(0.85, (activity.params?.skill ?? 0.55) + level * 0.25), level } }
   if (activity.mode !== 'runner' || !activity.params?.endless) return activity
   const heat = heatOf(game, activity.id)
   const notoriety = game.stats?.notoriety ?? 0
@@ -33,7 +42,7 @@ export function tunedActivity(game, activity) {
     const mins = coolsIn(game, activity.id)
     return { ...activity, blocked: `Task Force dey watch the bridge since your last runs. Come back in about ${Math.ceil(mins / 60)} hour${mins > 60 ? 's' : ''}.` }
   }
-  const base = activity.params.difficulty ?? 1
+  const base = (activity.params.difficulty ?? 1) + level
   const difficulty = Math.min(4, base + heat * 0.6 + notoriety / 50)
   return { ...activity, params: { ...activity.params, difficulty, heat, notoriety } }
 }

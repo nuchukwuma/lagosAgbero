@@ -49,7 +49,7 @@ export function create(params = {}, seed = 1) {
   const r = rng(seed)
   const count = params.count ?? 20
   const boxes = Array.from({ length: count }, () => makeBox(r))
-  return { r, boxes, i: 0, right: 0, wrong: 0, need: params.need ?? Math.ceil(count * 0.75), left: 7, slide: 0, tip: '', tipT: 0, flash: null, flashT: 0, over: false, sound: [] }
+  return { r, timeMul: params.timeMul ?? 1, boxes, i: 0, right: 0, wrong: 0, need: params.need ?? Math.ceil(count * 0.75), left: 7, slide: 0, tip: '', tipT: 0, flash: null, flashT: 0, over: false, sound: [] }
 }
 
 const limitFor = (i) => clamp(7 - i * 0.2, 3.2, 7)
@@ -77,7 +77,7 @@ function next(s) {
   s.i++
   s.slide = 1
   if (s.i >= s.boxes.length) s.over = true
-  else s.left = limitFor(s.i)
+  else s.left = limitFor(s.i) * s.timeMul
 }
 
 export function step(s, dt) {
@@ -149,7 +149,7 @@ export function draw(ctx, s, v, t) {
   box(ctx, bx + P * 2, by + bh - P * 9, P * 22, P * 7, '#fff2a8', Math.max(1, P / 2))
   label(ctx, `₦${b.price.toLocaleString('en-NG')}`, bx + P * 13, by + bh - P * 5.5, { size: P * 3.2, color: '#1a1a1a' })
   // the customer's patience
-  const tw = bw * clamp(s.left / limitFor(s.i), 0, 1)
+  const tw = bw * clamp(s.left / (limitFor(s.i) * s.timeMul), 0, 1)
   rect(ctx, bx, by - P * 5, bw, P * 2, '#1a1a1a')
   rect(ctx, bx, by - P * 5, tw, P * 2, s.left < 2 ? '#e74c3c' : '#ffd23a')
   if (s.flashT > 0) label(ctx, s.flash === 'right' ? '✔' : '✖', W / 2, by - P * 12, { size: P * 10, color: s.flash === 'right' ? '#8ff0a4' : '#ff6b4a', alpha: s.flashT * 2 })

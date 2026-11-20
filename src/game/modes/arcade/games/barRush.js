@@ -20,7 +20,7 @@ export const SEATS = 4
 
 export function create(params = {}, seed = 1) {
   const r = rng(seed)
-  return { r, time: params.seconds ?? 60, target: params.target ?? 20000, seats: Array(SEATS).fill(null), takings: 0, wasted: 0, walked: 0, served: 0, spawn: 0.4, msg: '', msgT: 0, over: false, sound: [] }
+  return { r, patienceMul: params.patienceMul ?? 1, total: params.seconds ?? 60, time: params.seconds ?? 60, target: params.target ?? 20000, seats: Array(SEATS).fill(null), takings: 0, wasted: 0, walked: 0, served: 0, spawn: 0.4, msg: '', msgT: 0, over: false, sound: [] }
 }
 
 export function pour(s, drink) {
@@ -51,12 +51,12 @@ export function pour(s, drink) {
 export function step(s, dt) {
   s.time -= dt
   s.msgT -= dt
-  const elapsed = 60 - s.time
+  const elapsed = s.total - s.time
   s.spawn -= dt
   if (s.spawn <= 0) {
     const free = s.seats.map((c, i) => (c ? -1 : i)).filter((i) => i >= 0)
     if (free.length) {
-      const max = clamp(9 - elapsed * 0.06, 5, 9)
+      const max = clamp(9 - elapsed * 0.06, 5, 9) * s.patienceMul
       s.seats[pickOf(s.r, free)] = { drink: pickOf(s.r, IDS), patience: max, max, seed: 500 + Math.floor(s.r() * 300) }
     }
     s.spawn = clamp(1.6 - elapsed * 0.015, 0.7, 1.6) * (0.7 + s.r() * 0.6)

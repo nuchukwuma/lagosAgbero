@@ -28,7 +28,7 @@ function newOrder(s) {
 
 export function create(params = {}, seed = 1) {
   const r = rng(seed)
-  const s = { r, time: params.seconds ?? 70, target: params.target ?? 5, slots: Array.from({ length: 6 }, (_, i) => ({ state: 'empty', cook: 0, speed: 0.16 + ((i * 7) % 5) * 0.012 })), orders: [], filled: 0, burnt: 0, perfect: 0, walked: 0, msg: '', msgT: 0, over: false, sound: [] }
+  const s = { r, time: params.seconds ?? 70, target: params.target ?? 5, slots: Array.from({ length: 6 }, (_, i) => ({ state: 'empty', cook: 0, speed: (0.16 + ((i * 7) % 5) * 0.012) * (params.cookMul ?? 1) })), orders: [], filled: 0, burnt: 0, perfect: 0, walked: 0, msg: '', msgT: 0, over: false, sound: [] }
   s.orders.push(newOrder(s), newOrder(s))
   return s
 }

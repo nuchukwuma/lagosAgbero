@@ -24,7 +24,7 @@ export function makePerson(r, served) {
 
 export function create(params = {}, seed = 1) {
   const r = rng(seed)
-  const s = { r, bags: params.bags ?? 40, need: params.need ?? 18, time: params.seconds ?? 75, servedSeeds: [], good: 0, cheats: 0, wronged: 0, anger: 0.2, wait: 0, queue: [], msg: '', msgT: 0, over: false, stampede: false, sound: [] }
+  const s = { r, angerMul: params.angerMul ?? 1, bags: params.bags ?? 40, need: params.need ?? 18, time: params.seconds ?? 75, servedSeeds: [], good: 0, cheats: 0, wronged: 0, anger: 0.2, wait: 0, queue: [], msg: '', msgT: 0, over: false, stampede: false, sound: [] }
   for (let i = 0; i < 4; i++) s.queue.push(makePerson(r, s.servedSeeds))
   return s
 }
@@ -47,7 +47,7 @@ export function decide(s, serve) {
     }
   } else if (p.ok) {
     s.wronged++
-    s.anger += 0.15
+    s.anger += 0.15 * s.angerMul
     s.msg = '"I live here! My card is right there!" The crowd boos.'
     s.msgT = 1.8
     s.sound.push('crowd')
@@ -67,7 +67,7 @@ export function step(s, dt) {
   s.msgT -= dt
   s.wait += dt
   // the queue gets restless if the front person waits
-  if (s.wait > 2.5) s.anger += dt * 0.06
+  if (s.wait > 2.5) s.anger += dt * 0.06 * s.angerMul
   if (s.anger >= 1) {
     s.stampede = true
     s.over = true

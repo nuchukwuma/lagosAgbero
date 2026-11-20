@@ -18,17 +18,19 @@ export const ITEMS = {
 const CUSTOMERS = ['Commander Bassey', 'Chief Dapo', 'A Shell engineer', 'The wedding party', 'Baba Paraga', 'A tired nurse', 'Kokoro (again)']
 
 /** An order: meat, the spice mix, then uziza or scent leaf (or both), then 1-3 peppers. */
-export function makeOrder(r) {
+export function makeOrder(r, mul = 1) {
   const meat = pickOf(r, ['goat', 'catfish', 'chicken'])
   const leaves = pickOf(r, [['uziza'], ['scent'], ['uziza', 'scent']])
   const heat = 1 + Math.floor(r() * 3)
   const steps = [meat, 'spice', ...leaves, ...Array(heat).fill('pepper')]
-  return { who: pickOf(r, CUSTOMERS), steps, heat, patience: 14 + steps.length * 2, max: 14 + steps.length * 2 }
+  const pat = (14 + steps.length * 2) * mul
+  return { who: pickOf(r, CUSTOMERS), steps, heat, patience: pat, max: pat }
 }
 
 export function create(params = {}, seed = 1) {
   const r = rng(seed)
-  return { r, time: params.seconds ?? 75, target: params.target ?? 6, orders: [makeOrder(r), makeOrder(r)], pot: [], served: 0, spoilt: 0, walked: 0, msg: '', msgT: 0, steam: 0, over: false, sound: [] }
+  const mul = params.patienceMul ?? 1
+  return { r, mul, time: params.seconds ?? 75, target: params.target ?? 6, orders: [makeOrder(r, mul), makeOrder(r, mul)], pot: [], served: 0, spoilt: 0, walked: 0, msg: '', msgT: 0, steam: 0, over: false, sound: [] }
 }
 
 export function add(s, item) {
@@ -78,7 +80,7 @@ export function step(s, dt) {
     s.msgT = 1.6
     s.sound.push('wrong')
   }
-  while (s.orders.length < 3) s.orders.push(makeOrder(s.r))
+  while (s.orders.length < 3) s.orders.push(makeOrder(s.r, s.mul))
   if (s.time <= 0 || s.walked >= 3) s.over = true
 }
 

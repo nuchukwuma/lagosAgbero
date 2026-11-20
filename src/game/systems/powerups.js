@@ -8,6 +8,7 @@
 //   runner   charm       one free stumble  headStart  they start 15 m further back
 //   feeRun   sweetMouth  drivers more willing to pay   extraTime +30 s
 import { create } from 'zustand'
+import { ARCADE_BOOSTS } from '../modes/arcade/tuning.js'
 
 export const POWERUPS = {
   heavyHands: { mode: 'fight', name: 'Heavy Hands', text: 'Your blows hit 30% harder', icon: 'fist' },
@@ -20,6 +21,9 @@ export const POWERUPS = {
   sweetMouth: { mode: 'feeCollection', name: 'Sweet Mouth', text: 'Drivers are more willing to pay', icon: 'talk' },
   extraTime: { mode: 'feeCollection', name: 'Extra Time', text: '30 more seconds at the stop', icon: 'naira' },
 }
+
+// the arcade mini-games' power-ups (defined with their effects in modes/arcade/tuning.js)
+for (const [mode, list] of Object.entries(ARCADE_BOOSTS)) for (const b of list) POWERUPS[b.id] = { mode, name: b.name, text: b.text, icon: b.icon }
 
 export const powerupsFor = (mode) => Object.entries(POWERUPS).filter(([, p]) => p.mode === mode)
 

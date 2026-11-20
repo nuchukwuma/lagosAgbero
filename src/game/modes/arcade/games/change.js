@@ -22,7 +22,7 @@ function nextPassenger(s) {
   const fare = pickOf(s.r, FARES)
   let paid = pickOf(s.r, PAYS)
   if (paid <= fare) paid = 1000
-  const max = clamp(13 - s.served * 0.6, 5, 13)
+  const max = clamp(13 - s.served * 0.6, 5, 13) * (s.patienceMul ?? 1)
   s.p = { fare, paid, patience: max, max, seed: 10 + Math.floor(s.r() * 900) }
   s.given = []
 }
@@ -31,7 +31,7 @@ export const changeOwed = (p) => p.paid - p.fare
 export const givenTotal = (s) => s.given.reduce((a, b) => a + b, 0)
 
 export function create(params = {}, seed = 1) {
-  const s = { r: rng(seed), time: params.seconds ?? 60, target: params.target ?? 8, tip: params.tip ?? 50, served: 0, strikes: 0, overpaid: 0, msg: '', msgT: 0, mood: 'idle', over: false, sound: [] }
+  const s = { r: rng(seed), patienceMul: params.patienceMul ?? 1, time: params.seconds ?? 60, target: params.target ?? 8, tip: params.tip ?? 50, served: 0, strikes: 0, overpaid: 0, msg: '', msgT: 0, mood: 'idle', over: false, sound: [] }
   nextPassenger(s)
   return s
 }

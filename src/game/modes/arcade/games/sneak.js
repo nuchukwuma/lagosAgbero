@@ -40,7 +40,7 @@ function startLevel(s, n) {
   s.lv = lv
   for (let y = 0; y < lv.map.length; y++) for (let x = 0; x < lv.map[y].length; x++) if (lv.map[y][x] === 'S') s.pos = [x, y]
   s.guards = lv.guards.map((g, i) => ({ ...g, i: (i * 2) % g.path.length, dir: 1, at: g.path[(i * 2) % g.path.length] }))
-  s.tickLeft = lv.tick
+  s.tickLeft = lv.tick * (s.tickMul ?? 1)
   s.caughtT = 0
 }
 
@@ -65,7 +65,7 @@ export function seen(s) {
 }
 
 export function create(params = {}) {
-  const s = { lives: params.lives ?? 3, moves: 0, done: 0, over: false, won: false, msg: '', msgT: 0, sound: [] }
+  const s = { tickMul: params.tickMul ?? 1, lives: params.lives ?? 3, moves: 0, done: 0, over: false, won: false, msg: '', msgT: 0, sound: [] }
   startLevel(s, 0)
   return s
 }
@@ -118,7 +118,7 @@ export function step(s, dt) {
   }
   s.tickLeft -= dt
   if (s.tickLeft > 0) return
-  s.tickLeft = s.lv.tick
+  s.tickLeft = s.lv.tick * s.tickMul
   for (const g of s.guards) {
     if (!g.path[g.i + g.dir]) g.dir = -g.dir
     g.i += g.dir

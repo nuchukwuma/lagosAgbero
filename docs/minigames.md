@@ -36,6 +36,35 @@ Controls are taps on the scene and a pad of chunky buttons at the bottom; on a
 keyboard every button has a key (shown in its corner). Swipes work where they
 are natural (Original or Fake, Rice Day).
 
+## Harder as the story goes on, easier with power-ups
+
+Every mini-game reads how far you are into its story (0 in the first chapter, 1
+in the last; `systems/progress.js`) and tunes itself with it
+(`modes/arcade/tuning.js`): in early chapters targets are about 15% smaller
+and customers more patient than written; by the last chapter targets are about
+20% bigger, patience shorter and opponents sharper. The limits are fixed so a
+careful player can always win (tests play the sorting games perfectly at the
+hardest level). The start screen shows the difficulty as stars.
+
+Free-roam fights, runs and chases step up the same way (`systems/heat.js`).
+
+Each game also has its own power-ups, bought by watching a short ad on the
+start screen, for that run only: more time, more patient customers, a tired
+opponent, gentler oil, slower guards, a bigger paste bucket, a Whot card in
+your hand, extra lives and hearts in the escape, and so on.
+
+## Escape (the platformer)
+
+Area Boy's Task Force chases in *Purple Rain* and *Operation Clean Sweep* are a
+side-scrolling platformer (`modes/platformer/`, mode `escape`): move freely,
+jump and double jump, roll, strike and stomp; cars, awnings and roofs are
+platforms; gutters kill; officers only see what's in front of them. Params:
+`metres` (700), `difficulty` (1–3), `lives` (3), `to` (the destination).
+Its sprites come from two packs, cropped into small atlases by
+`scripts/build-platformer-atlas.py`: Craftpix's *Free Pixel Art Prototype
+Character Sprites* (licence: craftpix.net/file-licenses) and *Retro vehicle
+sprites 64x64*.
+
 ## In the story
 
 Each game is a mode like any other:

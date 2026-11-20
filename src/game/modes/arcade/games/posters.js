@@ -13,7 +13,7 @@ export const SPOTS = 9
 export function create(params = {}, seed = 1) {
   const r = rng(seed)
   const wall = Array.from({ length: SPOTS }, () => (r() < 0.45 ? 'them' : null))
-  return { r, wall, boys: [], time: params.seconds ?? 45, need: params.need ?? 5, paste: 6, refill: 0, spawn: 1.4, chased: 0, pasted: 0, msg: '', msgT: 0, over: false, sound: [] }
+  return { r, wall, boys: [], spawnMul: params.spawnMul ?? 1, cap: params.paste ?? 6, time: params.seconds ?? 45, need: params.need ?? 5, paste: params.paste ?? 6, refill: 0, spawn: 1.4, chased: 0, pasted: 0, msg: '', msgT: 0, over: false, sound: [] }
 }
 
 export const mine = (s) => s.wall.filter((w) => w === 'you').length
@@ -46,7 +46,7 @@ export function step(s, dt) {
   s.msgT -= dt
   if (s.refill > 0) {
     s.refill -= dt
-    if (s.refill <= 0) s.paste = 6
+    if (s.refill <= 0) s.paste = s.cap
   }
   const elapsed = 45 - s.time
   s.spawn -= dt
@@ -58,7 +58,7 @@ export function step(s, dt) {
       const pool = yours.length && s.r() < 0.75 ? yours : targets
       s.boys.push({ spot: pool[Math.floor(s.r() * pool.length)], left: clamp(2.2 - elapsed * 0.025, 1.1, 2.2), seed: 200 + Math.floor(s.r() * 50) })
     }
-    s.spawn = clamp(1.6 - elapsed * 0.02, 0.6, 1.6) * (0.7 + s.r() * 0.6)
+    s.spawn = (clamp(1.6 - elapsed * 0.02, 0.6, 1.6) * (0.7 + s.r() * 0.6)) / s.spawnMul
   }
   for (const b of s.boys) b.left -= dt
   for (const b of s.boys.filter((x) => x.left <= 0)) {
@@ -81,7 +81,7 @@ export function spotRect(v, i) {
 
 export function input(s, ev, v) {
   if (ev.type === 'button' && ev.id === 'refill') {
-    if (s.refill <= 0 && s.paste < 6) {
+    if (s.refill <= 0 && s.paste < s.cap) {
       s.refill = 1.6
       s.sound.push('fuel')
     }
@@ -134,7 +134,7 @@ export function draw(ctx, s, v, t) {
     rect(ctx, r.x + r.w * 0.2, r.y - P * 3, r.w * 0.6 * (1 - clamp(b.left / 2.2, 0, 1)), P * 2, '#ff6b4a')
   }
   // your bucket
-  label(ctx, s.refill > 0 ? 'refilling…' : `paste ${'■'.repeat(s.paste)}${'□'.repeat(6 - s.paste)}`, W / 2, H * 0.84, { size: P * 3.6, color: s.paste ? '#fff2a8' : '#ff6b4a' })
+  label(ctx, s.refill > 0 ? 'refilling…' : `paste ${'■'.repeat(s.paste)}${'□'.repeat(Math.max(0, s.cap - s.paste))}`, W / 2, H * 0.84, { size: P * 3.6, color: s.paste ? '#fff2a8' : '#ff6b4a' })
   if (s.msgT > 0) label(ctx, s.msg, W / 2, H * 0.14, { size: Math.max(12, P * 3.6), alpha: clamp(s.msgT, 0, 1) })
 }
 
@@ -143,7 +143,7 @@ export const hud = (s) => [
   { label: 'YOUR POSTERS', value: `${mine(s)}/${SPOTS}`, warn: mine(s) < s.need },
   { label: 'BOYS CHASED', value: s.chased },
 ]
-export const buttons = (s) => [{ id: 'refill', label: s.refill > 0 ? '…' : 'REFILL', color: '#7a5a3a', disabled: s.refill > 0 || s.paste >= 6, key: 'R' }]
+export const buttons = (s) => [{ id: 'refill', label: s.refill > 0 ? '…' : 'REFILL', color: '#7a5a3a', disabled: s.refill > 0 || s.paste >= s.cap, key: 'R' }]
 
 export function result(s) {
   const n = mine(s)

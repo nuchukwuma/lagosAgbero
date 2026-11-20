@@ -5,6 +5,7 @@
 
 import { create } from 'zustand'
 import { storyCtx, FIRST_CHAPTER } from '../narrative/storyData.js'
+import { storyLevel } from '../systems/progress.js'
 import * as engine from '../narrative/storyEngine.js'
 import { bus } from '../narrative/eventBus.js'
 import { saveGame, loadGame, latestSave, recordChapters } from './saveSystem.js'
@@ -203,7 +204,7 @@ export const useGameStore = create((set, get) => {
     startActivity: (activity) => {
       // repeat runs get hot (systems/heat.js): harder, or staked out for a while
       const { game } = get()
-      const tuned = game ? tunedActivity(game, activity) : activity
+      const tuned = game ? tunedActivity(game, activity, storyLevel(game, storyCtx.chapters)) : activity
       if (tuned.blocked) return set((s) => ({ toasts: [...s.toasts, { id: ++toastId, text: tuned.blocked }].slice(-4) }))
       set({ activity: tuned })
     },

@@ -30,7 +30,7 @@ export function makeBallot(r) {
 export function create(params = {}, seed = 1) {
   const r = rng(seed)
   const count = params.count ?? 30
-  return { r, ballots: Array.from({ length: count }, () => makeBallot(r)), i: 0, right: 0, wrong: 0, tally: { teacher: 0, nephew: 0, other: 0, void: 0 }, left: 5, need: params.need ?? 0.85, flash: null, flashT: 0, msg: '', msgT: 0, over: false, sound: [] }
+  return { r, timeMul: params.timeMul ?? 1, ballots: Array.from({ length: count }, () => makeBallot(r)), i: 0, right: 0, wrong: 0, tally: { teacher: 0, nephew: 0, other: 0, void: 0 }, left: 5, need: params.need ?? 0.85, flash: null, flashT: 0, msg: '', msgT: 0, over: false, sound: [] }
 }
 
 const limit = (i) => clamp(5 - i * 0.1, 2.2, 5)
@@ -54,7 +54,7 @@ export function sortInto(s, pile) {
   s.flashT = 0.4
   s.i++
   if (s.i >= s.ballots.length) s.over = true
-  else s.left = limit(s.i)
+  else s.left = limit(s.i) * s.timeMul
 }
 
 export function step(s, dt) {
@@ -69,7 +69,7 @@ export function step(s, dt) {
     s.flashT = 0.4
     s.i++
     if (s.i >= s.ballots.length) s.over = true
-    else s.left = limit(s.i)
+    else s.left = limit(s.i) * s.timeMul
   }
 }
 
@@ -125,7 +125,7 @@ export function draw(ctx, s, v, t) {
   } else if (b.kind === 'outside') thumb(ctx, bx + bw * 0.95, by + bh * 0.12, P)
   else
     for (const k of b.prints) thumb(ctx, bx + k * cw + cw * 0.5 + ((b.jitter ?? 0.5) - 0.5) * cw * 0.3, by + bh * 0.62, P, b.kind === 'smudge')
-  const tw = bw * clamp(s.left / limit(s.i), 0, 1)
+  const tw = bw * clamp(s.left / (limit(s.i) * s.timeMul), 0, 1)
   rect(ctx, bx, by + bh + P * 9, bw, P * 2, '#1a1a1a')
   rect(ctx, bx, by + bh + P * 9, tw, P * 2, s.left < 1.5 ? '#e74c3c' : '#ffd23a')
   if (s.flashT > 0) label(ctx, s.flash === 'right' ? '✔' : '✖', bx + bw + P * 8, by + bh / 2, { size: P * 9, color: s.flash === 'right' ? '#1e8449' : '#b3261e', alpha: s.flashT * 2.5 })
