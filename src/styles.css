@@ -3787,20 +3787,19 @@ svg .is-chase { fill: #e53935; stroke: #fff; stroke-width: 0.6; animation: map-p
 }
 
 /* arcade mini-games: a slim score bar at the top, a pad of chunky buttons at the bottom */
+/* top-left, beside the map / stats / pause buttons on the right */
 .arcade-hud {
   position: fixed;
-  top: calc(max(8px, env(safe-area-inset-top)) + 54px);
-  left: 50%;
-  transform: translateX(-50%);
+  top: max(8px, env(safe-area-inset-top));
+  left: max(10px, env(safe-area-inset-left));
   z-index: 7;
   display: flex;
-  gap: 6px;
+  gap: 5px;
   flex-wrap: wrap;
-  justify-content: center;
   pointer-events: none;
-  font: 900 13px ui-monospace, Menlo, Consolas, monospace;
+  font: 900 12px ui-monospace, Menlo, Consolas, monospace;
   color: #fff;
-  max-width: calc(100vw - 24px);
+  max-width: calc(100vw - 190px);
 }
 .arcade-hud span {
   background: rgba(14, 13, 30, 0.82);

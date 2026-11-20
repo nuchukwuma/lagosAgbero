@@ -115,10 +115,12 @@ export function draw(ctx, s, v, t) {
   label(ctx, `You give ₦${givenTotal(s)}`, hx + bw / 2, H * 0.1 + P * 5, { size: P * 4.2, color: '#1a1a1a' })
   s.given.forEach((g, i) => {
     const n = NOTES.find((x) => x.v === g)
-    const x = hx + P * 3 + (i % 6) * P * 9
-    const y = H * 0.1 + P * 9 + Math.floor(i / 6) * P * 6
-    box(ctx, x, y, P * 8, P * 4, n.color, Math.max(1, P / 2))
-    label(ctx, String(g), x + P * 4, y + P * 2, { size: P * 2.4 })
+    const nw = Math.max(P * 8, 26)
+    const nh = Math.max(P * 4, 13)
+    const x = hx + P * 3 + (i % 4) * (nw + 3)
+    const y = H * 0.1 + P * 9 + Math.floor(i / 4) * (nh + 3)
+    box(ctx, x, y, nw, nh, n.color, 1)
+    label(ctx, String(g), x + nw / 2, y + nh / 2, { size: 10 })
   })
   if (s.msgT > 0) label(ctx, s.msg, W / 2, H * 0.78, { size: Math.max(12, P * 3.6), color: s.mood === 'hit' ? '#ffb3a8' : '#ffffff', alpha: clamp(s.msgT, 0, 1) })
 }

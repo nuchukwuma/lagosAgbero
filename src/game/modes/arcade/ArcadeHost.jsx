@@ -35,13 +35,30 @@ export function makeArcadeMode(game) {
       const canvas = canvasRef.current
       const ctx = canvas.getContext('2d')
       let v = viewFor(1, 1)
+      let W = 1
+      let H = 1
+      // the score bar on top and the button pad at the bottom get their own bands:
+      // the game draws in between, so nothing important hides under them
+      const band = { top: 0, bottom: 0 }
+      const measure = () => {
+        const hudEl = document.querySelector('.arcade-hud')
+        const padEl = document.querySelector('.arcade-pad')
+        const top = Math.max(52, hudEl ? Math.round(hudEl.getBoundingClientRect().bottom) + 6 : 52)
+        const bottom = padEl && padEl.children.length ? Math.round(H - padEl.getBoundingClientRect().top) + 6 : 8
+        if (top !== band.top || bottom !== band.bottom) {
+          band.top = top
+          band.bottom = bottom
+          v = viewFor(W, Math.max(80, H - top - bottom))
+        }
+      }
       const layout = () => {
         const r = canvas.getBoundingClientRect()
-        const W = Math.max(1, Math.round(r.width))
-        const H = Math.max(1, Math.round(r.height))
+        W = Math.max(1, Math.round(r.width))
+        H = Math.max(1, Math.round(r.height))
         canvas.width = W
         canvas.height = H
-        v = viewFor(W, H)
+        band.top = -1
+        measure()
       }
       layout()
       window.addEventListener('resize', layout)
@@ -66,11 +83,19 @@ export function makeArcadeMode(game) {
         }
         ctx.setTransform(1, 0, 0, 1, 0, 0)
         ctx.imageSmoothingEnabled = false
-        ctx.clearRect(0, 0, v.W, v.H)
+        ctx.fillStyle = '#14112a'
+        ctx.fillRect(0, 0, W, H)
+        ctx.save()
+        ctx.beginPath()
+        ctx.rect(0, band.top, W, v.H)
+        ctx.clip()
+        ctx.translate(0, band.top)
         game.draw(ctx, s, v, t)
+        ctx.restore()
         hudT -= dt
         if (hudT <= 0) {
           hudT = 0.1
+          measure()
           setHud(game.hud?.(s) || [])
           setButtons(game.buttons?.(s) || [])
         }
@@ -88,7 +113,7 @@ export function makeArcadeMode(game) {
         if (st !== 'play' || s.over || isPaused()) return
         const r = canvas.getBoundingClientRect()
         if (type === 'down') canvas.setPointerCapture?.(e.pointerId)
-        game.input(s, { type, x: e.clientX - r.left, y: e.clientY - r.top }, v)
+        game.input(s, { type, x: e.clientX - r.left, y: e.clientY - r.top - band.top }, v)
         e.preventDefault()
       }
       const down = point('down')

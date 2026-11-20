@@ -178,7 +178,7 @@ export function handLayout(v, n) {
   const span = Math.min(v.W * 0.92, n * cw * 1.05)
   const stepX = n > 1 ? (span - cw) / (n - 1) : 0
   const x0 = (v.W - span) / 2
-  return { cw, ch, x0, stepX: Math.min(stepX, cw * 1.05), y: v.H - ch - v.P * 22 }
+  return { cw, ch, x0, stepX: Math.min(stepX, cw * 1.05), y: v.H - ch - v.P * 3 }
 }
 export function marketRect(v) {
   const cw = Math.min(v.W / 8, v.H * 0.16)

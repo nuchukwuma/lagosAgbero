@@ -4,7 +4,7 @@
 // SERVE. Wrong order and the bowl goes to Kokoro (he's not complaining).
 // Params: target (bowls, 6) · seconds (75)
 // Outcomes: won | lost
-import { rng, pickOf, rect, box, label, disc, clamp } from '../px.js'
+import { rng, pickOf, rect, box, label, disc, clamp, ui } from '../px.js'
 
 export const ITEMS = {
   goat: { name: 'GOAT', color: '#8a4a2a', kind: 'meat' },
@@ -96,6 +96,7 @@ export function draw(ctx, s, v, t) {
   // the ticket rail: the current order big, the next ones small
   const o = s.orders[0]
   if (o) {
+    const P = ui(v.P)
     const tw = Math.min(W * 0.42, P * 80)
     box(ctx, P * 3, H * 0.18, tw, P * 12 + o.steps.length * P * 5, '#fff8e6', P)
     label(ctx, o.who, P * 3 + tw / 2, H * 0.18 + P * 4, { size: P * 3, color: '#1a1a1a' })
@@ -107,7 +108,7 @@ export function draw(ctx, s, v, t) {
     })
     rect(ctx, P * 3, H * 0.18 - P * 3, tw * clamp(o.patience / o.max, 0, 1), P * 2, o.patience < 5 ? '#e74c3c' : '#ffd23a')
   }
-  s.orders.slice(1, 3).forEach((n, i) => label(ctx, `next: ${n.who}`, W - P * 4, H * 0.18 + i * P * 5, { size: P * 2.6, align: 'right', color: '#d9c7a8', weight: 700 }))
+  s.orders.slice(1, 3).forEach((n, i) => label(ctx, `next: ${n.who}`, W - P * 4, H * 0.18 + i * ui(P) * 5, { size: P * 2.6, align: 'right', color: '#d9c7a8', weight: 700 }))
   // the pot on the gas ring
   const cx = W * 0.68
   const cy = H * 0.52

@@ -5,7 +5,7 @@
 // Finished akara fills the orders on the board, and customers won't wait forever.
 // Params: target (orders to fill, 5) · seconds (70)
 // Outcomes: won | lost
-import { rng, rect, box, label, disc, clamp } from '../px.js'
+import { rng, rect, box, label, disc, clamp, ui } from '../px.js'
 
 export const GOLD = [0.5, 0.78] // the golden window
 export const BURNT = 1.05
@@ -98,9 +98,9 @@ export function step(s, dt) {
 }
 
 export function slotPos(v, i) {
-  const pw = Math.min(v.W * 0.7, v.H * 1.1)
-  const cx = v.W / 2
-  const cy = v.H * 0.6
+  const pw = Math.min(v.W * 0.62, v.H * 0.95)
+  const cx = v.W * 0.58
+  const cy = v.H * 0.55
   const col = i % 3
   const row = Math.floor(i / 3)
   return { x: cx + (col - 1) * pw * 0.26, y: cy + (row - 0.5) * pw * 0.2, r: pw * 0.085 }
@@ -121,11 +121,12 @@ export function draw(ctx, s, v, t) {
   rect(ctx, 0, 0, W, H * 0.3, '#ffb36b') // dawn
   rect(ctx, 0, H * 0.3, W, P * 2, '#7a4a24')
   // the big black pan on its stand, firewood glowing beneath
-  const pw = Math.min(W * 0.7, H * 1.1)
-  const cy = H * 0.6
-  for (let i = 0; i < 8; i++) rect(ctx, W / 2 - pw * 0.4 + i * pw * 0.1, cy + pw * 0.3 + Math.sin(t * 9 + i) * P, P * 3, P * 3, i % 2 ? '#ff8a24' : '#ffd23a')
-  disc(ctx, W / 2, cy, pw * 0.48, '#2a2a2a', P)
-  disc(ctx, W / 2, cy, pw * 0.42, '#b07a2a', P, '#2a2a2a') // the oil
+  const pw = Math.min(W * 0.62, H * 0.95)
+  const cy = H * 0.55
+  const px0 = W * 0.58
+  for (let i = 0; i < 8; i++) rect(ctx, px0 - pw * 0.4 + i * pw * 0.1, cy + pw * 0.3 + Math.sin(t * 9 + i) * P, P * 3, P * 3, i % 2 ? '#ff8a24' : '#ffd23a')
+  disc(ctx, px0, cy, pw * 0.48, '#2a2a2a', P)
+  disc(ctx, px0, cy, pw * 0.42, '#b07a2a', P, '#2a2a2a') // the oil
   for (let i = 0; i < 6; i++) {
     const sl = s.slots[i]
     const p = slotPos(v, i)
@@ -141,6 +142,8 @@ export function draw(ctx, s, v, t) {
     rect(ctx, p.x + Math.cos(t * 7 + i) * p.r, p.y + Math.sin(t * 7 + i) * p.r, P, P, '#ffe9b0')
   }
   // the order board
+  {
+  const P = ui(v.P)
   const bw = Math.min(W * 0.32, P * 60)
   box(ctx, P * 3, P * 4, bw, P * 26, '#2a3a2a', P)
   label(ctx, 'ORDERS', P * 3 + bw / 2, P * 7, { size: P * 3, color: '#ffd23a' })
@@ -149,6 +152,7 @@ export function draw(ctx, s, v, t) {
     label(ctx, `${o.who}: ${o.got}/${o.n}`, P * 5, y, { size: P * 2.6, align: 'left', color: i === 0 ? '#ffffff' : '#9fbf9f', weight: 700 })
     rect(ctx, P * 5, y + P * 2, (bw - P * 4) * clamp(o.patience / o.max, 0, 1), P, o.patience < 5 ? '#e74c3c' : '#8ff0a4')
   })
+  }
   if (s.msgT > 0) label(ctx, s.msg, W / 2, H * 0.93, { size: Math.max(12, P * 3.4), alpha: clamp(s.msgT, 0, 1) })
 }
 

@@ -5,7 +5,7 @@
 // and dive LEFT, STAY or RIGHT. Level after five: sudden death.
 // Params: skill (the other team, 0.5) · name (the other hostel)
 // Outcomes: won | lost
-import { rng, rect, box, label, disc, clamp, inside } from '../px.js'
+import { rng, rect, box, label, disc, clamp, inside, ui } from '../px.js'
 import { drawPerson } from '../people.js'
 
 export const ZONES = ['TL', 'TC', 'TR', 'BL', 'BC', 'BR']
@@ -222,9 +222,10 @@ export function draw(ctx, s, v, t) {
   if (s.phase === 'flight' && s.anim < 0.6) label(ctx, s.result, W / 2, H * 0.6, { size: P * 5, color: '#ffffff' })
   // the score sheet: ● scored, ○ missed
   const sheet = (list) => list.map((k) => (k ? '●' : '○')).join(' ') || '–'
-  box(ctx, P * 3, H * 0.15, P * 50, P * 12, 'rgba(14,13,30,0.8)', P)
-  label(ctx, `YOU  ${sheet(s.kicks.you)}`, P * 5, H * 0.15 + P * 3, { size: P * 2.8, align: 'left', color: '#ffd23a', weight: 700 })
-  label(ctx, `THEM ${sheet(s.kicks.them)}`, P * 5, H * 0.15 + P * 9, { size: P * 2.8, align: 'left', weight: 700 })
+  const Q = ui(P)
+  box(ctx, Q * 3, H * 0.15, Q * 44, Q * 12, '#1c1a30', Q)
+  label(ctx, `YOU  ${sheet(s.kicks.you)}`, Q * 5, H * 0.15 + Q * 3, { size: Q * 2.8, align: 'left', color: '#ffd23a', weight: 700 })
+  label(ctx, `THEM ${sheet(s.kicks.them)}`, Q * 5, H * 0.15 + Q * 9, { size: Q * 2.8, align: 'left', weight: 700 })
 }
 
 export const hud = (s) => [

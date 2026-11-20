@@ -5,7 +5,7 @@
 // over on the way.
 // Params: target (₦ takings, 20000) · seconds (60)
 // Outcomes: won | lost
-import { rng, pickOf, rect, box, label, clamp } from '../px.js'
+import { rng, pickOf, rect, box, label, clamp, ui } from '../px.js'
 import { drawPerson } from '../people.js'
 
 export const DRINKS = {
@@ -107,6 +107,7 @@ export function draw(ctx, s, v, t) {
     const alpha = c.leaving != null ? clamp(c.leaving / 0.8, 0, 1) : 1
     drawPerson(ctx, c.seed, x, H * 0.72, P, { pose: c.leaving != null ? (c.happy ? 'cheer' : 'hit') : 'stand', t: t + i, alpha })
     if (c.leaving == null) {
+      const P = ui(v.P)
       const d = DRINKS[c.drink]
       box(ctx, x - P * 12, H * 0.34, P * 24, P * 9, '#ffffff', Math.max(1, P / 2))
       rect(ctx, x - P * 10, H * 0.34 + P * 2, P * 3, P * 5, d.color)

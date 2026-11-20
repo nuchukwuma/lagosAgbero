@@ -6,7 +6,7 @@
 // waiting, and the crowd gets angry; serve cheats and the bags run out.
 // Params: bags (40) · need (families served, 18) · seconds (75)
 // Outcomes: won | lost
-import { rng, rect, box, label, clamp } from '../px.js'
+import { rng, rect, box, label, clamp, ui } from '../px.js'
 import { drawPerson } from '../people.js'
 
 const WARDS = ['OKE-ODO', 'ALAKUKO', 'MILE 2', 'IKOTUN']
@@ -86,7 +86,8 @@ export function input(s, ev, v) {
   }
 }
 
-function card(ctx, x, y, P, c) {
+function card(ctx, x, y, P0, c) {
+  const P = ui(P0)
   if (c === 'none') {
     label(ctx, '(no card)', x, y + P * 4, { size: P * 3, color: '#ffb3a8' })
     return

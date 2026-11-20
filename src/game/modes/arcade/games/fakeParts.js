@@ -4,7 +4,7 @@
 // box ORIGINAL or FAKE before the next customer pushes in.
 // Params: count (boxes, 20) · need (correct to pass, 15)
 // Outcomes: won | lost
-import { rng, pickOf, rect, box, label, clamp } from '../px.js'
+import { rng, pickOf, rect, box, label, clamp, ui } from '../px.js'
 import { drawPerson } from '../people.js'
 
 const BRANDS = [
@@ -110,12 +110,14 @@ export function draw(ctx, s, v, t) {
   const { W, H, P } = v
   // the stall: a wooden counter, shelves of parts behind
   rect(ctx, 0, 0, W, H, '#4a3a2c')
-  for (let y = P * 8; y < H * 0.55; y += P * 14) {
+  for (let y = H * 0.16; y < H * 0.5; y += Math.max(P * 16, H * 0.17)) {
     rect(ctx, 0, y, W, P * 2, '#2a1f18')
-    for (let x = P * 3; x < W; x += P * 10) box(ctx, x, y - P * 7, P * 7, P * 6, ['#c0392b', '#2f6fd6', '#f2c230', '#7f8c8d'][Math.floor(x / P / 10) % 4], Math.max(1, P / 2))
+    for (let x = P * 3; x < W; x += P * 13) box(ctx, x, y - P * 7, P * 7, P * 6, ['#c0392b', '#2f6fd6', '#f2c230', '#7f8c8d'][Math.floor(x / P / 10) % 4], Math.max(1, P / 2))
   }
   drawPerson(ctx, 'ngozi', W * 0.12, H * 0.72, P, { pose: s.flash === 'wrong' && s.flashT > 0 ? 'hit' : 'idle', t })
   // Mama Ngozi's chart on the wall: which brand comes in which colour box
+  {
+  const P = ui(v.P)
   const cw = P * 34
   box(ctx, W - cw - P * 3, P * 3, cw, P * 22, '#fff8e6', P)
   label(ctx, 'ORIGINAL BOXES', W - cw / 2 - P * 3, P * 6, { size: P * 2.6, color: '#1a1a1a', weight: 700 })
@@ -124,6 +126,7 @@ export function draw(ctx, s, v, t) {
     rect(ctx, W - cw, y - P, P * 3, P * 2, b.color)
     label(ctx, b.name, W - cw + P * 5, y, { size: P * 2.4, color: '#1a1a1a', align: 'left', weight: 700 })
   })
+  }
   rect(ctx, 0, H * 0.64, W, H * 0.36, '#8a5a2b')
   rect(ctx, 0, H * 0.64, W, P * 2, '#5a3416')
   if (s.over) return

@@ -43,16 +43,25 @@ export function sprite(ctx, rows, palette, x, y, P, flip = false) {
 }
 export const spriteSize = (rows, P) => ({ w: rows[0].length * P, h: rows.length * P })
 
-/** Outlined text, chunky and readable over anything. */
+const isDark = (c) => {
+  const m = /^#([0-9a-f]{6})$/i.exec(c)
+  if (!m) return false
+  const n = parseInt(m[1], 16)
+  return ((n >> 16) & 255) * 0.299 + ((n >> 8) & 255) * 0.587 + (n & 255) * 0.114 < 110
+}
+
+/** Outlined text, chunky and readable over anything (never smaller than 10px). Dark text gets a light halo instead of an ink one. */
 export function label(ctx, text, x, y, { size = 12, color = '#fff', align = 'center', alpha = 1, weight = 900 } = {}) {
+  size = Math.max(10, size)
   ctx.save()
   ctx.globalAlpha = alpha
   ctx.font = `${weight} ${Math.round(size)}px ui-monospace, Menlo, Consolas, monospace`
   ctx.textAlign = align
   ctx.textBaseline = 'middle'
   ctx.lineJoin = 'round'
-  ctx.lineWidth = Math.max(3, size / 4)
-  ctx.strokeStyle = INK
+  const dark = isDark(color)
+  ctx.lineWidth = dark ? Math.max(2, size / 6) : Math.max(3, size / 4)
+  ctx.strokeStyle = dark ? 'rgba(255,255,255,0.75)' : INK
   ctx.strokeText(text, x, y)
   ctx.fillStyle = color
   ctx.fillText(text, x, y)
@@ -123,3 +132,6 @@ export const PAL = {
   k: INK, w: '#ffffff', W: '#f4ecd8', r: '#d9342b', R: '#ff6b4a', g: '#2e9e4f', G: '#8ff0a4', b: '#2f6fd6', B: '#7fc8ff',
   y: '#ffd23a', Y: '#fff2a8', o: '#f08a24', O: '#ffb36b', n: '#7a4a24', N: '#b5793e', s: '#8a8f99', S: '#c9ccd2', p: '#9b59b6', P: '#d7b4ec', d: '#3a2a20', t: '#c79a6a',
 }
+
+/** The unit for panels that hold text: never so small that labels overlap. */
+export const ui = (P) => Math.max(P, 3)
