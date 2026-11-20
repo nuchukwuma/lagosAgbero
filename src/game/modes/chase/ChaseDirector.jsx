@@ -135,7 +135,7 @@ export default function ChaseDirector() {
     const s = useChase.getState()
     const v = vehicleRef.current
     if (!s.started || s.ended || !v) return
-    const dt = Math.min(raw, 0.05)
+    const dt = Math.max(0, Math.min(raw, 0.05))
     elapsed.current += dt
     const p = playerState.position
 

@@ -20,6 +20,8 @@ export default function FrameCap({ fps = 30 }) {
       const now = t / 1000
       // after a pause (tab in the background) carry on as if one short frame had passed
       if (now - state.clock.elapsedTime > 0.1) state.clock.elapsedTime = now - 0.1
+      // the first frame's timestamp can be a little older than the clock's start: never step back in time
+      if (now < state.clock.elapsedTime) state.clock.elapsedTime = now
       advance(now, true, state)
     }
     get().clock.elapsedTime = performance.now() / 1000

@@ -46,7 +46,7 @@ export default function PlayerController({ layout, look, enabled, eyeRed = 0, ti
   useFrame((_, rawDelta) => {
     const g = ref.current
     if (!g) return
-    const dt = Math.min(rawDelta, 0.05)
+    const dt = Math.max(0, Math.min(rawDelta, 0.05))
     const p = playerState.position
 
     if (playerState.teleport) {

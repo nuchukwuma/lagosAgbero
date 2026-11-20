@@ -216,7 +216,7 @@ export default function RunnerScene({ playerLook }) {
   // power-ups, applied when the run starts: a free stumble, a head start
   const boosted = useRef(false)
   useFrame((_, raw) => {
-    const dt = Math.min(raw, 0.05)
+    const dt = Math.max(0, Math.min(raw, 0.05))
     if (started && !boosted.current) {
       boosted.current = true
       if (has('charm')) run.maxHits += 1

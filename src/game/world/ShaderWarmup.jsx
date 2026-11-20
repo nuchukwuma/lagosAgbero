@@ -57,6 +57,9 @@ export default function ShaderWarmup() {
     state.gl.render(state.scene, state.camera)
   }, 1)
   useEffect(() => {
+    if (import.meta.env.DEV) window.__scene = scene // dev bots: inspect the 3D scene
+  }, [scene])
+  useEffect(() => {
     // Keep compiling in the background while the cover is up or something is
     // loading: parts of the world mount at different moments (people, cars,
     // the crowd), so one pass isn't enough. Each pass only does work for

@@ -30,7 +30,7 @@ export default function Traffic({ density = 3, paused = false, raining = false }
   useEffect(() => () => clearTraffic(), [])
 
   useFrame((_, raw) => {
-    const dt = Math.min(raw, 0.05)
+    const dt = Math.max(0, Math.min(raw, 0.05))
     if (!paused) {
       const jam = performance.now() < useWorldStore.getState().jamUntil
       const want = jam ? density + 3 : density

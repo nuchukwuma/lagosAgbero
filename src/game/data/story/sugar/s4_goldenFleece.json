@@ -218,11 +218,13 @@
                       "sugarRep": ">= 30"
                     }
                   },
-                  "threatenedDapo"
+                  "threatenedDapo",
+                  "rentInstalment",
+                  "paidSomeRent"
                 ]
               },
               "showLocked": true,
-              "lockedText": "He has no reason to trust you",
+              "lockedText": "He has no reason to trust you: pay something first",
               "effects": {
                 "changeStat": {
                   "rentDebt": 50000

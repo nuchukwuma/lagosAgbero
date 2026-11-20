@@ -170,7 +170,7 @@ function Walkers({ baked, walkways, count, paused }) {
   const usedRef = useRef(null)
 
   useFrame((_, raw) => {
-    const dt = paused ? 0 : Math.min(raw, 0.05)
+    const dt = paused ? 0 : Math.max(0, Math.min(raw, 0.05))
     clock.current += dt
     const player = playerState.position
     if (!usedRef.current || usedRef.current.length !== groups) usedRef.current = new Array(groups)
@@ -218,7 +218,8 @@ function Walkers({ baked, walkways, count, paused }) {
       // flip-book: every group steps through the baked walk at its own pace
       const speed = 1.25 + (g % 5) * 0.09
       const cycles = (clock.current * speed) / (baked[Math.floor(g / 2)].metres || CHARACTER.clips.walk.rootMotion.metres || 1.56) + g * 0.37
-      im.geometry = baked[Math.floor(g / 2)].walk[Math.floor((cycles % 1) * FRAMES)]
+      const frame = Math.floor((cycles % 1) * FRAMES)
+      im.geometry = baked[Math.floor(g / 2)].walk[frame >= 0 && frame < FRAMES ? frame : 0]
     }
   })
 

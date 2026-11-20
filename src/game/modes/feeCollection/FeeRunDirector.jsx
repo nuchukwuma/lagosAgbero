@@ -59,7 +59,7 @@ export default function FeeRunDirector() {
   useFrame((_, raw) => {
     const run = useFeeRun.getState()
     if (!run.active || !run.started || run.ended) return
-    const dt = Math.min(raw, 0.05)
+    const dt = Math.max(0, Math.min(raw, 0.05))
     elapsed.current += dt
     const timeLeft = Math.max(0, run.duration - elapsed.current)
     if (Math.ceil(timeLeft) !== Math.ceil(run.timeLeft)) useFeeRun.setState({ timeLeft })

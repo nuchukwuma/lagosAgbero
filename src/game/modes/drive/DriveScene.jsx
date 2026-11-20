@@ -375,7 +375,7 @@ export default function DriveScene() {
   }, [drive])
 
   useFrame((_, raw) => {
-    const dt = Math.min(raw, 0.05)
+    const dt = Math.max(0, Math.min(raw, 0.05))
     const store = useDrive.getState()
     if (started && !store.ended && !store.paused) {
       const input = readDriveInput()

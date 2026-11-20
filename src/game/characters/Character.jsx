@@ -144,7 +144,7 @@ const Character = forwardRef(function Character({ look: lookInput, animation = '
   const lod = useRef({ acc: 0, n: Math.floor(Math.random() * 4) })
   useFrame(({ camera }, delta) => {
     const l = lod.current
-    l.acc += Math.min(delta, 0.1)
+    l.acc += Math.max(0, Math.min(delta, 0.1))
     l.n++
     const g = inner.current
     let every = 1

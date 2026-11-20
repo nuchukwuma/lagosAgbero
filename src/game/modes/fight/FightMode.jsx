@@ -297,14 +297,14 @@ export default function FightMode({ params, onFinish }) {
       </div>
       <div
         className="fight-purse"
-        key={fight.coins}
+        key={`coins-${fight.coins}`}
         aria-label="The crowd's money"
       >
         <span className="coin">₦</span>
         {(fight.coins * COIN).toLocaleString("en-NG")}
       </div>
       {combo >= 2 && (
-        <div className="fight-combo" key={combo}>
+        <div className="fight-combo" key={`combo-${combo}`}>
           x{combo} <small>COMBO</small>
         </div>
       )}
