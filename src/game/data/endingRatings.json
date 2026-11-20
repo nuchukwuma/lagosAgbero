@@ -1,28 +1,159 @@
 {
   "_doc": "How the game rates a run that reached each ending. tier: best | good | mixed | bad | early (early = the story cut short). comment: what the game says about how you got there.",
-  "street_king": { "tier": "good", "comment": "You own the Back Side. Every danfo knows your name, every Chairman fears your shadow. Nobody asks if you're happy. Wise of them." },
-  "cult_boss": { "tier": "mixed", "comment": "Capo at last. The robes fit, the money flows, and you can never, ever sleep facing the door again." },
-  "wanted": { "tier": "bad", "comment": "Your face is on a poster at every bus stop. Not the campaign kind. The Task Force had a whiteboard just for you." },
-  "legit_businessman": { "tier": "best", "comment": "From touting to a registered business with receipts. Professor would cry, then deny he cried." },
-  "informant": { "tier": "mixed", "comment": "You sold the street to the people who sell the street. You're alive. You're also very, very alone at the bus stop." },
-  "rock_bottom": { "tier": "early", "comment": "You hit rock bottom so fast the rock asked for your number. Lagos ate you for breakfast, without pepper. Baba Ticket is still waiting for his share. Go back: there's money, friends and at least one honest road you walked past." },
-  "jailed": { "tier": "early", "comment": "Cell 4, forty men, one bucket. The shortest tour of Lagos anybody has ever taken. Next time, maybe don't do the crime in front of the people paid to see it." },
-  "go_home": { "tier": "best", "comment": "₦0 owing. Mama declared a market holiday. You walked into Lagos with ₦2,300 and walked out a man people pray for. This is the one." },
-  "the_honourable": { "tier": "good", "comment": "Honourable! Agbero to the State House in one story. Your posters are bigger than your conscience, but they are very nice posters." },
-  "grace_grace": { "tier": "best", "comment": "Grass to grace, the real one: the debt paid clean, the village proud, and Nne didn't have to lie to anybody about where the money came from." },
-  "grace_unbound": { "tier": "good", "comment": "You broke the chains in your head before you broke them in the market. Free, a little poorer, a lot lighter." },
-  "grace_witness": { "tier": "good", "comment": "You told the truth in a room full of men who pay for silence. Brave. Expensive. Worth it." },
-  "grace_goldenCage": { "tier": "mixed", "comment": "Rich, comfortable and owned. The cage is gold, the lock is gold, and the key is in Chief's pocket." },
-  "grace_whiteCloth": { "tier": "bad", "comment": "Prayer house money comes with prayer house terms. You traded your village's name for a white cloth and a long silence." },
-  "grace_prodigal": { "tier": "early", "comment": "Back in the village with nothing but the morning. Nne's pepper soup is nice, but Lagos is still out there laughing. You barely saw it. Go and try again: the grace was two chapters away." },
-  "u_firstClass": { "tier": "best", "comment": "First Class, fair and square. No leaked papers, no Dons, no lies left standing. Mama's akara paid for every one of those A's." },
-  "u_graduate": { "tier": "good", "comment": "Somtochukwu, son of the pap seller, graduated with his name and his mother's both intact." },
-  "u_goldenLie": { "tier": "mixed", "comment": "You graduated as somebody else. Everybody loved him. You'll spend the rest of your life keeping him alive." },
-  "u_viral": { "tier": "good", "comment": "The story went viral, and for once the internet was on the right side. Bold move for a boy who used to hide his mother's stall." },
-  "u_donsCapo": { "tier": "bad", "comment": "Capo of the Dons. The campus fears you. The lecturers fear you. Your mother does not know, and you'd like to keep it that way. Forever." },
-  "u_bigMansBoy": { "tier": "mixed", "comment": "The Honourable's boy. Certificate, car, contacts. The strings are invisible, until he pulls them." },
-  "u_dubai": { "tier": "bad", "comment": "Cotonou. Not Dubai. Never Dubai. The fake life fled the country, and took the real you with it." },
-  "u_expelled": { "tier": "early", "comment": "Expelled before the story even warmed up. Four years of school fees for a ₦20,000 leaked paper: that maths would fail GST 101 too. Go back, Scholar. Somto's real story hasn't started." },
-  "u_cell": { "tier": "early", "comment": "Remand. You went from 'campus big boy' to 'Exhibit B' in record time. The Dons send their regards. From outside." },
-  "u_home": { "tier": "early", "comment": "Back to the bus stop with your gown in a nylon bag. You left most of the campus unexplored, the Dons unanswered and Mama's secret unspoken. Go back: Royal Crest has a lot more story than this." }
+  "street_king": {
+    "tier": "good",
+    "comment": "You own the Back Side. Every danfo knows your name, every Chairman fears your shadow. Nobody asks if you're happy. Wise of them."
+  },
+  "cult_boss": {
+    "tier": "mixed",
+    "comment": "Capo at last. The robes fit, the money flows, and you can never, ever sleep facing the door again."
+  },
+  "wanted": {
+    "tier": "bad",
+    "comment": "Your face is on a poster at every bus stop. Not the campaign kind. The Task Force had a whiteboard just for you."
+  },
+  "legit_businessman": {
+    "tier": "best",
+    "comment": "From touting to a registered business with receipts. Professor would cry, then deny he cried."
+  },
+  "informant": {
+    "tier": "mixed",
+    "comment": "You sold the street to the people who sell the street. You're alive. You're also very, very alone at the bus stop."
+  },
+  "rock_bottom": {
+    "tier": "early",
+    "comment": "You hit rock bottom so fast the rock asked for your number. Lagos ate you for breakfast, without pepper. Baba Ticket is still waiting for his share. Go back: there's money, friends and at least one honest road you walked past."
+  },
+  "jailed": {
+    "tier": "early",
+    "comment": "Cell 4, forty men, one bucket. The shortest tour of Lagos anybody has ever taken. Next time, maybe don't do the crime in front of the people paid to see it."
+  },
+  "go_home": {
+    "tier": "best",
+    "comment": "₦0 owing. Mama declared a market holiday. You walked into Lagos with ₦2,300 and walked out a man people pray for. This is the one."
+  },
+  "the_honourable": {
+    "tier": "good",
+    "comment": "Honourable! Agbero to the State House in one story. Your posters are bigger than your conscience, but they are very nice posters."
+  },
+  "grace_grace": {
+    "tier": "best",
+    "comment": "Grass to grace, the real one: the debt paid clean, the village proud, and Nne didn't have to lie to anybody about where the money came from."
+  },
+  "grace_unbound": {
+    "tier": "good",
+    "comment": "You broke the chains in your head before you broke them in the market. Free, a little poorer, a lot lighter."
+  },
+  "grace_witness": {
+    "tier": "good",
+    "comment": "You told the truth in a room full of men who pay for silence. Brave. Expensive. Worth it."
+  },
+  "grace_goldenCage": {
+    "tier": "mixed",
+    "comment": "Rich, comfortable and owned. The cage is gold, the lock is gold, and the key is in Chief's pocket."
+  },
+  "grace_whiteCloth": {
+    "tier": "bad",
+    "comment": "Prayer house money comes with prayer house terms. You traded your village's name for a white cloth and a long silence."
+  },
+  "grace_prodigal": {
+    "tier": "early",
+    "comment": "Back in the village with nothing but the morning. Nne's pepper soup is nice, but Lagos is still out there laughing. You barely saw it. Go and try again: the grace was two chapters away."
+  },
+  "u_firstClass": {
+    "tier": "best",
+    "comment": "First Class, fair and square. No leaked papers, no Dons, no lies left standing. Mama's akara paid for every one of those A's."
+  },
+  "u_graduate": {
+    "tier": "good",
+    "comment": "Somtochukwu, son of the pap seller, graduated with his name and his mother's both intact."
+  },
+  "u_goldenLie": {
+    "tier": "mixed",
+    "comment": "You graduated as somebody else. Everybody loved him. You'll spend the rest of your life keeping him alive."
+  },
+  "u_viral": {
+    "tier": "good",
+    "comment": "The story went viral, and for once the internet was on the right side. Bold move for a boy who used to hide his mother's stall."
+  },
+  "u_donsCapo": {
+    "tier": "bad",
+    "comment": "Capo of the Dons. The campus fears you. The lecturers fear you. Your mother does not know, and you'd like to keep it that way. Forever."
+  },
+  "u_bigMansBoy": {
+    "tier": "mixed",
+    "comment": "The Honourable's boy. Certificate, car, contacts. The strings are invisible, until he pulls them."
+  },
+  "u_dubai": {
+    "tier": "bad",
+    "comment": "Cotonou. Not Dubai. Never Dubai. The fake life fled the country, and took the real you with it."
+  },
+  "u_expelled": {
+    "tier": "early",
+    "comment": "Expelled before the story even warmed up. Four years of school fees for a ₦20,000 leaked paper: that maths would fail GST 101 too. Go back, Scholar. Somto's real story hasn't started."
+  },
+  "u_cell": {
+    "tier": "early",
+    "comment": "Remand. You went from 'campus big boy' to 'Exhibit B' in record time. The Dons send their regards. From outside."
+  },
+  "u_home": {
+    "tier": "early",
+    "comment": "Back to the bus stop with your gown in a nylon bag. You left most of the campus unexplored, the Dons unanswered and Mama's secret unspoken. Go back: Royal Crest has a lot more story than this."
+  },
+  "p_peoples": {
+    "tier": "best",
+    "comment": "Clean win in Iyana-Wahala. Scientists are studying it. The market has toilets AND a notebook. You did politics without becoming one. Rare, Honourable. Very rare."
+  },
+  "p_lostKept": {
+    "tier": "good",
+    "comment": "You lost by two thousand votes and kept your soul, your wife and your notebook. In this ward that is a landslide."
+  },
+  "p_witness": {
+    "tier": "best",
+    "comment": "You brought down the godfather with a phone recording and a stubborn journalist. Baba Oko's Prado is still looking for parking."
+  },
+  "p_certificate": {
+    "tier": "mixed",
+    "comment": "You won the seat, the fifteen percent and a lifetime of flinching every time the radio says \"EFCC\". Congratulations?"
+  },
+  "p_puppet": {
+    "tier": "bad",
+    "comment": "You won the election and lost the remote control. Baba Oko presses the buttons, you just change channels when he says so."
+  },
+  "p_jailed": {
+    "tier": "bad",
+    "comment": "Councillor on Monday, Kirikiri on Tuesday. Mr. Adjust adjusted you right into a cell. Go back: there was an honest road, and it was cheaper."
+  },
+  "p_fled": {
+    "tier": "early",
+    "comment": "\"Medical tourism\" before the election even happened. You ran from a race you were in. Go back, Teacher. Iyana-Wahala has a whole Election Day you never saw."
+  },
+  "sugar_saidNo": {
+    "tier": "best",
+    "comment": "Somebody offered you a million naira for five girls and you made sure nobody could ever offer it again. South Street has a new hero, and she sells pepper soup."
+  },
+  "sugar_kitchen": {
+    "tier": "best",
+    "comment": "You built it twice, the second time with a menu, receipts and a daughter who brags about you. That is how you make it."
+  },
+  "sugar_mama": {
+    "tier": "good",
+    "comment": "A pepper soup stall, four chairs and a prefect for a daughter. Small, honest and loud. Mama approves of Mama."
+  },
+  "sugar_manager": {
+    "tier": "mixed",
+    "comment": "You sold your name to Rukky and kept the keys. Very comfortable. Very Golden. Very not yours."
+  },
+  "sugar_queen": {
+    "tier": "mixed",
+    "comment": "Queen of South Street, and nobody says your name out loud. Power is lonely. Pepper soup is cold when nobody shares it."
+  },
+  "sugar_italy": {
+    "tier": "bad",
+    "comment": "Half a million naira for a girl's life. The court counted it. So did Blessing's mother. Go back, Mama: this was the one line you were never meant to cross."
+  },
+  "sugar_lockedOut": {
+    "tier": "early",
+    "comment": "Locked out before the story really started. Chief Dapo's padlock wins. Go back: the bar, the girls and a lot of story are waiting behind that door."
+  }
 }

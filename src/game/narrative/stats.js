@@ -31,6 +31,23 @@ export const STAT_DEFS = {
   cultLoyalty: { label: 'Tortoise loyalty', group: 'relationship', start: 0, min: 0, max: 100, who: 'The Tortoises' },
   rivalCultHatred: { label: 'Hyena hatred', group: 'relationship', start: 0, min: 0, max: 100, who: 'The Hyenas' },
 
+  // ---- The Honourable (politics) ----
+  votes: { label: 'Votes (the poll at Baba Radio\'s stall)', group: 'street', start: 18, min: 0, max: 100 },
+  publicTrust: { label: 'Public trust', group: 'street', start: 30, min: 0, max: 100 },
+  scandal: { label: 'Scandal', group: 'street', start: 5, min: 0, max: 100 },
+  godfather: { label: "Baba Oko's favour", group: 'relationship', start: 30, min: 0, max: 100, who: 'Baba Oko' },
+  wifeBond: { label: 'Bond with Funke', group: 'relationship', start: 60, min: 0, max: 100, who: 'Funke' },
+  seyiBond: { label: 'Bond with Seyi', group: 'relationship', start: 40, min: 0, max: 100, who: 'Seyi' },
+  ifeomaBond: { label: 'Ifeoma trusts you', group: 'relationship', start: 10, min: 0, max: 100, who: 'Ifeoma' },
+
+  // ---- Mama Sugar ----
+  rentDebt: { label: 'Rent owed to Chief Dapo', group: 'money', start: 250000, min: 0, max: Infinity },
+  sugarRep: { label: 'Your name on South Street', group: 'street', start: 20, min: 0, max: 100 },
+  secretKept: { label: 'Your secret, kept', group: 'hidden', start: 50, min: 0, max: 100 },
+  staffTrust: { label: 'The girls trust you', group: 'relationship', start: 40, min: 0, max: 100, who: 'The girls' },
+  blessingBond: { label: 'Bond with Blessing', group: 'relationship', start: 20, min: 0, max: 100, who: 'Blessing' },
+  iviBond: { label: 'Bond with Ivie', group: 'relationship', start: 65, min: 0, max: 100, who: 'Ivie' },
+
   // ---- Grass to Grace (Emeka) ----
   conscience: { label: 'Conscience', group: 'street', start: 60, min: 0, max: 100 },
   villageDebt: { label: 'What you owe Nkwọ-Agụụ', group: 'money', start: 0, min: 0, max: Infinity },

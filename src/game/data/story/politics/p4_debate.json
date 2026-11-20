@@ -1,0 +1,443 @@
+{
+  "id": "p4_debate",
+  "campaign": "politics",
+  "world": "iyanaWahala",
+  "act": 1,
+  "number": 4,
+  "title": "Chapter 4 — The Debate",
+  "description": "The motor park debate, a conversation with the man you are trying to replace, and a journalist holding a folder.",
+  "startScene": "debate",
+  "scenes": {
+    "debate": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Baba Ticket has cleared the motor park for the debate. Danfo drivers sit on their bonnets like it is a football match. Owó Ńlá arrives forty minutes late in an agbada so white it looks like a lie."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "babaTicket",
+          "text": "Order! Order! Every candidate gets three minutes. Anybody who passes three minutes, the drivers will horn you down."
+        },
+        {
+          "type": "startMode",
+          "mode": "exam",
+          "params": {
+            "bank": "debate",
+            "count": 5,
+            "seconds": 14
+          },
+          "results": {
+            "perfect": {
+              "changeStat": {
+                "votes": 8,
+                "publicTrust": 6
+              },
+              "setFlag": "wonDebate",
+              "toast": "The drivers are horning. For you."
+            },
+            "passed": {
+              "changeStat": {
+                "votes": 4,
+                "publicTrust": 2
+              },
+              "setFlag": "heldDebate"
+            },
+            "attacked": {
+              "changeStat": {
+                "votes": -3
+              },
+              "setFlag": "lostDebate"
+            }
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "owoNla"
+        }
+      ],
+      "location": "motorPark",
+      "time": "day",
+      "positions": {
+        "babaTicket": [
+          -36.4,
+          -19,
+          200
+        ],
+        "owoNla": [
+          -40,
+          -19,
+          160
+        ]
+      }
+    },
+    "owoNla": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "After the debate, Owó Ńlá finds you behind the ticket office. He is drinking malt through a straw like a child."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "owoNla",
+          "text": "You did well. (He means it, which is strange.) Let me tell you something your Baba Oko will not tell you."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "owoNla",
+          "text": "Who do you think paid for my first campaign? And my second? And my rice this year?"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "player",
+          "text": "...Baba Oko."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "owoNla",
+          "text": "Baba Oko owns both horses, Teacher. Whoever wins, he wins. You are not fighting me. You are fighting for the right to carry his bag."
+        },
+        {
+          "type": "choice",
+          "speaker": "owoNla",
+          "text": "He finishes the malt. He looks tired. Twelve years tired.",
+          "options": [
+            {
+              "text": "\"Then why are you still running?\"",
+              "effects": {
+                "changeStat": {
+                  "conscience": 3
+                },
+                "setFlag": "askedOwo"
+              }
+            },
+            {
+              "text": "\"Then help me finish him.\"",
+              "effects": {
+                "changeStat": {
+                  "conscience": 2,
+                  "godfather": -5
+                },
+                "setFlag": "owoAlly",
+                "remember": {
+                  "owo": "ally"
+                }
+              }
+            },
+            {
+              "text": "\"Thank you for the information, Honourable. See you at the polls.\"",
+              "effects": {
+                "setFlag": "owoCold"
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "owoNla",
+          "text": "Because when I stop, he will remember everything I know. And people who remember too much have accidents. (He laughs.) Enjoy your campaign, Teacher.",
+          "if": "askedOwo"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "owoNla",
+          "text": "(He looks at you for a long time.) Ifeoma has a folder. Ask her what is inside. Then decide if you still want to be my friend.",
+          "if": "owoAlly"
+        },
+        {
+          "type": "goto",
+          "scene": "ifeoma"
+        }
+      ],
+      "location": "babaTicketOffice",
+      "positions": {
+        "owoNla": [
+          -36.5,
+          -21.5,
+          200
+        ]
+      }
+    },
+    "ifeoma": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Ifeoma is at the suya spot under the bridge. She orders for both of you without asking. She remembers you don't eat pepper. That should worry you."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ifeoma",
+          "text": "What you told me over suya stays off the record. That is not a favour. That is the job.",
+          "if": "toldIfeomaSecret"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ifeoma",
+          "text": "I have a folder. Bank transfers. Fourteen contracts. Twelve companies with the same director: Wale Oko. Nine of them built nothing."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ifeoma",
+          "text": "I can air it next week. It will finish Baba Oko. It will also finish anybody standing too close to him.",
+          "variants": [
+            {
+              "if": "signedContract",
+              "text": "I can air it next week. It will finish Baba Oko. And there is a new letter in the folder, Teacher. A toilet contract. Your signature is very neat."
+            }
+          ]
+        },
+        {
+          "type": "choice",
+          "speaker": "ifeoma",
+          "text": "So. What do you want me to do?",
+          "options": [
+            {
+              "text": "Give her what you know. \"Air it. All of it.\"",
+              "effects": {
+                "changeStat": {
+                  "ifeomaBond": 15,
+                  "godfather": -20,
+                  "conscience": 8,
+                  "scandal": 3
+                },
+                "setFlag": "helpedIfeoma",
+                "remember": {
+                  "folder": "helped"
+                },
+                "noticedBy": [
+                  "Ifeoma"
+                ]
+              }
+            },
+            {
+              "text": "\"Wait until after the election. Then I will help you.\"",
+              "effects": {
+                "changeStat": {
+                  "ifeomaBond": -3
+                },
+                "setFlag": "askedWait",
+                "remember": {
+                  "folder": "wait"
+                }
+              }
+            },
+            {
+              "text": "\"If you air it, I will make sure Wahala FM loses its licence.\"",
+              "effects": {
+                "changeStat": {
+                  "ifeomaBond": -20,
+                  "scandal": 6,
+                  "conscience": -8,
+                  "godfather": 6
+                },
+                "setFlag": "threatenedIfeoma",
+                "remember": {
+                  "folder": "threat"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ifeoma",
+          "text": "Okay.",
+          "variants": [
+            {
+              "if": "helpedIfeoma",
+              "text": "(She closes the folder very slowly.) Do you know how many men have said \"air it\" to me? None. They all said \"how much\"."
+            },
+            {
+              "if": "threatenedIfeoma",
+              "text": "(She takes a picture of your face with her phone. Click.) For the archive, Honourable."
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "hub"
+        }
+      ],
+      "location": "underBridge",
+      "time": "night",
+      "positions": {
+        "ifeoma": [
+          1.4,
+          -14.4,
+          200
+        ]
+      }
+    },
+    "hub": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Three weeks to the election. One free evening. Who do you spend it with?"
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "One evening.",
+          "options": [
+            {
+              "text": "Funke. Just Funke. No phones.",
+              "effects": {
+                "changeStat": {
+                  "wifeBond": 10
+                },
+                "setFlag": "eveningFunke",
+                "goto": "nightFunke"
+              }
+            },
+            {
+              "text": "Seyi, at the beer parlour, where he talks.",
+              "effects": {
+                "changeStat": {
+                  "seyiBond": 10
+                },
+                "setFlag": "eveningSeyi",
+                "goto": "nightSeyi"
+              }
+            },
+            {
+              "text": "Mama Titi and the market women, counting stalls.",
+              "effects": {
+                "changeStat": {
+                  "votes": 3,
+                  "publicTrust": 4
+                },
+                "setFlag": "eveningMarket",
+                "goto": "nightMarket"
+              }
+            }
+          ]
+        }
+      ],
+      "location": "mamaPut",
+      "time": "night"
+    },
+    "nightFunke": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "funke",
+          "text": "Do you remember why you became a teacher? (She is lying on the mat on the balcony, looking at the one star you can see over Iyana-Wahala.)"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "player",
+          "text": "Because Mr. Okonkwo made me feel like the cleverest boy in Ekiti. And then I found out he made everybody feel like that."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "funke",
+          "text": "That is why I married you. You made the whole street feel clever. (Pause.) Don't let them make you feel clever, {name}. That is how they get you."
+        },
+        {
+          "type": "endChapter",
+          "title": "The Debate",
+          "summary": "You won something or lost something in front of the motor park. And now you know who owns both horses.",
+          "next": "p5_rigging"
+        }
+      ],
+      "location": "mamaPut",
+      "time": "night",
+      "positions": {
+        "funke": [
+          -6.8,
+          8.6,
+          200
+        ]
+      }
+    },
+    "nightSeyi": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "seyi",
+          "text": "(Three bottles in.) The one in Dubai, he was the honest one. Everybody thinks it was the other one. The honest ones always end up abroad or underground. (He laughs too long.) Teacher, which one are you?"
+        },
+        {
+          "type": "choice",
+          "speaker": "seyi",
+          "text": "He is waiting for an answer. A real one.",
+          "options": [
+            {
+              "text": "\"Neither. I am staying, and I am staying honest.\"",
+              "effects": {
+                "changeStat": {
+                  "seyiBond": 6,
+                  "conscience": 3
+                },
+                "setFlag": "toldSeyiHonest"
+              }
+            },
+            {
+              "text": "\"Whichever one wins, Seyi.\"",
+              "effects": {
+                "changeStat": {
+                  "seyiBond": 3,
+                  "conscience": -3
+                },
+                "setFlag": "toldSeyiWin"
+              }
+            }
+          ]
+        },
+        {
+          "type": "endChapter",
+          "title": "The Debate",
+          "summary": "You won something or lost something in front of the motor park. And now you know who owns both horses.",
+          "next": "p5_rigging"
+        }
+      ],
+      "location": "paraga",
+      "time": "night",
+      "positions": {
+        "seyi": [
+          -2.2,
+          -14.7,
+          200
+        ]
+      }
+    },
+    "nightMarket": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "mamaTiti",
+          "text": "Forty-two stalls leak. Nine have no light. Three have a snake. (She has your notebook. She has added things.) And we want a crèche. The children sit inside the pepper."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "player",
+          "text": "A crèche. That is not even on my manifesto."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "mamaTiti",
+          "text": "Now it is. (She hands the notebook back.) You wanted the market. This is the market."
+        },
+        {
+          "type": "endChapter",
+          "title": "The Debate",
+          "summary": "You won something or lost something in front of the motor park. And now you know who owns both horses.",
+          "next": "p5_rigging"
+        }
+      ],
+      "location": "market",
+      "time": "night",
+      "positions": {
+        "mamaTiti": [
+          20.4,
+          -9.6,
+          260
+        ]
+      }
+    }
+  }
+}

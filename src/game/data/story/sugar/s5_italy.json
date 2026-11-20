@@ -1,0 +1,359 @@
+{
+  "id": "s5_italy",
+  "campaign": "sugar",
+  "world": "iyanaWahala",
+  "act": 1,
+  "number": 5,
+  "title": "Chapter 5 — The Italy Man",
+  "description": "Oga Felix offers a million naira for five girls. This is the line. Which side of it are you on?",
+  "startScene": "felix",
+  "scenes": {
+    "felix": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Oga Felix wears a Juventus jersey and a Rolex that ticks too loudly. He talks softly, like a man who has never needed to talk loudly."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "felix",
+          "text": "Madam. I place girls in Italy. Hotel jobs, salon jobs, nanny jobs. Very good money. They send dollars home. Everybody is happy."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "felix",
+          "text": "Five of your girls. ₦200,000 each. A million naira. (He looks at the bar.) That one. The new one who smiles. Blessing. Italy will love her.",
+          "variants": [
+            {
+              "if": {
+                "notFlags": [
+                  "blessingBar"
+                ]
+              },
+              "text": "A million naira. (He looks at the stairs.) Young ones. The new ones. Italy loves them young."
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "kemi",
+          "text": "(From the stairs, very quietly.) Mama. My cousin went with an \"Italy man\". She called once. From a number in Libya. Then never again."
+        },
+        {
+          "type": "choice",
+          "speaker": "felix",
+          "text": "He puts a bag on the table. It is heavy.",
+          "options": [
+            {
+              "text": "\"Get out of my house.\"",
+              "effects": {
+                "changeStat": {
+                  "conscience": 12,
+                  "staffTrust": 12
+                },
+                "setFlag": "refusedFelix",
+                "remember": {
+                  "felix": "refused"
+                },
+                "noticedBy": [
+                  "The girls"
+                ]
+              }
+            },
+            {
+              "text": "Smile. \"Let me think. Come back on Friday.\" Then call NAPTIP.",
+              "effects": {
+                "changeStat": {
+                  "conscience": 10,
+                  "staffTrust": 6
+                },
+                "setFlag": [
+                  "refusedFelix",
+                  "stingFelix"
+                ],
+                "remember": {
+                  "felix": "sting"
+                }
+              }
+            },
+            {
+              "text": "Take the bag.",
+              "effects": {
+                "changeStat": {
+                  "money": 500000,
+                  "conscience": -30,
+                  "staffTrust": -25,
+                  "blessingBond": -30
+                },
+                "setFlag": "acceptedFelix",
+                "remember": {
+                  "felix": "accepted"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "grace",
+          "if": "stingFelix"
+        },
+        {
+          "type": "goto",
+          "scene": "begs",
+          "if": "acceptedFelix"
+        },
+        {
+          "type": "goto",
+          "scene": "girlsNight"
+        }
+      ],
+      "location": "southStreet",
+      "time": "day",
+      "positions": {
+        "felix": [
+          -18.4,
+          8.9,
+          210
+        ],
+        "kemi": [
+          -21.4,
+          10.3,
+          160
+        ]
+      }
+    },
+    "grace": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "The NAPTIP office is a bungalow behind the motor park with a cracked sign and an officer who looks like she has not slept since 2015. Officer Grace Okon."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "officerGrace",
+          "text": "Madam. You run a... hotel. (She doesn't say the other word. She doesn't need to.) And you want to help me catch a trafficker."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "officerGrace",
+          "text": "I need him on tape. Saying what he does. Saying where they go. He must trust you. Can you lie to a man like that?"
+        },
+        {
+          "type": "startMode",
+          "mode": "bluff",
+          "params": {
+            "scenario": "felixDeal"
+          },
+          "results": {
+            "convinced": {
+              "changeStat": {
+                "conscience": 4
+              },
+              "setFlag": "felixTaped"
+            },
+            "doubted": {
+              "setFlag": "felixWary"
+            },
+            "caught": {
+              "changeStat": {
+                "policeHeat": 6
+              },
+              "setFlag": [
+                "felixWary",
+                "felixKnows"
+              ]
+            },
+            "confessed": {
+              "setFlag": [
+                "felixKnows"
+              ]
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "officerGrace",
+          "text": "Good.",
+          "variants": [
+            {
+              "if": "felixTaped",
+              "text": "(She listens to the recording twice. Her hand is shaking a little.) \"Tripoli, then Sicily.\" He said it. In his own voice. (She looks at you.) Madam, whatever you are, today you are a witness."
+            },
+            {
+              "if": "felixKnows",
+              "text": "(She swears very quietly.) He knows. Then he will come for you before he goes. Lock your gate, Madam."
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "girlsNight"
+        }
+      ],
+      "location": "motorPark",
+      "time": "day",
+      "positions": {
+        "officerGrace": [
+          -36.6,
+          -19.2,
+          200
+        ]
+      }
+    },
+    "begs": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Blessing finds you in the store room, counting Felix's money with your back to the door.",
+          "variants": [
+            {
+              "if": {
+                "notFlags": [
+                  "blessingBar"
+                ]
+              },
+              "text": "Kemi finds you in the store room, counting Felix's money with your back to the door."
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "blessing",
+          "text": "Mama. Please. (She is not crying. That is worse.) I don't want Italy. I want my salon. I will work. I will pay you. Please don't sell me.",
+          "variants": [
+            {
+              "if": {
+                "notFlags": [
+                  "blessingBar"
+                ]
+              },
+              "text": "(Kemi.) Mama. You knew my cousin. You came to her mother's house when she didn't call. (Very quietly.) Don't do this."
+            }
+          ]
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "The money is very heavy in your hands.",
+          "options": [
+            {
+              "text": "Give the bag back to Felix tonight. Whatever it costs.",
+              "effects": {
+                "changeStat": {
+                  "conscience": 25,
+                  "staffTrust": 15,
+                  "blessingBond": 20,
+                  "money": -500000
+                },
+                "setFlag": [
+                  "backedOut",
+                  "refusedFelix"
+                ],
+                "clearFlag": "acceptedFelix",
+                "remember": {
+                  "felix": "backedOut"
+                }
+              }
+            },
+            {
+              "text": "\"It is a good job. You will thank me.\"",
+              "effects": {
+                "changeStat": {
+                  "blessingBond": -20
+                },
+                "setFlag": "keptDeal"
+              }
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "girlsNight"
+        }
+      ],
+      "location": "southStreet",
+      "time": "night",
+      "positions": {
+        "blessing": [
+          -18.6,
+          9.3,
+          200
+        ],
+        "kokoro": [
+          -21.8,
+          9.7,
+          160
+        ]
+      }
+    },
+    "girlsNight": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Late. The girls sit on the bar with their shoes off. Somebody has made Indomie for everybody. Precious is doing impressions of Bassey, badly and perfectly."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "kemi",
+          "text": "Mama. Why do you do this? Not the money. I mean, why this?"
+        },
+        {
+          "type": "choice",
+          "speaker": "kemi",
+          "text": "They all go quiet. They have never asked.",
+          "options": [
+            {
+              "text": "Tell them about Warri, and the wrong address, and the first night.",
+              "effects": {
+                "changeStat": {
+                  "staffTrust": 10,
+                  "conscience": 4
+                },
+                "setFlag": "toldWarri"
+              }
+            },
+            {
+              "text": "\"Because it pays. Eat your Indomie.\"",
+              "effects": {
+                "changeStat": {
+                  "staffTrust": -2
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "kemi",
+          "text": "(After a long time.) So you were Blessing. (Nobody says anything. Precious offers you her egg.)",
+          "if": "toldWarri"
+        },
+        {
+          "type": "endChapter",
+          "title": "The Italy Man",
+          "summary": "You were offered the price of a life, five times over. What you did with it is already in the street's mouth.",
+          "next": "s6_raid"
+        }
+      ],
+      "location": "southStreet",
+      "time": "night",
+      "positions": {
+        "kemi": [
+          -21.4,
+          10.3,
+          160
+        ],
+        "blessing": [
+          -18.6,
+          9.3,
+          200
+        ]
+      }
+    }
+  }
+}

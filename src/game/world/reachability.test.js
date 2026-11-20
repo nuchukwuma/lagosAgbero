@@ -8,6 +8,7 @@ const chapters = import.meta.glob('../data/story/**/*.json', { eager: true, impo
 const worlds = import.meta.glob('../data/world/*.json', { eager: true, import: 'default' })
 import items from '../data/items.json'
 import questsData from '../data/quests.json'
+import campaignsData from '../data/campaigns.json'
 
 const inside = (c, x, z, pad) => {
   const dx = x - c.x
@@ -81,10 +82,13 @@ describe('story goals can be reached', () => {
   it('every activity, shop and quest giver on a map can be reached', () => {
     const problems = []
     const quests = Array.isArray(questsData) ? questsData : questsData.quests || []
-    const needed = new Set([...Object.keys(items.vendors || {}), ...quests.map((q) => q.giver).filter(Boolean)])
+    const worldOfCampaign = Object.fromEntries((campaignsData.campaigns || campaignsData).map((c) => [c.id, c.world]))
     for (const [file, w] of Object.entries(worlds)) {
       const id = w.id || file.split('/').pop().replace('.json', '')
       if (!w.spots) continue
+      // a quest giver only has to be reachable in the world of the quest's own story
+      const givers = quests.filter((q) => worldOfCampaign[q.campaign || 'areaBoy'] === id).map((q) => q.giver)
+      const needed = new Set([...Object.keys(items.vendors || {}), ...givers])
       for (const a of w.activities || []) {
         const spot = w.spots[a.spot]
         if (!spot) problems.push(`${id}: activity ${a.id} has no spot ${a.spot}`)

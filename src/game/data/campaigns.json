@@ -286,6 +286,219 @@
         "campusRep",
         "donsHeat"
       ]
+    },
+    {
+      "id": "politics",
+      "title": "The Honourable",
+      "tagline": "A civics teacher runs for councillor of Iyana-Wahala. A godfather offers the ticket. Everybody has a price, including, maybe, you.",
+      "hero": {
+        "name": "Kunle",
+        "nickname": "Teacher",
+        "placeholder": "Kunle",
+        "look": {
+          "body": "mini_male_d",
+          "skin": "#5c3a24",
+          "shirt": "#f4f1ea",
+          "shirt2": "#2471a3",
+          "trousers": "#1f2a3a",
+          "shoes": "#1a1a1a",
+          "accessories": [
+            {
+              "type": "fila",
+              "color": "#2471a3"
+            }
+          ]
+        },
+        "style": "neat",
+        "outfits": [
+          [
+            "mini_male_d",
+            "Campaign agbada",
+            {
+              "shirt2": "#2471a3"
+            }
+          ],
+          [
+            "mini_male_a",
+            "Teacher's shirt",
+            {}
+          ],
+          [
+            "mini_male_e",
+            "Weekend",
+            {}
+          ]
+        ],
+        "shirts": [
+          "#f4f1ea",
+          "#2471a3",
+          "#1e8449",
+          "#7a4fd9",
+          "#c0392b"
+        ],
+        "styleNote": "Clean agbada for rallies, teacher's shirt for the market."
+      },
+      "firstChapter": "p1_ticket",
+      "world": "iyanaWahala",
+      "art": "art/story-politics.webp",
+      "loading": {
+        "place": "IYANA-WAHALA WARD",
+        "lines": [
+          "Printing posters…",
+          "Counting rice bags…",
+          "Charging the megaphone…",
+          "Rehearsing promises…",
+          "Finding a crowd…"
+        ]
+      },
+      "strict": false,
+      "features": {
+        "energy": false
+      },
+      "startStats": {
+        "money": 160000,
+        "debt": 0,
+        "energy": 80,
+        "notoriety": 0,
+        "votes": 18,
+        "godfather": 30,
+        "scandal": 5,
+        "conscience": 55,
+        "publicTrust": 30,
+        "wifeBond": 60,
+        "seyiBond": 40,
+        "ifeomaBond": 10
+      },
+      "hud": {
+        "meter": {
+          "stat": "votes",
+          "label": "Votes",
+          "icon": "people"
+        },
+        "bar": {
+          "stat": "scandal",
+          "label": "Scandal"
+        }
+      },
+      "stats": [
+        "money",
+        "votes",
+        "publicTrust",
+        "scandal",
+        "godfather",
+        "conscience",
+        "wifeBond",
+        "seyiBond",
+        "ifeomaBond"
+      ]
+    },
+    {
+      "id": "sugar",
+      "title": "Mama Sugar",
+      "tagline": "Twenty-two years after Warri, Mama Sugar runs a hotel on South Street. The rent is due, the Task Force is hungry, and a man is selling \"jobs in Italy\".",
+      "hero": {
+        "name": "Ebiere",
+        "nickname": "Mama Sugar",
+        "placeholder": "Ebiere",
+        "look": {
+          "body": "mini_female_e",
+          "skin": "#6e4329",
+          "shirt": "#c0392b",
+          "shirt2": "#f5b041",
+          "trousers": "#1a1a1a",
+          "shoes": "#d4af37",
+          "accessories": [
+            {
+              "type": "gele",
+              "color": "#c0392b"
+            },
+            {
+              "type": "chain",
+              "color": "#d4af37"
+            }
+          ]
+        },
+        "style": "flashy",
+        "outfits": [
+          [
+            "mini_female_e",
+            "Night boubou",
+            {
+              "shirt2": "#f5b041"
+            }
+          ],
+          [
+            "mini_female_d",
+            "Business",
+            {}
+          ],
+          [
+            "mini_female_f",
+            "Market day",
+            {}
+          ]
+        ],
+        "shirts": [
+          "#c0392b",
+          "#d4af37",
+          "#8e44ad",
+          "#1abc9c",
+          "#f4f1ea"
+        ],
+        "styleNote": "Gold for the bar, plain for the landlord."
+      },
+      "firstChapter": "s1_palace",
+      "world": "iyanaWahala",
+      "art": "art/story-sugar.webp",
+      "loading": {
+        "place": "SUGAR PALACE, SOUTH STREET",
+        "lines": [
+          "Cooling the Star lager…",
+          "Waking Kokoro…",
+          "Counting the drawer twice…",
+          "Warming the pepper soup…",
+          "Hiding the rent letter…"
+        ]
+      },
+      "strict": false,
+      "features": {
+        "energy": false
+      },
+      "startStats": {
+        "money": 30000,
+        "debt": 0,
+        "energy": 80,
+        "notoriety": 0,
+        "rentDebt": 250000,
+        "staffTrust": 40,
+        "sugarRep": 20,
+        "policeHeat": 10,
+        "conscience": 50,
+        "blessingBond": 20,
+        "iviBond": 65,
+        "secretKept": 50
+      },
+      "hud": {
+        "meter": {
+          "stat": "sugarRep",
+          "label": "Street name",
+          "icon": "star"
+        },
+        "bar": {
+          "stat": "staffTrust",
+          "label": "The girls"
+        }
+      },
+      "stats": [
+        "money",
+        "rentDebt",
+        "sugarRep",
+        "staffTrust",
+        "policeHeat",
+        "conscience",
+        "blessingBond",
+        "iviBond"
+      ]
     }
   ]
 }

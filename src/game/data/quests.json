@@ -213,6 +213,189 @@
       },
       "blurb": "The Task Force impounded Formula One's okada. He has a plan. It is a bad plan.",
       "start": "quests:impound"
+    },
+    {
+      "id": "funkeShop",
+      "giver": "funke",
+      "title": "Funke's door",
+      "icon": "quest",
+      "if": {
+        "flags": [
+          "funkeAround"
+        ],
+        "notFlags": [
+          "quest_funkeShop"
+        ]
+      },
+      "blurb": "Funke wants you to walk her to the market. Mostly she wants you to walk with her.",
+      "start": "bonds:funkeShop",
+      "campaign": "politics"
+    },
+    {
+      "id": "seyiFather",
+      "giver": "seyi",
+      "title": "Seyi's pillar",
+      "icon": "quest",
+      "if": {
+        "flags": [
+          "seyiAround"
+        ],
+        "notFlags": [
+          "quest_seyiFather"
+        ]
+      },
+      "blurb": "Seyi wants to show you something under the bridge. He says it is not politics.",
+      "start": "bonds:seyiFather",
+      "campaign": "politics"
+    },
+    {
+      "id": "ifeomaSuya",
+      "giver": "ifeoma",
+      "title": "Off the record",
+      "icon": "quest",
+      "if": {
+        "flags": [
+          "ifeomaAround"
+        ],
+        "notFlags": [
+          "quest_ifeomaSuya"
+        ]
+      },
+      "blurb": "Ifeoma wants suya. Off the record. You are paying.",
+      "start": "bonds:ifeomaSuya",
+      "campaign": "politics"
+    },
+    {
+      "id": "blessingSalon",
+      "giver": "blessing",
+      "title": "The pink dryer",
+      "icon": "quest",
+      "if": {
+        "flags": [
+          "blessingAround"
+        ],
+        "notFlags": [
+          "quest_blessingSalon"
+        ]
+      },
+      "blurb": "Blessing has seen a second-hand hair dryer at the market.",
+      "start": "bonds:blessingSalon",
+      "campaign": "sugar"
+    },
+    {
+      "id": "kokoroRing",
+      "giver": "kokoro",
+      "title": "Kokoro of Ajegunle",
+      "icon": "quest",
+      "if": {
+        "flags": [
+          "kokoroAround"
+        ],
+        "notFlags": [
+          "quest_kokoroRing"
+        ]
+      },
+      "blurb": "Kokoro is awake, and he wants to spar.",
+      "start": "bonds:kokoroRing",
+      "campaign": "sugar"
+    },
+    {
+      "id": "kemiExam",
+      "giver": "kemi",
+      "title": "Kemi's exam",
+      "icon": "quest",
+      "if": {
+        "flags": [
+          "kemiAround"
+        ],
+        "notFlags": [
+          "quest_kemiExam"
+        ]
+      },
+      "blurb": "Kemi has a nursing school entrance exam on Saturday.",
+      "start": "bonds:kemiExam",
+      "campaign": "sugar"
+    },
+    {
+      "id": "adaDream",
+      "giver": "ada",
+      "title": "Ada's sketchbook",
+      "icon": "quest",
+      "if": {
+        "flags": [
+          "dayLoop"
+        ],
+        "notFlags": [
+          "quest_adaDream"
+        ],
+        "stats": {
+          "friendBond": ">= 10"
+        }
+      },
+      "blurb": "Ada wants to show you something. She says you are not allowed to laugh.",
+      "start": "bonds:adaDream"
+    },
+    {
+      "id": "professorPast",
+      "giver": "professor",
+      "title": "Why \"Professor\"",
+      "icon": "quest",
+      "if": {
+        "flags": [
+          "dayLoop"
+        ],
+        "notFlags": [
+          "quest_professorPast"
+        ],
+        "stats": {
+          "mentorBond": ">= 15"
+        }
+      },
+      "blurb": "Professor is pouring two cups of tea. He never pours two.",
+      "start": "bonds:professorPast"
+    },
+    {
+      "id": "chinweWalk",
+      "giver": "chinwe",
+      "title": "The stream path",
+      "icon": "quest",
+      "if": {
+        "notFlags": [
+          "quest_chinweWalk",
+          "chinweGone"
+        ]
+      },
+      "blurb": "Chinwe wants to walk the old path with you.",
+      "start": "bonds:chinweWalk",
+      "campaign": "grace"
+    },
+    {
+      "id": "nneStory",
+      "giver": "nneEmeka",
+      "title": "Papa's debt",
+      "icon": "quest",
+      "if": {
+        "notFlags": [
+          "quest_nneStory"
+        ]
+      },
+      "blurb": "Nne is shelling egusi and wants you to sit with her.",
+      "start": "bonds:nneStory",
+      "campaign": "grace"
+    },
+    {
+      "id": "tamaraLibrary",
+      "giver": "tamara",
+      "title": "Statistics, allegedly",
+      "icon": "quest",
+      "if": {
+        "notFlags": [
+          "quest_tamaraLibrary"
+        ]
+      },
+      "blurb": "Tamara needs \"help\" with statistics.",
+      "start": "bonds:tamaraLibrary",
+      "campaign": "campus"
     }
   ]
 }

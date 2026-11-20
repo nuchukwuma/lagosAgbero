@@ -194,5 +194,83 @@
         "right": 1
       }
     }
+  },
+  "debate": {
+    "title": "The Motor Park Debate",
+    "intro": "Three minutes each. The drivers will horn you down if you talk nonsense.",
+    "questions": {
+      "q1": {
+        "q": "\"Who is the head of a local government council?\"",
+        "answers": [
+          "The Governor",
+          "The Chairman",
+          "The Councillor"
+        ],
+        "right": 1
+      },
+      "q2": {
+        "q": "\"What does a councillor do?\"",
+        "answers": [
+          "Represents the ward at the council",
+          "Collects tolls at the motor park",
+          "Appoints the Governor"
+        ],
+        "right": 0
+      },
+      "q3": {
+        "q": "\"Owó Ńlá says the toilets cost ₦40 million. A fair answer?\"",
+        "answers": [
+          "\"Show us the receipts.\"",
+          "\"Make it ₦80 million.\"",
+          "\"Toilets are not important.\""
+        ],
+        "right": 0
+      },
+      "q4": {
+        "q": "\"How many tiers of government does Nigeria have?\"",
+        "answers": [
+          "Two",
+          "Three",
+          "Four"
+        ],
+        "right": 1
+      },
+      "q5": {
+        "q": "\"A driver asks about Task Force extortion. You say:\"",
+        "answers": [
+          "\"Published fees, receipts for everything.\"",
+          "\"Pay them, it is normal.\"",
+          "\"Drivers should walk.\""
+        ],
+        "right": 0
+      },
+      "q6": {
+        "q": "\"What is a constituency project?\"",
+        "answers": [
+          "A project for the representative's family",
+          "A public project for the people of the area",
+          "A party rally"
+        ],
+        "right": 1
+      },
+      "q7": {
+        "q": "\"Owó Ńlá promises rice. You promise:\"",
+        "answers": [
+          "More rice",
+          "A market where women can sell in the rain",
+          "Nothing"
+        ],
+        "right": 1
+      },
+      "q8": {
+        "q": "\"Election results are announced by:\"",
+        "answers": [
+          "The electoral commission",
+          "The godfather",
+          "Wahala FM"
+        ],
+        "right": 0
+      }
+    }
   }
 }

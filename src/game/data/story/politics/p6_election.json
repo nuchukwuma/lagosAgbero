@@ -1,0 +1,268 @@
+{
+  "id": "p6_election",
+  "campaign": "politics",
+  "world": "iyanaWahala",
+  "act": 1,
+  "number": 6,
+  "title": "Chapter 6 — Election Day",
+  "description": "Three polling units, ballot snatchers, Mama Titi's market, and a long night of counting.",
+  "startScene": "dawn",
+  "scenes": {
+    "dawn": {
+      "beats": [
+        {
+          "type": "cutscene",
+          "cards": [
+            {
+              "title": "Election Day",
+              "text": "6:00 a.m. No movement. No okada, no danfo, no Task Force. Just the queues, and the birds, who are confused."
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "seyi",
+          "text": "Three polling units decide everything: the Front Stop, the Market and the Motor Park. Go to each one. Show your face. Make sure the agents are awake and the boxes are where we left them.",
+          "variants": [
+            {
+              "if": "funkeLeft",
+              "text": "(He looks at the empty passenger seat.) Three polling units decide everything: the Front Stop, the Market and the Motor Park. Funke is not answering my calls either, if it helps."
+            }
+          ]
+        },
+        {
+          "type": "freeRoam",
+          "objective": "Polling unit 1: the Front Stop.",
+          "goal": {
+            "reach": "frontStop"
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "unit1"
+        }
+      ],
+      "location": "mamaPut",
+      "time": "dawn"
+    },
+    "unit1": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "The queue at the Front Stop is three hundred people long. An old man is sitting on a bucket, refusing to leave until he votes. \"I voted in 1979,\" he says. \"I will vote again before I die.\""
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "He is looking at you.",
+          "options": [
+            {
+              "text": "Bring him water and a chair from the tea table.",
+              "effects": {
+                "changeStat": {
+                  "votes": 1,
+                  "publicTrust": 3
+                },
+                "setFlag": "oldManChair"
+              }
+            },
+            {
+              "text": "Shake his hand for the cameras.",
+              "effects": {
+                "changeStat": {
+                  "votes": 1
+                }
+              }
+            },
+            {
+              "text": "Ask your agent to make sure he votes first.",
+              "effects": {
+                "changeStat": {
+                  "votes": 2
+                },
+                "setFlag": "oldManFirst"
+              }
+            }
+          ]
+        },
+        {
+          "type": "freeRoam",
+          "objective": "Polling unit 2: the Market.",
+          "goal": {
+            "reach": "market"
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "unit2"
+        }
+      ],
+      "location": "frontStop",
+      "time": "day"
+    },
+    "unit2": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "mamaTiti",
+          "text": "Teacher! The women are here. All of them. We are voting for the toilet. (She shows you a padlock.) This is the key Owó Ńlá never gave us. I bought a new lock for your own.",
+          "if": "promiseToilets"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "mamaTiti",
+          "text": "The association remembers, Teacher. (She doesn't smile.) We will see if you remember too.",
+          "if": "paidMamaTiti"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "mamaTiti",
+          "text": "They are voting for the notebook. (She shows you. The women have written in it. Pages and pages.) Don't lose it.",
+          "if": "listenedTiti"
+        },
+        {
+          "type": "changeStat",
+          "stats": {
+            "votes": 3
+          },
+          "if": "promiseToilets"
+        },
+        {
+          "type": "changeStat",
+          "stats": {
+            "votes": 4
+          },
+          "if": "listenedTiti"
+        },
+        {
+          "type": "changeStat",
+          "stats": {
+            "votes": 2
+          },
+          "if": "paidMamaTiti"
+        },
+        {
+          "type": "freeRoam",
+          "objective": "Polling unit 3: the Motor Park.",
+          "goal": {
+            "reach": "motorPark"
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "unit3"
+        }
+      ],
+      "location": "market",
+      "time": "day",
+      "positions": {
+        "mamaTiti": [
+          20.4,
+          -9.6,
+          260
+        ]
+      }
+    },
+    "unit3": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "At the Motor Park polling unit, three boys in black are running towards the ballot box. One of them has a cutlass. The INEC officer has disappeared under a table."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "babaTicket",
+          "text": "(From the ticket office window.) Teacher! Na your box dem wan carry!"
+        },
+        {
+          "type": "startMode",
+          "mode": "fight",
+          "params": {
+            "opponent": "thug",
+            "difficulty": 2
+          },
+          "results": {
+            "won": {
+              "changeStat": {
+                "votes": 4,
+                "publicTrust": 4
+              },
+              "setFlag": "savedBox",
+              "toast": "The box stays. The drivers carry you on their shoulders."
+            },
+            "lost": {
+              "changeStat": {
+                "votes": -4
+              },
+              "setFlag": "lostBox"
+            }
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "count"
+        }
+      ],
+      "location": "motorPark",
+      "time": "day",
+      "positions": {
+        "babaTicket": [
+          -37,
+          -21,
+          200
+        ]
+      }
+    },
+    "count": {
+      "beats": [
+        {
+          "type": "newsBroadcast",
+          "source": "Baba Radio's stall — Wahala FM 99.9",
+          "headline": "COUNTING IN PROGRESS",
+          "text": "Results are coming in from the polling units. The collation centre has asked everybody to remain calm, and has locked its door from the inside.",
+          "if": {
+            "notFlags": [
+              "stingAdjust"
+            ]
+          }
+        },
+        {
+          "type": "newsBroadcast",
+          "source": "Baba Radio's stall — Wahala FM 99.9",
+          "headline": "BREAKING: THE \"LOGISTICS\" TAPE",
+          "text": "Wahala FM has received a recording of a commission official explaining how wards 4, 7 and 9 were \"already settled\". Ifeoma Nwankwo will be playing it in full, every hour, until somebody arrests somebody.",
+          "if": "stingAdjust"
+        },
+        {
+          "type": "newsBroadcast",
+          "source": "Baba Radio's stall — Wahala FM 99.9",
+          "headline": "THE OKO FILES",
+          "text": "Fourteen contracts. Twelve companies. One director. Wahala FM can reveal that Mr. Wale Oko has built nothing, nine times, for ₦300 million. Baba Oko could not be reached. His Prado was seen heading towards the airport.",
+          "if": "helpedIfeoma"
+        },
+        {
+          "type": "setFlag",
+          "flags": [
+            "exposedOko"
+          ],
+          "if": {
+            "flags": [
+              "helpedIfeoma",
+              "stingAdjust"
+            ]
+          }
+        },
+        {
+          "type": "endChapter",
+          "title": "Election Day",
+          "summary": "The boxes are counted. Somewhere in a locked room, a man in a safari suit is adding up what you are worth.",
+          "next": "p7_declaration"
+        }
+      ],
+      "location": "frontStop",
+      "time": "night"
+    }
+  }
+}

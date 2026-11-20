@@ -106,7 +106,8 @@ function jump(ctx, state, target, events) {
     const back = state.story.returnTo || state.story.checkpoint
     if (!back) throw new Error('Nothing to resume')
     events.push({ type: 'scene', ...back })
-    return withStory(state, { chapterId: back.chapterId, sceneId: back.sceneId, beatIndex: back.beatIndex ?? 0, returnTo: null })
+    // a paused story (walking somewhere, raising money, roaming between chapters) pauses again
+    return withStory(state, { chapterId: back.chapterId, sceneId: back.sceneId, beatIndex: back.beatIndex ?? 0, returnTo: null, detour: back.detour || null })
   }
   const p = resolveTarget(target, state.story)
   chapterOf(ctx, p.chapterId) // throws early on a bad target
@@ -126,6 +127,11 @@ function jump(ctx, state, target, events) {
 // advance() ends a detour (the free-roam goal tracker calls it on arrival).
 
 const locationOf = (scene) => scene?.location ?? LEGACY_BACKGROUNDS[scene?.background]?.location ?? null
+// a common scene (side quest, raid...) happens wherever the story it interrupted is
+const hostWorld = (ctx, story) => {
+  const back = story.returnTo || story.checkpoint
+  return (back && ctx.chapters[back.chapterId]?.world) || 'iyanaWahala'
+}
 const worldOfScene = (ctx, chapterId, scene) => scene?.world || ctx.chapters[chapterId]?.world || 'iyanaWahala'
 
 /** Walking to the next scene: only inside one chapter, same world, to a different spot. */
@@ -295,13 +301,15 @@ export function interrupt(ctx, state, target) {
   // scene's dialogue. Anything else goes back to the scene start.
   const here = currentBeat(ctx, state)
   const inCommon = ctx.chapters[state.story.chapterId]?.common
-  const returnTo =
-    here?.type === 'freeRoam' && !inCommon
+  const { detour } = state.story
+  const returnTo = detour
+    ? { chapterId: state.story.chapterId, sceneId: state.story.sceneId, beatIndex: state.story.beatIndex, detour }
+    : here?.type === 'freeRoam' && !inCommon
       ? { chapterId: state.story.chapterId, sceneId: state.story.sceneId, beatIndex: state.story.beatIndex }
       : inCommon && state.story.returnTo
         ? state.story.returnTo
         : state.story.checkpoint || { chapterId: state.story.chapterId, sceneId: state.story.sceneId }
-  state = withStory(state, { pendingMode: null, returnTo })
+  state = withStory(state, { pendingMode: null, returnTo, detour: null })
   state = jump(ctx, state, target, events)
   state = run(ctx, state, events)
   events.push({ type: 'autosave' })
@@ -409,7 +417,7 @@ export function renderView(ctx, state) {
     time: scene.time ?? legacy.time ?? phaseOf(state.time),
     clock: state.time ?? TIME_OF.day,
     positions: scene.positions || {}, // NPC position overrides for this scene
-    world: scene.world || chapter.world || 'iyanaWahala', // which 3D place this scene happens in
+    world: scene.world || chapter.world || hostWorld(ctx, story), // which 3D place this scene happens in
   }
 
   if (story.detour) {

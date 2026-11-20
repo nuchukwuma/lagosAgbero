@@ -1374,6 +1374,146 @@
       "facing": 0,
       "anim": "idle",
       "if": "chinweAround"
+    },
+    {
+      "id": "funke",
+      "pos": [
+        -6.8,
+        8.8
+      ],
+      "facing": 180,
+      "anim": "idle",
+      "if": "funkeAround"
+    },
+    {
+      "id": "seyi",
+      "pos": [
+        -14.8,
+        -6.2
+      ],
+      "facing": 180,
+      "anim": "idle",
+      "if": "seyiAround"
+    },
+    {
+      "id": "ifeoma",
+      "pos": [
+        -4.8,
+        -6.8
+      ],
+      "facing": 180,
+      "anim": "idle",
+      "if": "ifeomaAround"
+    },
+    {
+      "id": "babaOko",
+      "pos": [
+        29.2,
+        24.8
+      ],
+      "facing": 180,
+      "anim": "idle",
+      "if": "babaOkoAround"
+    },
+    {
+      "id": "mamaTiti",
+      "pos": [
+        23.2,
+        -9.2
+      ],
+      "facing": 180,
+      "anim": "idle",
+      "if": "mamaTitiAround"
+    },
+    {
+      "id": "mrAdjust",
+      "pos": [
+        -14.8,
+        -6.2
+      ],
+      "facing": 180,
+      "anim": "idle",
+      "if": "mrAdjustAround"
+    },
+    {
+      "id": "blessing",
+      "pos": [
+        -18.8,
+        9.3
+      ],
+      "facing": 180,
+      "anim": "idle",
+      "if": "blessingAround"
+    },
+    {
+      "id": "kokoro",
+      "pos": [
+        -17.6,
+        10.2
+      ],
+      "facing": 180,
+      "anim": "idle",
+      "if": "kokoroAround"
+    },
+    {
+      "id": "chiefDapo",
+      "pos": [
+        -18.8,
+        9.3
+      ],
+      "facing": 180,
+      "anim": "idle",
+      "if": "chiefDapoAround"
+    },
+    {
+      "id": "ivie",
+      "pos": [
+        -18.8,
+        9.3
+      ],
+      "facing": 180,
+      "anim": "idle",
+      "if": "ivieAround"
+    },
+    {
+      "id": "rukky",
+      "pos": [
+        -18.8,
+        9.3
+      ],
+      "facing": 180,
+      "anim": "idle",
+      "if": "rukkyAround"
+    },
+    {
+      "id": "felix",
+      "pos": [
+        -18.8,
+        9.3
+      ],
+      "facing": 180,
+      "anim": "idle",
+      "if": "felixAround"
+    },
+    {
+      "id": "kemi",
+      "pos": [
+        -20.2,
+        9.6
+      ],
+      "facing": 180,
+      "anim": "idle",
+      "if": "kemiAround"
+    },
+    {
+      "id": "officerGrace",
+      "pos": [
+        -36.8,
+        -19.2
+      ],
+      "facing": 180,
+      "anim": "idle",
+      "if": "officerGraceAround"
     }
   ],
   "extras": [
@@ -1701,6 +1841,83 @@
         "prize": 3000
       },
       "where": "Mama Put"
+    },
+    {
+      "id": "campaignFundraiser",
+      "label": "FUNDRAISER",
+      "icon": "naira",
+      "spot": "richStreet",
+      "if": "campaign_politics",
+      "mode": "haggle",
+      "minutes": 90,
+      "params": {
+        "goods": "favours",
+        "customers": 5
+      },
+      "where": "Rich Street",
+      "results": {
+        "default": {
+          "changeStat": {
+            "scandal": 3
+          }
+        }
+      }
+    },
+    {
+      "id": "campaignRally",
+      "label": "RALLY",
+      "icon": "megaphone",
+      "spot": "market",
+      "if": "campaign_politics",
+      "mode": "rally",
+      "minutes": 120,
+      "params": {
+        "job": "crowd"
+      },
+      "where": "The Market",
+      "results": {
+        "paid": {
+          "changeStat": {
+            "votes": 1
+          }
+        }
+      }
+    },
+    {
+      "id": "barNight",
+      "label": "SELL DRINKS",
+      "icon": "naira",
+      "spot": "southStreet",
+      "if": "campaign_sugar",
+      "mode": "haggle",
+      "minutes": 90,
+      "params": {
+        "goods": "drinks",
+        "customers": 6
+      },
+      "where": "Sugar Palace bar"
+    },
+    {
+      "id": "bouncerShift",
+      "label": "DOOR DUTY",
+      "icon": "fist",
+      "spot": "southStreet",
+      "if": "campaign_sugar",
+      "mode": "fight",
+      "minutes": 60,
+      "params": {
+        "opponent": "passenger",
+        "difficulty": 1
+      },
+      "where": "Sugar Palace gate",
+      "results": {
+        "won": {
+          "changeStat": {
+            "money": 6000,
+            "sugarRep": 1
+          }
+        }
+      }
     }
   ],
   "rows": [

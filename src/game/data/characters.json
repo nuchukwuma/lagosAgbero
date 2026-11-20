@@ -921,5 +921,240 @@
       "pitch": 1.15,
       "rate": 1.2
     }
+  },
+  "funke": {
+    "name": "Funke",
+    "fullName": "Funke, your wife, fabric seller",
+    "color": "#c0392b",
+    "role": "wife",
+    "look": {
+      "body": "mini_female_d",
+      "skin": "#6e4329",
+      "shirt": "#c0392b",
+      "shirt2": "#f4d03f",
+      "trousers": "#7b241c",
+      "accessories": [
+        {
+          "type": "gele",
+          "color": "#c0392b"
+        }
+      ]
+    }
+  },
+  "seyi": {
+    "name": "Seyi \"Spin\"",
+    "fullName": "Seyi \"Spin\" Balogun, campaign manager",
+    "color": "#2471a3",
+    "role": "manager",
+    "look": {
+      "body": "mini_male_a",
+      "skin": "#5c3a24",
+      "shirt": "#2471a3",
+      "trousers": "#1a1a1a",
+      "accessories": [
+        {
+          "type": "glasses"
+        }
+      ]
+    }
+  },
+  "ifeoma": {
+    "name": "Ifeoma",
+    "fullName": "Ifeoma Nwankwo, Wahala FM",
+    "color": "#8e44ad",
+    "role": "journalist",
+    "look": {
+      "body": "mini_female_c",
+      "skin": "#8a5a3c",
+      "shirt": "#8e44ad",
+      "trousers": "#1f2a3a",
+      "accessories": [
+        {
+          "type": "glasses"
+        }
+      ]
+    }
+  },
+  "babaOko": {
+    "name": "Baba Oko",
+    "fullName": "Chief Adekunle \"Baba\" Oko, godfather",
+    "color": "#d4ac0d",
+    "role": "godfather",
+    "look": {
+      "body": "mini_male_g",
+      "skin": "#4e2f1d",
+      "shirt": "#f4f1ea",
+      "trousers": "#f4f1ea",
+      "width": 1.35,
+      "accessories": [
+        {
+          "type": "fila",
+          "color": "#d4ac0d"
+        },
+        {
+          "type": "chain",
+          "color": "#d4af37"
+        }
+      ]
+    }
+  },
+  "mamaTiti": {
+    "name": "Mama Titi",
+    "fullName": "Mama Titi, leader of the market women",
+    "color": "#e67e22",
+    "role": "marketLeader",
+    "look": {
+      "body": "mini_female_f",
+      "skin": "#3d2516",
+      "shirt": "#e67e22",
+      "trousers": "#784212",
+      "width": 1.2,
+      "accessories": [
+        {
+          "type": "gele",
+          "color": "#e67e22"
+        }
+      ]
+    }
+  },
+  "mrAdjust": {
+    "name": "Mr. Adjust",
+    "fullName": "A man from \"the commission\"",
+    "color": "#a39274",
+    "role": "official",
+    "look": {
+      "body": "mini_male_e",
+      "skin": "#6e4329",
+      "shirt": "#c9b28a",
+      "trousers": "#c9b28a"
+    }
+  },
+  "blessing": {
+    "name": "Blessing",
+    "fullName": "Blessing, nineteen, from Benin",
+    "color": "#e84393",
+    "role": "newcomer",
+    "look": {
+      "body": "mini_female_a",
+      "skin": "#5c3a24",
+      "shirt": "#f5b7b1",
+      "trousers": "#2e4053"
+    }
+  },
+  "kokoro": {
+    "name": "Kokoro",
+    "fullName": "Kokoro, bouncer (mostly asleep)",
+    "color": "#566573",
+    "role": "bouncer",
+    "look": {
+      "body": "mini_male_b",
+      "skin": "#3d2516",
+      "shirt": "#1c2833",
+      "trousers": "#1c2833",
+      "width": 1.35,
+      "height": 1.06
+    }
+  },
+  "chiefDapo": {
+    "name": "Chief Dapo",
+    "fullName": "Chief Dapo, JP, landlord",
+    "color": "#7d6608",
+    "role": "landlord",
+    "look": {
+      "body": "mini_male_g",
+      "skin": "#6e4329",
+      "shirt": "#7d6608",
+      "trousers": "#4d3c05",
+      "accessories": [
+        {
+          "type": "cap",
+          "color": "#7d6608"
+        }
+      ]
+    }
+  },
+  "ivie": {
+    "name": "Ivie",
+    "fullName": "Ivie, your daughter, sixteen",
+    "color": "#5dade2",
+    "role": "daughter",
+    "look": {
+      "body": "mini_female_b",
+      "skin": "#5c3a24",
+      "shirt": "#5dade2",
+      "trousers": "#1b4f72"
+    }
+  },
+  "rukky": {
+    "name": "Alhaja Rukky",
+    "fullName": "Alhaja Rukayat \"Rukky\", Golden Fleece Hotel",
+    "color": "#d4af37",
+    "role": "rival",
+    "look": {
+      "body": "mini_female_e",
+      "skin": "#8a5a3c",
+      "shirt": "#d4af37",
+      "shirt2": "#7d6608",
+      "trousers": "#1a1a1a",
+      "accessories": [
+        {
+          "type": "gele",
+          "color": "#d4af37"
+        },
+        {
+          "type": "chain",
+          "color": "#d4af37"
+        }
+      ]
+    }
+  },
+  "felix": {
+    "name": "Oga Felix",
+    "fullName": "Oga Felix, \"Italy jobs\"",
+    "color": "#1a1a1a",
+    "role": "trafficker",
+    "look": {
+      "body": "mini_male_e",
+      "skin": "#4e2f1d",
+      "shirt": "#f4f1ea",
+      "trousers": "#1a1a1a",
+      "accessories": [
+        {
+          "type": "chain",
+          "color": "#d4af37"
+        }
+      ]
+    }
+  },
+  "kemi": {
+    "name": "Kemi",
+    "fullName": "Kemi, saving for nursing school",
+    "color": "#48c9b0",
+    "role": "worker",
+    "look": {
+      "body": "mini_female_f",
+      "skin": "#6e4329",
+      "shirt": "#48c9b0",
+      "trousers": "#1a1a1a"
+    }
+  },
+  "officerGrace": {
+    "name": "Officer Grace",
+    "fullName": "Officer Grace Okon, NAPTIP",
+    "color": "#1e8449",
+    "role": "officer",
+    "look": {
+      "body": "mini_female_d",
+      "skin": "#3d2516",
+      "shirt": "#1e8449",
+      "shirt2": "#145a32",
+      "trousers": "#145a32",
+      "accessories": [
+        {
+          "type": "cap",
+          "color": "#145a32"
+        }
+      ]
+    }
   }
 }

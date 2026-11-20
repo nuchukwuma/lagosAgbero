@@ -11,6 +11,8 @@ export const GOODS = {
   palmwine: { name: 'palm wine', unit: 'keg', fair: 2500, seller: 'the palm-wine shade' },
   notes: { name: 'lecture notes', unit: 'set', fair: 1500, seller: 'the cafeteria' },
   jollof: { name: 'jollof', unit: 'plate', fair: 1200, seller: 'the canteen' },
+  drinks: { name: 'drinks', unit: 'crate', fair: 9000, seller: 'the Sugar Palace bar' },
+  favours: { name: 'promises', unit: 'favour', fair: 25000, seller: 'the fundraiser' }, // The Honourable: donors buy "considerations"
 }
 
 const BUYERS = [

@@ -1,0 +1,302 @@
+{
+  "id": "s6_raid",
+  "campaign": "sugar",
+  "world": "iyanaWahala",
+  "act": 1,
+  "number": 6,
+  "title": "Chapter 6 — The Raid",
+  "description": "Felix comes back. Somebody comes with him. Ivie is watching.",
+  "startScene": "friday",
+  "scenes": {
+    "friday": {
+      "beats": [
+        {
+          "type": "goto",
+          "scene": "bus",
+          "if": {
+            "flags": [
+              "acceptedFelix"
+            ],
+            "notFlags": [
+              "backedOut"
+            ]
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "sting",
+          "if": "felixTaped"
+        },
+        {
+          "type": "goto",
+          "scene": "attack"
+        }
+      ],
+      "location": "southStreet"
+    },
+    "sting": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Friday. Felix comes back for his girls with a bus and two boys. Officer Grace comes back with four officers in a borrowed Hilux and no siren."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "officerGrace",
+          "text": "NAPTIP! Nobody move! (Felix moves. Of course he moves.)"
+        },
+        {
+          "type": "startMode",
+          "mode": "fight",
+          "params": {
+            "opponent": "thug",
+            "difficulty": 2
+          },
+          "results": {
+            "won": {
+              "changeStat": {
+                "sugarRep": 10,
+                "staffTrust": 10,
+                "conscience": 10
+              },
+              "setFlag": "savedGirls",
+              "toast": "Felix is face-down in the gutter. Officer Grace is reading him his rights, slowly, with pleasure."
+            },
+            "lost": {
+              "changeStat": {
+                "staffTrust": 4
+              },
+              "setFlag": "felixEscaped"
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "officerGrace",
+          "text": "He got over the fence. (She sits on the kerb.) But the bus, the passports, the \"contracts\", I have them. That is twelve girls who don't go to Libya next week, Madam. Twelve.",
+          "if": "felixEscaped"
+        },
+        {
+          "type": "setFlag",
+          "flags": [
+            "savedGirls"
+          ],
+          "if": "felixEscaped"
+        },
+        {
+          "type": "goto",
+          "scene": "ivie"
+        }
+      ],
+      "location": "southStreet",
+      "time": "day",
+      "positions": {
+        "officerGrace": [
+          -18,
+          9.0,
+          200
+        ],
+        "felix": [
+          -19,
+          7.5,
+          210
+        ]
+      }
+    },
+    "attack": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Friday night. Felix's boys come over the back fence with machetes and a message: nobody embarrasses Oga Felix.",
+          "variants": [
+            {
+              "if": "backedOut",
+              "text": "Friday night. You gave Felix his bag back. Felix's boys come over the back fence to collect \"interest\"."
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Kokoro is awake. Head of security does not sleep on Fridays. He meets the first boy at the fence with the broom handle he has carried since his promotion.",
+          "if": "kokoroPromoted"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "kokoro",
+          "text": "Mama, stand behind me. No. Stand next to me. I have seen your left hook.",
+          "if": "beatKokoro"
+        },
+        {
+          "type": "startMode",
+          "mode": "fight",
+          "params": {
+            "opponent": "thug",
+            "difficulty": 2
+          },
+          "results": {
+            "won": {
+              "changeStat": {
+                "sugarRep": 8,
+                "staffTrust": 6
+              },
+              "setFlag": "defendedPalace",
+              "toast": "Kokoro finally wakes up. Together you chase them as far as the Front Stop."
+            },
+            "lost": {
+              "changeStat": {
+                "money": -30000,
+                "staffTrust": 2
+              },
+              "setFlag": "palaceDamaged"
+            }
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "ivie"
+        }
+      ],
+      "location": "southStreet",
+      "time": "night",
+      "positions": {
+        "kokoro": [
+          -21.8,
+          9.7,
+          160
+        ]
+      }
+    },
+    "bus": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Dawn. Felix's bus is at the gate. Five girls with small bags. Blessing is not on it. Blessing is gone: out of the back window, over the fence, into the morning.",
+          "variants": [
+            {
+              "if": {
+                "notFlags": [
+                  "blessingBar"
+                ]
+              },
+              "text": "Dawn. Felix's bus is at the gate. Five girls with small bags. Kemi refuses to get on. Felix's boy grabs her arm. She bites him and runs."
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Then the sirens. Not Bassey's. NAPTIP. Somebody called them. You will never know who. You will spend years wondering if it was Ivie."
+        },
+        {
+          "type": "setFlag",
+          "flags": [
+            "raided"
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "ivie"
+        }
+      ],
+      "location": "southStreet",
+      "time": "dawn"
+    },
+    "ivie": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Ivie is at the gate. She took a danfo from Ikorodu by herself. She has heard. Everybody has heard."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ivie",
+          "text": "They said your name on Wahala FM, Mummy. (She doesn't come in.) They said \"trafficking\".",
+          "if": "raided"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ivie",
+          "text": "They said your name on Wahala FM, Mummy. They said you helped NAPTIP catch the Italy man. (She hugs you. She hasn't hugged you like this since primary school.) Mummy, is it true?",
+          "if": "savedGirls"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ivie",
+          "text": "They said there was a fight here, Mummy. (She looks at the broken glass, the girls, the stairs.) I want to know everything. Today. Not later.",
+          "if": {
+            "notFlags": [
+              "raided",
+              "savedGirls"
+            ]
+          }
+        },
+        {
+          "type": "choice",
+          "speaker": "ivie",
+          "text": "She is waiting.",
+          "options": [
+            {
+              "text": "\"I am closing this place. We will make it a real kitchen. With you.\"",
+              "requires": {
+                "notFlags": [
+                  "raided"
+                ]
+              },
+              "effects": {
+                "changeStat": {
+                  "iviBond": 15,
+                  "conscience": 8
+                },
+                "setFlag": "kitchen",
+                "remember": {
+                  "future": "kitchen"
+                }
+              }
+            },
+            {
+              "text": "\"This is what pays your fees, Ivie. It will continue.\"",
+              "effects": {
+                "changeStat": {
+                  "iviBond": -15
+                },
+                "setFlag": "continueBusiness",
+                "remember": {
+                  "future": "continue"
+                }
+              }
+            },
+            {
+              "text": "\"Go back to school, my love. Mummy will handle it.\"",
+              "effects": {
+                "changeStat": {
+                  "iviBond": -5
+                },
+                "setFlag": "sentIvieBack"
+              }
+            }
+          ]
+        },
+        {
+          "type": "endChapter",
+          "title": "The Raid",
+          "summary": "Something happened on South Street that people will tell their children about. Whether they tell it with your name as the hero is up to you now.",
+          "next": "s7_sugar"
+        }
+      ],
+      "location": "southStreet",
+      "time": "day",
+      "positions": {
+        "ivie": [
+          -18.8,
+          9.0,
+          200
+        ]
+      }
+    }
+  }
+}

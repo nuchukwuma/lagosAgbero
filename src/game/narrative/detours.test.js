@@ -86,3 +86,55 @@ describe('detours: the player sets the pace', () => {
     expect(s.story.completedChapters.filter((c) => c === 't1').length).toBe(1)
   })
 })
+
+describe('a side quest while the story is paused', () => {
+  const common = {
+    id: 'q',
+    common: true,
+    startScene: 's',
+    scenes: { s: { beats: [{ type: 'dialogue', speaker: 'narrator', text: 'A favour.' }, { type: 'freeRoam', objective: 'Go.', goal: { reach: 'market' } }, { type: 'dialogue', speaker: 'narrator', text: 'Thanks.' }, { type: 'goto', scene: '@resume' }] } },
+  }
+  const qctx = { ...ctx, chapters: { ...chapters, q: common } }
+  const playQuest = (s) => {
+    s = engine.interrupt(qctx, s, 'q:s').state
+    expect(engine.renderView(qctx, s).text).toBe('A favour.')
+    s = engine.advance(qctx, s).state
+    expect(engine.renderView(qctx, s).type).toBe('freeRoam')
+    s = engine.advance(qctx, s).state
+    expect(engine.renderView(qctx, s).text).toBe('Thanks.')
+    return engine.advance(qctx, s).state
+  }
+
+  it('plays the quest, then puts the walk back', () => {
+    let s = engine.startChapter(qctx, engine.newGameState({ name: 'T' }), 't1').state
+    s = engine.advance(qctx, s).state
+    expect(engine.renderView(qctx, s).detour).toBe('travel')
+    s = playQuest(s)
+    const v = engine.renderView(qctx, s)
+    expect(v.detour).toBe('travel')
+    expect(v.goal).toEqual({ reach: 'market' })
+    s = engine.advance(qctx, s).state
+    expect(engine.renderView(qctx, s).text).toBe('At the market.')
+  })
+
+  it('between chapters: back to free time, and the next chapter still waits', () => {
+    let s = engine.startChapter(qctx, engine.newGameState({ name: 'T' }), 't1').state
+    for (let i = 0; i < 3; i++) s = engine.advance(qctx, s).state
+    s = engine.choose(qctx, s, 1).state
+    s = engine.roamFirst(qctx, s).state
+    expect(engine.renderView(qctx, s).detour).toBe('roam')
+    s = playQuest(s)
+    expect(engine.renderView(qctx, s).detour).toBe('roam')
+    s = engine.advance(qctx, s).state
+    expect(engine.renderView(qctx, s).text).toBe('Chapter two.')
+  })
+})
+
+it('a side quest happens in the world of the story it interrupted', () => {
+  const village = { id: 'v1', world: 'nkwoAgu', startScene: 'a', scenes: { a: { location: 'square', beats: [{ type: 'freeRoam', objective: 'Look around.' }, { type: 'endChapter', title: 'x', ending: 'y' }] } } }
+  const q = { id: 'q', common: true, startScene: 's', scenes: { s: { beats: [{ type: 'dialogue', speaker: 'narrator', text: 'Hi.' }, { type: 'goto', scene: '@resume' }] } } }
+  const vctx = { ...ctx, chapters: { v1: village, q } }
+  let s = engine.startChapter(vctx, engine.newGameState({ name: 'T' }), 'v1').state
+  s = engine.interrupt(vctx, s, 'q:s').state
+  expect(engine.renderView(vctx, s).world).toBe('nkwoAgu')
+})

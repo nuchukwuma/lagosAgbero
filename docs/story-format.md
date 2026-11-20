@@ -592,7 +592,7 @@ Losing never dead-ends the story: send `lost` to a hospital scene, a debt or
 a new branch. Modes that aren't built yet show a stand-in screen where you
 pick the outcome by hand.
 
-## Campaigns: three stories, one engine
+## Campaigns: five stories, one engine
 
 `campaigns.json` lists the stories on the New Game screen. Each one is a
 separate run with its own hero, chapters, world, HUD and endings.
@@ -602,6 +602,13 @@ separate run with its own hero, chapters, world, HUD and endings.
 | `areaBoy` — Area Boy | you name him | `story/act1`–`act4` (12) | Iyana-Wahala |
 | `grace` — Grass to Grace | Emeka | `story/grace` (6) | Nkwọ-Agụụ village |
 | `campus` — Fake It Till You Graduate | Somto | `story/campus` (6) | Royal Crest University |
+| `politics` — The Honourable | Kunle | `story/politics` (7) | Iyana-Wahala |
+| `sugar` — Mama Sugar | Ebiere | `story/sugar` (7) | Iyana-Wahala |
+
+Side quests with each story's key people live in `story/common/bonds.json`;
+their entries in `quests.json` carry `"campaign"` so they are only offered in
+that story. A giver is a world NPC; story-only people use an `if` flag such as
+`funkeAround`, set by the chapter that introduces them.
 
 Grass to Grace and the campus story borrow only premises and themes from
 films (a village man chasing city money; a poor student among rich ones).

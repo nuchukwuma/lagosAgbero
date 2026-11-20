@@ -1,0 +1,386 @@
+{
+  "id": "s1_palace",
+  "campaign": "sugar",
+  "world": "iyanaWahala",
+  "act": 1,
+  "number": 1,
+  "title": "Chapter 1 — Sugar Palace",
+  "description": "A landlord with a padlock, a girl with one bag, and a hotel that is all you ever built.",
+  "startScene": "open",
+  "scenes": {
+    "open": {
+      "beats": [
+        {
+          "type": "setFlag",
+          "flags": [
+            "kokoroAround"
+          ]
+        },
+        {
+          "type": "cutscene",
+          "cards": [
+            {
+              "title": "South Street, Iyana-Wahala",
+              "text": "Sugar Palace Hotel & Bar. Rooms by the hour. Pepper soup by the bowl. Generator by the grace of God."
+            },
+            {
+              "title": "{name}",
+              "text": "They call you Mama Sugar. You came from Warri twenty-two years ago with one bag and a cousin's address that was wrong. Everything on this street, you saw built. This one, you built."
+            },
+            {
+              "title": "The month",
+              "text": "Thirty days. Chief Dapo wants his rent. Commander Bassey wants his settlement. Your daughter Ivie wants to know why her school fees are always paid in cash."
+            }
+          ]
+        },
+        {
+          "type": "setFlag",
+          "flags": [
+            "campaign_sugar"
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Seven a.m. The bar smells of last night: Star lager, Indomie, perfume that was sold as Chanel. Kokoro the bouncer is asleep on two plastic chairs. There is a letter under the door."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "chiefDapo",
+          "text": "(The letter, in a hand that has written many letters like it.) \"Madam. Arrears: ₦250,000. Pay before the end of the month or I padlock. — Chief Dapo, JP.\" (Under it, in pencil: \"No more pepper soup instead.\")"
+        },
+        {
+          "type": "goto",
+          "scene": "blessing"
+        }
+      ],
+      "location": "southStreet",
+      "time": "dawn",
+      "positions": {
+        "kokoro": [
+          -21.8,
+          9.7,
+          160
+        ]
+      }
+    },
+    "blessing": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "A girl is standing at the gate with a Ghana-must-go bag and a scrap of paper. Nineteen, maybe. Her shoes are her best shoes. You can tell because they hurt her."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "blessing",
+          "text": "Good morning ma. Please... my cousin Joy said to come here. She said you help girls. (She holds out the paper.) I want to learn hair. I can do braids, cornrow, Ghana weaving. I can wash plates. Anything, ma."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "kokoro",
+          "text": "(Waking up.) Mama, Joy left for Golden Fleece last month. Alhaja Rukky pays more. (He looks at the girl.) This one is fresh. Rukky will take her by evening."
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "The girl is waiting. She has not let go of the bag.",
+          "options": [
+            {
+              "text": "\"You will work the bar. Plates, drinks, money. Nothing upstairs. Ever.\"",
+              "effects": {
+                "changeStat": {
+                  "blessingBond": 12,
+                  "staffTrust": 5,
+                  "conscience": 4
+                },
+                "setFlag": "blessingBar",
+                "remember": {
+                  "blessing": "bar"
+                },
+                "noticedBy": [
+                  "Blessing"
+                ]
+              }
+            },
+            {
+              "text": "\"There is a room upstairs. The girls will show you how it works here.\"",
+              "effects": {
+                "changeStat": {
+                  "blessingBond": -12,
+                  "staffTrust": -4,
+                  "conscience": -10,
+                  "money": 8000
+                },
+                "setFlag": "blessingUpstairs",
+                "remember": {
+                  "blessing": "upstairs"
+                }
+              }
+            },
+            {
+              "text": "Give her ₦10,000 for transport. \"Go home, my daughter. Lagos is not for you.\"",
+              "cost": 10000,
+              "effects": {
+                "changeStat": {
+                  "conscience": 6
+                },
+                "setFlag": "blessingHome",
+                "remember": {
+                  "blessing": "home"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "blessing",
+          "text": "(She looks at the money. Then at you.) Home has nothing, ma. That is why I came. (She takes the money anyway, politely, and walks towards Golden Fleece.)",
+          "if": "blessingHome"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "blessing",
+          "text": "(She bursts into tears, then apologises for bursting into tears, then washes every glass in the bar without being asked.)",
+          "if": "blessingBar"
+        },
+        {
+          "type": "goto",
+          "scene": "landlord"
+        }
+      ],
+      "location": "southStreet",
+      "time": "dawn",
+      "positions": {
+        "blessing": [
+          -18.6,
+          9.3,
+          200
+        ],
+        "kokoro": [
+          -21.8,
+          9.7,
+          160
+        ]
+      }
+    },
+    "landlord": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Chief Dapo arrives at noon in a white Peugeot 406 that has outlived two of his wives. He does not come in. He never comes in during the day."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "chiefDapo",
+          "text": "Madam. ₦250,000. I am not a wicked man. I am a man with a mortgage."
+        },
+        {
+          "type": "choice",
+          "speaker": "chiefDapo",
+          "text": "He is holding the padlock already. It is new. He bought it for you.",
+          "options": [
+            {
+              "text": "Pay ₦20,000 now as good faith.",
+              "cost": 20000,
+              "effects": {
+                "changeStat": {
+                  "rentDebt": -20000
+                },
+                "setFlag": "paidSomeRent"
+              }
+            },
+            {
+              "text": "\"Chief, you come here every Thursday night. Should I tell your wife it is for pepper soup?\"",
+              "effects": {
+                "changeStat": {
+                  "sugarRep": 4
+                },
+                "setFlag": "threatenedDapo",
+                "remember": {
+                  "dapo": "threatened"
+                }
+              }
+            },
+            {
+              "text": "\"End of the month, Chief. You will have it. All.\"",
+              "effects": {
+                "setFlag": "promisedRent"
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "chiefDapo",
+          "text": "End of the month.",
+          "variants": [
+            {
+              "if": "threatenedDapo",
+              "text": "(His face goes grey, then purple.) End of the month, Madam. And we will never discuss Thursday."
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "girls"
+        }
+      ],
+      "location": "southStreet",
+      "time": "day",
+      "positions": {
+        "chiefDapo": [
+          -17.5,
+          7.5,
+          220
+        ]
+      }
+    },
+    "girls": {
+      "beats": [
+        {
+          "type": "setFlag",
+          "flags": [
+            "kemiAround"
+          ]
+        },
+        {
+          "type": "setFlag",
+          "flags": [
+            "blessingAround"
+          ],
+          "if": "blessingBar"
+        },
+        {
+          "type": "setFlag",
+          "flags": [
+            "blessingAround"
+          ],
+          "if": "blessingUpstairs"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Four o'clock. The girls come down for their meeting: Kemi, who is saving for nursing school; Precious, who laughs too loud; Tari, who never says where she is from. They split the night's money with you. They have always split it sixty-forty. Your sixty."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "blessing",
+          "text": "(Quietly, from the bar.) Mama, can I ask? Is it true they keep only forty?",
+          "variants": [
+            {
+              "if": "blessingUpstairs",
+              "text": "(Quietly, from the stairs.) Mama... is it true we keep only forty?"
+            },
+            {
+              "if": "blessingHome",
+              "text": "(Kemi, reading your face.) Mama, the rent. Are you going to cut our share again?"
+            }
+          ]
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "The girls are looking at you. The rent is looking at you too.",
+          "options": [
+            {
+              "text": "\"From tonight, fifty-fifty.\"",
+              "effects": {
+                "changeStat": {
+                  "staffTrust": 12,
+                  "conscience": 4
+                },
+                "setFlag": "fairShare",
+                "remember": {
+                  "share": "fifty"
+                },
+                "noticedBy": [
+                  "The girls"
+                ]
+              }
+            },
+            {
+              "text": "\"Sixty-forty, as always.\"",
+              "effects": {
+                "changeStat": {
+                  "staffTrust": -2
+                }
+              }
+            },
+            {
+              "text": "\"Seventy-thirty until the rent is paid. We all suffer together.\"",
+              "effects": {
+                "changeStat": {
+                  "staffTrust": -12,
+                  "money": 15000
+                },
+                "setFlag": "cutShare",
+                "remember": {
+                  "share": "cut"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "player",
+          "text": "The rent is ₦{stat:rentDebt} and the month is short. Everybody works."
+        },
+        {
+          "type": "freeRoam",
+          "objective": "Work the bar: SELL DRINKS at Sugar Palace (South Street) and raise ₦50,000 towards the rent.",
+          "goal": {
+            "until": {
+              "stats": {
+                "money": ">= 50000"
+              }
+            }
+          }
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "There is ₦{money} in the drawer.",
+          "options": [
+            {
+              "text": "Send ₦50,000 to Chief Dapo now.",
+              "cost": 50000,
+              "effects": {
+                "changeStat": {
+                  "rentDebt": -50000
+                },
+                "setFlag": "rentInstalment"
+              }
+            },
+            {
+              "text": "Keep it. You will need it for Bassey."
+            }
+          ]
+        },
+        {
+          "type": "endChapter",
+          "title": "Sugar Palace",
+          "summary": "The rent is a clock, and you can hear it ticking over the generator.",
+          "next": "s2_settlement"
+        }
+      ],
+      "location": "southStreet",
+      "time": "dusk",
+      "positions": {
+        "blessing": [
+          -18.6,
+          9.3,
+          200
+        ],
+        "kokoro": [
+          -21.8,
+          9.7,
+          160
+        ]
+      }
+    }
+  }
+}

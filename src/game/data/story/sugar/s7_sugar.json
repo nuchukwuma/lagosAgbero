@@ -1,0 +1,225 @@
+{
+  "id": "s7_sugar",
+  "campaign": "sugar",
+  "world": "iyanaWahala",
+  "act": 1,
+  "number": 7,
+  "title": "Chapter 7 — Sugar",
+  "description": "Whatever Sugar Palace becomes, it becomes today.",
+  "startScene": "last",
+  "scenes": {
+    "last": {
+      "beats": [
+        {
+          "type": "goto",
+          "scene": "italy",
+          "if": "raided"
+        },
+        {
+          "type": "goto",
+          "scene": "saidNo",
+          "if": "savedGirls"
+        },
+        {
+          "type": "goto",
+          "scene": "kitchenEnd",
+          "if": {
+            "flags": [
+              "kitchen"
+            ],
+            "stats": {
+              "rentDebt": "<= 0",
+              "staffTrust": ">= 50"
+            }
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "mama",
+          "if": "kitchen"
+        },
+        {
+          "type": "goto",
+          "scene": "manager",
+          "if": "soldToRukky"
+        },
+        {
+          "type": "goto",
+          "scene": "queen"
+        }
+      ],
+      "location": "southStreet"
+    },
+    "italy": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "NAPTIP holding cell. The girls who were on the bus give statements one by one. Each one says your name. Ivie does not visit."
+        },
+        {
+          "type": "endChapter",
+          "title": "The Price of Italy",
+          "summary": "Half a million naira. That is what it cost. You will have years to count it.",
+          "ending": "sugar_italy"
+        }
+      ],
+      "location": "motorPark",
+      "time": "night"
+    },
+    "saidNo": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "officerGrace",
+          "text": "(At the gate, with a certificate in a cheap frame.) Commendation. From the agency. (She looks at the bar.) I won't ask what you do here, Madam. I will ask what you will do next."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "blessing",
+          "text": "(Holding a hair dryer like a trophy.) Mama! The first customer at Blessing's Touch is you. Free. Forever.",
+          "variants": [
+            {
+              "if": {
+                "notFlags": [
+                  "blessingBar"
+                ]
+              },
+              "text": "(Kemi, in her nursing school uniform for the first time.) Mama. Look. (She turns around once, like a model.)"
+            }
+          ]
+        },
+        {
+          "type": "endChapter",
+          "title": "The Woman Who Said No",
+          "summary": "You were offered a million naira for five girls. You said no, and then you made sure nobody else could say yes.",
+          "ending": "sugar_saidNo"
+        }
+      ],
+      "location": "southStreet",
+      "time": "day",
+      "positions": {
+        "officerGrace": [
+          -18,
+          9.0,
+          200
+        ],
+        "blessing": [
+          -18.6,
+          9.3,
+          200
+        ]
+      }
+    },
+    "kitchenEnd": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Three months later. SUGAR'S KITCHEN & SUITES. A real menu. Rooms by the night, with receipts. Kemi does the books. Precious runs the bar and makes everybody laugh. Ivie comes on weekends and argues with the cook."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ivie",
+          "text": "Mummy, your pepper soup is the best in Lagos. Officially. (She shows you a food blogger's review. Four and a half stars. \"Points off for the generator.\")"
+        },
+        {
+          "type": "endChapter",
+          "title": "Sugar's Kitchen",
+          "summary": "You built it twice: once to survive, and once to be proud of. The second one has a menu.",
+          "ending": "sugar_kitchen"
+        }
+      ],
+      "location": "southStreet",
+      "time": "day",
+      "positions": {
+        "ivie": [
+          -18.8,
+          9.0,
+          200
+        ]
+      }
+    },
+    "mama": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Chief Dapo padlocked the hotel in the end. You did not fight him. You rented a stall at the market instead, a pot of pepper soup and four plastic chairs."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ivie",
+          "text": "(Serving a customer, school bag still on her back.) Two bowls, one Coke! Mummy, we are running out of goat!"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Kemi comes on Sundays in a white uniform, eats two bowls, and complains about night shifts like a woman who is very happy.",
+          "if": "paidKemiForm"
+        },
+        {
+          "type": "endChapter",
+          "title": "Mama, Just Mama",
+          "summary": "Smaller. Poorer. Lighter. Your daughter calls you to her school's PTA meetings now. You go.",
+          "ending": "sugar_mama"
+        }
+      ],
+      "location": "market",
+      "time": "day",
+      "positions": {
+        "ivie": [
+          23.2,
+          -9.5,
+          200
+        ]
+      }
+    },
+    "manager": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "GOLDEN FLEECE II. You are very good at your job. Rukky gives you a bonus at Christmas and a Hilux at Easter. You sleep at night. That is the strange part."
+        },
+        {
+          "type": "endChapter",
+          "title": "Golden Fleece II",
+          "summary": "You sold your name to keep your house. The house is very nice. The name was yours.",
+          "ending": "sugar_manager"
+        }
+      ],
+      "location": "southStreet",
+      "time": "night"
+    },
+    "queen": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Sugar Palace becomes the biggest hotel on South Street. Golden Fleece closes. Bassey eats your pepper soup every Friday and calls you \"Madam\" without laughing."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "kokoro",
+          "text": "(Awake, for once.) Mama, you are the queen of South Street now. (He doesn't say it like a compliment. He says it like weather.)"
+        },
+        {
+          "type": "endChapter",
+          "title": "Queen of South Street",
+          "summary": "You made it. Everybody on South Street knows your name, and nobody says it out loud.",
+          "ending": "sugar_queen"
+        }
+      ],
+      "location": "southStreet",
+      "time": "night",
+      "positions": {
+        "kokoro": [
+          -21.8,
+          9.7,
+          160
+        ]
+      }
+    }
+  }
+}

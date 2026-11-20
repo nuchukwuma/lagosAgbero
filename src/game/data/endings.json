@@ -1140,5 +1140,123 @@
       },
       "text": "Final CGPA: {stat:cgpa}. Some employers will ask. Most won't care."
     }
-  ]
+  ],
+  "p_peoples": {
+    "campaign": "politics",
+    "title": "The People's Honourable",
+    "epilogue": [
+      "The swearing-in is in the community hall. The generator works for the first time in a year.",
+      "Six months later, the market has two toilets and a padlock with a key everybody has.",
+      {
+        "if": "listenedTiti",
+        "text": "Mama Titi keeps the notebook. Every quarter she reads it out at the market, and ticks things off with a red biro, in front of everybody."
+      }
+    ]
+  },
+  "p_lostKept": {
+    "campaign": "politics",
+    "title": "Lost the Seat, Kept the Man",
+    "epilogue": [
+      "You go back to the classroom on Monday. JSS 2 asks if you are a politician now. \"Not today,\" you say, and teach them the Constitution.",
+      {
+        "if": "conceded",
+        "text": "The video of you shaking the winner's hand goes round the ward. In four years, people say, it might go round again."
+      }
+    ]
+  },
+  "p_witness": {
+    "campaign": "politics",
+    "title": "The Witness",
+    "epilogue": [
+      "Baba Oko's Prado is parked at the EFCC office for three weeks. Then it isn't. Nobody knows where it went.",
+      "You take the oath of office with your hand on the Constitution and Ifeoma's tape in your pocket."
+    ]
+  },
+  "p_certificate": {
+    "campaign": "politics",
+    "title": "The Certificate",
+    "epilogue": [
+      "The certificate of return is framed in your parlour. Funke has turned it to face the wall twice. You turn it back.",
+      "Every time Wahala FM says \"investigation\", your stomach does something you have to pretend is indigestion."
+    ]
+  },
+  "p_puppet": {
+    "campaign": "politics",
+    "title": "Baba Oko's Boy",
+    "epilogue": [
+      "Wale Oko's company builds the toilets. They are beautiful. They have no water.",
+      "You go to Baba Oko's house every Sunday. He calls you \"my son\". You never correct him."
+    ]
+  },
+  "p_jailed": {
+    "campaign": "politics",
+    "title": "Kirikiri",
+    "epilogue": [
+      "Awaiting trial. The other men in the cell call you \"Honourable\" and make you settle their quarrels.",
+      "Seyi visits once, with Agege bread. \"Experience,\" he says. He doesn't laugh."
+    ]
+  },
+  "p_fled": {
+    "campaign": "politics",
+    "title": "Medical Tourism",
+    "epilogue": [
+      "London is cold and expensive and nobody knows your name, which was the point.",
+      "Funke does not come. She sends a voice note: \"When you are well, come home. If you are never well, stay.\""
+    ]
+  },
+  "sugar_saidNo": {
+    "campaign": "sugar",
+    "title": "The Woman Who Said No",
+    "epilogue": [
+      "Officer Grace's commendation hangs behind the bar, next to the price list.",
+      "Twelve girls who were going to Tripoli are in school, in salons, at home. Some of them send you a message on your birthday."
+    ]
+  },
+  "sugar_kitchen": {
+    "campaign": "sugar",
+    "title": "Sugar's Kitchen",
+    "epilogue": [
+      "Sugar's Kitchen & Suites. Rooms by the night. Pepper soup by the bowl. Receipts for everything, which Chief Dapo finds very confusing.",
+      "Ivie puts it on Instagram. Somebody from Lekki drives two hours for your pepper soup and leaves a tip bigger than the bill."
+    ]
+  },
+  "sugar_mama": {
+    "campaign": "sugar",
+    "title": "Mama, Just Mama",
+    "epilogue": [
+      "Your stall at the market has four chairs and a queue.",
+      "Ivie's school sends a letter: she has been made a prefect. You read it nine times, at the stall, out loud, to customers who did not ask."
+    ]
+  },
+  "sugar_manager": {
+    "campaign": "sugar",
+    "title": "Golden Fleece II",
+    "epilogue": [
+      "The hotel is busier than ever. Rukky is very pleased with you.",
+      "Some nights you walk past the gate and read the sign out of habit. Then you remember."
+    ]
+  },
+  "sugar_queen": {
+    "campaign": "sugar",
+    "title": "Queen of South Street",
+    "epilogue": [
+      "Sugar Palace is the biggest hotel on South Street.",
+      "The girls come and go. Not many of them stay long enough for you to learn their real names."
+    ]
+  },
+  "sugar_italy": {
+    "campaign": "sugar",
+    "title": "The Price of Italy",
+    "epilogue": [
+      "The trial takes two years. Half a million naira of lawyers.",
+      "Blessing's mother comes to court every day, sits in the back row, and never looks at you once."
+    ]
+  },
+  "sugar_lockedOut": {
+    "campaign": "sugar",
+    "title": "Locked Out",
+    "epilogue": [
+      "Chief Dapo's padlock is very shiny. You sit on the kerb opposite with your one bag, twenty-two years after Warri, and watch your name come down off the gate."
+    ]
+  }
 }

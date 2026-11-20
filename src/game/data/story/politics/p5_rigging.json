@@ -1,0 +1,296 @@
+{
+  "id": "p5_rigging",
+  "campaign": "politics",
+  "world": "iyanaWahala",
+  "act": 1,
+  "number": 5,
+  "title": "Chapter 5 — Rigging Season",
+  "description": "Mr. Adjust offers fifteen percent. Funke draws a line. The motor park boils over. And there is always a flight to London.",
+  "startScene": "adjust",
+  "scenes": {
+    "adjust": {
+      "beats": [
+        {
+          "type": "newsBroadcast",
+          "source": "Baba Radio's stall — Wahala FM 99.9",
+          "headline": "POLL: IT IS CLOSE",
+          "text": "Our scientific poll of the people at Baba Radio's stall shows {stat:votes} percent for the Teacher, and the rest for \"Honourable Owó Ńlá or anybody with rice\". Margin of error: plenty."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "A man in a beige safari suit is waiting in your office. He has a laminated ID card on a lanyard and the calm of a man who has done this before."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "mrAdjust",
+          "text": "Good afternoon, sir. I am from the commission. Logistics. (He pronounces it lo-GIS-tics.) Let us say there are... fluctuations, on election night. Fifteen percent can fluctuate in your direction."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "mrAdjust",
+          "text": "₦300,000. Half now, half when the figures settle. Very affordable democracy, sir."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "seyi",
+          "text": "(Quietly, by the door.) Teacher. Owó Ńlá has already paid him. If you don't, those fifteen percent go to the other side.",
+          "variants": [
+            {
+              "if": "toldSeyiHonest",
+              "text": "(Quietly, by the door.) Teacher. You told me you were staying honest. I am just telling you: Owó Ńlá has already paid him."
+            }
+          ]
+        },
+        {
+          "type": "choice",
+          "speaker": "mrAdjust",
+          "text": "He is holding out a pen. It is a nice pen.",
+          "options": [
+            {
+              "text": "Pay him.",
+              "cost": 300000,
+              "effects": {
+                "changeStat": {
+                  "votes": 12,
+                  "scandal": 15,
+                  "conscience": -15
+                },
+                "setFlag": "rigged",
+                "remember": {
+                  "adjust": "paid"
+                }
+              }
+            },
+            {
+              "text": "\"Get out of my office.\"",
+              "effects": {
+                "changeStat": {
+                  "conscience": 10,
+                  "seyiBond": -4
+                },
+                "setFlag": "refusedAdjust",
+                "remember": {
+                  "adjust": "refused"
+                }
+              }
+            },
+            {
+              "text": "Keep him talking while your phone records. (For Ifeoma.)",
+              "requires": "helpedIfeoma",
+              "showLocked": true,
+              "lockedText": "You would need somebody to send it to",
+              "effects": {
+                "changeStat": {
+                  "conscience": 6,
+                  "ifeomaBond": 10
+                },
+                "setFlag": [
+                  "refusedAdjust",
+                  "stingAdjust"
+                ],
+                "remember": {
+                  "adjust": "sting"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "mrAdjust",
+          "text": "...and the collation centre is where we do the real work, sir. Ward 4, 7 and 9 are already settled. (He has no idea. He is enjoying explaining.)",
+          "if": "stingAdjust"
+        },
+        {
+          "type": "goto",
+          "scene": "funkeLine"
+        }
+      ],
+      "location": "frontStop",
+      "positions": {
+        "mrAdjust": [
+          -14.4,
+          -5.8,
+          200
+        ],
+        "seyi": [
+          -17.2,
+          -6,
+          160
+        ]
+      }
+    },
+    "funkeLine": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "funke",
+          "text": "Seyi told me about the man in the safari suit.",
+          "variants": [
+            {
+              "if": "rigged",
+              "text": "Seyi told me you paid the man in the safari suit. (She is holding a packed bag. Hers.)"
+            }
+          ]
+        },
+        {
+          "type": "choice",
+          "speaker": "funke",
+          "text": "If you do this, you do it without me. I will not stand on a podium and clap for stolen votes.",
+          "options": [
+            {
+              "text": "\"Then I will undo it. I will get the money back.\"",
+              "effects": {
+                "changeStat": {
+                  "wifeBond": 8,
+                  "votes": -12,
+                  "scandal": -5,
+                  "money": 150000
+                },
+                "setFlag": "undidRigging",
+                "clearFlag": "rigged",
+                "remember": {
+                  "adjust": "undone"
+                }
+              }
+            },
+            {
+              "text": "\"Funke, this is how it works. You will thank me when we win.\"",
+              "effects": {
+                "changeStat": {
+                  "wifeBond": -25
+                },
+                "setFlag": "funkeLeft",
+                "remember": {
+                  "funke": "left"
+                }
+              }
+            }
+          ],
+          "if": "rigged"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "funke",
+          "text": "(She hugs you, which she has not done since the rice.) Thank God. I was ready to leave. I had even packed. (She shows you the bag. It is full of your shirts. \"I was going to make you leave,\" she says.)",
+          "if": {
+            "notFlags": [
+              "rigged"
+            ]
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "motorPark"
+        }
+      ],
+      "location": "mamaPut",
+      "time": "night",
+      "positions": {
+        "funke": [
+          -6.8,
+          8.6,
+          200
+        ]
+      }
+    },
+    "motorPark": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Saturday. Your last rally at the motor park. Halfway through your speech, somebody throws a bottle. Then a chair. Then the crowd is not a crowd, it is a river, and it is coming for the stage."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "seyi",
+          "text": "TEACHER! RUN! This one is not politics, this one is physics!"
+        },
+        {
+          "type": "startMode",
+          "mode": "runner",
+          "params": {
+            "goal": 260,
+            "chaser": "mob",
+            "difficulty": 2
+          },
+          "results": {
+            "escaped": {
+              "changeStat": {
+                "publicTrust": 1
+              },
+              "setFlag": "escapedMob"
+            },
+            "caught": {
+              "changeStat": {
+                "scandal": 4,
+                "votes": -2
+              },
+              "setFlag": "caughtMob",
+              "toast": "They tore your agbada. A danfo driver hid you under the seat."
+            }
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "crisis"
+        }
+      ],
+      "location": "motorPark",
+      "time": "dusk"
+    },
+    "crisis": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Night. A text from Baba Oko's number: \"Owó Ńlá has withdrawn. You are now my only horse. Do not disappoint me.\" Another text, from an unknown number: \"Your file is at the EFCC. Baba Oko sent it. Insurance.\""
+        },
+        {
+          "type": "dialogue",
+          "speaker": "seyi",
+          "text": "Teacher... there is a flight to London on Thursday. \"Medical tourism\". Many great men have had very long medical treatments. You will come back when it is calm."
+        },
+        {
+          "type": "choice",
+          "speaker": "seyi",
+          "text": "He is serious.",
+          "options": [
+            {
+              "text": "\"I am staying. Election Day is mine.\"",
+              "effects": {
+                "changeStat": {
+                  "conscience": 4,
+                  "seyiBond": 4
+                },
+                "setFlag": "stayed"
+              }
+            },
+            {
+              "text": "Take the flight.",
+              "effects": {
+                "ending": "p_fled"
+              }
+            }
+          ]
+        },
+        {
+          "type": "endChapter",
+          "title": "Rigging Season",
+          "summary": "Everyone has shown you their price. Now you have to show them yours.",
+          "next": "p6_election"
+        }
+      ],
+      "location": "frontStop",
+      "time": "night",
+      "positions": {
+        "seyi": [
+          -14.8,
+          -6,
+          200
+        ]
+      }
+    }
+  }
+}

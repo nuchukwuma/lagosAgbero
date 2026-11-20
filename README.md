@@ -5,7 +5,7 @@ React, three.js (@react-three/fiber and drei) and Zustand. It is satire:
 every person, party, cult, brand and drink is made up.
 
 It's a branching narrative game: choices are remembered, characters bring
-them up later, and they decide which endings you can reach. Three stories
+them up later, and they decide which endings you can reach. Five stories
 share the engine:
 
 - **Area Boy:** a JJC with ₦2,300 becomes the agbero of Iyana-Wahala. 12
@@ -19,6 +19,19 @@ share the engine:
   loan apps, yahoo boys and a girlfriend whose mother is running for office.
   6 chapters, 10 endings. Inspired by the premise of campus coming-of-age
   dramas; the characters and plot are original.
+- **The Honourable:** Kunle, a schoolteacher, runs for councillor of
+  Iyana-Wahala with a godfather's money, a wife who knows him too well, and a
+  journalist holding a folder. Rallies, a debate, a rigging offer and
+  election day. 7 chapters, 7 endings.
+- **Mama Sugar:** Ebiere runs Sugar Palace, a tired South Street hotel, and is
+  three months behind on rent. Settlement money, a rival madam, a daughter who
+  comes visiting, and a man who wants to send five girls to Italy. Kept
+  non-explicit: the story is about the business and the line she will or
+  won't cross. 7 chapters, 7 endings.
+
+Every story also has side quests with its key people (a quest-giver stands in
+the street during free roam); doing them raises your bond and changes later
+scenes.
 
 After every chapter you see the choices you made, and a story map shows the
 paths you didn't take. The title screen has an **Endings** page: the endings

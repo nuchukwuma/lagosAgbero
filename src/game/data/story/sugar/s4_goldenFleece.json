@@ -1,0 +1,276 @@
+{
+  "id": "s4_goldenFleece",
+  "campaign": "sugar",
+  "world": "iyanaWahala",
+  "act": 1,
+  "number": 4,
+  "title": "Chapter 4 — Golden Fleece",
+  "description": "Alhaja Rukky makes an offer, the Task Force makes a visit, and Chief Dapo brings his padlock.",
+  "startScene": "rukky",
+  "scenes": {
+    "rukky": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Alhaja Rukky comes in person, which she has never done. Gold on every finger. Two phones. A driver who holds an umbrella over her even though it is not raining."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "rukky",
+          "text": "Sugar. We are not girls anymore. (She sits without being asked.) I will pay your rent. All of it. You will manage this place for me. Same girls, my name on the gate. You will sleep at night."
+        },
+        {
+          "type": "choice",
+          "speaker": "rukky",
+          "text": "₦300,000. Cash. Today.",
+          "options": [
+            {
+              "text": "Sell. Sleep at night.",
+              "effects": {
+                "changeStat": {
+                  "money": 300000,
+                  "rentDebt": -999999,
+                  "sugarRep": -15,
+                  "staffTrust": -10
+                },
+                "setFlag": "soldToRukky",
+                "remember": {
+                  "rukky": "sold"
+                }
+              }
+            },
+            {
+              "text": "\"This is my name on this gate, Rukky. It stays.\"",
+              "effects": {
+                "changeStat": {
+                  "sugarRep": 6
+                },
+                "setFlag": "refusedRukky"
+              }
+            },
+            {
+              "text": "\"Let us stop fighting. Same prices, we share the Task Force bill.\"",
+              "effects": {
+                "changeStat": {
+                  "sugarRep": 2,
+                  "policeHeat": -4
+                },
+                "setFlag": "rukkyTruce",
+                "remember": {
+                  "rukky": "truce"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "rukky",
+          "text": "(Getting up.) Oh, your little girl from the gate. Blessing. She is at my place now. Very popular. (She smiles like a key turning.)",
+          "if": "blessingHome"
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "Blessing. The girl you sent home.",
+          "options": [
+            {
+              "text": "\"How much for her debt to you?\" Pay it.",
+              "cost": 20000,
+              "effects": {
+                "changeStat": {
+                  "blessingBond": 20,
+                  "conscience": 8
+                },
+                "setFlag": [
+                  "rescuedBlessing",
+                  "blessingBar"
+                ],
+                "noticedBy": [
+                  "Blessing"
+                ]
+              }
+            },
+            {
+              "text": "Say nothing. It is not your business anymore.",
+              "effects": {
+                "changeStat": {
+                  "conscience": -6
+                }
+              }
+            }
+          ],
+          "if": "blessingHome"
+        },
+        {
+          "type": "goto",
+          "scene": "raid"
+        }
+      ],
+      "location": "southStreet",
+      "time": "day",
+      "positions": {
+        "rukky": [
+          -18.4,
+          9.0,
+          200
+        ]
+      }
+    },
+    "raid": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Wednesday night. Sirens from both ends of South Street. Task Force trucks. Somebody shouts \"RAID!\" and the street becomes a river of people holding their shoes."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "kokoro",
+          "text": "Mama! Back gate! If they carry you, it is ₦50,000 bail and your name on Wahala FM!",
+          "variants": [
+            {
+              "if": "refusedBassey",
+              "text": "Mama! It is Bassey! He came for his envelope with interest! Back gate!"
+            }
+          ]
+        },
+        {
+          "type": "startMode",
+          "mode": "runner",
+          "params": {
+            "goal": 240,
+            "chaser": "taskForce",
+            "difficulty": 1
+          },
+          "results": {
+            "escaped": {
+              "setFlag": "escapedRaid"
+            },
+            "caught": {
+              "changeStat": {
+                "money": -20000,
+                "policeHeat": 10,
+                "sugarRep": -3
+              },
+              "setFlag": "caughtRaid",
+              "toast": "₦20,000 \"bail\", paid to a man with no uniform, in the back of a Hilux."
+            }
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "padlock"
+        }
+      ],
+      "location": "southStreet",
+      "time": "night",
+      "positions": {
+        "kokoro": [
+          -21.8,
+          9.7,
+          160
+        ]
+      }
+    },
+    "padlock": {
+      "beats": [
+        {
+          "type": "goto",
+          "scene": "rukkysManager",
+          "if": "soldToRukky"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "The end of the month. Chief Dapo's Peugeot. Chief Dapo's padlock. Chief Dapo's face, which is sorry and not sorry at the same time."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "chiefDapo",
+          "text": "Madam. ₦{stat:rentDebt}. Today."
+        },
+        {
+          "type": "choice",
+          "speaker": "chiefDapo",
+          "text": "The padlock is open in his hand.",
+          "options": [
+            {
+              "text": "Pay it. All of it.",
+              "cost": "stat:rentDebt",
+              "effects": {
+                "changeStat": {
+                  "rentDebt": -999999
+                },
+                "setFlag": "rentPaid",
+                "remember": {
+                  "rent": "paid"
+                }
+              }
+            },
+            {
+              "text": "\"One more month, Chief. With interest. ₦50,000 more.\"",
+              "requires": {
+                "anyOf": [
+                  {
+                    "stats": {
+                      "sugarRep": ">= 30"
+                    }
+                  },
+                  "threatenedDapo"
+                ]
+              },
+              "showLocked": true,
+              "lockedText": "He has no reason to trust you",
+              "effects": {
+                "changeStat": {
+                  "rentDebt": 50000
+                },
+                "setFlag": "rentExtended"
+              }
+            },
+            {
+              "text": "\"Lock it then. Lock everything.\"",
+              "effects": {
+                "ending": "sugar_lockedOut"
+              }
+            }
+          ]
+        },
+        {
+          "type": "endChapter",
+          "title": "Golden Fleece",
+          "summary": "South Street has noticed you are still standing. So has a man from Benin who sells \"jobs in Italy\".",
+          "next": "s5_italy"
+        }
+      ],
+      "location": "southStreet",
+      "time": "day",
+      "positions": {
+        "chiefDapo": [
+          -17.5,
+          7.5,
+          220
+        ]
+      }
+    },
+    "rukkysManager": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "The banner over the gate now says GOLDEN FLEECE II. You still open the bar at six. You still close at four. You get a salary on the 28th, like a bank worker, and you hate it in a very specific, bank-worker way."
+        },
+        {
+          "type": "endChapter",
+          "title": "Golden Fleece",
+          "summary": "South Street has noticed you are still standing. So has a man from Benin who sells \"jobs in Italy\".",
+          "next": "s5_italy"
+        }
+      ],
+      "location": "southStreet",
+      "time": "day"
+    }
+  }
+}

@@ -1,0 +1,285 @@
+{
+  "id": "s2_settlement",
+  "campaign": "sugar",
+  "world": "iyanaWahala",
+  "act": 1,
+  "number": 2,
+  "title": "Chapter 2 — Settlement",
+  "description": "Commander Bassey wants his envelope, a customer forgets his manners, and Ivie is coming on Saturday.",
+  "startScene": "bassey",
+  "scenes": {
+    "bassey": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Friday. The Task Force Hilux parks across the gate so nobody can enter or leave. Commander Bassey sits in your best chair and puts his boots on your second best."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "bassey",
+          "text": "Mama Sugar! My favourite tax payer. (He opens his palm.) Twenty thousand. Weekly. Like church."
+        },
+        {
+          "type": "choice",
+          "speaker": "bassey",
+          "text": "His boys are leaning on the bar. One of them is drinking from the bottle.",
+          "options": [
+            {
+              "text": "Pay.",
+              "cost": 20000,
+              "effects": {
+                "changeStat": {
+                  "policeHeat": -6
+                },
+                "setFlag": "paidBassey",
+                "remember": {
+                  "bassey": "paid"
+                }
+              }
+            },
+            {
+              "text": "\"Not this week, Commander. The landlord ate everything.\"",
+              "effects": {
+                "changeStat": {
+                  "policeHeat": 20
+                },
+                "setFlag": "refusedBassey",
+                "remember": {
+                  "bassey": "refused"
+                }
+              }
+            },
+            {
+              "text": "\"Half now. And a plate of pepper soup, on the house, every Friday.\"",
+              "cost": 10000,
+              "effects": {
+                "changeStat": {
+                  "policeHeat": 4,
+                  "sugarRep": 2
+                },
+                "setFlag": "halfBassey",
+                "remember": {
+                  "bassey": "half"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "bassey",
+          "text": "Good woman.",
+          "variants": [
+            {
+              "if": "refusedBassey",
+              "text": "(He stands up slowly.) The landlord ate everything. Hm. Then I hope the landlord is hungry when we come back, Mama. Raids are very expensive. For you."
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "rowdy"
+        }
+      ],
+      "location": "southStreet",
+      "time": "day",
+      "positions": {
+        "bassey": [
+          -18.4,
+          8.9,
+          200
+        ]
+      }
+    },
+    "rowdy": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Midnight. A big man in a Chelsea jersey has drunk four bottles and paid for one. When Precious asks for the rest, he slaps her. The bar goes quiet. Kokoro is outside, \"checking the generator\", which means sleeping in it."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "player",
+          "text": "Kokoro! ...Kokoro?"
+        },
+        {
+          "type": "startMode",
+          "mode": "fight",
+          "params": {
+            "opponent": "passenger",
+            "difficulty": 1
+          },
+          "results": {
+            "won": {
+              "changeStat": {
+                "staffTrust": 8,
+                "sugarRep": 6
+              },
+              "setFlag": "threwOutRowdy",
+              "toast": "You throw the Chelsea man into the gutter. The girls clap. Even Kokoro claps, from the generator."
+            },
+            "lost": {
+              "changeStat": {
+                "staffTrust": -3,
+                "money": -5000
+              },
+              "setFlag": "lostToRowdy"
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "blessing",
+          "text": "(Holding ice to Precious's face.) Mama, are you okay? (She is shaking. You realise she is shaking for you.)",
+          "variants": [
+            {
+              "if": "blessingHome",
+              "text": "(Kemi, holding ice to Precious's face.) Mama. Joy from Golden Fleece came by today. She said the new girl is there. The one you sent home."
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "ivieCall"
+        }
+      ],
+      "location": "southStreet",
+      "time": "night",
+      "positions": {
+        "blessing": [
+          -18.6,
+          9.3,
+          200
+        ],
+        "kokoro": [
+          -21.8,
+          9.7,
+          160
+        ]
+      }
+    },
+    "ivieCall": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Your phone. \"IVIE ❤\" with a photo of her in her school uniform, at eleven, missing a tooth. She is sixteen now and will kill you if she ever sees that picture."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ivie",
+          "text": "Mummy! We have a long weekend. I want to come home on Saturday. I want to see the restaurant. You said there is a new kitchen."
+        },
+        {
+          "type": "choice",
+          "speaker": "ivie",
+          "text": "There is no restaurant. There has never been a restaurant.",
+          "options": [
+            {
+              "text": "\"Come, my love. I will cook for you myself.\"",
+              "effects": {
+                "changeStat": {
+                  "iviBond": 6
+                },
+                "setFlag": "iviComing"
+              }
+            },
+            {
+              "text": "\"No, no. I will come to your school. Don't waste transport.\"",
+              "effects": {
+                "changeStat": {
+                  "iviBond": -6
+                },
+                "setFlag": "iviPutOff"
+              }
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "hair"
+        }
+      ],
+      "location": "southStreet",
+      "time": "night"
+    },
+    "hair": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Two a.m. Blessing insists on doing your hair while the bar is quiet. Her fingers are fast and kind. She talks to your scalp like it is a friend.",
+          "if": "blessingBar"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "blessing",
+          "text": "One day I will have a salon, ma. \"Blessing's Touch\". With a ring light. And a TV that shows Nollywood. And no man will ever enter without permission.",
+          "if": "blessingBar"
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "She is braiding your hair into something you have not worn since Warri.",
+          "options": [
+            {
+              "text": "\"I will buy you a starter kit. Dryer, irons, everything. You will pay me back from your salon.\"",
+              "cost": 15000,
+              "effects": {
+                "changeStat": {
+                  "blessingBond": 15,
+                  "conscience": 4
+                },
+                "setFlag": "blessingKit",
+                "noticedBy": [
+                  "Blessing"
+                ]
+              }
+            },
+            {
+              "text": "\"Dreams don't pay rent, my dear.\"",
+              "effects": {
+                "changeStat": {
+                  "blessingBond": -8
+                }
+              }
+            }
+          ],
+          "if": "blessingBar"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Two a.m. You count the drawer twice. It is the same both times. It is never enough both times.",
+          "if": {
+            "notFlags": [
+              "blessingBar"
+            ]
+          }
+        },
+        {
+          "type": "endChapter",
+          "title": "Settlement",
+          "summary": "Everybody on South Street has a price. You are learning which ones you can still afford to pay.",
+          "next": "s3_ivie"
+        }
+      ],
+      "location": "southStreet",
+      "time": "night",
+      "positions": {
+        "blessing": [
+          -18.6,
+          9.3,
+          200
+        ],
+        "kokoro": [
+          -21.8,
+          9.7,
+          160
+        ]
+      }
+    }
+  }
+}

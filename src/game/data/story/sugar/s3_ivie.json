@@ -1,0 +1,229 @@
+{
+  "id": "s3_ivie",
+  "campaign": "sugar",
+  "world": "iyanaWahala",
+  "act": 1,
+  "number": 3,
+  "title": "Chapter 3 — Ivie's Visit",
+  "description": "A daughter with questions, a bar dressed up as a restaurant, and a dance war with Golden Fleece.",
+  "startScene": "start",
+  "scenes": {
+    "start": {
+      "beats": [
+        {
+          "type": "goto",
+          "scene": "dressUp",
+          "if": "iviComing"
+        },
+        {
+          "type": "goto",
+          "scene": "school"
+        }
+      ],
+      "location": "southStreet"
+    },
+    "dressUp": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Saturday, 9 a.m. You have hung a banner over the gate: SUGAR'S KITCHEN. The girls are wearing aprons. Kokoro is wearing a chef's hat and an expression of deep betrayal."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ivie",
+          "text": "(Running in, hugging you, smelling like school soap.) Mummy! It's so... (She looks at the stairs.) ...big. What is upstairs?"
+        },
+        {
+          "type": "startMode",
+          "mode": "bluff",
+          "params": {
+            "scenario": "iviVisit"
+          },
+          "results": {
+            "convinced": {
+              "changeStat": {
+                "secretKept": 10
+              },
+              "setFlag": "secretKept"
+            },
+            "doubted": {
+              "changeStat": {
+                "iviBond": -4
+              },
+              "setFlag": "iviDoubts"
+            },
+            "caught": {
+              "changeStat": {
+                "iviBond": -18
+              },
+              "setFlag": "iviKnows",
+              "remember": {
+                "ivie": "caught"
+              }
+            },
+            "confessed": {
+              "changeStat": {
+                "iviBond": 6,
+                "conscience": 6
+              },
+              "setFlag": [
+                "iviKnows",
+                "toldIvie"
+              ],
+              "remember": {
+                "ivie": "told"
+              }
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ivie",
+          "text": "Okay, Mummy.",
+          "variants": [
+            {
+              "if": "iviKnows",
+              "text": "(She is very still.) Is that how you paid for my school? (She doesn't cry. She is your daughter. She waits until the toilet to cry.)"
+            },
+            {
+              "if": "toldIvie",
+              "text": "(Long silence.) I knew something, Mummy. Girls at school have mothers. Some of them have mothers like you. (She takes your hand.) Thank you for not lying again."
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "danceWar"
+        }
+      ],
+      "location": "southStreet",
+      "time": "day",
+      "positions": {
+        "ivie": [
+          -18.8,
+          9.0,
+          200
+        ],
+        "kokoro": [
+          -21.8,
+          9.7,
+          160
+        ]
+      }
+    },
+    "school": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "You take a danfo to Ivie's school in Ikorodu with a nylon bag of provisions: Milo, Peak milk, cabin biscuits, and ₦10,000 folded inside the Milo tin like your mother used to do."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ivie",
+          "text": "Mummy, you look tired. (She looks at your hands.) Why do your hands smell of beer?"
+        },
+        {
+          "type": "choice",
+          "speaker": "ivie",
+          "text": "She asked it lightly. She is not asking lightly.",
+          "options": [
+            {
+              "text": "\"The restaurant sells drinks too, my love.\"",
+              "effects": {
+                "changeStat": {
+                  "secretKept": 6
+                },
+                "setFlag": "secretKept"
+              }
+            },
+            {
+              "text": "Tell her the truth, on the bench outside the dining hall.",
+              "effects": {
+                "changeStat": {
+                  "iviBond": 4,
+                  "conscience": 6
+                },
+                "setFlag": [
+                  "iviKnows",
+                  "toldIvie"
+                ],
+                "remember": {
+                  "ivie": "told"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "danceWar"
+        }
+      ],
+      "location": "frontStop",
+      "time": "day",
+      "positions": {
+        "ivie": [
+          -14.8,
+          -6.5,
+          200
+        ]
+      }
+    },
+    "danceWar": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Saturday night. Golden Fleece has hired a DJ and a generator the size of a danfo. Their best dancer, \"Sweet Mother\", is outside your gate, dancing at your customers until they cross the road."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "kokoro",
+          "text": "Mama, if we don't answer, by midnight every customer on this street will be drinking Rukky's beer."
+        },
+        {
+          "type": "startMode",
+          "mode": "dance",
+          "params": {
+            "name": "Sweet Mother",
+            "skill": 0.6,
+            "prize": 5000
+          },
+          "results": {
+            "won": {
+              "changeStat": {
+                "sugarRep": 8,
+                "staffTrust": 4
+              },
+              "setFlag": "wonDanceWar",
+              "toast": "The customers cross back. Sweet Mother bows. Rukky does not."
+            },
+            "lost": {
+              "changeStat": {
+                "sugarRep": -4
+              },
+              "setFlag": "lostDanceWar"
+            }
+          }
+        },
+        {
+          "type": "endChapter",
+          "title": "Ivie's Visit",
+          "summary": "Your daughter saw the house you built. Whatever she understood, she is taking it back to school with her.",
+          "next": "s4_goldenFleece"
+        }
+      ],
+      "location": "southStreet",
+      "time": "night",
+      "positions": {
+        "kokoro": [
+          -21.8,
+          9.7,
+          160
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,312 @@
+{
+  "id": "p7_declaration",
+  "campaign": "politics",
+  "world": "iyanaWahala",
+  "act": 1,
+  "number": 7,
+  "title": "Chapter 7 — The Declaration",
+  "description": "The returning officer clears his throat. Whatever he says, you will have to live in it.",
+  "startScene": "hall",
+  "scenes": {
+    "hall": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "The collation centre is a primary school classroom. Your name is on a blackboard. So is Owó Ńlá's, crossed out, written again, crossed out again."
+        },
+        {
+          "type": "goto",
+          "scene": "witness",
+          "if": "exposedOko"
+        },
+        {
+          "type": "goto",
+          "scene": "efcc",
+          "if": {
+            "flags": [
+              "rigged"
+            ],
+            "stats": {
+              "scandal": ">= 40"
+            }
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "certificate",
+          "if": "rigged"
+        },
+        {
+          "type": "goto",
+          "scene": "puppet",
+          "if": {
+            "flags": [
+              "signedContract",
+              "tookTicket"
+            ]
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "peoples",
+          "if": {
+            "stats": {
+              "votes": ">= 50"
+            }
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "lost"
+        }
+      ],
+      "location": "frontStop",
+      "time": "night"
+    },
+    "witness": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "ifeoma",
+          "text": "(She is outside the classroom with a microphone and no fear.) Honourable-elect, or whatever you are tonight: the commission has cancelled the results in three wards because of the tape. And you are still winning the other six."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "funke",
+          "text": "They are saying your name on the radio, {name}. Not \"Baba Oko's boy\". Your name.",
+          "variants": [
+            {
+              "if": "funkeLeft",
+              "text": "(A text, from Funke.) I heard the tape on Wahala FM. I am coming home. We will talk."
+            }
+          ]
+        },
+        {
+          "type": "endChapter",
+          "title": "The Witness",
+          "summary": "You won the ward and lost a godfather, which is the best trade in Nigerian politics.",
+          "ending": "p_witness"
+        }
+      ],
+      "location": "frontStop",
+      "time": "night",
+      "positions": {
+        "ifeoma": [
+          -14.6,
+          -6.2,
+          200
+        ],
+        "funke": [
+          -17.2,
+          -6,
+          160
+        ]
+      }
+    },
+    "efcc": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Two men in black jackets with yellow letters are waiting at the classroom door. They are very polite. They have a folder. It has your name and Mr. Adjust's receipts in it."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "seyi",
+          "text": "(Sweating.) Teacher. Baba Oko's insurance policy. He paid it out."
+        },
+        {
+          "type": "endChapter",
+          "title": "Kirikiri",
+          "summary": "You won the seat on Monday and lost it on Tuesday. The certificate of return is framed in an evidence room.",
+          "ending": "p_jailed"
+        }
+      ],
+      "location": "frontStop",
+      "time": "night"
+    },
+    "certificate": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "The returning officer announces your name. The fifteen percent fluctuated beautifully. The crowd cheers, the half that was paid to."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "seyi",
+          "text": "Congratulations, Honourable! (He hugs you. He smells like relief and Hennessy.) Don't think about it. Nobody will ever ask."
+        },
+        {
+          "type": "endChapter",
+          "title": "The Certificate",
+          "summary": "You are the Honourable now. You will spend four years making sure nobody ever opens a particular folder.",
+          "ending": "p_certificate"
+        }
+      ],
+      "location": "frontStop",
+      "time": "night",
+      "positions": {
+        "seyi": [
+          -14.8,
+          -6,
+          200
+        ]
+      }
+    },
+    "puppet": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "You win. Baba Oko's Prado arrives at the classroom before the returning officer has finished reading. Baba Oko walks in, shakes the officer's hand, then yours, and leaves an envelope in your pocket without looking."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "babaOko",
+          "text": "Congratulations, Honourable. Wale will start the toilets on Monday. (He pats your cheek, the way you pat a car you bought.)"
+        },
+        {
+          "type": "endChapter",
+          "title": "Baba Oko's Boy",
+          "summary": "You won. He owns the seat. You are just the man who sits on it.",
+          "ending": "p_puppet"
+        }
+      ],
+      "location": "frontStop",
+      "time": "night",
+      "positions": {
+        "babaOko": [
+          29.5,
+          23,
+          220
+        ]
+      }
+    },
+    "peoples": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "The returning officer reads your number twice because he does not believe it either. Outside, somebody starts beating a talking drum. The market women arrive with a padlock and a key."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "mamaTiti",
+          "text": "Toilets, Honourable. Six months. We are counting.",
+          "variants": [
+            {
+              "if": "listenedTiti",
+              "text": "(She hands you the notebook, full now.) Page one, Honourable. We will be checking."
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "funke",
+          "text": "(She takes your hand on the podium, which she said she would never do.) Now the hard part. Don't let them make you feel clever.",
+          "variants": [
+            {
+              "if": "funkeLeft",
+              "text": "(A text, from Funke.) I saw it on TV. Congratulations. I am still at my sister's. Let us see who you are on Monday."
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Your first letter as Honourable goes to the council archive: the levy case of Councillor Ayo Balogun, 1999, reopened. Seyi reads it under the bridge, alone, twice.",
+          "if": "promiseBalogun"
+        },
+        {
+          "type": "endChapter",
+          "title": "The People's Honourable",
+          "summary": "You won it clean, in a ward where nobody wins clean. Now you have to stay that way for four years, which is harder.",
+          "ending": "p_peoples"
+        }
+      ],
+      "location": "frontStop",
+      "time": "night",
+      "positions": {
+        "mamaTiti": [
+          -14.6,
+          -6.2,
+          200
+        ],
+        "funke": [
+          -17.2,
+          -6,
+          160
+        ]
+      }
+    },
+    "lost": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Owó Ńlá's nephew wins. By two thousand votes. The old man on the bucket voted for you. So did the market. It was not enough."
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "The cameras are pointing at you.",
+          "options": [
+            {
+              "text": "Concede. Shake the nephew's hand in front of everybody.",
+              "effects": {
+                "changeStat": {
+                  "publicTrust": 10,
+                  "conscience": 6
+                },
+                "setFlag": "conceded"
+              }
+            },
+            {
+              "text": "\"We are going to the tribunal!\"",
+              "effects": {
+                "changeStat": {
+                  "scandal": 3
+                },
+                "setFlag": "tribunal"
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "funke",
+          "text": "Come home, {name}. You are still the man the street calls. (She is smiling. She has not smiled this much since the Prado came.)",
+          "variants": [
+            {
+              "if": "funkeLeft",
+              "text": "(Funke is at the back of the hall. She came. She doesn't say anything. She takes your arm on the way out.)"
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Under the bridge the paint on the pillar is still fresh. COUNCILLOR AYO BALOGUN. HONEST MAN. Seyi says honest men lose all the time in this ward. It is the losing that keeps them honest.",
+          "if": "paintedPillar"
+        },
+        {
+          "type": "endChapter",
+          "title": "Lost the Seat, Kept the Man",
+          "summary": "You lost the election and kept everything you came in with. In Iyana-Wahala, that is almost a victory.",
+          "ending": "p_lostKept"
+        }
+      ],
+      "location": "frontStop",
+      "time": "night",
+      "positions": {
+        "funke": [
+          -17.2,
+          -6,
+          160
+        ]
+      }
+    }
+  }
+}

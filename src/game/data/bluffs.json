@@ -75,6 +75,31 @@
       "business": "Spare parts business",
       "fellowship": "A fellowship of businessmen",
       "gift": "A gift from a chief"
+    },
+    "manifesto": {
+      "toilets": "Toilets in six months",
+      "jobs": "Ten thousand jobs",
+      "roads": "Every road tarred"
+    },
+    "funding": {
+      "self": "My own savings",
+      "party": "The party",
+      "oko": "Baba Oko"
+    },
+    "restaurant": {
+      "food": "Sugar's Kitchen, food only",
+      "hotel": "A small hotel",
+      "truth": "Not a restaurant"
+    },
+    "upstairs": {
+      "storage": "Storage",
+      "rooms": "Rooms for travellers",
+      "girls": "The girls work there"
+    },
+    "route": {
+      "plane": "Straight to Rome",
+      "tripoli": "Through Tripoli",
+      "none": "Not saying"
     }
   },
   "reactions": {
@@ -909,6 +934,331 @@
               },
               "risk": 0,
               "truth": true
+            }
+          ]
+        }
+      ]
+    },
+    "pressFirst": {
+      "title": "Live on Wahala FM",
+      "asker": "ifeoma",
+      "intro": "Ifeoma asks the questions the listeners are too polite to ask. And she remembers every answer.",
+      "coverStat": "publicTrust",
+      "questions": [
+        {
+          "id": "manifesto",
+          "fact": "manifesto",
+          "q": "\"Teacher, your number one promise. One sentence.\"",
+          "answers": [
+            {
+              "text": "\"Toilets in the market. Six months.\"",
+              "says": {
+                "manifesto": "toilets"
+              },
+              "risk": 2,
+              "truth": true
+            },
+            {
+              "text": "\"Ten thousand jobs for our youth.\"",
+              "says": {
+                "manifesto": "jobs"
+              },
+              "risk": 14
+            },
+            {
+              "text": "\"Every road in the ward, tarred.\"",
+              "says": {
+                "manifesto": "roads"
+              },
+              "risk": 16
+            }
+          ]
+        },
+        {
+          "id": "funding",
+          "fact": "funding",
+          "q": "\"Who is paying for your campaign?\"",
+          "answers": [
+            {
+              "text": "\"My savings and small donations.\"",
+              "says": {
+                "funding": "self"
+              },
+              "risk": 10
+            },
+            {
+              "text": "\"The party.\"",
+              "says": {
+                "funding": "party"
+              },
+              "risk": 8
+            },
+            {
+              "text": "\"Baba Oko is supporting me. That is the truth.\"",
+              "says": {
+                "funding": "oko"
+              },
+              "risk": 0,
+              "truth": true,
+              "core": true
+            }
+          ]
+        },
+        {
+          "id": "manifesto2",
+          "fact": "manifesto",
+          "q": "\"A caller says you promised jobs at the market. Which is it?\"",
+          "answers": [
+            {
+              "text": "\"Toilets first. Jobs after.\"",
+              "says": {
+                "manifesto": "toilets"
+              },
+              "risk": 4
+            },
+            {
+              "text": "\"Jobs. I said jobs.\"",
+              "says": {
+                "manifesto": "jobs"
+              },
+              "risk": 10
+            },
+            {
+              "text": "\"Next question, my sister.\"",
+              "risk": 0,
+              "deflect": true
+            }
+          ]
+        },
+        {
+          "id": "funding2",
+          "fact": "funding",
+          "q": "\"Is it true a Prado was outside your house on the day you declared?\"",
+          "answers": [
+            {
+              "text": "\"A friend visited.\"",
+              "says": {
+                "funding": "self"
+              },
+              "risk": 12
+            },
+            {
+              "text": "\"It was Baba Oko. He supports me.\"",
+              "says": {
+                "funding": "oko"
+              },
+              "risk": 0,
+              "truth": true,
+              "core": true
+            },
+            {
+              "text": "\"Na Lagos. Prados everywhere.\"",
+              "risk": 0,
+              "deflect": true
+            }
+          ]
+        }
+      ]
+    },
+    "iviVisit": {
+      "title": "Ivie wants the tour",
+      "asker": "ivie",
+      "intro": "Your daughter has your eyes and your memory. Keep your story straight.",
+      "coverStat": "secretKept",
+      "questions": [
+        {
+          "id": "restaurant",
+          "fact": "restaurant",
+          "q": "\"Mummy, is this the restaurant? Why is there a bar?\"",
+          "answers": [
+            {
+              "text": "\"Sugar's Kitchen. Food, drinks, nothing else.\"",
+              "says": {
+                "restaurant": "food"
+              },
+              "risk": 10
+            },
+            {
+              "text": "\"It is a small hotel, my love. With a kitchen.\"",
+              "says": {
+                "restaurant": "hotel"
+              },
+              "risk": 6
+            },
+            {
+              "text": "\"It is not a restaurant, Ivie.\"",
+              "says": {
+                "restaurant": "truth"
+              },
+              "risk": 0,
+              "truth": true,
+              "core": true
+            }
+          ]
+        },
+        {
+          "id": "upstairs",
+          "fact": "upstairs",
+          "q": "\"What is upstairs?\"",
+          "answers": [
+            {
+              "text": "\"Storage. Beer crates.\"",
+              "says": {
+                "upstairs": "storage"
+              },
+              "risk": 12
+            },
+            {
+              "text": "\"Rooms, for travellers.\"",
+              "says": {
+                "upstairs": "rooms"
+              },
+              "risk": 6
+            },
+            {
+              "text": "\"Come and eat your rice.\"",
+              "risk": 0,
+              "deflect": true
+            }
+          ]
+        },
+        {
+          "id": "girls",
+          "fact": "upstairs",
+          "q": "\"Why do the aunties live upstairs if it is storage?\"",
+          "answers": [
+            {
+              "text": "\"They... guard the storage.\"",
+              "says": {
+                "upstairs": "storage"
+              },
+              "risk": 14
+            },
+            {
+              "text": "\"They rent the rooms. They work for me.\"",
+              "says": {
+                "upstairs": "rooms"
+              },
+              "risk": 6
+            },
+            {
+              "text": "\"Because they work there, Ivie. Sit down. I will tell you.\"",
+              "says": {
+                "upstairs": "girls"
+              },
+              "risk": 0,
+              "truth": true,
+              "core": true
+            }
+          ]
+        },
+        {
+          "id": "restaurant2",
+          "fact": "restaurant",
+          "q": "\"So it is a restaurant or a hotel, Mummy?\"",
+          "answers": [
+            {
+              "text": "\"A restaurant, I told you.\"",
+              "says": {
+                "restaurant": "food"
+              },
+              "risk": 8
+            },
+            {
+              "text": "\"Both. A hotel with a kitchen.\"",
+              "says": {
+                "restaurant": "hotel"
+              },
+              "risk": 4
+            },
+            {
+              "text": "\"Your food is getting cold.\"",
+              "risk": 0,
+              "deflect": true
+            }
+          ]
+        }
+      ]
+    },
+    "felixDeal": {
+      "title": "Keep Felix talking",
+      "asker": "felix",
+      "intro": "Officer Grace's phone is recording in your bra. Felix must say it in his own words: where the girls go.",
+      "coverStat": "sugarRep",
+      "questions": [
+        {
+          "id": "route",
+          "fact": "route",
+          "q": "\"So you want to do business, Madam? (He is watching your hands.) Why the change of heart?\"",
+          "answers": [
+            {
+              "text": "\"Rent. Chief Dapo is not a patient man.\"",
+              "risk": 4
+            },
+            {
+              "text": "\"I want to know how it works. Where do they fly to?\"",
+              "says": {
+                "route": "plane"
+              },
+              "risk": 10
+            },
+            {
+              "text": "\"Business is business, Oga.\"",
+              "risk": 0,
+              "deflect": true
+            }
+          ]
+        },
+        {
+          "id": "route2",
+          "fact": "route",
+          "q": "\"Fly? (He laughs.) Who said fly?\"",
+          "answers": [
+            {
+              "text": "\"Then how do they reach Italy?\"",
+              "says": {
+                "route": "tripoli"
+              },
+              "risk": 6
+            },
+            {
+              "text": "\"I don't care, as long as you pay.\"",
+              "says": {
+                "route": "none"
+              },
+              "risk": 2
+            },
+            {
+              "text": "\"You are NAPTIP's problem, not mine.\"",
+              "risk": 0,
+              "truth": true,
+              "core": true
+            }
+          ]
+        },
+        {
+          "id": "money",
+          "fact": "route",
+          "q": "\"Tripoli first. Then the boat. Then Sicily. You still want the money?\"",
+          "answers": [
+            {
+              "text": "\"I still want the money.\"",
+              "says": {
+                "route": "tripoli"
+              },
+              "risk": 2
+            },
+            {
+              "text": "\"A boat? You said hotel jobs.\"",
+              "says": {
+                "route": "plane"
+              },
+              "risk": 14
+            },
+            {
+              "text": "\"Pour me another drink, Oga.\"",
+              "risk": 0,
+              "deflect": true
             }
           ]
         }

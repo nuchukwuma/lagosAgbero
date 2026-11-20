@@ -1,0 +1,799 @@
+{
+  "id": "bonds",
+  "act": 1,
+  "number": 0,
+  "title": "Side stories",
+  "description": "Side quests to get close to the key people of every story (see quests.json for givers). Each ends with @resume.",
+  "startScene": "funkeShop",
+  "scenes": {
+    "funkeShop": {
+      "beats": [
+        {
+          "type": "setFlag",
+          "flags": [
+            "quest_funkeShop"
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "funke",
+          "text": "Walk with me to the market. My supplier is cheating me and I want a councillor-to-be to stand behind me and look expensive."
+        },
+        {
+          "type": "freeRoam",
+          "objective": "Walk Funke to the market.",
+          "goal": {
+            "reach": "market"
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Funke bargains like a general. The supplier gives up in four minutes. On the way back she stops at an empty shop with a FOR RENT sign and looks at it the way you look at a bus you just missed."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "funke",
+          "text": "Twelve years I have sold from a table. One day I want a door. A door that I lock, and a sign that says \"Funke's Fabrics\", and a chair for my customers."
+        },
+        {
+          "type": "choice",
+          "speaker": "funke",
+          "text": "She is not asking you for anything. She never does.",
+          "options": [
+            {
+              "text": "Pay the first month's rent on the shop.",
+              "cost": 30000,
+              "effects": {
+                "changeStat": {
+                  "wifeBond": 14
+                },
+                "setFlag": "funkeShopRented",
+                "noticedBy": [
+                  "Funke"
+                ]
+              }
+            },
+            {
+              "text": "\"After the election, it will be the first thing.\"",
+              "effects": {
+                "changeStat": {
+                  "wifeBond": 4
+                }
+              }
+            },
+            {
+              "text": "Just stand there with her and look at it.",
+              "effects": {
+                "changeStat": {
+                  "wifeBond": 7
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "funke",
+          "text": "Okay. (She takes your arm.)",
+          "variants": [
+            {
+              "if": "funkeShopRented",
+              "text": "(She reads the receipt three times.) You are a foolish man. A good, foolish man. (She cries in the middle of the market, and dares anybody to look.)"
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "@resume"
+        }
+      ]
+    },
+    "seyiFather": {
+      "beats": [
+        {
+          "type": "setFlag",
+          "flags": [
+            "quest_seyiFather"
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "seyi",
+          "text": "Teacher. Come under the bridge with me. I want to show you something. Don't ask questions, it is not politics."
+        },
+        {
+          "type": "freeRoam",
+          "objective": "Follow Seyi under the bridge.",
+          "goal": {
+            "reach": "underBridge"
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "On a pillar under the bridge, under twenty years of posters, somebody has painted a name in white: COUNCILLOR AYO BALOGUN, 1999–2001. HONEST MAN."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "seyi",
+          "text": "My father. They said he stole the market levy. He didn't. They printed it anyway. He died owing everybody an apology he didn't need to make. (He touches the paint.) I repaint it every year."
+        },
+        {
+          "type": "choice",
+          "speaker": "seyi",
+          "text": "He is not crying. He is very carefully not crying.",
+          "options": [
+            {
+              "text": "Help him repaint it.",
+              "effects": {
+                "changeStat": {
+                  "seyiBond": 14,
+                  "conscience": 3
+                },
+                "setFlag": "paintedPillar",
+                "noticedBy": [
+                  "Seyi"
+                ]
+              }
+            },
+            {
+              "text": "\"When I win, we clear his name. Officially.\"",
+              "effects": {
+                "changeStat": {
+                  "seyiBond": 10
+                },
+                "setFlag": "promiseBalogun"
+              }
+            },
+            {
+              "text": "\"Is that why you'll do anything to win?\"",
+              "effects": {
+                "changeStat": {
+                  "seyiBond": 4,
+                  "conscience": 2
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "seyi",
+          "text": "(He laughs, finally.) Don't tell anybody I have feelings. It is bad for my rates."
+        },
+        {
+          "type": "goto",
+          "scene": "@resume"
+        }
+      ]
+    },
+    "ifeomaSuya": {
+      "beats": [
+        {
+          "type": "setFlag",
+          "flags": [
+            "quest_ifeomaSuya"
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ifeoma",
+          "text": "Suya. Off the record. My treat, which means you are paying."
+        },
+        {
+          "type": "freeRoam",
+          "objective": "Meet Ifeoma at the suya spot under the bridge.",
+          "goal": {
+            "reach": "underBridge"
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ifeoma",
+          "text": "You want to know why I do this? (She doesn't wait.) My brother was at Lekki in 2020. He came home. A lot of people's brothers didn't. And every station that night played music."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ifeoma",
+          "text": "So now I don't play music. I ask questions until somebody answers."
+        },
+        {
+          "type": "choice",
+          "speaker": "ifeoma",
+          "text": "She is looking at you over the suya like a reporter, and a little like something else.",
+          "options": [
+            {
+              "text": "Tell her something true that nobody else knows about you.",
+              "effects": {
+                "changeStat": {
+                  "ifeomaBond": 14
+                },
+                "setFlag": "toldIfeomaSecret",
+                "noticedBy": [
+                  "Ifeoma"
+                ]
+              }
+            },
+            {
+              "text": "\"Off the record: I'm frightened of winning.\"",
+              "effects": {
+                "changeStat": {
+                  "ifeomaBond": 10,
+                  "conscience": 2
+                }
+              }
+            },
+            {
+              "text": "Change the subject to the weather.",
+              "effects": {
+                "changeStat": {
+                  "ifeomaBond": -3
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "@resume"
+        }
+      ]
+    },
+    "blessingSalon": {
+      "beats": [
+        {
+          "type": "setFlag",
+          "flags": [
+            "quest_blessingSalon"
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "blessing",
+          "text": "Mama, please come with me to the market. There is a hand dryer. Second-hand from London. I just want to touch it."
+        },
+        {
+          "type": "freeRoam",
+          "objective": "Walk with Blessing to the market.",
+          "goal": {
+            "reach": "market"
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "The dryer is pink and missing a knob. Blessing holds it like a baby. She tells you about her mother in Benin, who plaits hair under a mango tree for ₦500 and sings the whole time."
+        },
+        {
+          "type": "choice",
+          "speaker": "blessing",
+          "text": "The seller says ₦12,000. Blessing has ₦3,400.",
+          "options": [
+            {
+              "text": "Pay the rest.",
+              "cost": 8600,
+              "effects": {
+                "changeStat": {
+                  "blessingBond": 14
+                },
+                "setFlag": "boughtDryer",
+                "noticedBy": [
+                  "Blessing"
+                ]
+              }
+            },
+            {
+              "text": "\"Save for it. You will appreciate it more.\"",
+              "effects": {
+                "changeStat": {
+                  "blessingBond": 3
+                }
+              }
+            },
+            {
+              "text": "Bargain the seller down to ₦7,000 for her, then let her pay.",
+              "effects": {
+                "changeStat": {
+                  "blessingBond": 10,
+                  "sugarRep": 2
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "blessing",
+          "text": "Thank you, Mama.",
+          "variants": [
+            {
+              "if": "boughtDryer",
+              "text": "(She plugs it into Mama Put's socket right there to test it. It works. She screams. Mama Put screams back.)"
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "@resume"
+        }
+      ]
+    },
+    "kokoroRing": {
+      "beats": [
+        {
+          "type": "setFlag",
+          "flags": [
+            "quest_kokoroRing"
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "kokoro",
+          "text": "Mama. (He is awake. That alone is news.) Before Sugar Palace I was a boxer. \"Kokoro of Ajegunle\". Seven fights, six wins. You want to see if the old man still has it?"
+        },
+        {
+          "type": "startMode",
+          "mode": "fight",
+          "params": {
+            "opponent": "professorSpar",
+            "difficulty": 1
+          },
+          "results": {
+            "won": {
+              "changeStat": {
+                "staffTrust": 4
+              },
+              "setFlag": "beatKokoro",
+              "toast": "Kokoro sits on the floor laughing. \"Mama! Where did you learn that?\""
+            },
+            "lost": {
+              "changeStat": {
+                "staffTrust": 6
+              },
+              "toast": "Kokoro helps you up very gently, like an egg."
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "kokoro",
+          "text": "I stopped because my daughter saw me bleed once and cried for two days. (Pause.) I sleep at your gate because it is the only job where nobody hits me."
+        },
+        {
+          "type": "choice",
+          "speaker": "kokoro",
+          "text": "He looks at the floor.",
+          "options": [
+            {
+              "text": "\"From today, you are head of security. Real salary.\"",
+              "cost": 10000,
+              "effects": {
+                "changeStat": {
+                  "staffTrust": 8,
+                  "sugarRep": 3
+                },
+                "setFlag": "kokoroPromoted",
+                "noticedBy": [
+                  "Kokoro"
+                ]
+              }
+            },
+            {
+              "text": "\"Then sleep, Kokoro. You have earned it.\"",
+              "effects": {
+                "changeStat": {
+                  "staffTrust": 4
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "@resume"
+        }
+      ]
+    },
+    "kemiExam": {
+      "beats": [
+        {
+          "type": "setFlag",
+          "flags": [
+            "quest_kemiExam"
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "kemi",
+          "text": "Mama, the nursing school entrance exam is on Saturday. English and General Studies. Can you ask me questions? Nobody else here can read the book without laughing."
+        },
+        {
+          "type": "startMode",
+          "mode": "exam",
+          "params": {
+            "bank": "gst101",
+            "count": 5,
+            "seconds": 16
+          },
+          "results": {
+            "perfect": {
+              "changeStat": {
+                "staffTrust": 8
+              }
+            },
+            "passed": {
+              "changeStat": {
+                "staffTrust": 5
+              }
+            },
+            "failed": {
+              "changeStat": {
+                "staffTrust": 3
+              }
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "kemi",
+          "text": "(She closes the book.) My mother wanted me to be a nurse. Then she got sick, and I came to Lagos to pay for her drugs, and now I am here. (She smiles.) Saturday, I start becoming what she wanted."
+        },
+        {
+          "type": "choice",
+          "speaker": "kemi",
+          "text": "The form costs ₦7,500.",
+          "options": [
+            {
+              "text": "Pay for her exam form.",
+              "cost": 7500,
+              "effects": {
+                "changeStat": {
+                  "staffTrust": 10,
+                  "conscience": 4
+                },
+                "setFlag": "paidKemiForm",
+                "noticedBy": [
+                  "Kemi"
+                ]
+              }
+            },
+            {
+              "text": "\"Good luck, my dear.\"",
+              "effects": {
+                "changeStat": {
+                  "staffTrust": 2
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "@resume"
+        }
+      ]
+    },
+    "adaDream": {
+      "beats": [
+        {
+          "type": "setFlag",
+          "flags": [
+            "quest_adaDream"
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ada",
+          "text": "{name}, close your eyes. (You close them.) Now open. (She holds up a sketchbook. Dresses. Hundreds of them.) Don't laugh."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ada",
+          "text": "Yaba Tech has a fashion course. ₦45,000 a year. I have ₦11,000 and a sewing machine my aunty gave me in 2015. (She laughs at herself before you can.)"
+        },
+        {
+          "type": "choice",
+          "speaker": "ada",
+          "text": "She is waiting to see if you laugh.",
+          "options": [
+            {
+              "text": "\"These are good, Ada. Really good.\" Look at every page.",
+              "effects": {
+                "changeStat": {
+                  "friendBond": 10
+                },
+                "noticedBy": [
+                  "Ada"
+                ]
+              }
+            },
+            {
+              "text": "Put ₦5,000 inside the sketchbook when she isn't looking.",
+              "cost": 5000,
+              "effects": {
+                "changeStat": {
+                  "friendBond": 12
+                }
+              }
+            },
+            {
+              "text": "\"Fashion na hobby. Shop dey pay.\"",
+              "effects": {
+                "changeStat": {
+                  "friendBond": -6
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "@resume"
+        }
+      ]
+    },
+    "professorPast": {
+      "beats": [
+        {
+          "type": "setFlag",
+          "flags": [
+            "quest_professorPast"
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "professor",
+          "text": "You want to know why they call me Professor? (He pours two cups of Garba's tea.) Because I was one. Mathematics. University of Ibadan. 1994 to 2003."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "professor",
+          "text": "ASUU strike. Nine months, no salary. Then another strike. My wife sold her gold. Then my car. Then I came here to \"do something small\" until the strike ended. (He drinks.) It ended in 2004. I didn't go back."
+        },
+        {
+          "type": "choice",
+          "speaker": "professor",
+          "text": "He is looking at the danfos like equations he solved a long time ago.",
+          "options": [
+            {
+              "text": "\"Teach me. Mathematics. Anything.\"",
+              "effects": {
+                "changeStat": {
+                  "mentorBond": 12
+                },
+                "setFlag": "professorTeaches",
+                "noticedBy": [
+                  "Professor"
+                ]
+              }
+            },
+            {
+              "text": "\"Why didn't you go back?\"",
+              "effects": {
+                "changeStat": {
+                  "mentorBond": 8
+                }
+              }
+            },
+            {
+              "text": "Pay for the tea, and say nothing.",
+              "cost": 200,
+              "effects": {
+                "changeStat": {
+                  "mentorBond": 6
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "professor",
+          "text": "(He smiles for the first time in the conversation.) Rule fourteen: everybody here can count money. Very few can count consequences. Lesson one starts tomorrow, 5 a.m.",
+          "if": "professorTeaches"
+        },
+        {
+          "type": "goto",
+          "scene": "@resume"
+        }
+      ]
+    },
+    "chinweWalk": {
+      "beats": [
+        {
+          "type": "setFlag",
+          "flags": [
+            "quest_chinweWalk"
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "chinwe",
+          "text": "Emeka. Walk with me to the stream path. Like we used to before Lagos got into your head."
+        },
+        {
+          "type": "freeRoam",
+          "objective": "Walk with Chinwe to the village square.",
+          "goal": {
+            "reach": "square"
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "chinwe",
+          "text": "Do you remember what we planned? A shop by the junction. Cloth on one side, provisions on the other. Our children doing homework behind the counter."
+        },
+        {
+          "type": "choice",
+          "speaker": "chinwe",
+          "text": "She is not asking if you remember. She is asking if you still want it.",
+          "options": [
+            {
+              "text": "\"I still want it. Exactly that.\"",
+              "effects": {
+                "changeStat": {
+                  "chinweBond": 12
+                },
+                "noticedBy": [
+                  "Chinwe"
+                ]
+              }
+            },
+            {
+              "text": "\"Lagos is bigger than a shop by the junction, Chinwe.\"",
+              "effects": {
+                "changeStat": {
+                  "chinweBond": -8
+                }
+              }
+            },
+            {
+              "text": "Take her hand. Say nothing for a long time.",
+              "effects": {
+                "changeStat": {
+                  "chinweBond": 8
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "@resume"
+        }
+      ]
+    },
+    "nneStory": {
+      "beats": [
+        {
+          "type": "setFlag",
+          "flags": [
+            "quest_nneStory"
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "nneEmeka",
+          "text": "Sit, my son. (She is shelling egusi. She doesn't look up.) Your father. You never asked me how he really died."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "nneEmeka",
+          "text": "Everybody says \"sickness\". It was the debt. He borrowed for your school fees from a man in Onitsha, and when he could not pay, he worked until his heart said enough."
+        },
+        {
+          "type": "choice",
+          "speaker": "nneEmeka",
+          "text": "She keeps shelling. Her hands don't stop.",
+          "options": [
+            {
+              "text": "\"Then I will pay every kobo, Nne. Clean.\"",
+              "effects": {
+                "changeStat": {
+                  "motherBond": 12,
+                  "conscience": 6
+                },
+                "noticedBy": [
+                  "Nne"
+                ]
+              }
+            },
+            {
+              "text": "\"Why are you telling me now?\"",
+              "effects": {
+                "changeStat": {
+                  "motherBond": 8
+                }
+              }
+            },
+            {
+              "text": "Help her shell the egusi. All of it.",
+              "effects": {
+                "changeStat": {
+                  "motherBond": 10
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "@resume"
+        }
+      ]
+    },
+    "tamaraLibrary": {
+      "beats": [
+        {
+          "type": "setFlag",
+          "flags": [
+            "quest_tamaraLibrary"
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "tamara",
+          "text": "Library, 4 p.m. I have a statistics test and you have a face that looks like it understands statistics."
+        },
+        {
+          "type": "freeRoam",
+          "objective": "Meet Tamara at the library.",
+          "goal": {
+            "reach": "library"
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "She does not need help with statistics. She needs somebody to sit next to her while she doesn't look at her phone, where her father has sent eleven messages about her \"future\"."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "tamara",
+          "text": "Everybody thinks my life is easy. (She draws a tiny house in the margin.) My dad has already chosen my husband, my job and my church. I get to choose my shoes."
+        },
+        {
+          "type": "choice",
+          "speaker": "tamara",
+          "text": "She turns the drawing towards you.",
+          "options": [
+            {
+              "text": "Tell her about your mother's akara stall. The real thing.",
+              "effects": {
+                "changeStat": {
+                  "tamaraBond": 12,
+                  "cover": -6
+                },
+                "noticedBy": [
+                  "Tamara"
+                ]
+              }
+            },
+            {
+              "text": "Draw a second house next to hers.",
+              "effects": {
+                "changeStat": {
+                  "tamaraBond": 10
+                }
+              }
+            },
+            {
+              "text": "\"At least your shoes are nice.\"",
+              "effects": {
+                "changeStat": {
+                  "tamaraBond": 4
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "@resume"
+        }
+      ]
+    }
+  },
+  "common": true
+}

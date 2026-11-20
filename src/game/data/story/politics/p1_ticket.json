@@ -1,0 +1,527 @@
+{
+  "id": "p1_ticket",
+  "campaign": "politics",
+  "world": "iyanaWahala",
+  "act": 1,
+  "number": 1,
+  "title": "Chapter 1 — The Ticket",
+  "description": "A godfather, a party ticket, a wife who knows you too well, and the market women who decide everything.",
+  "startScene": "open",
+  "scenes": {
+    "open": {
+      "beats": [
+        {
+          "type": "cutscene",
+          "cards": [
+            {
+              "title": "Iyana-Wahala Ward",
+              "text": "Population: loud. Voters: forty-one thousand. Toilets in the market: one, and it has a padlock."
+            },
+            {
+              "title": "{name}",
+              "text": "Civics teacher for eleven years. Chairman of the PTA for six. The man everybody calls when somebody needs to shout at a government office politely."
+            },
+            {
+              "title": "Seven weeks",
+              "text": "The councillorship election is in seven weeks. The incumbent, Hon. Owó Ńlá, has held the seat for twelve years and the market toilet key for ten."
+            }
+          ]
+        },
+        {
+          "type": "setFlag",
+          "flags": [
+            "campaign_politics"
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "A Prado is parked outside your gate. Prados do not park outside your gate."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "The driver holds the door like it is a church. \"Baba Oko wants to see you. Now now.\""
+        },
+        {
+          "type": "goto",
+          "scene": "oko"
+        }
+      ],
+      "location": "mamaPut",
+      "time": "dawn",
+      "positions": {
+        "funke": [
+          -6.8,
+          8.6,
+          200
+        ]
+      }
+    },
+    "oko": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Baba Oko's parlour has three air conditioners and two of them are only for show. He is eating boiled yam with a silver fork."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "babaOko",
+          "text": "Teacher. Sit. You know why you are here?"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "player",
+          "text": "If I knew, Baba, I would have worn my better shirt."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "babaOko",
+          "text": "(He laughs, a big laugh with nothing behind it.) You talk well. The people like you. Owó Ńlá is old, and old men forget who fed them."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "babaOko",
+          "text": "The party ticket for this ward is in my pocket. I can put it in yours. All I ask is that you remember. When contracts come, you remember Baba Oko."
+        },
+        {
+          "type": "choice",
+          "speaker": "babaOko",
+          "text": "Well, Teacher?",
+          "options": [
+            {
+              "text": "Kneel. \"Baba, I will never forget.\"",
+              "effects": {
+                "changeStat": {
+                  "godfather": 25,
+                  "conscience": -6,
+                  "votes": 3
+                },
+                "setFlag": "tookTicket",
+                "remember": {
+                  "okoDeal": "knelt"
+                },
+                "noticedBy": [
+                  "Baba Oko"
+                ]
+              }
+            },
+            {
+              "text": "\"I will take the ticket. The contracts we will discuss when there is something to share.\"",
+              "effects": {
+                "changeStat": {
+                  "godfather": 8,
+                  "votes": 2
+                },
+                "setFlag": [
+                  "tookTicket",
+                  "ownTerms"
+                ],
+                "remember": {
+                  "okoDeal": "terms"
+                }
+              }
+            },
+            {
+              "text": "\"Keep the ticket, Baba. I will run on my own feet.\"",
+              "effects": {
+                "changeStat": {
+                  "godfather": -30,
+                  "conscience": 8
+                },
+                "setFlag": "noGodfather",
+                "remember": {
+                  "okoDeal": "refused"
+                },
+                "goto": "refused"
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "babaOko",
+          "text": "Good. My people will print the posters. Your face, my colours. Go home and tell your wife she married a councillor."
+        },
+        {
+          "type": "goto",
+          "scene": "home"
+        }
+      ],
+      "location": "richStreet",
+      "positions": {
+        "babaOko": [
+          29.5,
+          23,
+          220
+        ]
+      }
+    },
+    "refused": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "babaOko",
+          "text": "(He puts the fork down very gently, which is worse than throwing it.) Feet. Hm. Feet get tired, Teacher. Speeches do not pay for posters."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "babaOko",
+          "text": "There is an independent ticket. The nomination form is ₦100,000. Maybe your feet have savings."
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "The form is ₦100,000.",
+          "options": [
+            {
+              "text": "Pay for the form yourself.",
+              "cost": 100000,
+              "effects": {
+                "changeStat": {
+                  "conscience": 4
+                },
+                "setFlag": "paidOwnForm"
+              }
+            },
+            {
+              "text": "\"I will be back with it, Baba.\"",
+              "effects": {
+                "setFlag": "formLater"
+              }
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "home"
+        }
+      ],
+      "location": "richStreet",
+      "positions": {
+        "babaOko": [
+          29.5,
+          23,
+          220
+        ]
+      }
+    },
+    "home": {
+      "beats": [
+        {
+          "type": "setFlag",
+          "flags": [
+            "funkeAround"
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Funke is folding ankara at the window, the way she folds everything: as if it will be inspected."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "funke",
+          "text": "You went to Baba Oko. (Not a question.) Mrs. Adeyemi saw the Prado. Mrs. Adeyemi sees everything."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "funke",
+          "text": "So. Are you a politician now?"
+        },
+        {
+          "type": "choice",
+          "speaker": "funke",
+          "text": "She is still folding. She has folded the same wrapper three times.",
+          "options": [
+            {
+              "text": "\"Nothing will change, Funke. I am still me.\"",
+              "effects": {
+                "changeStat": {
+                  "wifeBond": -4
+                },
+                "remember": {
+                  "funkeTold": "nothing"
+                }
+              }
+            },
+            {
+              "text": "Tell her everything: the ticket, and what Baba Oko wants back.",
+              "effects": {
+                "changeStat": {
+                  "wifeBond": 10,
+                  "conscience": 3
+                },
+                "setFlag": "toldFunke",
+                "remember": {
+                  "funkeTold": "everything"
+                },
+                "noticedBy": [
+                  "Funke"
+                ]
+              }
+            },
+            {
+              "text": "\"I am doing it for us. For the shop you want.\"",
+              "effects": {
+                "changeStat": {
+                  "wifeBond": 3
+                },
+                "remember": {
+                  "funkeTold": "forUs"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "funke",
+          "text": "Hm.",
+          "variants": [
+            {
+              "if": "toldFunke",
+              "text": "(She puts the wrapper down at last.) Then I will tell you a thing too. If you start lying to me, I will know before you finish the sentence."
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "funke",
+          "text": "Go and find Seyi. If you are going to do this foolishness, do it with somebody who knows how."
+        },
+        {
+          "type": "goto",
+          "scene": "seyi"
+        }
+      ],
+      "location": "mamaPut",
+      "time": "day",
+      "positions": {
+        "funke": [
+          -6.8,
+          8.6,
+          200
+        ]
+      }
+    },
+    "seyi": {
+      "beats": [
+        {
+          "type": "setFlag",
+          "flags": [
+            "seyiAround"
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Seyi \"Spin\" Balogun has run four campaigns. Two of the candidates won. One of them is in Dubai, and one of them is in Kirikiri. Seyi says both count as experience."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "seyi",
+          "text": "Teacher! I hear say you wan enter politics. (He shakes your hand with both of his.) Politics is a market. You are the product. The people are customers. And customers buy with their stomach first and their head last."
+        },
+        {
+          "type": "choice",
+          "speaker": "seyi",
+          "text": "My fee is ₦30,000 a week. I am worth it.",
+          "options": [
+            {
+              "text": "Hire him properly.",
+              "cost": 30000,
+              "effects": {
+                "changeStat": {
+                  "seyiBond": 10
+                },
+                "setFlag": "seyiHired",
+                "noticedBy": [
+                  "Seyi"
+                ]
+              }
+            },
+            {
+              "text": "\"I cannot pay you yet. Work for the poster: your name in small print.\"",
+              "effects": {
+                "changeStat": {
+                  "seyiBond": -5
+                },
+                "setFlag": "seyiVolunteer"
+              }
+            },
+            {
+              "text": "\"Why do you really do this, Seyi?\"",
+              "effects": {
+                "changeStat": {
+                  "seyiBond": 6
+                },
+                "setFlag": "askedSeyi"
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "seyi",
+          "text": "(He stops smiling for a second.) My father was a councillor. Honest man. They finished him with one rumour. Now I make sure the honest ones learn to fight. ...Or the dishonest ones pay well. Either way I eat.",
+          "if": "askedSeyi"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "seyi",
+          "text": "Rule one: the market women. If Mama Titi says you are good, the whole market votes like one person. Go and see her. Go humble."
+        },
+        {
+          "type": "freeRoam",
+          "objective": "Walk to the market and find Mama Titi, leader of the market women.",
+          "goal": {
+            "talkTo": "mamaTiti"
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "mamaTiti"
+        }
+      ],
+      "location": "frontStop",
+      "positions": {
+        "seyi": [
+          -14.6,
+          -6.2,
+          200
+        ]
+      }
+    },
+    "mamaTiti": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "mamaTiti",
+          "text": "Ehen. Another one. (She doesn't look up from her pepper.) Owó Ńlá came in 2014. He promised toilets. We are still holding it."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "mamaTiti",
+          "text": "Task Force collects money from us every Monday. The rain enters the stalls. The children sell instead of school. Tell me something new, Teacher."
+        },
+        {
+          "type": "choice",
+          "speaker": "mamaTiti",
+          "text": "The other women have stopped selling to listen.",
+          "options": [
+            {
+              "text": "\"Toilets in six months, or you can come and pack my house.\"",
+              "effects": {
+                "changeStat": {
+                  "votes": 4
+                },
+                "setFlag": "promiseToilets",
+                "remember": {
+                  "titiPromise": "toilets"
+                }
+              }
+            },
+            {
+              "text": "Put an envelope in her hand \"for the women's association\".",
+              "cost": 20000,
+              "effects": {
+                "changeStat": {
+                  "votes": 6,
+                  "scandal": 3,
+                  "conscience": -5
+                },
+                "setFlag": "paidMamaTiti",
+                "remember": {
+                  "titiPromise": "envelope"
+                }
+              }
+            },
+            {
+              "text": "Bring out a notebook. \"Tell me everything. One by one.\"",
+              "effects": {
+                "changeStat": {
+                  "votes": 2,
+                  "conscience": 4,
+                  "publicTrust": 6
+                },
+                "setFlag": "listenedTiti",
+                "remember": {
+                  "titiPromise": "listened"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "mamaTiti",
+          "text": "We will see.",
+          "variants": [
+            {
+              "if": "listenedTiti",
+              "text": "(She looks at the notebook, then at you, for a long time.) Nobody has written it down before. They only nod. Okay, Teacher. Write."
+            },
+            {
+              "if": "paidMamaTiti",
+              "text": "(The envelope disappears into her wrapper faster than a magician.) The association thanks you. The association has a long memory, Teacher. Both ways."
+            }
+          ]
+        },
+        {
+          "type": "freeRoam",
+          "objective": "Raise ₦100,000 for the independent nomination form (Seyi says: rallies, the owambe dance-off, a fundraiser at Rich Street). Then go back to Baba Oko's gate.",
+          "goal": {
+            "until": {
+              "stats": {
+                "money": ">= 100000"
+              }
+            }
+          },
+          "if": {
+            "flags": [
+              "formLater"
+            ]
+          }
+        },
+        {
+          "type": "changeStat",
+          "stats": {
+            "money": -100000
+          },
+          "if": {
+            "flags": [
+              "formLater"
+            ]
+          }
+        },
+        {
+          "type": "setFlag",
+          "flags": [
+            "paidOwnForm"
+          ],
+          "if": {
+            "flags": [
+              "formLater"
+            ]
+          }
+        },
+        {
+          "type": "endChapter",
+          "title": "The Ticket",
+          "summary": "You have a name on a ballot, a campaign manager with a strange past, and a market that is watching you with its arms folded.",
+          "next": "p2_stomach"
+        }
+      ],
+      "location": "market",
+      "positions": {
+        "mamaTiti": [
+          20.4,
+          -9.6,
+          260
+        ]
+      }
+    }
+  }
+}

@@ -1,18 +1,27 @@
 import { describe, it, expect } from 'vitest'
 import { QUESTS, availableQuests, questFrom, questState } from './quests.js'
 import quests from '../data/story/common/quests.json'
+import bonds from '../data/story/common/bonds.json'
 import characters from '../data/characters.json'
-import street from '../data/world/iyanaWahala.json'
+import campaigns from '../data/campaigns.json'
+const worlds = import.meta.glob('../data/world/*.json', { eager: true, import: 'default' })
+const worldOf = (campaign) => {
+  const id = (campaigns.campaigns || campaigns).find((c) => c.id === (campaign || 'areaBoy')).world
+  return Object.entries(worlds).find(([f]) => f.endsWith(`/${id}.json`))[1]
+}
+const commons = { quests, bonds }
 
 const game = (flags = {}, stats = {}) => ({ flags, stats: { friendBond: 0, day: 1, ...stats }, memory: {} })
 
 describe('side quests', () => {
-  it('every quest has a giver in the street and a starting scene', () => {
-    const npcs = new Set(street.npcs.map((n) => n.id))
+  it('every quest has a giver in its story\'s world and a starting scene', () => {
     for (const q of QUESTS) {
-      expect(npcs.has(q.giver), q.giver).toBe(true)
+      const npcs = new Set(worldOf(q.campaign).npcs.map((n) => n.id))
+      expect(npcs.has(q.giver), `${q.id}: ${q.giver}`).toBe(true)
       expect(characters[q.giver], q.giver).toBeTruthy()
-      expect(quests.scenes[q.start.split(':')[1]], q.start).toBeTruthy()
+      const [chapter, scene] = q.start.split(':')
+      expect(commons[chapter]?.common, q.start).toBe(true)
+      expect(commons[chapter].scenes[scene], q.start).toBeTruthy()
     }
   })
 

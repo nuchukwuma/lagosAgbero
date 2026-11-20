@@ -1,0 +1,424 @@
+{
+  "id": "p2_stomach",
+  "campaign": "politics",
+  "world": "iyanaWahala",
+  "act": 1,
+  "number": 2,
+  "title": "Chapter 2 — Stomach Infrastructure",
+  "description": "Rice or a town hall, a rally that needs a crowd, a radio interview with teeth, and an owambe where the votes dance.",
+  "startScene": "office",
+  "scenes": {
+    "office": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "The campaign office is a shop that used to sell phone accessories. Some of the screen protectors are still on the wall. Seyi has stacked rice bags up to the ceiling."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "seyi",
+          "text": "Two hundred bags. Your face on every one. Owó Ńlá gives rice, we give rice and a smile. People vote with their stomach.",
+          "variants": [
+            {
+              "if": "noGodfather",
+              "text": "I borrowed these from my cousin's warehouse. Two hundred bags. If we don't share them by Friday, he wants them back with interest. People vote with their stomach."
+            }
+          ]
+        },
+        {
+          "type": "choice",
+          "speaker": "seyi",
+          "text": "So? We share?",
+          "options": [
+            {
+              "text": "Share the rice. Your face on every bag.",
+              "cost": 40000,
+              "effects": {
+                "changeStat": {
+                  "votes": 6,
+                  "scandal": 4,
+                  "conscience": -4,
+                  "publicTrust": -2
+                },
+                "setFlag": "riceBags",
+                "remember": {
+                  "rice": "shared"
+                }
+              }
+            },
+            {
+              "text": "\"No rice. A town hall meeting. They ask, I answer.\"",
+              "effects": {
+                "changeStat": {
+                  "votes": 2,
+                  "conscience": 5,
+                  "publicTrust": 8,
+                  "seyiBond": -4
+                },
+                "setFlag": "townHall",
+                "remember": {
+                  "rice": "townHall"
+                }
+              }
+            },
+            {
+              "text": "\"Share it, but no faces, no party colours. Just rice.\"",
+              "cost": 40000,
+              "effects": {
+                "changeStat": {
+                  "votes": 3,
+                  "conscience": 2,
+                  "publicTrust": 4
+                },
+                "setFlag": "plainRice",
+                "remember": {
+                  "rice": "plain"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "townHall",
+          "if": "townHall"
+        },
+        {
+          "type": "goto",
+          "scene": "rally"
+        }
+      ],
+      "location": "frontStop",
+      "time": "day",
+      "positions": {
+        "seyi": [
+          -14.8,
+          -6,
+          200
+        ]
+      }
+    },
+    "townHall": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Forty people come to the town hall. Then a hundred. Then the man who runs the generator asks for diesel money and you pay it out of your own pocket while a grandmother asks why her pension stopped in 2019."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "mamaTiti",
+          "text": "He is not giving anything. He is just answering. (Somebody laughs.) It is strange. I like strange.",
+          "variants": [
+            {
+              "if": "paidMamaTiti",
+              "text": "He gave the association something. Now he is giving answers too. Two things in one week. Owó Ńlá never did two things in one year."
+            }
+          ]
+        },
+        {
+          "type": "changeStat",
+          "stats": {
+            "votes": 2
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "rally"
+        }
+      ],
+      "location": "market",
+      "positions": {
+        "mamaTiti": [
+          20.4,
+          -9.6,
+          260
+        ]
+      }
+    },
+    "rally": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "seyi",
+          "text": "Saturday rally at the Front Stop. A candidate without a crowd is a man talking to a wall. Go and gather the people. Drums, chants, keep the Task Force calm."
+        },
+        {
+          "type": "startMode",
+          "mode": "rally",
+          "params": {
+            "job": "crowd"
+          },
+          "results": {
+            "paid": {
+              "changeStat": {
+                "votes": 4,
+                "publicTrust": 3
+              },
+              "setFlag": "goodRally"
+            },
+            "faked": {
+              "changeStat": {
+                "votes": 1,
+                "scandal": 4
+              },
+              "setFlag": "fakedRally"
+            },
+            "failed": {
+              "changeStat": {
+                "votes": -2
+              }
+            },
+            "arrested": {
+              "changeStat": {
+                "scandal": 8,
+                "votes": -3
+              },
+              "setFlag": "rallyArrest"
+            },
+            "brawl": {
+              "changeStat": {
+                "scandal": 6,
+                "votes": -1
+              },
+              "setFlag": "rallyBrawl"
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "seyi",
+          "text": "Wahala FM wants you on air tonight. Ifeoma is presenting. Be careful with that one. She was a court reporter. She remembers everything you say and uses it at the worst time."
+        },
+        {
+          "type": "goto",
+          "scene": "radio"
+        }
+      ],
+      "location": "frontStop",
+      "time": "day",
+      "positions": {
+        "seyi": [
+          -14.8,
+          -6,
+          200
+        ]
+      }
+    },
+    "radio": {
+      "beats": [
+        {
+          "type": "setFlag",
+          "flags": [
+            "ifeomaAround"
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "The Wahala FM studio is a room above Baba Radio's stall. The foam on the walls is mostly egg trays. Ifeoma Nwankwo wears reading glasses she does not need and smiles like she knows your bank balance."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ifeoma",
+          "text": "Welcome, Teacher. Our listeners have questions. I have more. Shall we?"
+        },
+        {
+          "type": "startMode",
+          "mode": "bluff",
+          "params": {
+            "scenario": "pressFirst"
+          },
+          "results": {
+            "convinced": {
+              "changeStat": {
+                "votes": 4,
+                "ifeomaBond": 3
+              },
+              "setFlag": "pressWon"
+            },
+            "doubted": {
+              "changeStat": {
+                "votes": 1
+              }
+            },
+            "caught": {
+              "changeStat": {
+                "votes": -3,
+                "scandal": 6
+              },
+              "setFlag": "pressCaught"
+            },
+            "confessed": {
+              "changeStat": {
+                "ifeomaBond": 12,
+                "publicTrust": 10,
+                "votes": 2
+              },
+              "setFlag": "pressHonest"
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ifeoma",
+          "text": "(Off air, packing her notes.) You are not the worst I have interviewed this year. That is not a compliment. It is a warning.",
+          "variants": [
+            {
+              "if": "pressHonest",
+              "text": "(Off air, she takes off the glasses.) You told the truth on live radio. Nobody does that. Either you are very brave or very new. Come for suya one day. I want to know which."
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "owambe"
+        }
+      ],
+      "location": "teaTable",
+      "time": "dusk",
+      "positions": {
+        "ifeoma": [
+          -5,
+          -6.8,
+          200
+        ]
+      }
+    },
+    "owambe": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Saturday. Alhaja Kudi's 60th birthday at Mama Put. Owó Ńlá's nephew is on the dance floor in a gold agbada, and the whole ward is watching to see who will answer him."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "seyi",
+          "text": "This is not a party. This is the real debate. If you dance well, the aunties will campaign for you for free. If you dance badly, the video will campaign against you for free."
+        },
+        {
+          "type": "startMode",
+          "mode": "dance",
+          "params": {
+            "name": "Owó Ńlá's nephew",
+            "skill": 0.55,
+            "rival": "owoNla"
+          },
+          "results": {
+            "won": {
+              "changeStat": {
+                "votes": 4,
+                "publicTrust": 3
+              },
+              "setFlag": "wonOwambe",
+              "toast": "The aunties are spraying money. On you."
+            },
+            "lost": {
+              "changeStat": {
+                "votes": -1
+              },
+              "setFlag": "lostOwambe"
+            }
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "evening"
+        }
+      ],
+      "location": "mamaPut",
+      "time": "night",
+      "positions": {
+        "owoNla": [
+          -5,
+          9,
+          240
+        ]
+      }
+    },
+    "evening": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "It is past midnight. Funke is awake. The kitchen light is on, and the stew is cold."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "funke",
+          "text": "Mrs. Adeyemi sent me the owambe video. (She turns the phone so you can see.)",
+          "variants": [
+            {
+              "if": "lostOwambe",
+              "text": "Mrs. Adeyemi sent me the owambe video. Three thousand views. They are calling you \"Uncle Stiff Waist\". (She tries not to laugh and fails.)"
+            }
+          ]
+        },
+        {
+          "type": "choice",
+          "speaker": "funke",
+          "text": "You have not eaten at home in nine days.",
+          "options": [
+            {
+              "text": "Take her out tomorrow: Chicken Republic, the one with the AC.",
+              "cost": 8000,
+              "effects": {
+                "changeStat": {
+                  "wifeBond": 8
+                },
+                "setFlag": "funkeDate",
+                "noticedBy": [
+                  "Funke"
+                ]
+              }
+            },
+            {
+              "text": "Sit. Eat the cold stew with her. Ask about her shop.",
+              "effects": {
+                "changeStat": {
+                  "wifeBond": 6,
+                  "conscience": 2
+                },
+                "setFlag": "funkeShop"
+              }
+            },
+            {
+              "text": "\"After the election, Funke. I promise.\"",
+              "effects": {
+                "changeStat": {
+                  "wifeBond": -6
+                },
+                "remember": {
+                  "funkePromise": "after"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "funke",
+          "text": "Customers are fine. The rent is not. And the landlord's wife now greets me like I owe her. Because we are \"politicians\" now. (She eats a piece of meat off your plate.) Don't look at me. You are not hungry. I can see.",
+          "if": "funkeShop"
+        },
+        {
+          "type": "endChapter",
+          "title": "Stomach Infrastructure",
+          "summary": "The ward has seen your face: on rice, on a stage, on the radio, on a dance floor. Now they are deciding what it means.",
+          "next": "p3_warChest"
+        }
+      ],
+      "location": "mamaPut",
+      "time": "night",
+      "positions": {
+        "funke": [
+          -6.8,
+          8.6,
+          200
+        ]
+      }
+    }
+  }
+}

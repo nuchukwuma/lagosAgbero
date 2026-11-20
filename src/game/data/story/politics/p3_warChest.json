@@ -1,0 +1,443 @@
+{
+  "id": "p3_warChest",
+  "campaign": "politics",
+  "world": "iyanaWahala",
+  "act": 1,
+  "number": 3,
+  "title": "Chapter 3 — The War Chest",
+  "description": "Campaigns eat money. Donors want favours, Baba Oko wants a contract, Funke finds an envelope, and Owó Ńlá sends his boys.",
+  "startScene": "broke",
+  "scenes": {
+    "broke": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "seyi",
+          "text": "Teacher, we are finished. (He shows you the books, a school exercise book with a cartoon on the cover.) Posters, agents, diesel, Mama Titi's \"association\", the boys who guard the posters at night. We need ₦120,000 by next week or the campaign dies of hunger."
+        },
+        {
+          "type": "choice",
+          "speaker": "seyi",
+          "text": "Where does the money come from?",
+          "options": [
+            {
+              "text": "\"Call Baba Oko.\"",
+              "requires": "tookTicket",
+              "effects": {
+                "changeStat": {
+                  "godfather": 10,
+                  "money": 120000
+                },
+                "setFlag": "okoMoney",
+                "remember": {
+                  "warChest": "oko"
+                }
+              }
+            },
+            {
+              "text": "\"We hold a fundraiser on Rich Street. We sell... access.\"",
+              "effects": {
+                "setFlag": "fundraiser",
+                "remember": {
+                  "warChest": "fundraiser"
+                }
+              }
+            },
+            {
+              "text": "\"We raise it ourselves. Rallies, dance-offs, small donations. Slow and clean.\"",
+              "effects": {
+                "changeStat": {
+                  "conscience": 4,
+                  "seyiBond": -2
+                },
+                "setFlag": "raiseClean",
+                "remember": {
+                  "warChest": "clean"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "fundraiser",
+          "if": "fundraiser"
+        },
+        {
+          "type": "goto",
+          "scene": "raiseClean",
+          "if": "raiseClean"
+        },
+        {
+          "type": "goto",
+          "scene": "okoDemand"
+        }
+      ],
+      "location": "frontStop",
+      "positions": {
+        "seyi": [
+          -14.8,
+          -6,
+          200
+        ]
+      }
+    },
+    "fundraiser": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Rich Street. A garden with fairy lights and a man whose only job is to refill the Chapman. The donors don't give money. They buy promises: a road contract, a permit, a \"consideration\"."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "seyi",
+          "text": "Name your price for each promise. Too cheap and you look desperate. Too expensive and they go to Owó Ńlá. He is having a sale."
+        },
+        {
+          "type": "startMode",
+          "mode": "haggle",
+          "params": {
+            "goods": "favours",
+            "customers": 5
+          },
+          "results": {
+            "good": {
+              "changeStat": {
+                "scandal": 8,
+                "conscience": -6
+              },
+              "setFlag": "soldFavours"
+            },
+            "ok": {
+              "changeStat": {
+                "scandal": 5,
+                "conscience": -4
+              },
+              "setFlag": "soldFavours"
+            },
+            "bad": {
+              "changeStat": {
+                "scandal": 2
+              }
+            }
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "okoDemand"
+        }
+      ],
+      "location": "richStreet",
+      "time": "night"
+    },
+    "raiseClean": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "seyi",
+          "text": "Clean money is slow money, Teacher. ₦120,000. Rallies at the Front Stop, the owambe dance-offs, anything honest. Tell me when the box is full."
+        },
+        {
+          "type": "freeRoam",
+          "objective": "Raise ₦120,000 for the campaign the clean way (rallies, dance-offs, small jobs). Then go back to Seyi at the office.",
+          "goal": {
+            "until": {
+              "stats": {
+                "money": ">= 120000"
+              }
+            }
+          }
+        },
+        {
+          "type": "changeStat",
+          "stats": {
+            "money": -120000,
+            "publicTrust": 6
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "seyi",
+          "text": "(He counts it twice.) Two hundred small donations. A pepper seller gave ₦200 and made me write her name down. ...Okay. Maybe clean money has a better smell."
+        },
+        {
+          "type": "goto",
+          "scene": "okoDemand"
+        }
+      ],
+      "location": "frontStop",
+      "positions": {
+        "seyi": [
+          -14.8,
+          -6,
+          200
+        ]
+      }
+    },
+    "okoDemand": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "A text from an unknown number: \"Baba says come.\" The Prado is already outside."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Baba Oko does not take no the first time. Or the second.",
+          "if": "noGodfather"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "babaOko",
+          "text": "Teacher. The market toilet contract, the one you are promising everybody. When you win, my nephew Wale will build it. ₦40 million. He has a company. It has a name and everything."
+        },
+        {
+          "type": "choice",
+          "speaker": "babaOko",
+          "text": "Sign here. It is just a letter of intention.",
+          "options": [
+            {
+              "text": "Sign it.",
+              "effects": {
+                "changeStat": {
+                  "godfather": 15,
+                  "conscience": -10,
+                  "scandal": 4
+                },
+                "setFlag": "signedContract",
+                "remember": {
+                  "toiletContract": "signed"
+                }
+              }
+            },
+            {
+              "text": "\"After I win, we will open a tender. Wale can bid like everybody.\"",
+              "effects": {
+                "changeStat": {
+                  "godfather": -15,
+                  "conscience": 6
+                },
+                "setFlag": "tenderPromise",
+                "remember": {
+                  "toiletContract": "tender"
+                }
+              }
+            },
+            {
+              "text": "Fold the letter and put it in your pocket. \"Let me read it at home.\"",
+              "effects": {
+                "changeStat": {
+                  "godfather": -4
+                },
+                "setFlag": "keptLetter",
+                "remember": {
+                  "toiletContract": "kept"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "babaOko",
+          "text": "(He watches you like a man watching a goat he has already paid for.) Good. Go well.",
+          "variants": [
+            {
+              "if": "tenderPromise",
+              "text": "(He smiles with his teeth only.) A tender. In Iyana-Wahala. You are a funny man, Teacher. Funny men are very good at funerals."
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "envelope"
+        }
+      ],
+      "location": "richStreet",
+      "positions": {
+        "babaOko": [
+          29.5,
+          23,
+          220
+        ]
+      }
+    },
+    "envelope": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Funke is standing at the kitchen table. On the table is a brown envelope. On the envelope, in Seyi's handwriting: \"Donor 4: the road permit\".",
+          "if": "soldFavours"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Funke is standing at the kitchen table. On the table is a folded letter on Baba Oko's letterhead. She found it in your trouser pocket, doing the washing.",
+          "if": {
+            "anyOf": [
+              "signedContract",
+              "keptLetter"
+            ],
+            "notFlags": [
+              "soldFavours"
+            ]
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Funke is standing at the kitchen table with your phone. Seyi texted at 2 a.m.: \"Baba Oko is not happy. Call him before he calls other people.\"",
+          "if": {
+            "notFlags": [
+              "soldFavours",
+              "keptLetter",
+              "signedContract"
+            ]
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "funke",
+          "text": "Explain it to me like I am one of your JSS 2 students."
+        },
+        {
+          "type": "choice",
+          "speaker": "funke",
+          "text": "She has not raised her voice. That is the frightening part.",
+          "options": [
+            {
+              "text": "Tell her the truth. All of it.",
+              "effects": {
+                "changeStat": {
+                  "wifeBond": 8,
+                  "conscience": 4
+                },
+                "setFlag": "truthEnvelope",
+                "noticedBy": [
+                  "Funke"
+                ]
+              }
+            },
+            {
+              "text": "\"It's campaign paperwork. Seyi's business.\"",
+              "effects": {
+                "changeStat": {
+                  "wifeBond": -10
+                },
+                "setFlag": "liedFunke",
+                "remember": {
+                  "funkeLie": "paperwork"
+                }
+              }
+            },
+            {
+              "text": "\"I needed it. Everybody does it. You don't understand this world.\"",
+              "effects": {
+                "changeStat": {
+                  "wifeBond": -6,
+                  "conscience": -3
+                },
+                "setFlag": "everybodyDoesIt"
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "funke",
+          "text": "Okay.",
+          "variants": [
+            {
+              "if": "liedFunke",
+              "text": "(Long pause.) I told you. I would know before you finished the sentence. (She goes to bed. You hear her lock the door, gently.)"
+            },
+            {
+              "if": "truthEnvelope",
+              "text": "(She sits down.) Thank you for not lying. Now I am frightened and angry at the same time, and you will have to sleep beside both."
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "attack"
+        }
+      ],
+      "location": "mamaPut",
+      "time": "night",
+      "positions": {
+        "funke": [
+          -6.8,
+          8.6,
+          200
+        ]
+      }
+    },
+    "attack": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Midnight. Glass breaks at the campaign office. Four boys in Owó Ńlá's colours are tearing down the posters, and one of them has the generator on his shoulder like a baby."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "seyi",
+          "text": "(On the phone, out of breath.) Teacher! They are carrying the generator! Come with your whole body!"
+        },
+        {
+          "type": "startMode",
+          "mode": "fight",
+          "params": {
+            "opponent": "thug",
+            "difficulty": 1
+          },
+          "results": {
+            "won": {
+              "changeStat": {
+                "votes": 3,
+                "publicTrust": 2
+              },
+              "setFlag": "defendedOffice",
+              "toast": "The boys run. Somebody filmed it. You look like a man who fights for his ward."
+            },
+            "lost": {
+              "changeStat": {
+                "votes": -1
+              },
+              "setFlag": "lostOffice"
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "seyi",
+          "text": "They took the generator.",
+          "variants": [
+            {
+              "if": "defendedOffice",
+              "text": "Teacher! (He is laughing and shaking.) You beat Owó Ńlá's boys with a campaign poster. This video will sell more than rice."
+            }
+          ]
+        },
+        {
+          "type": "endChapter",
+          "title": "The War Chest",
+          "summary": "You found the money, one way or another. Everybody who gave it is keeping a receipt in their head.",
+          "next": "p4_debate"
+        }
+      ],
+      "location": "frontStop",
+      "time": "night",
+      "positions": {
+        "seyi": [
+          -14.8,
+          -6,
+          200
+        ]
+      }
+    }
+  }
+}
