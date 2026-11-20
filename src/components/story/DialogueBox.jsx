@@ -12,7 +12,7 @@ import { voicesSupported } from '../../game/audio/voices.js'
 const CHARS_PER_SECOND = 45
 const reducedMotion = () => typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
 
-export default function DialogueBox({ view, onNext }) {
+export default function DialogueBox({ view, onNext, onUndo = null }) {
   const { text, speaker, speakerName, mood } = view
   const [shown, setShown] = useState(reducedMotion() ? text.length : 0)
   const done = shown >= text.length
@@ -84,6 +84,17 @@ export default function DialogueBox({ view, onNext }) {
           }}
         >
           <Icon name="sound" size={18} />
+        </button>
+      )}
+      {onUndo && (
+        <button
+          className="dialogue-undo"
+          onClick={(e) => {
+            e.stopPropagation()
+            onUndo()
+          }}
+        >
+          ↶ Change my answer
         </button>
       )}
       <p className="dialogue-text">{text.slice(0, shown)}</p>

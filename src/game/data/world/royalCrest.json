@@ -1338,6 +1338,44 @@
         "difficulty": 1
       },
       "where": "The back gate"
+    },
+    {
+      "id": "sellNotes",
+      "label": "SELL NOTES",
+      "icon": "naira",
+      "spot": "cafeteria",
+      "mode": "haggle",
+      "minutes": 60,
+      "params": {
+        "goods": "notes",
+        "customers": 6
+      },
+      "where": "The cafeteria"
+    },
+    {
+      "id": "tutorFresher",
+      "label": "TUTOR A FRESHER",
+      "icon": "quest",
+      "spot": "library",
+      "mode": "exam",
+      "minutes": 90,
+      "params": {
+        "bank": "gst101",
+        "count": 5
+      },
+      "where": "The library",
+      "results": {
+        "perfect": {
+          "changeStat": {
+            "money": 5000
+          }
+        },
+        "passed": {
+          "changeStat": {
+            "money": 2500
+          }
+        }
+      }
     }
   ],
   "mapLabels": {

@@ -111,10 +111,42 @@ function jump(ctx, state, target, events) {
   const p = resolveTarget(target, state.story)
   chapterOf(ctx, p.chapterId) // throws early on a bad target
   events.push({ type: 'scene', ...p })
+  const travel = walkNeeded(ctx, state.story, p)
+  if (travel) state = withStory(state, { detour: { kind: 'travel', to: travel } })
   // every scene start in a normal chapter is a checkpoint to retry from
   const checkpoint = ctx.chapters[p.chapterId].common ? state.story.checkpoint : { chapterId: p.chapterId, sceneId: p.sceneId }
   return markVisited(withSceneTime(ctx, withStory(state, { ...p, checkpoint })))
 }
+
+// ---------- detours: the player's own pace ----------
+// story.detour pauses the story in free roam until the player is ready:
+//   { kind: 'travel', to }      walk to where the next scene happens (or skip with an ad)
+//   { kind: 'raise', amount }   a choice costs more than you have: go and make it
+//   { kind: 'roam', next }      between chapters: free time before the next one
+// advance() ends a detour (the free-roam goal tracker calls it on arrival).
+
+const locationOf = (scene) => scene?.location ?? LEGACY_BACKGROUNDS[scene?.background]?.location ?? null
+const worldOfScene = (ctx, chapterId, scene) => scene?.world || ctx.chapters[chapterId]?.world || 'iyanaWahala'
+
+/** Walking to the next scene: only inside one chapter, same world, to a different spot. */
+function walkNeeded(ctx, story, p) {
+  if (!ctx.travel || !story.chapterId || p.chapterId !== story.chapterId) return null
+  const chapter = ctx.chapters[p.chapterId]
+  if (chapter.common) return null
+  const from = chapter.scenes[story.sceneId]
+  const to = chapter.scenes[p.sceneId]
+  if (!to || to.travel === false) return null
+  const a = locationOf(from)
+  const b = locationOf(to)
+  if (!a || !b || a === b) return null
+  if (worldOfScene(ctx, p.chapterId, from) !== worldOfScene(ctx, p.chapterId, to)) return null
+  // the scene already starts with "walk there yourself"
+  const first = to.beats?.[0]
+  if (first?.type === 'freeRoam' && first.goal?.reach === b) return null
+  return b
+}
+
+const placeName = (ctx, world, spot) => ctx.places?.[world]?.[spot] || String(spot).replace(/([A-Z])/g, ' $1').replace(/^./, (c) => c.toUpperCase())
 
 // ---------- callbacks & dialogue ----------
 /** A dialogue beat's final speaker/text, or null if it should be skipped. */
@@ -170,7 +202,7 @@ function pickWeighted(outcomes, state, random) {
 function run(ctx, state, events, random = Math.random) {
   for (let step = 0; step < MAX_STEPS; step++) {
     const { story } = state
-    if (story.ending || story.pendingMode || !story.chapterId) return state
+    if (story.ending || story.pendingMode || story.detour || !story.chapterId) return state
     const scene = sceneOf(ctx, story)
     const beat = scene.beats[story.beatIndex]
 
@@ -230,7 +262,7 @@ function visibleOptions(state, beat) {
       let lockedReason = null
       if (!meets) lockedReason = opt.lockedText || `Needs ${describeCondition(opt.requires)}`
       else if (!affordable) lockedReason = `You need ${formatNaira(cost)}`
-      return { index, text: interpolate(opt.text, state), cost, locked: Boolean(lockedReason), lockedReason }
+      return { index, text: interpolate(opt.text, state), cost, locked: Boolean(lockedReason), lockedReason, short: meets && !affordable } // short: only the money is missing
     })
     .filter(Boolean)
 }
@@ -279,6 +311,13 @@ export function interrupt(ctx, state, target) {
 /** Continue past a dialogue / news / cutscene / chapter-end beat. */
 export function advance(ctx, state, random) {
   const events = []
+  const detour = state.story.detour
+  if (detour) {
+    if (detour.kind === 'roam') return startChapter(ctx, withStory(state, { detour: null }), detour.next)
+    state = run(ctx, withStory(state, { detour: null }), events, random)
+    events.push({ type: 'autosave' })
+    return { state, events }
+  }
   const beat = currentBeat(ctx, state)
   if (!beat || !ADVANCEABLE.includes(beat.type)) return { state, events }
 
@@ -297,7 +336,7 @@ export function advance(ctx, state, random) {
 export function choose(ctx, state, index, random) {
   const events = []
   const beat = currentBeat(ctx, state)
-  if (beat?.type !== 'choice') return { state, events }
+  if (beat?.type !== 'choice' || state.story.detour) return { state, events }
   const option = visibleOptions(state, beat).find((o) => o.index === index)
   if (!option || option.locked) return { state, events }
 
@@ -312,6 +351,24 @@ export function choose(ctx, state, index, random) {
   state = run(ctx, state, events, random)
   events.push({ type: 'autosave' })
   return { state, events }
+}
+
+/** A choice costs more than the pocket holds: go and raise it, then come back to the same choice. */
+export function raiseMoney(ctx, state, index) {
+  const beat = currentBeat(ctx, state)
+  if (beat?.type !== 'choice' || state.story.detour) return { state, events: [] }
+  const option = visibleOptions(state, beat).find((o) => o.index === index)
+  if (!option || !option.cost || state.stats.money >= option.cost) return { state, events: [] }
+  if (!checkCondition(beat.options[index].requires, state)) return { state, events: [] }
+  return { state: withStory(state, { detour: { kind: 'raise', amount: option.cost } }), events: [{ type: 'autosave' }] }
+}
+
+/** At a chapter's end: free roam first, and start the next chapter whenever you like. */
+export function roamFirst(ctx, state) {
+  const beat = currentBeat(ctx, state)
+  if (beat?.type !== 'endChapter' || !beat.next || beat.ending || state.story.detour) return { state, events: [] }
+  const completed = [...state.story.completedChapters, state.story.chapterId]
+  return { state: withStory(state, { completedChapters: completed, detour: { kind: 'roam', next: beat.next } }), events: [{ type: 'autosave' }] }
 }
 
 /** A gameplay mode finished. result = { outcome, moneyChange, flags, stats, remember } */
@@ -355,6 +412,16 @@ export function renderView(ctx, state) {
     world: scene.world || chapter.world || 'iyanaWahala', // which 3D place this scene happens in
   }
 
+  if (story.detour) {
+    const d = story.detour
+    const key = `${story.chapterId}/${story.sceneId}/${story.beatIndex}/detour/${d.kind}`
+    // location null: no teleport while the player walks or roams
+    if (d.kind === 'travel') return { ...base, key, location: null, type: 'freeRoam', detour: 'travel', objective: `Make your way to ${placeName(ctx, base.world, d.to)}.`, goal: { reach: d.to } }
+    if (d.kind === 'raise') return { ...base, key, location: null, type: 'freeRoam', detour: 'raise', amount: d.amount, objective: `Raise ${formatNaira(d.amount)} (you have ${formatNaira(state.stats.money)}), then come back to it. Or go back now and choose something else.`, goal: { money: d.amount } }
+    const next = ctx.chapters[d.next]
+    return { ...base, key, location: null, type: 'freeRoam', detour: 'roam', nextTitle: next?.title || '', objective: `Free time. Hustle, explore, do side jobs. When you're ready: "${next?.title || 'the next chapter'}".`, goal: null }
+  }
+
   if (story.pendingMode) {
     const { mode, params, results } = story.pendingMode
     const key = `${story.chapterId}/${story.sceneId}/${story.beatIndex}/mode/${mode}`
@@ -389,7 +456,7 @@ export function renderView(ctx, state) {
     case 'freeRoam':
       return { ...base, key, type: 'freeRoam', objective: interpolate(beat.objective || '', state), goal: beat.goal || null }
     case 'endChapter':
-      return { ...base, key, type: 'chapterEnd', title: interpolate(beat.title || `End of ${chapter.title}`, state), summary: interpolate(beat.summary || '', state), recap: chapterRecap(ctx, state, story.chapterId) }
+      return { ...base, key, type: 'chapterEnd', canRoam: Boolean(beat.next && !beat.ending), title: interpolate(beat.title || `End of ${chapter.title}`, state), summary: interpolate(beat.summary || '', state), recap: chapterRecap(ctx, state, story.chapterId) }
     default:
       return { ...base, type: 'loading' }
   }

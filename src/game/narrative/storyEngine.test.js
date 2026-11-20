@@ -43,7 +43,7 @@ describe('story engine', () => {
     const view = engine.renderView(ctx, state)
     expect(view.type).toBe('cutscene')
     expect(view.cards[1].text).toContain('₦2,300')
-    expect(view.cards[1].text).toContain('₦850,000')
+    expect(view.cards[1].text).toContain('₦300,000')
   })
 
   it('charges for a choice, changes stats, remembers it and calls back later', () => {

@@ -39,6 +39,7 @@ const ctx = {
   characters: readJson(path.join(DATA, 'characters.json')),
   callbacks: readJson(path.join(DATA, 'callbacks.json')),
   endings: readJson(path.join(DATA, 'endings.json')),
+  travel: true, // play-throughs walk between spots too (the free-roam detours)
 }
 
 const worlds = {}

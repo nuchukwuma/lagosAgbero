@@ -6,8 +6,8 @@ export const STAT_DEFS = {
   money: { label: 'Pocket money', group: 'money', start: 2300, min: 0, max: Infinity },
   hustleMoney: { label: 'Hustle savings', group: 'money', start: 0, min: 0, max: Infinity },
   cultMoney: { label: 'Cult funds', group: 'money', start: 0, min: 0, max: Infinity },
-  debt: { label: "Mama's debt", group: 'money', start: 850000, min: 0, max: Infinity },
-  quota: { label: "Baba Ticket's daily share", group: 'money', start: 15000, min: 0, max: Infinity },
+  debt: { label: "Mama's debt", group: 'money', start: 300000, min: 0, max: Infinity },
+  quota: { label: "Baba Ticket's daily share", group: 'money', start: 10000, min: 0, max: Infinity },
   stopFee: { label: 'Your stop fee (per danfo)', group: 'money', start: 500, min: 100, max: 2000 },
 
   // body and street

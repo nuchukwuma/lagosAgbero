@@ -9,7 +9,7 @@ import { formatNaira } from '../../game/narrative/stats.js'
 // show a shrinking bar and pick `timeoutOption` when time runs out.
 // Keyboard: 1–9 picks an option.
 
-export default function ChoiceMenu({ view, onChoose }) {
+export default function ChoiceMenu({ view, onChoose, onRaise = null }) {
   const { text, speaker, speakerName, options, timeout, timeoutOption } = view
   const [left, setLeft] = useState(timeout || 0)
   const chosen = useRef(false)
@@ -88,15 +88,22 @@ export default function ChoiceMenu({ view, onChoose }) {
       ) : null}
       <div className="choice-options">
         {options.map((opt, i) => (
-          <button key={opt.index} className={`choice-btn ${opt.locked ? 'locked' : ''}`} onClick={() => pick(opt)} disabled={opt.locked}>
-            <span className="choice-num">{i + 1}</span>
-            <span className="choice-text">
-              {opt.locked && '🔒 '}
-              {opt.text}
-              {opt.locked && <small className="choice-lock">{opt.lockedReason}</small>}
-            </span>
-            {opt.cost > 0 && <span className="choice-cost">{formatNaira(opt.cost)}</span>}
-          </button>
+          <div key={opt.index} className="choice-row">
+            <button className={`choice-btn ${opt.locked ? 'locked' : ''}`} onClick={() => pick(opt)} disabled={opt.locked}>
+              <span className="choice-num">{i + 1}</span>
+              <span className="choice-text">
+                {opt.locked && '🔒 '}
+                {opt.text}
+                {opt.locked && <small className="choice-lock">{opt.lockedReason}</small>}
+              </span>
+              {opt.cost > 0 && <span className="choice-cost">{formatNaira(opt.cost)}</span>}
+            </button>
+            {opt.short && onRaise && !timeout && (
+              <button className="btn btn-small choice-raise" onClick={() => onRaise(opt.index)}>
+                Go and raise it
+              </button>
+            )}
+          </div>
         ))}
       </div>
     </div>

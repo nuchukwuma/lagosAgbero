@@ -26,6 +26,7 @@ import GameMenu from './GameMenu.jsx'
 import Toasts from './Toasts.jsx'
 import ModeHost from './ModeHost.jsx'
 import FavourButton from '../hud/FavourButton.jsx'
+import DetourBar from '../hud/DetourBar.jsx'
 import StoryMap from './StoryMap.jsx'
 import RotateHint, { useTurnHint } from '../hud/RotateHint.jsx'
 import { applyOrientation } from '../../game/systems/orientation.js'
@@ -45,7 +46,7 @@ function ActivityHost({ activity, onFinish }) {
 }
 
 export default function StoryScreen() {
-  const { game, view, toasts, error, advance, choose, save, load, quitToTitle, dismissToast, goTo, activity, startActivity, finishActivity } = useGameStore()
+  const { game, view, toasts, error, advance, choose, save, load, quitToTitle, dismissToast, goTo, activity, startActivity, finishActivity, lastChoice, undoChoice, raiseMoney, roamFirst } = useGameStore()
   const [overlay, setOverlay] = useState(null) // 'status' | 'menu' | 'shop:<vendor>' | null
   // phones: hold the screen the way the player chose (Settings → Screen)
   const orientation = useSettings((s) => s.orientation)
@@ -113,10 +114,10 @@ export default function StoryScreen() {
   let content = null
   switch (view.type) {
     case 'dialogue':
-      content = <DialogueBox view={view} onNext={advance} />
+      content = <DialogueBox view={view} onNext={advance} onUndo={lastChoice ? undoChoice : null} />
       break
     case 'choice':
-      content = <ChoiceMenu view={view} onChoose={choose} />
+      content = <ChoiceMenu view={view} onChoose={choose} onRaise={raiseMoney} />
       break
     case 'news':
       content = <NewsBroadcast view={view} onNext={advance} />
@@ -125,7 +126,7 @@ export default function StoryScreen() {
       content = <CutsceneCards view={view} onDone={advance} />
       break
     case 'chapterEnd':
-      content = <ChapterEndCard view={view} onNext={advance} onMap={() => setOverlay('map')} />
+      content = <ChapterEndCard view={view} onNext={advance} onMap={() => setOverlay('map')} onRoam={roamFirst} />
       break
     case 'mode':
       content = <ModeHost key={view.key} view={view} />
@@ -170,6 +171,7 @@ export default function StoryScreen() {
           }}
         />
       )}
+      {view.type === 'freeRoam' && view.detour && !overlay && !activity && <DetourBar view={view} />}
       {activity && <ActivityHost activity={activity} onFinish={finishActivity} />}
       {view.type === 'freeRoam' && !overlay && <Confrontation />}
       <EnergyTicker active={(view.type === 'freeRoam' || streetMode) && !overlay} />

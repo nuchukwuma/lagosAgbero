@@ -11,6 +11,7 @@ import jobs from './jobs.json'
 import drivers from './drivers.json'
 import characters from './characters.json'
 import registrySource from '../modes/modeRegistry.js?raw'
+import { GOODS } from '../modes/haggle/haggleLogic.js'
 import runnerSource from '../modes/runner/RunnerScene.jsx?raw'
 
 const chapters = import.meta.glob('./story/**/*.json', { eager: true, import: 'default' })
@@ -72,6 +73,7 @@ describe('data cross-references', () => {
       }
       // a chase after someone who isn't a named driver must say who it is
       if (u.mode === 'chase' && p.target) need(drivers.named[p.target.replace('driver_', '')] || p.name, u, `target "${p.target}" (not a named driver and no "name")`)
+      if (u.mode === 'haggle') need(GOODS[p.goods], u, `goods "${p.goods}"`)
       if (u.mode === 'runner' && p.chaser) need(CHASERS.has(p.chaser), u, `chaser "${p.chaser}"`)
     }
     expect(bad).toEqual([])

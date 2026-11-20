@@ -85,8 +85,34 @@ export const useGameStore = create((set, get) => {
     // Jump straight into any chapter (used by the dev chapter picker).
     startChapter: (chapterId) => dispatch((g) => engine.startChapter(storyCtx, g, chapterId)),
 
-    advance: () => dispatch((g) => engine.advance(storyCtx, g)),
-    choose: (index) => dispatch((g) => engine.choose(storyCtx, g, index)),
+    advance: () => {
+      dispatch((g) => engine.advance(storyCtx, g))
+      // "Change my answer" lasts a few lines after the choice, not for the whole chapter
+      const lc = get().lastChoice
+      if (lc) {
+        const steps = (lc.steps || 0) + 1
+        const t = get().view?.type
+        set({ lastChoice: steps > 3 || !['dialogue', 'news'].includes(t) ? null : { ...lc, steps } })
+      }
+    },
+    choose: (index) => {
+      // keep the moment before the pick, so "Change my answer" can undo it
+      const { game, view } = get()
+      dispatch((g) => engine.choose(storyCtx, g, index))
+      const after = get().view
+      set({ lastChoice: after?.type === 'dialogue' || after?.type === 'news' || after?.type === 'choice' ? { game, view } : null })
+    },
+    lastChoice: null,
+    /** Go back to the choice you just made and pick again (until the next choice, activity or chapter). */
+    undoChoice: () => {
+      const back = get().lastChoice
+      if (!back) return
+      set({ game: back.game, view: engine.renderView(storyCtx, back.game), lastChoice: null })
+    },
+    /** A choice you can't afford yet: go and raise the money in free roam. */
+    raiseMoney: (index) => dispatch((g) => engine.raiseMoney(storyCtx, g, index)),
+    /** At a chapter's end: free roam before the next chapter. */
+    roamFirst: () => dispatch((g) => engine.roamFirst(storyCtx, g)),
     modeResult: (result) => {
       clearPowerups() // used up
       dispatch((g) => engine.receiveModeResult(storyCtx, g, result))

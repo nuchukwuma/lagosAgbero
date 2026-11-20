@@ -1311,6 +1311,32 @@
         "difficulty": 1
       },
       "where": "The junction"
+    },
+    {
+      "id": "sellYams",
+      "label": "SELL YAMS",
+      "icon": "naira",
+      "spot": "square",
+      "mode": "haggle",
+      "minutes": 90,
+      "params": {
+        "goods": "yams",
+        "customers": 6
+      },
+      "where": "Nkwọ market"
+    },
+    {
+      "id": "sellPalmwine",
+      "label": "SELL PALM WINE",
+      "icon": "naira",
+      "spot": "palmwine",
+      "mode": "haggle",
+      "minutes": 90,
+      "params": {
+        "goods": "palmwine",
+        "customers": 5
+      },
+      "where": "The palm-wine shade"
     }
   ],
   "mapLabels": {

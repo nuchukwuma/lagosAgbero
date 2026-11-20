@@ -43,7 +43,7 @@
               "effects": {
                 "changeStat": {
                   "money": -999999,
-                  "chairmanTrust": -3
+                  "chairmanTrust": -1
                 }
               }
             },

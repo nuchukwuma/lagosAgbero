@@ -26,7 +26,7 @@ describe('day loop', () => {
     expect(v.type).toBe('freeRoam')
     expect(v.sceneId).toBe('street')
     expect(s.stats.day).toBe(day + 1)
-    expect(s.stats.money).toBe(20000 - 15000)
+    expect(s.stats.money).toBe(20000 - 10000) // Baba Ticket's ₦10,000 share
     expect(s.time).toBe(6 * 60)
   })
 

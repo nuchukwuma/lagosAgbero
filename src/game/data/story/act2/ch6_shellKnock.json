@@ -418,7 +418,7 @@
           "text": "(She waits. She is good at waiting.)",
           "options": [
             {
-              "text": "Tell her everything: Double-Double, Mama, the ₦850,000.",
+              "text": "Tell her everything: Double-Double, Mama, the ₦300,000.",
               "effects": {
                 "setFlag": "ada_knowsDebt",
                 "changeStat": {

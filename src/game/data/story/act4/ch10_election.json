@@ -40,7 +40,7 @@
           "scene": "debtGood",
           "if": {
             "stats": {
-              "debt": "<= 750000"
+              "debt": "<= 200000"
             }
           }
         },
@@ -318,7 +318,7 @@
         {
           "type": "dialogue",
           "speaker": "ada",
-          "text": "You told me you were running from poverty. You were running from ₦850,000. I found out. Lagos is small.",
+          "text": "You told me you were running from poverty. You were running from ₦300,000. I found out. Lagos is small.",
           "if": "ada_lied"
         },
         {

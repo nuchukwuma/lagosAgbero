@@ -3595,3 +3595,59 @@ svg .is-chase { fill: #e53935; stroke: #fff; stroke-width: 0.6; animation: map-p
   top: calc(max(8px, env(safe-area-inset-top)) + 56px);
   align-items: center;
 }
+/* the story waits for the player: skip the walk / back to the story / continue */
+.detour-bar {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: calc(max(12px, env(safe-area-inset-bottom)) + 150px);
+  z-index: 8;
+  display: flex;
+  gap: 8px;
+}
+@media (max-height: 520px) {
+  .detour-bar {
+    /* landscape phones: the free space between the stick and the buttons */
+    bottom: calc(max(10px, env(safe-area-inset-bottom)) + 6px);
+  }
+}
+.choice-row {
+  display: flex;
+  gap: 6px;
+  align-items: stretch;
+}
+.choice-row .choice-btn {
+  flex: 1;
+}
+.choice-raise {
+  flex: none;
+  align-self: center;
+}
+.dialogue-undo {
+  float: right;
+  margin: -2px 0 4px 8px;
+  font-size: 12px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(242, 195, 0, 0.6);
+  background: rgba(0, 0, 0, 0.35);
+  color: var(--danfo);
+  cursor: pointer;
+}
+.haggle .haggle-hint { font-style: italic; }
+.haggle .haggle-note { color: var(--danfo); font-weight: 700; }
+.haggle .haggle-price {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  font-size: 22px;
+  margin: 8px 0;
+}
+.haggle .haggle-steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
+  margin-bottom: 10px;
+}

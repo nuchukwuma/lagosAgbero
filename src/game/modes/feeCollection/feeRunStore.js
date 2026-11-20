@@ -41,7 +41,7 @@ const STOP_KINDS = [
 
 // How tired of you the drivers are: 0 fresh in the morning, 1 after 50 asked.
 // Tuned so a steady player (fee ₦500) makes about ₦6,500, ₦5,500, ₦4,500 in
-// the day's first three runs: Baba Ticket's ₦15,000 is in reach, each run
+// the day's first three runs: Baba Ticket's ₦10,000 is in reach, each run
 // harder than the last (feeRunStore.test.js).
 export const FATIGUE_PER = 50
 export const fatigueOf = (asked) => Math.min(1.2, asked / FATIGUE_PER)
@@ -129,7 +129,7 @@ export const useFeeRun = create((set, get) => {
     timeLeft: 150,
     schedule: [],
     collected: 0,
-    quota: 15000,
+    quota: 10000,
     stopFee: 500,
     fairFee: BASE_FAIR_FEE,
     notoriety: 0,
@@ -159,7 +159,7 @@ export const useFeeRun = create((set, get) => {
         timeLeft: params.duration ?? 150,
         schedule: buildSchedule(params),
         collected: 0,
-        quota: stats.quota ?? 15000,
+        quota: stats.quota ?? 10000,
         stopFee: stats.stopFee ?? 500,
         // fairFeeBonus: flashy / sharp clothes make drivers accept a bit more (wardrobe.js)
         fairFee: (params.fairFee ?? stats.fairFee ?? BASE_FAIR_FEE) + (params.fairFeeBonus || 0),

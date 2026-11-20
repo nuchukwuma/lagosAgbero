@@ -1,7 +1,7 @@
 import Icon from '../Icon.jsx'
 
 // End of a chapter: the summary, the choices you made, how much you explored.
-export default function ChapterEndCard({ view, onNext, onMap }) {
+export default function ChapterEndCard({ view, onNext, onMap, onRoam = null }) {
   const recap = view.recap
   return (
     <div className="cutscene">
@@ -30,8 +30,13 @@ export default function ChapterEndCard({ view, onNext, onMap }) {
               <Icon name="dodge" size={18} /> See your story map
             </button>
           )}
+          {view.canRoam && onRoam && (
+            <button className="btn" onClick={onRoam}>
+              Free roam first
+            </button>
+          )}
           <button className="btn btn-primary" onClick={onNext}>
-            Continue
+            {view.canRoam ? 'Next chapter' : 'Continue'}
           </button>
         </div>
       </div>

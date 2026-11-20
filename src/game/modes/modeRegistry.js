@@ -18,6 +18,7 @@ import RallyMode from './rally/RallyMode.jsx'
 import InitiationMode from './initiation/InitiationMode.jsx'
 import DriveMode from './drive/DriveMode.jsx'
 import BluffMode from './bluff/BluffMode.jsx'
+import HaggleMode from './haggle/HaggleMode.jsx'
 
 export const MODES = {
   feeCollection: FeeCollectionMode,
@@ -31,12 +32,13 @@ export const MODES = {
   drive: DriveMode,
   bluff: BluffMode,
   exam: InitiationMode, // the same timed-question screen, with a question bank
+  haggle: HaggleMode, // selling at a stall: name your price, read the customer
 }
 
 // Modes played inside the 3D street (the player walks with joystick/keys).
 export const WORLD_MODES = new Set(['feeCollection', 'chase', 'fight', 'runner', 'conductor', 'drive'])
 
-export const PLANNED_MODES = ['chase', 'fight', 'runner', 'raid', 'conductor', 'feeCollection', 'begging', 'rally', 'initiation', 'drive', 'bluff', 'exam', 'shop']
+export const PLANNED_MODES = ['chase', 'fight', 'runner', 'raid', 'conductor', 'feeCollection', 'begging', 'rally', 'initiation', 'drive', 'bluff', 'exam', 'haggle', 'shop']
 
 export function modeComponent(name) {
   return MODES[name] || StandInMode

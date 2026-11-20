@@ -330,7 +330,7 @@
         {
           "type": "dialogue",
           "speaker": "babaTicket",
-          "text": "Every day, you bring ₦15,000 for me. Wetin pass am, na your own. Wetin no reach am..."
+          "text": "Every day, you bring ₦10,000 for me. Wetin pass am, na your own. Wetin no reach am..."
         },
         {
           "type": "dialogue",
@@ -343,7 +343,7 @@
           "text": "You hear me?",
           "options": [
             {
-              "text": "\"Yes sir! ₦15,000 every day. You go see work.\"",
+              "text": "\"Yes sir! ₦10,000 every day. You go see work.\"",
               "effects": {
                 "changeStat": {
                   "chairmanTrust": 5
@@ -352,7 +352,7 @@
               }
             },
             {
-              "text": "\"Chairman, Back Side no fit bring ₦15,000. Make e be ₦10,000.\"",
+              "text": "\"Chairman, Back Side no fit bring ₦10,000. Make e be ₦7,000.\"",
               "effects": {
                 "changeStat": {
                   "chairmanTrust": -5,
@@ -892,7 +892,7 @@
           "text": "(whispering) If e no reach, no lie. Him fit smell lie like suya.",
           "if": {
             "stats": {
-              "money": "< 15000"
+              "money": "< 10000"
             }
           }
         },
@@ -1101,7 +1101,7 @@
           "effects": {
             "changeStat": {
               "fairFee": 100,
-              "quota": 3000
+              "quota": 2000
             }
           }
         },

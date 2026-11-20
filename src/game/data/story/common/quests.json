@@ -114,7 +114,7 @@
         {
           "type": "dialogue",
           "speaker": "player",
-          "text": "(Double-Double. The same name. The same smile. You feel ₦850,000 sit down on your chest.)"
+          "text": "(Double-Double. The same name. The same smile. You feel ₦300,000 sit down on your chest.)"
         },
         {
           "type": "choice",
@@ -180,7 +180,7 @@
         {
           "type": "dialogue",
           "speaker": "kelvin",
-          "text": "...Your mama? ₦850,000? (He looks at his phone for a long time.) Me, I just dey sell what dem sell me. Okay. I go... I go think am."
+          "text": "...Your mama? ₦300,000? (He looks at his phone for a long time.) Me, I just dey sell what dem sell me. Okay. I go... I go think am."
         },
         {
           "type": "setFlag",
