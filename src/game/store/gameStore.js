@@ -83,6 +83,13 @@ export const useGameStore = create((set, get) => {
       dispatch((g) => engine.startChapter(storyCtx, g, chapterId, sceneId))
     },
 
+    // Developer: play one game on its own (the All games screen). It runs in
+    // the sandbox street and comes back to that screen when it's done.
+    playGame: ({ mode, label, params = {} }) => {
+      get().devStart('dev_sandbox')
+      set({ activity: { id: `games-${mode}`, label: label || mode.toUpperCase(), mode, params, minutes: 0, fromGames: true, key: `games-${mode}-${Date.now()}` } })
+    },
+
     // Jump straight into any chapter (used by the dev chapter picker).
     startChapter: (chapterId) => dispatch((g) => engine.startChapter(storyCtx, g, chapterId)),
 
@@ -240,6 +247,7 @@ export const useGameStore = create((set, get) => {
       // wrecked bus into a foot chase ("then": { "mode", "params", "label" })
       const then = extra?.then
       const chained = then ? { id: `${activity.id}-then`, label: then.label || 'WAHALA', mode: then.mode, params: then.params || {}, minutes: then.minutes ?? 20, results: then.results, key: `${activity.id}-then-${Date.now()}` } : null
+      if (activity.fromGames) return set({ game: next, activity: null, screen: 'games', toasts: [] })
       set((s) => ({ game: next, activity: chained, toasts: [...s.toasts, { id: ++toastId, text: `${activity.label || 'Done'}: ${summary}` }, ...r.notices.map((t) => ({ id: ++toastId, text: t }))].slice(-4) }))
       saveGame('auto', next, summaryOf(next, get().view))
     },

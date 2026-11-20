@@ -279,6 +279,16 @@ Optional environment variables:
 Ads appear only as optional "favours" during free roam, never in dialogue,
 fights, chases or any mode. Real money can never buy anything in the story.
 
+## Play any game without the story (developer)
+
+The title screen has **All games (dev)** in development builds (`npm run dev`).
+In a built or deployed copy, open it once with `?dev` on the address
+(`…/?dev`) and the button stays on for that browser. It lists every mini-game
+(three or four per story) and every story mode (fights, dance battle, runner,
+chase, fee run, conductor, danfo drive, begging, rally, bluffs, exam, haggle,
+initiation). The **Story point** slider sets how far into a story you'd be, so
+you can feel the difficulty rise. Each game comes back to the list when it ends.
+
 ## Story, tests and animations
 
 ```bash
@@ -302,6 +312,12 @@ npm run assets:slim      # shrink the .glb models (1-byte normals and skin weigh
 - People (Men / Women packs and the RPG character pack), the bus, trees, bushes
   and rocks: Quaternius (quaternius.com), CC0.
 - Animations: Mixamo (Adobe) and Quaternius.
+- 2D people (mini-games, the platformer, dialogue portraits): *Character
+  Templates Pack* by [Eris Esra](https://erisesra.itch.io/character-templates-pack)
+  — free for games including commercial ones; not to be resold or redistributed
+  as an asset pack. Recoloured per character by `src/game/characters/eris.js`.
+- Platformer fallback sprites: Craftpix *Free Pixel Art Prototype Character
+  Sprites* (craftpix.net/file-licenses) and *Retro vehicle sprites 64x64*.
 - Driving handling (gearbox, spring steering) adapted from
   [Sketchbook](https://github.com/swift502/Sketchbook) by swift502, MIT licence.
 

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import Portrait from './Portrait.jsx'
+import { expressionFor } from '../../game/characters/eris.js'
 import Icon from '../Icon.jsx'
 import { useReadAloud, handsFree } from './useReadAloud.js'
 import { voicesSupported } from '../../game/audio/voices.js'
@@ -69,7 +70,7 @@ export default function DialogueBox({ view, onNext, onUndo = null }) {
     <div className={`dialogue-box ${narrator ? 'is-narrator' : ''}`} onClick={next} role="button" tabIndex={0}>
       {!narrator && (
         <div className="dialogue-speaker">
-          <Portrait speaker={speaker} />
+          <Portrait speaker={speaker} expression={expressionFor(mood, text)} />
           <span className="speaker-name">{speakerName}</span>
           {mood && <span className="speaker-mood">({mood})</span>}
         </div>

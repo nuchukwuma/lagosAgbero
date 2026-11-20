@@ -3887,3 +3887,15 @@ svg .is-chase { fill: #e53935; stroke: #fff; stroke-width: 0.6; animation: map-p
   .dance-btn.lane { height: 56px; }
   .dance-btn.lane .lane-arrow { font-size: 24px; }
 }
+
+/* developer: all games */
+.games-screen { overflow-y: auto; max-height: 100dvh; padding-bottom: 32px; }
+.games-level { display: flex; align-items: center; gap: 8px; margin: 6px 0 12px; }
+.games-level input { flex: 1; max-width: 260px; }
+.games-groups { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; width: min(100%, 980px); margin-bottom: 12px; }
+.games-group { display: flex; flex-direction: column; gap: 6px; background: rgba(0, 0, 0, 0.25); padding: 10px; border: 2px solid rgba(255, 255, 255, 0.08); }
+.games-group h3 { margin: 0 0 4px; font-size: 15px; color: #ffd23a; }
+.games-btn { text-align: left; font-size: 13px; padding: 8px 10px; }
+/* the pixel portrait: crisp, filling the disc down to the shoulders */
+.portrait.pixel-face { background: #3a2c22; }
+.portrait.pixel-face img { image-rendering: pixelated; object-fit: contain; padding: 4px 6px 0; box-sizing: border-box; object-position: 50% 100%; }

@@ -1,0 +1,78 @@
+{
+ "source": "Character Templates Pack by Eris Esra (erisesra.itch.io/character-templates-pack)",
+ "frame": 32,
+ "anims": {
+  "idle_front": {
+   "y": 0,
+   "frames": 4
+  },
+  "idle_side": {
+   "y": 32,
+   "frames": 4
+  },
+  "walk_front": {
+   "y": 64,
+   "frames": 4
+  },
+  "walk_side": {
+   "y": 96,
+   "frames": 4
+  },
+  "run_front": {
+   "y": 128,
+   "frames": 6
+  },
+  "run_side": {
+   "y": 160,
+   "frames": 6
+  },
+  "jump_front": {
+   "y": 192,
+   "frames": 5
+  },
+  "jump_side": {
+   "y": 224,
+   "frames": 5
+  },
+  "attack_front": {
+   "y": 256,
+   "frames": 7
+  },
+  "attack_side": {
+   "y": 288,
+   "frames": 7
+  },
+  "interact_front": {
+   "y": 320,
+   "frames": 4
+  },
+  "interact_side": {
+   "y": 352,
+   "frames": 4
+  }
+ },
+ "faces": {
+  "w": 20,
+  "h": 23,
+  "names": [
+   "hollow",
+   "neutral",
+   "serious",
+   "pleased",
+   "happy",
+   "elated",
+   "gloomy",
+   "sad",
+   "despair",
+   "anxious",
+   "fear",
+   "terror",
+   "annoyed",
+   "angry",
+   "rage",
+   "confused",
+   "surprised",
+   "shocked"
+  ]
+ }
+}

@@ -1,4 +1,5 @@
 import { latestSave } from '../game/store/saveSystem.js'
+import { devToolsOn } from './GamesScreen.jsx'
 import { storyCtx } from '../game/narrative/storyData.js'
 import { useGameStore } from '../game/store/gameStore.js'
 import { webglSupport } from '../game/world/webgl.js'
@@ -55,7 +56,7 @@ export default function TitleScreen({ onNavigate, onContinue }) {
       <MusicButton />
       <div className="title-block">
         <h1>NAIJAVICE</h1>
-        <p className="tagline">Three stories. Every choice counts. Naija go remember.</p>
+        <p className="tagline">Five stories. Every choice counts. Naija go remember.</p>
       </div>
       {!webglSupport().ok && <WebGLHelp compact />}
       <div className="menu">
@@ -78,12 +79,17 @@ export default function TitleScreen({ onNavigate, onContinue }) {
         <button className="btn" onClick={() => onNavigate('about')}>
           About
         </button>
+        {devToolsOn() && (
+          <button className="btn" onClick={() => onNavigate('games')}>
+            All games (dev)
+          </button>
+        )}
         {import.meta.env.DEV && (
           <button className="btn btn-small" onClick={() => onNavigate('assets')}>
             Asset Check (dev)
           </button>
         )}
-        {import.meta.env.DEV && <DevChapterPicker />}
+        {devToolsOn() && <DevChapterPicker />}
       </div>
       <p className="footnote">v{__APP_VERSION__} · satire, not a guide</p>
     </div>

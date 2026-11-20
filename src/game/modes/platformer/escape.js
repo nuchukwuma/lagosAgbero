@@ -10,7 +10,8 @@ import dummyMeta from './dummy.json'
 import vehMeta from './vehicles.json'
 import { ASSET_ROOT } from '../../../assets/assetManifest.js'
 import { rect, box, label, clamp } from '../arcade/px.js'
-import { createEscape, stepEscape, press, metresLeft, PX_PER_M, VEHICLE_SCALE, STAND_H } from './platformerLogic.js'
+import { createEscape, stepEscape, press, metresLeft, PX_PER_M, VEHICLE_SCALE, STAND_H, ROLL_TIME } from './platformerLogic.js'
+import { drawEris } from '../../characters/eris.js'
 
 // ---------------------------------------------------------------- sprites
 const SRC = { light: [201, 212, 253], mid: [138, 161, 246], dark1: [94, 113, 142], dark2: [27, 36, 71], ink: [44, 52, 56] }
@@ -108,6 +109,34 @@ function runnerPose(p, t) {
   if (v > 100) return ['run', (t * 14) % 12]
   if (v > 18) return ['walk', (t * 12) % 12]
   return ['idle', 0]
+}
+
+// the same moves on Eris Esra's template: [anim, frame, rotation]
+const ERIS_K = STAND_H / 25 // world units per template pixel (the template is 25 pixels tall)
+const TASK_FORCE = { skin: '#4e2f1d', shirt: '#b89a52', trousers: '#4a5530', shoes: '#1a1a1a', accessories: [{ type: 'beret', color: '#111111' }] }
+function erisRunner(p, t) {
+  if (p.dead > 0) return ['idle', 0, -Math.PI / 2 * Math.min(1, (1.3 - p.dead) * 3)]
+  if (p.hit > 0) return ['idle', 0, -0.35]
+  if (p.roll > 0) return ['jump', 2, (1 - p.roll / ROLL_TIME) * Math.PI * 2]
+  if (p.attack > 0) return ['attack', (1 - p.attack / 0.36) * 6.9, 0]
+  if (!p.ground) {
+    if (p.jumps >= 2 && p.vy < 150) return ['jump', 2, clamp((p.vy + 500) / 650, 0, 1) * Math.PI * 2]
+    return ['jump', p.vy < -150 ? 1 : p.vy < 200 ? 2 : 3, 0]
+  }
+  if (p.landT > 0) return ['jump', 4, 0]
+  const v = Math.abs(p.vx)
+  if (v > 100) return ['run', t * 12, 0]
+  if (v > 18) return ['walk', t * 8, 0]
+  return ['idle', t * 4, 0]
+}
+function erisOfficer(o, t) {
+  if (o.state === 'down') return ['idle', 0, -Math.PI / 2 * Math.min(1, o.t * 3)]
+  if (o.stun > 0) return ['idle', 0, -0.3]
+  if (o.windup > 0) return ['attack', 1, 0]
+  if (o.cool > 0.8) return ['attack', 4, 0]
+  if (o.state === 'chase' && o.alertT <= 0) return ['run', t * 11 + o.home[0], 0]
+  if (o.state === 'chase') return ['idle', 0, 0]
+  return ['walk', t * 6 + o.home[0], 0]
 }
 
 function officerPose(o, t) {
@@ -252,11 +281,14 @@ export function draw(ctx, s, v, t) {
   const tf = tinted('#b89a52', '#4a5530')
   for (const o of lv.officers) {
     if (!onScreen(o.x - 30, o.x + 30)) continue
-    const [anim, f] = officerPose(o, t)
-    drawFrame(ctx, tf, anim, f, X(o.x), Y(o.y), o.dir, k)
-    if (o.state !== 'down') {
-      // the black beret, and the baton
+    const [ea, ef, er] = erisOfficer(o, t)
+    if (!drawEris(ctx, TASK_FORCE, ea, ef, X(o.x), Y(o.y), ERIS_K * k, { dir: o.dir, rotate: er * o.dir })) {
+      const [anim, f] = officerPose(o, t)
+      drawFrame(ctx, tf, anim, f, X(o.x), Y(o.y), o.dir, k)
       rect(ctx, X(o.x - 5), Y(o.y - STAND_H - 6), 11 * k, 4 * k, '#111')
+    }
+    if (o.state !== 'down') {
+      // the baton
       const up = o.windup > 0
       rect(ctx, X(o.x + o.dir * (up ? 6 : 12)), Y(o.y - (up ? 66 : 34)), 3 * k, (up ? 18 : 14) * k, '#1a1a1a')
     }
@@ -266,10 +298,13 @@ export function draw(ctx, s, v, t) {
   }
   // you
   const you = tinted(s.look?.shirt || '#2f8f83', s.look?.trousers || '#2c3e50')
-  const [anim, f] = runnerPose(p, t)
   const blink = p.invul > 0 && p.dead <= 0 && Math.floor(t * 12) % 2 ? 0.35 : 1
-  drawFrame(ctx, you, anim, f, X(p.x), Y(p.y), p.dir, k, blink)
-  if (!you) box(ctx, X(p.x - 8), Y(p.y - STAND_H), 16 * k, STAND_H * k, '#2f8f83', k)
+  const [ea, ef, er] = erisRunner(p, t)
+  if (!drawEris(ctx, s.look, ea, ef, X(p.x), Y(p.y), ERIS_K * k, { dir: p.dir, rotate: er * p.dir, alpha: blink })) {
+    const [anim, f] = runnerPose(p, t)
+    drawFrame(ctx, you, anim, f, X(p.x), Y(p.y), p.dir, k, blink)
+    if (!you) box(ctx, X(p.x - 8), Y(p.y - STAND_H), 16 * k, STAND_H * k, '#2f8f83', k)
+  }
   // the messages
   if (s.msgT > 0) label(ctx, s.msg, W / 2, Math.max(16, H * 0.12), { size: Math.max(12, 5 * k), alpha: clamp(s.msgT, 0, 1) })
   // the distance bar along the top

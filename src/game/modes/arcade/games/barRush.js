@@ -107,12 +107,15 @@ export function draw(ctx, s, v, t) {
     const alpha = c.leaving != null ? clamp(c.leaving / 0.8, 0, 1) : 1
     drawPerson(ctx, c.seed, x, H * 0.72, P, { pose: c.leaving != null ? (c.happy ? 'cheer' : 'hit') : 'stand', t: t + i, alpha })
     if (c.leaving == null) {
-      const P = ui(v.P)
+      // the order bubble floats over the customer's head
+      const head = H * 0.72 - P * 38
+      const P2 = ui(v.P)
+      const by = Math.max(P2, Math.min(H * 0.34, head - P2 * 12))
       const d = DRINKS[c.drink]
-      box(ctx, x - P * 12, H * 0.34, P * 24, P * 9, '#ffffff', Math.max(1, P / 2))
-      rect(ctx, x - P * 10, H * 0.34 + P * 2, P * 3, P * 5, d.color)
-      label(ctx, d.name, x + P * 3, H * 0.34 + P * 4.5, { size: P * 2.6, color: '#1a1a1a', weight: 800 })
-      rect(ctx, x - P * 12, H * 0.34 + P * 10, P * 24 * clamp(c.patience / c.max, 0, 1), P * 1.5, c.patience < 2.5 ? '#e74c3c' : '#8ff0a4')
+      box(ctx, x - P2 * 12, by, P2 * 24, P2 * 9, '#ffffff', Math.max(1, P2 / 2))
+      rect(ctx, x - P2 * 10, by + P2 * 2, P2 * 3, P2 * 5, d.color)
+      label(ctx, d.name, x + P2 * 3, by + P2 * 4.5, { size: P2 * 2.6, color: '#1a1a1a', weight: 800 })
+      rect(ctx, x - P2 * 12, by + P2 * 10, P2 * 24 * clamp(c.patience / c.max, 0, 1), P2 * 1.5, c.patience < 2.5 ? '#e74c3c' : '#8ff0a4')
     }
   })
   rect(ctx, 0, H * 0.78, W, H * 0.22, '#6b3a1e')

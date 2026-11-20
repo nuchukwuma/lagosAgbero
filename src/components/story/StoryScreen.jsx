@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useLayoutEffect, useState } from 'react'
 import { useGameStore } from '../../game/store/gameStore.js'
 import GameCanvas from '../../game/world/GameCanvas.jsx'
 import CanvasGuard from '../help/CanvasGuard.jsx'
@@ -38,11 +38,12 @@ const MAP_MODES = new Set(['feeCollection', 'chase']) // (fights are 2D: no map)
 // During a freeRoam beat the player walks; otherwise the story has the floor.
 function ActivityHost({ activity, onFinish }) {
   const Mode = modeComponent(activity.mode)
-  return (
-    <div className="story-content">
-      <Mode key={activity.key} mode={activity.mode} params={activity.params} outcomes={[]} onFinish={onFinish} />
-    </div>
-  )
+  // 2D modes put their canvas into .story-screen; when the screen and the
+  // activity start together (the games menu) it isn't in the page on the first
+  // render, so the mode waits one commit for it
+  const [mounted, setMounted] = useState(false)
+  useLayoutEffect(() => setMounted(true), [])
+  return <div className="story-content">{mounted && <Mode key={activity.key} mode={activity.mode} params={activity.params} outcomes={[]} onFinish={onFinish} />}</div>
 }
 
 export default function StoryScreen() {

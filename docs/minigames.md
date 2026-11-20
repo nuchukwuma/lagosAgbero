@@ -60,10 +60,13 @@ side-scrolling platformer (`modes/platformer/`, mode `escape`): move freely,
 jump and double jump, roll, strike and stomp; cars, awnings and roofs are
 platforms; gutters kill; officers only see what's in front of them. Params:
 `metres` (700), `difficulty` (1–3), `lives` (3), `to` (the destination).
-Its sprites come from two packs, cropped into small atlases by
-`scripts/build-platformer-atlas.py`: Craftpix's *Free Pixel Art Prototype
-Character Sprites* (licence: craftpix.net/file-licenses) and *Retro vehicle
-sprites 64x64*.
+The runner and the Task Force are Eris Esra's character template (see *People*
+below): run, walk, idle, jump (the landing frame on touchdown), the attack swing
+for strikes and baton blows; the roll and double jump spin the tuck frame, and a
+knock-down tips the body flat. The cars, trucks and buses come from *Retro
+vehicle sprites 64x64*; Craftpix's *Free Pixel Art Prototype Character Sprites*
+stay as the fallback while the template loads. Both are cropped into small
+atlases by `scripts/build-platformer-atlas.py`.
 
 ## Dance battles (rhythm)
 
@@ -111,8 +114,26 @@ No image files: every game draws its own pixel art in code, at a whole-number
 pixel size picked from the screen, so it stays sharp on any phone and costs
 nothing to download. Shared pieces live in `src/game/modes/arcade/px.js`
 (panels, outlined labels, pixel discs, character-map sprites, a town backdrop)
-and `people.js` (the same pixel people as the fights and dance battles, so
-Mama Ngozi, Garba, Bassey and you look like yourselves).
+and `people.js` (the people, so Mama Ngozi, Garba, Bassey and you look like
+yourselves).
+
+### People
+
+People in the mini-games, the platformer and the dialogue portraits are the
+*Character Templates Pack* by Eris Esra (erisesra.itch.io/character-templates-pack;
+free for games, credit given, not to be resold as an asset pack).
+`scripts/build-eris-atlas.py` keeps its front and side views of idle, walk, run,
+jump, attack and interact (`public/assets/eris/eris.png`, `eris.json`), and
+`src/game/characters/eris.js` paints each frame for a character by where the pixel
+sits on the body: skin on the head and hands, hair or their cap / beret / gele,
+shirt, trousers, shoes. The dialogue portrait is the template's face with an
+expression drawn on (neutral, happy, laughing, sad, angry, surprised, scared,
+serious, nervous), picked from the line's mood or what the text says
+(`expressionFor`). The *Pixelart Study Expression Sheet* that came with it has
+eighteen identical blank faces, so the expressions are drawn in code instead.
+
+The fights and dance battles keep their own pixel fighters: the template has no
+hit, block, duck, knock-out or dance moves. The 3D streets keep their 3D people.
 
 | Game | What it draws |
 |---|---|
