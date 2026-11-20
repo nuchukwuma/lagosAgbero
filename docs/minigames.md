@@ -65,6 +65,16 @@ Its sprites come from two packs, cropped into small atlases by
 Character Sprites* (licence: craftpix.net/file-licenses) and *Retro vehicle
 sprites 64x64*.
 
+## Dance battles (rhythm)
+
+Every dance battle (`modes/dance/`, mode `dance`) is a 4-lane rhythm game:
+arrows fall down four lanes and you tap each lane as its arrow reaches the
+line (PERFECT / GOOD / MISS, with combos). The rival dances a phrase first,
+then you; phrases get busier each round and later in the story. Each arrow
+is a dance move your dancer does on the stage: ← Shaku, ↓ Gwara, ↑ Zanku,
+→ Azonto. Params: `rival`, `name`, `rounds` (3), `length` (8 beats), `bpm`
+(100), `skill` (0.6), `prize`. Power-ups: a slower beat, wider timing.
+
 ## In the story
 
 Each game is a mode like any other:
