@@ -1454,6 +1454,81 @@
           }
         }
       }
+    },
+    {
+      "id": "hostelFight",
+      "label": "HOSTEL FIGHT",
+      "icon": "fist",
+      "spot": "hostel",
+      "if": null,
+      "mode": "fight",
+      "minutes": 45,
+      "params": {
+        "opponent": "donBoy",
+        "difficulty": 1
+      },
+      "where": "a Crimson Don boy picking on freshers",
+      "results": {
+        "won": {
+          "changeStat": {
+            "campusRep": 1,
+            "donsHeat": 2
+          }
+        },
+        "lost": {
+          "changeStat": {
+            "energy": -10
+          }
+        }
+      }
+    },
+    {
+      "id": "backGateEscape",
+      "label": "RAID!",
+      "icon": "run",
+      "spot": "backGate",
+      "if": null,
+      "mode": "escape",
+      "minutes": 60,
+      "params": {
+        "metres": 600,
+        "difficulty": 1,
+        "to": "the hostel"
+      },
+      "where": "a Task Force raid on the shops outside the back gate",
+      "results": {
+        "escaped": {
+          "changeStat": {
+            "campusRep": 1
+          }
+        },
+        "caught": {
+          "changeStat": {
+            "money": -3000
+          }
+        }
+      }
+    },
+    {
+      "id": "whotCafeteria",
+      "label": "WHOT",
+      "icon": "star",
+      "spot": "cafeteria",
+      "if": null,
+      "mode": "whot",
+      "minutes": 45,
+      "params": {
+        "name": "Tamara",
+        "skill": 0.5
+      },
+      "where": "a game of Whot over cold zobo",
+      "results": {
+        "won": {
+          "changeStat": {
+            "tamaraBond": 1
+          }
+        }
+      }
     }
   ],
   "mapLabels": {

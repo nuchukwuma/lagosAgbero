@@ -1392,6 +1392,53 @@
           }
         }
       }
+    },
+    {
+      "id": "wrestleIke",
+      "label": "WRESTLE",
+      "icon": "fist",
+      "spot": "square",
+      "if": null,
+      "mode": "fight",
+      "minutes": 45,
+      "params": {
+        "opponent": "ikeFight",
+        "difficulty": 1
+      },
+      "where": "a wrestling bout with Ike in the square",
+      "results": {
+        "won": {
+          "changeStat": {
+            "villageStanding": 1
+          }
+        },
+        "lost": {
+          "changeStat": {
+            "energy": -10
+          }
+        }
+      }
+    },
+    {
+      "id": "draughtsObi",
+      "label": "DRAUGHTS",
+      "icon": "star",
+      "spot": "obi",
+      "if": null,
+      "mode": "draughts",
+      "minutes": 60,
+      "params": {
+        "name": "Papa Ngwo",
+        "skill": 0.55
+      },
+      "where": "draughts with Papa Ngwo in the obi",
+      "results": {
+        "won": {
+          "changeStat": {
+            "villageStanding": 1
+          }
+        }
+      }
     }
   ],
   "mapLabels": {

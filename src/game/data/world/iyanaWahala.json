@@ -2194,6 +2194,120 @@
           }
         }
       }
+    },
+    {
+      "id": "bridgeFight",
+      "label": "BRIDGE FIGHT",
+      "icon": "fist",
+      "spot": "underBridge",
+      "if": {
+        "flags": [
+          "canCollectFees"
+        ]
+      },
+      "mode": "fight",
+      "minutes": 60,
+      "params": {
+        "opponent": "kpakpa",
+        "difficulty": 1
+      },
+      "where": "the ring of crates under the bridge",
+      "results": {
+        "won": {
+          "changeStat": {
+            "money": 2500,
+            "notoriety": 2
+          }
+        },
+        "lost": {
+          "changeStat": {
+            "energy": -10
+          }
+        }
+      }
+    },
+    {
+      "id": "thugClash",
+      "label": "THUGS!",
+      "icon": "fist",
+      "spot": "market",
+      "if": "campaign_politics",
+      "mode": "fight",
+      "minutes": 45,
+      "params": {
+        "opponent": "thug",
+        "difficulty": 1
+      },
+      "where": "the other party's boys at the market",
+      "results": {
+        "won": {
+          "changeStat": {
+            "publicTrust": 1
+          }
+        },
+        "lost": {
+          "changeStat": {
+            "scandal": 1,
+            "energy": -10
+          }
+        }
+      }
+    },
+    {
+      "id": "thugEscape",
+      "label": "RUN!",
+      "icon": "run",
+      "spot": "southStreet",
+      "if": "campaign_politics",
+      "mode": "escape",
+      "minutes": 60,
+      "params": {
+        "metres": 600,
+        "difficulty": 1,
+        "to": "the campaign office"
+      },
+      "where": "a Task Force sweep after the rally",
+      "results": {
+        "escaped": {
+          "changeStat": {
+            "publicTrust": 1
+          }
+        },
+        "caught": {
+          "changeStat": {
+            "scandal": 2,
+            "money": -5000
+          }
+        }
+      }
+    },
+    {
+      "id": "raidEscape",
+      "label": "RAID!",
+      "icon": "run",
+      "spot": "southStreet",
+      "if": "campaign_sugar",
+      "mode": "escape",
+      "minutes": 60,
+      "params": {
+        "metres": 600,
+        "difficulty": 1,
+        "to": "the Palace back gate"
+      },
+      "where": "a Task Force raid on the bars",
+      "results": {
+        "escaped": {
+          "changeStat": {
+            "sugarRep": 1
+          }
+        },
+        "caught": {
+          "changeStat": {
+            "money": -5000,
+            "arrests": 1
+          }
+        }
+      }
     }
   ],
   "rows": [
