@@ -20,6 +20,7 @@ import DriveMode from './drive/DriveMode.jsx'
 import BluffMode from './bluff/BluffMode.jsx'
 import HaggleMode from './haggle/HaggleMode.jsx'
 import DanceMode from './dance/DanceMode.jsx'
+import { ARCADE_MODES } from './arcade/index.js'
 
 export const MODES = {
   feeCollection: FeeCollectionMode,
@@ -35,12 +36,16 @@ export const MODES = {
   exam: InitiationMode, // the same timed-question screen, with a question bank
   haggle: HaggleMode, // selling at a stall: name your price, read the customer
   dance: DanceMode, // a dance battle on a stage, the crowd behind
+  ...ARCADE_MODES, // the 2D mini-games: three per story (arcade/index.js)
 }
+
+// Modes drawn as a full-screen 2D scene over the frozen street (the street HUD steps aside).
+export const FULLSCREEN_MODES = new Set(['dance', ...Object.keys(ARCADE_MODES)])
 
 // Modes played inside the 3D street (the player walks with joystick/keys).
 export const WORLD_MODES = new Set(['feeCollection', 'chase', 'fight', 'runner', 'conductor', 'drive'])
 
-export const PLANNED_MODES = ['chase', 'fight', 'runner', 'raid', 'conductor', 'feeCollection', 'begging', 'rally', 'initiation', 'drive', 'bluff', 'exam', 'haggle', 'dance', 'shop']
+export const PLANNED_MODES = [...Object.keys(ARCADE_MODES), 'chase', 'fight', 'runner', 'raid', 'conductor', 'feeCollection', 'begging', 'rally', 'initiation', 'drive', 'bluff', 'exam', 'haggle', 'dance', 'shop']
 
 export function modeComponent(name) {
   return MODES[name] || StandInMode

@@ -9,7 +9,7 @@ import EnergyTicker from '../hud/EnergyTicker.jsx'
 import ShopPanel from '../hud/ShopPanel.jsx'
 import { useFeeRun } from '../../game/modes/feeCollection/feeRunStore.js'
 import { useChase } from '../../game/modes/chase/chaseStore.js'
-import { modeComponent } from '../../game/modes/modeRegistry.js'
+import { modeComponent, FULLSCREEN_MODES } from '../../game/modes/modeRegistry.js'
 import { worldJson, getLayout } from '../../game/world/worlds.js'
 import { MiniMap, MapScreen, useMapStore } from '../hud/WorldMap.jsx'
 import Confrontation from '../hud/Confrontation.jsx'
@@ -152,7 +152,7 @@ export default function StoryScreen() {
   }
 
   return (
-    <div className={`story-screen ${modeName === 'fight' || modeName === 'dance' ? 'fighting' : ''}`}>
+    <div className={`story-screen ${modeName === 'fight' || FULLSCREEN_MODES.has(modeName) ? 'fighting' : ''}`}>
       <CanvasGuard onBack={quitToTitle}>{(safeGl) => <GameCanvas view={view} game={game} activity={activity} paused={paused} onGoalReached={advance} safeGl={safeGl} />}</CanvasGuard>
       {raining && <div className="rain" aria-hidden="true" />}
       <div id="speech-layer" className="speech-layer" aria-live="polite" />

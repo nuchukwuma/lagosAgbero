@@ -28,28 +28,23 @@
         },
         {
           "type": "startMode",
-          "mode": "haggle",
+          "mode": "akara",
           "params": {
-            "goods": "pap",
-            "customers": 6
+            "target": 5,
+            "seconds": 70
           },
           "results": {
-            "good": {
+            "won": {
               "changeStat": {
                 "momBond": 4
               },
               "toast": "Mama counts the morning's money twice and hides ₦2,000 in your box when she thinks you're not looking."
             },
-            "ok": {
-              "changeStat": {
-                "momBond": 2
-              }
-            },
-            "bad": {
+            "lost": {
               "changeStat": {
                 "momBond": 1
               },
-              "toast": "\"You gave the conductor credit again? He will pay in heaven.\""
+              "toast": "\"You burnt the scholar's akara!\" Mama laughs so hard the drivers join in."
             }
           }
         },

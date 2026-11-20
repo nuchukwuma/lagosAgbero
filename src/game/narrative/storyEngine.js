@@ -32,7 +32,7 @@ export function newGameState({ name = 'Tunde', nickname = 'JJC', look = null, ca
     campaign,
     player: { name, nickname, look },
     stats: defaultStats(stats),
-    flags: {},
+    flags: { [`campaign_${campaign}`]: true }, // which story this is (world activities check it)
     memory: {},
     time: TIME_OF.dawn, // minutes since midnight
     story: { chapterId: null, sceneId: null, beatIndex: 0, pendingMode: null, ending: null, completedChapters: [], visited: {}, picks: [] },

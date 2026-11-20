@@ -75,27 +75,23 @@
         },
         {
           "type": "startMode",
-          "mode": "haggle",
+          "mode": "barRush",
           "params": {
-            "goods": "drinks",
-            "customers": 6
+            "target": 20000,
+            "seconds": 60
           },
           "results": {
-            "good": {
+            "won": {
               "changeStat": {
                 "sugarRep": 3
               },
               "toast": "The wedding party buys a round for the whole bar, twice. The groom cries. The bride pays."
             },
-            "ok": {
-              "changeStat": {
-                "sugarRep": 1
-              }
-            },
-            "bad": {
+            "lost": {
               "changeStat": {
                 "sugarRep": -1
-              }
+              },
+              "toast": "Two tables walk out. One of them takes the ashtray."
             }
           }
         },

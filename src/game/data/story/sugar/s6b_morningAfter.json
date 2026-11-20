@@ -124,6 +124,12 @@
                 },
                 "setFlag": "basseyRefused2"
               }
+            },
+            {
+              "text": "\"Play me for it, Commander. One game of Whot. If I win, no envelope this month.\"",
+              "effects": {
+                "goto": "whotGame"
+              }
             }
           ]
         },
@@ -288,6 +294,45 @@
       ],
       "location": "southStreet",
       "time": "night"
+    },
+    "whotGame": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "bassey",
+          "text": "(delighted, pulling his chair to the bar) Whot! Mama Sugar, you don't know who you are playing. I am the Whot champion of the Task Force, three years running."
+        },
+        {
+          "type": "startMode",
+          "mode": "whot",
+          "params": {
+            "name": "Commander Bassey",
+            "skill": 0.6
+          },
+          "results": {
+            "won": {
+              "changeStat": {
+                "policeHeat": -10,
+                "sugarRep": 5
+              },
+              "toast": "He counts your cards twice, then his, then yours again. \"Rematch next month,\" he says, and leaves without his envelope."
+            },
+            "lost": {
+              "changeStat": {
+                "money": -40000,
+                "policeHeat": -4
+              },
+              "toast": "\"CHECK UP!\" He slams down his last card. ₦40,000, and he is in a very good mood for a week."
+            }
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "girls"
+        }
+      ],
+      "location": "southStreet",
+      "time": "day"
     }
   }
 }

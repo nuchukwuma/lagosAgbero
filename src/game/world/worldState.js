@@ -36,7 +36,13 @@ export const useWorldStore = create((set) => ({
   jamUntil: 0, // performance.now() ms until which traffic crawls (go-slow event)
   setJam: (seconds) => set({ jamUntil: performance.now() + seconds * 1000 }),
   nearActivity: null, // id of a free-roam activity the player can start here
-  setNearActivity: (id) => set((s) => (s.nearActivity === id ? s : { nearActivity: id })),
+  nearActivities: [], // every activity here (several can share a spot: the bar, the kitchen, the card table)
+  setNearActivity: (ids) =>
+    set((s) => {
+      const list = Array.isArray(ids) ? ids : ids ? [ids] : []
+      const first = list[0] || null
+      return s.nearActivity === first && s.nearActivities.join() === list.join() ? s : { nearActivity: first, nearActivities: list }
+    }),
   nearQuest: null, // id of a side quest whose giver the player is standing next to
   setNearQuest: (id) => set((s) => (s.nearQuest === id ? s : { nearQuest: id })),
   nearVendor: null, // npc id of a seller the player is standing next to

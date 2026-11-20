@@ -1351,6 +1351,47 @@
         "prize": 2500
       },
       "where": "The village square"
+    },
+    {
+      "id": "ayoShade",
+      "label": "AYÒ",
+      "icon": "star",
+      "spot": "palmwine",
+      "mode": "ayo",
+      "minutes": 60,
+      "params": {
+        "name": "Ngwo the younger",
+        "skill": 0.55
+      },
+      "where": "The palm-wine shade",
+      "results": {
+        "won": {
+          "changeStat": {
+            "villageStanding": 1,
+            "money": 1000
+          }
+        }
+      }
+    },
+    {
+      "id": "palmTap",
+      "label": "TAP PALM",
+      "icon": "up",
+      "spot": "farm",
+      "mode": "palmClimb",
+      "minutes": 90,
+      "params": {
+        "height": 32,
+        "seconds": 45
+      },
+      "where": "The palm grove",
+      "results": {
+        "won": {
+          "changeStat": {
+            "energy": -10
+          }
+        }
+      }
     }
   ],
   "mapLabels": {

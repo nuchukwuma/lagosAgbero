@@ -19,7 +19,9 @@ const worlds = import.meta.glob('./world/*.json', { eager: true, import: 'defaul
 
 // names declared in code, read from the source so this test needs no 3D imports
 const keysOf = (src, name) => [...src.slice(src.indexOf(`${name} = {`)).split('\n}')[0].matchAll(/^\s{2}(\w+):/gm)].map((m) => m[1])
-const MODES = new Set(keysOf(registrySource, 'MODES'))
+// the arcade mini-games are spread into MODES from arcade/index.js: their ids are in each game file
+const arcadeIds = Object.values(import.meta.glob('../modes/arcade/games/*.js', { eager: true, query: '?raw', import: 'default' })).map((src) => src.match(/^\s*id: '(\w+)'/m)?.[1]).filter(Boolean)
+const MODES = new Set([...keysOf(registrySource, 'MODES'), ...arcadeIds])
 const CHASERS = new Set(keysOf(runnerSource, 'CHASERS'))
 const SPOTS = new Set(Object.values(worlds).flatMap((w) => Object.keys(w.spots || {})))
 

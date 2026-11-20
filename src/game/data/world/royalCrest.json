@@ -1390,6 +1390,70 @@
         "prize": 3000
       },
       "where": "The Quad"
+    },
+    {
+      "id": "akaraFry",
+      "label": "FRY AKARA",
+      "icon": "gas",
+      "spot": "cafeteria",
+      "mode": "akara",
+      "minutes": 90,
+      "params": {
+        "target": 5,
+        "seconds": 70
+      },
+      "where": "The cafeteria stall",
+      "results": {
+        "won": {
+          "changeStat": {
+            "momBond": 1
+          }
+        }
+      }
+    },
+    {
+      "id": "curfewSneak",
+      "label": "SNEAK OUT",
+      "icon": "door",
+      "spot": "hostel",
+      "mode": "sneak",
+      "minutes": 60,
+      "params": {
+        "lives": 3
+      },
+      "where": "After curfew",
+      "results": {
+        "won": {
+          "changeStat": {
+            "campusRep": 1
+          }
+        },
+        "lost": {
+          "changeStat": {
+            "donsHeat": 2
+          }
+        }
+      }
+    },
+    {
+      "id": "hostelCup",
+      "label": "PENALTIES",
+      "icon": "boot",
+      "spot": "field",
+      "mode": "penalty",
+      "minutes": 60,
+      "params": {
+        "name": "Spike's Hall",
+        "skill": 0.5
+      },
+      "where": "The sports field",
+      "results": {
+        "won": {
+          "changeStat": {
+            "campusRep": 2
+          }
+        }
+      }
     }
   ],
   "mapLabels": {

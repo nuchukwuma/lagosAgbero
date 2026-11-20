@@ -39,5 +39,14 @@ export function recordFight({ outcome, combo = 0 }) {
   return f
 }
 
+/** Best score in a mini-game (arcade games and the like). */
+export const bestScore = (id) => read().best?.[id] || 0
+export function recordScore(id, score) {
+  const r = read()
+  const best = Math.max(r.best?.[id] || 0, Math.round(score) || 0)
+  write({ ...r, best: { ...(r.best || {}), [id]: best } })
+  return best
+}
+
 /** Forget everything (for tests). */
 export const resetRecords = () => write({})

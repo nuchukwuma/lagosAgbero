@@ -94,6 +94,39 @@
     "hospital": {
       "beats": [
         {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "The junction by the market is jammed solid: the traffic light died in the rain. An ambulance is stuck in the middle of it, crying."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "professor",
+          "text": "(handing you his whistle) Agbero. Today you are the traffic light. Mama, sit in the shade. Your son is working."
+        },
+        {
+          "type": "startMode",
+          "mode": "traffic",
+          "params": {
+            "target": 26,
+            "seconds": 60
+          },
+          "results": {
+            "won": {
+              "changeStat": {
+                "communityGoodwill": 4,
+                "mentorBond": 3
+              },
+              "toast": "The ambulance gets through. The drivers horn for you. Mama tells everybody in the queue that her son \"controls traffic in Lagos\"."
+            },
+            "lost": {
+              "changeStat": {
+                "communityGoodwill": -1
+              },
+              "toast": "It takes an hour to clear. Mama is very patient about it, loudly."
+            }
+          }
+        },
+        {
           "type": "freeRoam",
           "objective": "Take Mama to the general hospital by the market.",
           "goal": {

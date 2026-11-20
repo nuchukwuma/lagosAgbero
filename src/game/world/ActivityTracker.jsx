@@ -10,14 +10,11 @@ export default function ActivityTracker({ layout, game }) {
   useEffect(() => () => setNearActivity(null), [setNearActivity])
   useFrame(() => {
     const p = playerState.position
-    let found = null
+    const found = []
     for (const a of layout.raw.activities || []) {
       const spot = layout.spots[a.spot]
       if (!spot || !checkCondition(a.if, game)) continue
-      if (Math.hypot(p.x - spot.pos[0], p.z - spot.pos[1]) < (spot.radius || 3)) {
-        found = a.id
-        break
-      }
+      if (Math.hypot(p.x - spot.pos[0], p.z - spot.pos[1]) < (spot.radius || 3)) found.push(a.id)
     }
     setNearActivity(found)
   })

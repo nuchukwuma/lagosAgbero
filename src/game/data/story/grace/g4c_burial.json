@@ -70,6 +70,71 @@
           "text": "The tortoise. In every story Papa Ngwo told, the tortoise was clever, greedy, and got his shell broken at the end. Every single story."
         },
         {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Ngwo the younger has laid out Papa Ngwo's Ayò board on the stool, the seeds already in their cups. \"He always said you counted too fast and thought too slow. Play one for him.\""
+        },
+        {
+          "type": "startMode",
+          "mode": "ayo",
+          "params": {
+            "name": "Ngwo the younger",
+            "skill": 0.55
+          },
+          "results": {
+            "won": {
+              "changeStat": {
+                "villageStanding": 3
+              },
+              "toast": "The old men watching say Papa Ngwo would have accused you of cheating. It's the highest praise they know."
+            },
+            "lost": {
+              "changeStat": {
+                "villageStanding": 1
+              },
+              "toast": "\"Too fast,\" says Ngwo the younger, sweeping the seeds up. \"Exactly what he said.\""
+            }
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "palm"
+        }
+      ],
+      "location": "palmwine",
+      "time": "day"
+    },
+    "palm": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Ngwo the younger, worried: \"The burial needs palm wine, and our tapper broke his leg on Tuesday. You used to climb. Do you still have the legs?\" He holds out the rope loop."
+        },
+        {
+          "type": "startMode",
+          "mode": "palmClimb",
+          "params": {
+            "height": 30,
+            "seconds": 45
+          },
+          "results": {
+            "won": {
+              "changeStat": {
+                "villageStanding": 4,
+                "energy": -10
+              },
+              "toast": "You come down with a full calabash. The children cheer. Your arms will hate you tomorrow."
+            },
+            "lost": {
+              "changeStat": {
+                "energy": -15
+              },
+              "toast": "You come down faster than you went up, with no wine and three stings. Ngwo the younger buys wine from the next village."
+            }
+          }
+        },
+        {
           "type": "goto",
           "scene": "levy"
         }

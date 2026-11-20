@@ -5,6 +5,7 @@ import characters from '../../game/data/characters.json'
 import { worldJson } from '../../game/world/worlds.js'
 import { QUESTS } from '../../game/systems/quests.js'
 import ObjectiveBanner from './ObjectiveBanner.jsx'
+import Icon from '../Icon.jsx'
 
 // On-screen controls while walking around: objective, joystick, RUN, TALK.
 // Keyboard: WASD / arrows to move, Shift to run, E or Enter to talk.
@@ -15,6 +16,8 @@ export default function FreeRoamControls({ view, onTalk, onShop, onActivity, onQ
   const vendorName = nearVendor ? characters[nearVendor]?.name || nearVendor : null
   const nearActivity = useWorldStore((s) => s.nearActivity)
   const activity = nearActivity ? (worldJson(view.world).activities || []).find((a) => a.id === nearActivity) : null
+  const nearActivities = useWorldStore((s) => s.nearActivities)
+  const others = canTalk ? [] : nearActivities.slice(1).map((id) => (worldJson(view.world).activities || []).find((a) => a.id === id)).filter(Boolean)
   const nearQuest = useWorldStore((s) => s.nearQuest)
   const quest = !canTalk && nearQuest ? QUESTS.find((q) => q.id === nearQuest) : null
 
@@ -35,6 +38,15 @@ export default function FreeRoamControls({ view, onTalk, onShop, onActivity, onQ
   return (
     <>
       <ObjectiveBanner text={view.objective} />
+      {others.length > 0 && (
+        <div className="activity-more" aria-label="More things to do here">
+          {others.map((a) => (
+            <button key={a.id} className="activity-chip" onClick={() => onActivity(a.id)}>
+              <Icon name={a.icon || 'star'} size={16} /> {a.label}
+            </button>
+          ))}
+        </div>
+      )}
       <MoveControls
         actionLabel={talkName ? 'TALK' : quest ? `QUEST: ${quest.title}` : activity ? activity.label : vendorName ? 'BUY' : null}
         actionIcon={talkName ? 'talk' : quest ? 'quest' : activity ? activity.icon || 'star' : 'buy'}

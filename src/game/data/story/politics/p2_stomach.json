@@ -80,6 +80,48 @@
           ]
         },
         {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Friday. Rice day at the Front Stop. Two hundred bags, one queue, and suddenly every family from three wards lives in Iyana-Wahala.",
+          "if": {
+            "anyOf": [
+              "riceBags",
+              "plainRice"
+            ]
+          }
+        },
+        {
+          "type": "startMode",
+          "mode": "riceQueue",
+          "params": {
+            "bags": 40,
+            "need": 18,
+            "seconds": 75
+          },
+          "results": {
+            "won": {
+              "changeStat": {
+                "votes": 3,
+                "publicTrust": 3
+              },
+              "toast": "The right families went home with rice, and nobody fought. Mama Titi nods at you from her stall. Once."
+            },
+            "lost": {
+              "changeStat": {
+                "votes": -1,
+                "scandal": 2
+              },
+              "toast": "By noon the canopy is down and somebody from Oke-Odo is selling your rice at the motor park."
+            }
+          },
+          "if": {
+            "anyOf": [
+              "riceBags",
+              "plainRice"
+            ]
+          }
+        },
+        {
           "type": "goto",
           "scene": "townHall",
           "if": "townHall"

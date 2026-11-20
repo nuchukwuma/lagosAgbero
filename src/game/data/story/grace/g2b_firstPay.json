@@ -122,6 +122,43 @@
         },
         {
           "type": "goto",
+          "scene": "test"
+        }
+      ],
+      "location": "market",
+      "time": "dusk"
+    },
+    "test": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "ngozi",
+          "text": "(crossing the road with her arms folded) Before you spend it. Ike sells fakes, everybody knows. I want to know if YOU know. Twenty boxes. Tell me which ones are original."
+        },
+        {
+          "type": "startMode",
+          "mode": "fakeParts",
+          "params": {
+            "count": 20,
+            "need": 15
+          },
+          "results": {
+            "won": {
+              "changeStat": {
+                "conscience": 2
+              },
+              "toast": "Mama Ngozi takes your hand and turns it over. \"Quarry hands. Good eyes.\" She doesn't say anything else. She doesn't need to."
+            },
+            "lost": {
+              "changeStat": {
+                "ikeTrust": 1
+              },
+              "toast": "\"You will learn,\" she says, \"or you will become Ike.\" She goes back to her stall."
+            }
+          }
+        },
+        {
+          "type": "goto",
           "scene": "professor"
         }
       ],

@@ -1,0 +1,234 @@
+import { describe, it, expect } from 'vitest'
+import { ARCADE_GAMES, ARCADE_BY_STORY } from './index.js'
+import { rng, viewFor } from './px.js'
+import * as change from './games/change.js'
+import * as draughts from './games/draughts.js'
+import * as ayo from './games/ayo.js'
+import * as whot from './games/whot.js'
+import * as sneak from './games/sneak.js'
+import * as akara from './games/akara.js'
+import * as palm from './games/palmClimb.js'
+import * as traffic from './games/traffic.js'
+import * as ballots from './games/ballots.js'
+import * as rice from './games/riceQueue.js'
+import * as pepper from './games/pepperSoup.js'
+import * as bar from './games/barRush.js'
+import * as posters from './games/posters.js'
+import * as parts from './games/fakeParts.js'
+import * as penalty from './games/penalty.js'
+import campaigns from '../../data/campaigns.json'
+
+const V = viewFor(800, 450)
+
+// turn-based games: a bot that makes a random legal move on its turn
+const BOTS = {
+  draughts: (s, r) => {
+    if (s.turn !== 'p') return
+    const ms = draughts.legalMoves(s.board, 'p', s.chain)
+    const m = ms[Math.floor(r() * ms.length)]
+    if (!m) return
+    draughts.tapSquare(s, m.from)
+    draughts.tapSquare(s, m.to)
+  },
+  ayo: (s, r) => {
+    const ms = ayo.legal(s.board, 'p')
+    if (s.turn === 'p' && ms.length) ayo.tapCup(s, ms[Math.floor(r() * ms.length)])
+  },
+  whot: (s) => {
+    if (s.turn !== 'p') return
+    if (s.choosing) return whot.callShape(s, 'circle')
+    const k = s.hands.p.findIndex((c) => whot.playable(c, s.top, s.need))
+    if (k >= 0) whot.playCard(s, 'p', k)
+    else whot.goMarket(s, 'p')
+  },
+}
+
+/** Mash random inputs at a game until it ends (or 10 simulated minutes pass). */
+function mash(game, seed) {
+  const s = game.create({}, seed)
+  const r = rng(seed * 7 + 1)
+  for (let i = 0; i < 6000 && !s.over; i++) {
+    game.step(s, 0.1)
+    if (BOTS[game.id]) BOTS[game.id](s, r)
+    else if (r() < 0.6) {
+      const bs = game.buttons?.(s) || []
+      if (bs.length && r() < 0.6) game.input(s, { type: 'button', id: bs[Math.floor(r() * bs.length)].id }, V)
+      else {
+        const ev = { x: r() * V.W, y: r() * V.H }
+        game.input(s, { type: 'down', ...ev }, V)
+        game.input(s, { type: 'up', ...ev }, V)
+      }
+    }
+  }
+  return s
+}
+
+describe('arcade mini-games', () => {
+  it('three games for every story', () => {
+    const stories = (campaigns.campaigns || campaigns).map((c) => c.id)
+    for (const id of stories) expect(ARCADE_BY_STORY[id], id).toHaveLength(3)
+    const ids = ARCADE_GAMES.map((g) => g.id)
+    expect(new Set(ids).size).toBe(ids.length)
+    for (const list of Object.values(ARCADE_BY_STORY)) for (const id of list) expect(ids).toContain(id)
+  })
+
+  it('every game plays to an end under random tapping, with a proper result', () => {
+    for (const g of ARCADE_GAMES)
+      for (const seed of [1, 2, 3]) {
+        const s = mash(g, seed)
+        expect(s.over, `${g.id} #${seed} never ended`).toBe(true)
+        const res = g.result(s, {})
+        expect(['won', 'lost'], g.id).toContain(res.outcome)
+        expect(Number.isFinite(res.score), g.id).toBe(true)
+        expect(g.hud(s).length, g.id).toBeGreaterThan(0)
+        expect(g.rules.length ?? g.rules({}).length, g.id).toBeGreaterThan(0)
+      }
+  })
+
+  it('exact change: exact is a tip, short is a strike', () => {
+    const s = change.create({}, 4)
+    const owed = change.changeOwed(s.p)
+    for (const n of change.NOTES) while (change.givenTotal(s) + n.v <= owed) change.input(s, { type: 'button', id: `n${n.v}` })
+    change.input(s, { type: 'button', id: 'give' })
+    expect(s.served).toBe(1)
+    change.input(s, { type: 'button', id: 'give' }) // nothing given
+    expect(s.strikes).toBe(1)
+  })
+
+  it('draughts: captures are compulsory, and a capture removes the piece', () => {
+    const b = new Array(64).fill(null)
+    b[draughts.idx(5, 0)] = { side: 'p', king: false }
+    b[draughts.idx(5, 4)] = { side: 'p', king: false }
+    b[draughts.idx(4, 1)] = { side: 'o', king: false }
+    const moves = draughts.legalMoves(b, 'p')
+    expect(moves.every((m) => m.cap != null)).toBe(true)
+    const after = draughts.applyStep(b, moves[0]).board
+    expect(draughts.countOf(after, 'o')).toBe(0)
+    expect(draughts.turnsFor(draughts.initialBoard(), 'p')).toHaveLength(7)
+  })
+
+  it('ayo: last seed making two or three on their side is captured; feeding is compulsory', () => {
+    const b = [0, 0, 0, 0, 0, 2, 1, 2, 0, 0, 4, 0]
+    const res = ayo.play(b, 5, 'p') // sow into 6 and 7: they become 2 and 3
+    expect(res.taken).toBe(5)
+    const empty = [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    expect(ayo.legal(empty, 'p')).toEqual([]) // one seed can't reach their side: no feeding move
+    const feedable = [0, 0, 0, 0, 1, 6, 0, 0, 0, 0, 0, 0]
+    expect(ayo.legal(feedable, 'p')).toEqual([5])
+  })
+
+  it('whot: shape or number, Whot on anything, and specials hit the other player', () => {
+    expect(whot.makeDeck()).toHaveLength(54)
+    const top = { shape: 'circle', n: 7 }
+    expect(whot.playable({ shape: 'circle', n: 3 }, top)).toBe(true)
+    expect(whot.playable({ shape: 'star', n: 7 }, top)).toBe(true)
+    expect(whot.playable({ shape: 'star', n: 3 }, top)).toBe(false)
+    expect(whot.playable({ shape: 'whot', n: 20 }, top)).toBe(true)
+    const s = whot.create({}, 9)
+    s.top = { shape: 'square', n: 9 }
+    s.hands.p = [{ shape: 'square', n: 2 }, { shape: 'circle', n: 4 }]
+    const before = s.hands.o.length
+    whot.playCard(s, 'p', 0)
+    expect(s.hands.o.length).toBe(before + 2)
+    expect(s.turn).toBe('p') // pick two: you go again
+  })
+
+  it('sneak: every level has a way from the hostel to the gate', () => {
+    for (const lv of sneak.LEVELS) {
+      let start
+      lv.map.forEach((row, y) => [...row].forEach((c, x) => c === 'S' && (start = [x, y])))
+      const seen = new Set([start.join()])
+      const q = [start]
+      let found = false
+      while (q.length) {
+        const [x, y] = q.shift()
+        if (lv.map[y][x] === 'E') found = true
+        for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+          const nx = x + dx
+          const ny = y + dy
+          const c = lv.map[ny]?.[nx]
+          if (!c || c === '#' || seen.has(`${nx},${ny}`)) continue
+          seen.add(`${nx},${ny}`)
+          q.push([nx, ny])
+        }
+      }
+      expect(found, lv.name).toBe(true)
+      for (const g of lv.guards) for (const [x, y] of g.path) expect(lv.map[y][x], `${lv.name} guard at ${x},${y}`).not.toBe('#')
+    }
+  })
+
+  it('akara: flip at golden, lift at golden, and orders fill', () => {
+    const s = akara.create({}, 2)
+    const need = s.orders[0].n
+    for (let k = 0; k < need; k++) {
+      akara.tapSlot(s, 0)
+      s.slots[0].cook = 0.6
+      akara.tapSlot(s, 0) // flip
+      s.slots[0].cook = 0.6
+      akara.tapSlot(s, 0) // lift
+    }
+    expect(s.filled).toBe(1)
+    expect(s.perfect).toBe(need)
+  })
+
+  it('palm climb: the clear side climbs, a hazard side stings', () => {
+    const s = palm.create({}, 3)
+    s.trunk[1] = { side: 'L', kind: 'ants' }
+    palm.climb(s, 'R')
+    expect(s.at).toBe(1)
+    s.trunk[2] = { side: 'R', kind: 'wasps' }
+    s.slip = 0
+    palm.climb(s, 'R')
+    expect(s.stings).toBe(1)
+  })
+
+  it('a perfect player wins the sorting games', () => {
+    // fake parts
+    let s = parts.create({}, 5)
+    while (!s.over) parts.judge(s, s.boxes[s.i].fake)
+    expect(parts.result(s).outcome).toBe('won')
+    // ballots
+    s = ballots.create({}, 5)
+    while (!s.over) ballots.sortInto(s, s.ballots[s.i].answer)
+    expect(ballots.result(s).outcome).toBe('won')
+    // rice queue
+    s = rice.create({ seconds: 600 }, 5)
+    while (!s.over) rice.decide(s, s.queue[0].ok)
+    expect(rice.result(s).outcome).toBe('won')
+    // pepper soup
+    s = pepper.create({}, 5)
+    while (!s.over) {
+      for (const st of s.orders[0].steps) pepper.add(s, st)
+      pepper.serve(s)
+      pepper.step(s, 3)
+    }
+    expect(pepper.result(s).outcome).toBe('won')
+  })
+
+  it('bar rush: serving what they ask pays; pouring what nobody wants costs', () => {
+    const s = bar.create({}, 6)
+    bar.step(s, 0.5)
+    const c = s.seats.find(Boolean)
+    bar.pour(s, c.drink)
+    expect(s.takings).toBeGreaterThan(0)
+    const before = s.takings
+    const nobody = Object.keys(bar.DRINKS).find((d) => !s.seats.some((x) => x && !x.leaving && x.drink === d))
+    bar.pour(s, nobody)
+    expect(s.takings).toBeLessThan(before)
+  })
+
+  it('poster war, traffic and penalties hold together', () => {
+    const p = posters.create({}, 1)
+    p.wall = p.wall.map(() => null)
+    posters.tapSpot(p, 0)
+    expect(posters.mine(p)).toBe(1)
+    const t = traffic.create({}, 1)
+    traffic.toggle(t)
+    expect(t.green).toBe('EW')
+    for (let i = 0; i < 100; i++) traffic.step(t, 0.1)
+    expect(t.passed).toBeGreaterThan(0)
+    const k = penalty.create({}, 1)
+    penalty.input(k, { type: 'button', id: 'TL' }, V)
+    expect(k.phase).toBe('power')
+  })
+})

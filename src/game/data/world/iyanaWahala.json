@@ -1918,6 +1918,250 @@
           }
         }
       }
+    },
+    {
+      "id": "exactChange",
+      "label": "CONDUCT",
+      "icon": "naira",
+      "spot": "frontStop",
+      "if": {
+        "flags": [
+          "dayLoop"
+        ]
+      },
+      "mode": "change",
+      "minutes": 60,
+      "params": {
+        "target": 8,
+        "seconds": 60,
+        "tip": 50
+      },
+      "where": "Front Stop danfos",
+      "results": {
+        "won": {
+          "changeStat": {
+            "communityGoodwill": 1
+          }
+        }
+      }
+    },
+    {
+      "id": "draughtsTea",
+      "label": "DRAUGHTS",
+      "icon": "star",
+      "spot": "teaTable",
+      "if": {
+        "flags": [
+          "dayLoop"
+        ]
+      },
+      "mode": "draughts",
+      "minutes": 45,
+      "params": {
+        "name": "Mallam Garba",
+        "opponent": "garba",
+        "skill": 0.6
+      },
+      "where": "Garba's tea table",
+      "results": {
+        "won": {
+          "changeStat": {
+            "money": 1000,
+            "mentorBond": 1
+          }
+        }
+      }
+    },
+    {
+      "id": "goSlow",
+      "label": "GO-SLOW",
+      "icon": "wheel",
+      "spot": "motorPark",
+      "if": {
+        "flags": [
+          "dayLoop"
+        ]
+      },
+      "mode": "traffic",
+      "minutes": 60,
+      "params": {
+        "target": 30,
+        "seconds": 60
+      },
+      "where": "The dead traffic light",
+      "results": {
+        "won": {
+          "changeStat": {
+            "communityGoodwill": 2
+          }
+        }
+      }
+    },
+    {
+      "id": "fakeOrOriginal",
+      "label": "ORIGINAL?",
+      "icon": "shield",
+      "spot": "market",
+      "if": {
+        "anyOf": [
+          "campaign_grace",
+          "ikeAround"
+        ]
+      },
+      "mode": "fakeParts",
+      "minutes": 60,
+      "params": {
+        "count": 20,
+        "need": 15
+      },
+      "where": "Mama Ngozi's stall, Ọjà",
+      "results": {
+        "won": {
+          "changeStat": {
+            "conscience": 1
+          }
+        }
+      }
+    },
+    {
+      "id": "posterWar",
+      "label": "POSTERS",
+      "icon": "megaphone",
+      "spot": "frontStop",
+      "if": "campaign_politics",
+      "mode": "posters",
+      "minutes": 60,
+      "params": {
+        "seconds": 45,
+        "need": 5
+      },
+      "where": "The Front Stop wall",
+      "results": {
+        "won": {
+          "changeStat": {
+            "votes": 1
+          }
+        }
+      }
+    },
+    {
+      "id": "countVotes",
+      "label": "COUNT",
+      "icon": "stats",
+      "spot": "southStreet",
+      "if": "campaign_politics",
+      "mode": "ballots",
+      "minutes": 60,
+      "params": {
+        "count": 30,
+        "need": 0.85
+      },
+      "where": "Agent training, South Street",
+      "results": {
+        "won": {
+          "changeStat": {
+            "publicTrust": 1
+          }
+        }
+      }
+    },
+    {
+      "id": "riceDay",
+      "label": "RICE DAY",
+      "icon": "people",
+      "spot": "market",
+      "if": "campaign_politics",
+      "mode": "riceQueue",
+      "minutes": 90,
+      "params": {
+        "bags": 40,
+        "need": 18,
+        "seconds": 75
+      },
+      "where": "The market canopy",
+      "results": {
+        "won": {
+          "changeStat": {
+            "votes": 1,
+            "money": -10000
+          }
+        },
+        "lost": {
+          "changeStat": {
+            "money": -10000,
+            "scandal": 1
+          }
+        }
+      }
+    },
+    {
+      "id": "pepperKitchen",
+      "label": "KITCHEN",
+      "icon": "gas",
+      "spot": "southStreet",
+      "if": "campaign_sugar",
+      "mode": "pepperSoup",
+      "minutes": 90,
+      "params": {
+        "target": 6,
+        "seconds": 75
+      },
+      "where": "Sugar Palace kitchen",
+      "results": {
+        "won": {
+          "changeStat": {
+            "staffTrust": 1
+          }
+        }
+      }
+    },
+    {
+      "id": "barRushNight",
+      "label": "BAR RUSH",
+      "icon": "naira",
+      "spot": "southStreet",
+      "if": "campaign_sugar",
+      "mode": "barRush",
+      "minutes": 90,
+      "params": {
+        "target": 20000,
+        "seconds": 60
+      },
+      "where": "Sugar Palace bar",
+      "results": {
+        "won": {
+          "changeStat": {
+            "sugarRep": 1
+          }
+        }
+      }
+    },
+    {
+      "id": "whotBassey",
+      "label": "WHOT",
+      "icon": "star",
+      "spot": "southStreet",
+      "if": "campaign_sugar",
+      "mode": "whot",
+      "minutes": 45,
+      "params": {
+        "name": "Commander Bassey",
+        "skill": 0.6
+      },
+      "where": "The card table at the bar",
+      "results": {
+        "won": {
+          "changeStat": {
+            "money": 5000,
+            "policeHeat": -2
+          }
+        },
+        "lost": {
+          "changeStat": {
+            "money": -5000
+          }
+        }
+      }
     }
   ],
   "rows": [

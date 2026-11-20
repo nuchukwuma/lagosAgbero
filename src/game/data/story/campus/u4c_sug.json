@@ -60,6 +60,33 @@
           ]
         },
         {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Saturday: the Hostel Cup final. Tobi is captain, and the whole campus is watching. \"Win this,\" he says, \"and the hostels vote for us.\" It ends 1-1. Penalties. And Tobi's best penalty taker is you."
+        },
+        {
+          "type": "startMode",
+          "mode": "penalty",
+          "params": {
+            "name": "Spike's Hall",
+            "skill": 0.55
+          },
+          "results": {
+            "won": {
+              "changeStat": {
+                "campusRep": 5
+              },
+              "toast": "They carry you round the field. Tobi is crying. \"VOTE TOBI\" is painted on someone's chest by evening."
+            },
+            "lost": {
+              "changeStat": {
+                "campusRep": 1
+              },
+              "toast": "Spike's Hall lift the cup. Tobi hugs you anyway. \"We go again. In the ballot box.\""
+            }
+          }
+        },
+        {
           "type": "goto",
           "scene": "debate"
         }

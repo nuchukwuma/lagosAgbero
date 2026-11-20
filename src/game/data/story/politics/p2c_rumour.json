@@ -122,24 +122,27 @@
           "text": "Midnight. Someone is pasting the rumour as posters, right on top of yours, along the Front Stop."
         },
         {
+          "type": "dialogue",
+          "speaker": "seyi",
+          "text": "(arriving with two buckets of paste and a torch) Teacher, the whole Front Stop wall. If the morning danfos see THEIR posters, the rumour wins the week. Paste!"
+        },
+        {
           "type": "startMode",
-          "mode": "chase",
+          "mode": "posters",
           "params": {
-            "target": "thief",
-            "name": "The poster boy",
-            "kind": "okada",
-            "difficulty": 1,
-            "timeLimit": 30
+            "seconds": 45,
+            "need": 5
           },
           "results": {
             "won": {
               "setFlag": "caughtPosterBoy",
-              "toast": "You catch him by the bucket of paste. He is sixteen. He was paid ₦1,500. He has a receipt. Owó Ńlá's campaign gives receipts."
+              "toast": "By 3 a.m. the wall is yours, and you catch the last boy by his bucket. He is sixteen. He was paid ₦1,500. He has a receipt. Owó Ńlá's campaign gives receipts."
             },
             "lost": {
               "changeStat": {
                 "votes": -1
-              }
+              },
+              "toast": "At dawn the danfos pass a wall that says TEACHER FLOGS CHILDREN in four colours."
             }
           }
         },

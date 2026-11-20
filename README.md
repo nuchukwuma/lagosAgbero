@@ -29,6 +29,10 @@ share the engine:
   non-explicit: the story is about the business and the line she will or
   won't cross. 15 chapters, 9 endings.
 
+Every story also has three mini-games of its own (draughts with Professor,
+Ayò at the palm-wine shade, akara frying, Poster War, Whot! with Commander
+Bassey, and ten more): see [docs/minigames.md](docs/minigames.md).
+
 Every story also has side quests with its key people (a quest-giver stands in
 the street during free roam); doing them raises your bond and changes later
 scenes.

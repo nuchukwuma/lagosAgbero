@@ -13,6 +13,34 @@
         {
           "type": "dialogue",
           "speaker": "narrator",
+          "text": "Before the sheets travel: at the Market polling unit, your agent fainted from the heat at 4 p.m. You sit in his chair at the counting table yourself."
+        },
+        {
+          "type": "startMode",
+          "mode": "ballots",
+          "params": {
+            "count": 30,
+            "need": 0.85
+          },
+          "results": {
+            "won": {
+              "changeStat": {
+                "votes": 3,
+                "publicTrust": 2
+              },
+              "toast": "Every agent signs the Market sheet: clean, counted, photographed. Ifeoma's camera got all of it."
+            },
+            "lost": {
+              "changeStat": {
+                "votes": -2
+              },
+              "toast": "The nephew's agent disputes your pile. The sheet goes to collation with a big question mark on it."
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
           "text": "The collation centre is the primary school on South Street. Your agents phone in the polling unit results one by one: Front Stop, Market, Motor Park, and six others."
         },
         {

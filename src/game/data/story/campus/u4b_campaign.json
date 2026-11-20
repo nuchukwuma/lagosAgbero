@@ -297,6 +297,34 @@
           ]
         },
         {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "It's past curfew. Tamara's hostel is across campus, and the Dons are walking the paths. You'll have to go the quiet way.",
+          "if": "warnedTownHall"
+        },
+        {
+          "type": "startMode",
+          "mode": "sneak",
+          "params": {
+            "lives": 3
+          },
+          "results": {
+            "won": {
+              "changeStat": {
+                "tamaraBond": 3
+              },
+              "toast": "You tap on Tamara's window at 1 a.m. She listens to everything, then hugs you through the burglar bars."
+            },
+            "lost": {
+              "changeStat": {
+                "donsHeat": 5
+              },
+              "toast": "Security catches you. You shout the warning at Tamara's window as they march you back. She hears it. So does the whole hostel."
+            }
+          },
+          "if": "warnedTownHall"
+        },
+        {
           "type": "endChapter",
           "title": "Campaign Season",
           "summary": "Two candidates, one campus, and everybody watching where you stood.",

@@ -29,7 +29,7 @@ import { withAllegiance } from '../characters/look.js'
 import { useRunner } from '../modes/runner/runnerStore.js'
 import ConductorDirector from '../modes/conductor/ConductorDirector.jsx'
 import { useBus } from '../modes/conductor/ConductorMode.jsx'
-import { WORLD_MODES } from '../modes/modeRegistry.js'
+import { WORLD_MODES, FULLSCREEN_MODES } from '../modes/modeRegistry.js'
 import { LOW_ENERGY } from '../systems/energy.js'
 import VendorTracker from './VendorTracker.jsx'
 import ActivityTracker from './ActivityTracker.jsx'
@@ -101,7 +101,7 @@ export default function GameCanvas({ view, game, activity = null, paused = false
   const chaseActive = useChase((s) => s.active && s.started && !s.ended)
   const fightOn = useFight((s) => s.active)
   // the 2D scenes (the fights, dance battles) draw over a frozen, hidden street
-  const fight2d = (fightOn && modeName === 'fight') || modeName === 'dance'
+  const fight2d = (fightOn && modeName === 'fight') || FULLSCREEN_MODES.has(modeName)
   const runnerOn = useRunner((s) => s.active) && modeName === 'runner'
   const busOn = useBus((s) => s.active) && modeName === 'conductor'
   const driveOn = useDrive((s) => s.active) && modeName === 'drive'

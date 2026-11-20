@@ -146,6 +146,50 @@
         {
           "type": "dialogue",
           "speaker": "biodun",
+          "text": "Before you say anything: my conductor is still in Ghana. Hang on the door for me today. Fares in, change out. Don't short anybody, they know where I park.",
+          "if": {
+            "anyOf": [
+              "paidImpound",
+              "shellImpoundFavour",
+              "coopPaidImpound",
+              "stoleDanfoBack"
+            ]
+          }
+        },
+        {
+          "type": "startMode",
+          "mode": "change",
+          "params": {
+            "target": 8,
+            "seconds": 60,
+            "tip": 50
+          },
+          "results": {
+            "won": {
+              "changeStat": {
+                "communityGoodwill": 3
+              },
+              "toast": "Not one passenger shouted all day. Bíọ́dún says that has never happened on the Oshodi route."
+            },
+            "lost": {
+              "changeStat": {
+                "notoriety": 1
+              },
+              "toast": "A market woman follows you two bus stops to collect her ₦50."
+            }
+          },
+          "if": {
+            "anyOf": [
+              "paidImpound",
+              "shellImpoundFavour",
+              "coopPaidImpound",
+              "stoleDanfoBack"
+            ]
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "biodun",
           "text": "(polishing the bus with his shirt) Five children. Five! All of them ate today because of you. (He slaps the danfo.) God's Time Is The Best. Now I believe the sticker.",
           "if": {
             "anyOf": [

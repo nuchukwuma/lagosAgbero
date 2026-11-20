@@ -56,6 +56,88 @@
       "beats": [
         {
           "type": "dialogue",
+          "speaker": "professor",
+          "text": "Before the book. Sit. One game of draughts. I want to see if you learned anything except shouting.",
+          "if": {
+            "anyOf": [
+              "professor_village",
+              "professor_buka",
+              "professor_stays"
+            ]
+          }
+        },
+        {
+          "type": "startMode",
+          "mode": "draughts",
+          "params": {
+            "name": "Professor",
+            "opponent": "professor",
+            "skill": 0.7
+          },
+          "results": {
+            "won": {
+              "changeStat": {
+                "mentorBond": 6
+              },
+              "toast": "Professor stares at the board for a whole minute. Then he laughs, properly."
+            },
+            "lost": {
+              "changeStat": {
+                "mentorBond": 3
+              },
+              "toast": "\"Rule eleven,\" he says. \"Never play an old man at his own table.\""
+            }
+          },
+          "if": {
+            "anyOf": [
+              "professor_village",
+              "professor_buka",
+              "professor_stays"
+            ]
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "garba",
+          "text": "He played every evening on this table. Bottle tops. Red for him, green for whoever was foolish. (He sets up the board.) Play me. For him.",
+          "if": {
+            "anyOf": [
+              "professor_dead",
+              "professor_jailed"
+            ]
+          }
+        },
+        {
+          "type": "startMode",
+          "mode": "draughts",
+          "params": {
+            "name": "Mallam Garba",
+            "opponent": "garba",
+            "skill": 0.5
+          },
+          "results": {
+            "won": {
+              "changeStat": {
+                "mentorBond": 4
+              },
+              "toast": "Garba nods slowly. \"He taught you that move. I saw him do it to me in 2009.\""
+            },
+            "lost": {
+              "changeStat": {
+                "mentorBond": 2
+              },
+              "toast": "Garba wins, and doesn't celebrate. He leaves the red bottle tops on Professor's chair."
+            }
+          },
+          "if": {
+            "anyOf": [
+              "professor_dead",
+              "professor_jailed"
+            ]
+          }
+        },
+        {
+          "type": "dialogue",
           "speaker": "garba",
           "text": "(handing you a school exercise book, its cover soft with age) Professor gave me this years ago. He said: \"When I'm gone, give it to the one who argues with me most.\" (He shrugs.) That's you.",
           "if": {

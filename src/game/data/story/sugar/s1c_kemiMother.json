@@ -76,6 +76,33 @@
       "beats": [
         {
           "type": "dialogue",
+          "speaker": "narrator",
+          "text": "She wants to see \"the hotel kitchen\". Then the Friday orders start coming in, and she stands in the doorway and watches you cook for a full house."
+        },
+        {
+          "type": "startMode",
+          "mode": "pepperSoup",
+          "params": {
+            "target": 6,
+            "seconds": 75
+          },
+          "results": {
+            "won": {
+              "changeStat": {
+                "staffTrust": 4
+              },
+              "toast": "She eats a bowl standing up. \"This is how my mother made it,\" she says, and then she cries a little, and blames the pepper."
+            },
+            "lost": {
+              "changeStat": {
+                "staffTrust": 1
+              },
+              "toast": "\"It is a busy kitchen,\" she says politely, looking at the burnt pot."
+            }
+          }
+        },
+        {
+          "type": "dialogue",
           "speaker": "mamaKemi",
           "text": "(later, over pepper soup, quietly) My blood pressure. The doctor wants me on new drugs, ₦18,000 a month. Kemi sends ₦10,000. I didn't want to tell her the rest."
         },
