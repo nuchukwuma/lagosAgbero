@@ -7,7 +7,9 @@ const TITLES = { main: 'Paused', save: 'Save game', load: 'Load game', wardrobe:
 
 // Pause menu: resume, the rules of the game you're in, wardrobe, save, load,
 // settings, quit to title. Paused in the middle of a game, it opens on the rules.
-export default function GameMenu({ onClose, onSave, onLoad, onQuit, onMap, canDress = true, objective = null, chapter = null, activity = null, howTo = null, onRetry = null, onTutorial = null }) {
+// A game started from the Games tab (gamesOnly) has no story bits: no save,
+// load, wardrobe or story map, and Quit goes back to the Games list.
+export default function GameMenu({ onClose, onSave, onLoad, onQuit, onMap, canDress = true, objective = null, chapter = null, activity = null, howTo = null, onRetry = null, onTutorial = null, gamesOnly = false }) {
   const [tab, setTab] = useState(howTo ? 'rules' : 'main')
   return (
     <div className="overlay" onClick={onClose}>
@@ -18,7 +20,7 @@ export default function GameMenu({ onClose, onSave, onLoad, onQuit, onMap, canDr
             ✕
           </button>
         </div>
-        {tab === 'main' && (objective || activity || chapter) && (
+        {tab === 'main' && !gamesOnly && (objective || activity || chapter) && (
           <div className="pause-objective">
             {chapter && <small>{chapter}</small>}
             {activity && (
@@ -55,29 +57,33 @@ export default function GameMenu({ onClose, onSave, onLoad, onQuit, onMap, canDr
                 Tutorial
               </button>
             )}
-            {onMap && (
+            {!gamesOnly && onMap && (
               <button className="btn" onClick={onMap}>
                 Story map
               </button>
             )}
-            {canDress && (
+            {!gamesOnly && canDress && (
               <button className="btn" onClick={() => setTab('wardrobe')}>
                 Wardrobe
               </button>
             )}
-            <button className="btn" onClick={() => setTab('save')}>
-              Save
-            </button>
-            <button className="btn" onClick={() => setTab('load')}>
-              Load
-            </button>
+            {!gamesOnly && (
+              <>
+                <button className="btn" onClick={() => setTab('save')}>
+                  Save
+                </button>
+                <button className="btn" onClick={() => setTab('load')}>
+                  Load
+                </button>
+              </>
+            )}
             <button className="btn" onClick={() => setTab('settings')}>
               Settings
             </button>
             <button className="btn" onClick={onQuit}>
-              Quit to title
+              {gamesOnly ? 'Quit to Games' : 'Quit to title'}
             </button>
-            <p className="footnote">The game also autosaves after every choice.</p>
+            {!gamesOnly && <p className="footnote">The game also autosaves after every choice.</p>}
           </div>
         )}
         {tab === 'rules' && howTo && (

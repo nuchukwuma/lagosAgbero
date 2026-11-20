@@ -281,13 +281,18 @@ fights, chases or any mode. Real money can never buy anything in the story.
 
 ## Games (no story needed)
 
-The home screen has a **Games** tab: every mini-game and every story game
-(fights, dance battle, runner, chase, fee run, conductor, danfo drive,
-begging, rally, bluffs, exam, haggle, initiation), at Easy, Normal or Hard.
-Each comes back to the list when it ends, and every game gets a little harder
-(and pays a little more) the more you play it. Developers (`npm run dev`, or
-any build opened once with `?dev`) also get a slider for the exact point in
-the story, and the chapter picker.
+The home screen has a **Games** tab for playing just for fun: the games on
+their own, not the story's events. **Action**: Endless Runner, Rooftop Escape
+(the platformer), Street Fight (a new opponent every time), Dance Battle, Danfo
+Drive. **Board & card**: Draughts, Ayò, Whot!. **Arcade**: Go-Slow, Exact
+Change, Palm Climb, Original or Fake?, Akara Fry, Back Gate, Penalty Shoot-out,
+Poster War, Count the Votes, Rice Day, Pepper Soup Kitchen, Bar Rush. Easy,
+Normal or Hard; your best score shows on each; every game gets a little
+harder the more you play it. Inside, there's no story around the game: no
+name, money or map on screen, no save or load, and Quit goes back to the list.
+The story's events (bluffs, exams, the fee run, the defaulter chase...) stay in
+the stories; developers (`npm run dev`, or `?dev`) can still try them from a
+"Story events" group, with a slider for the exact point in the story.
 
 Every game has a short guided **tutorial** the first time you play it (a
 spotlight on each control); the pause menu has **How to play**, **Tutorial**,

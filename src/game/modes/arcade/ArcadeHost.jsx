@@ -240,7 +240,7 @@ export function makeArcadeMode(game) {
             {params.prize ? <p>Prize: {formatNaira(params.prize)}</p> : null}
             <p className="arcade-level" title="Rises as the story goes on, and the more you play">
               Difficulty <strong>{'★'.repeat(1 + Math.round(level * 4))}{'☆'.repeat(4 - Math.round(level * 4))}</strong>
-              {rewardMul > 1 && <span className="arcade-mul"> · rewards ×{rewardMul}</span>}
+              {rewardMul > 1 && !given.recreational && <span className="arcade-mul"> · rewards ×{rewardMul}</span>}
             </p>
             <PowerupOffer mode={game.id} />
             <button
@@ -288,13 +288,13 @@ export function makeArcadeMode(game) {
               {game.scoreLabel ? `${res.score} ${game.scoreLabel}` : `Score ${res.score}`}
               {res.score >= best && res.score > 0 ? ' · new best!' : best > 0 ? ` · best ${Math.max(best, res.score)}` : ''}
             </p>
-            {res.moneyChange ? (
+            {res.moneyChange && !given.recreational ? (
               <p className="arcade-pay">
                 {res.moneyChange > 0 ? `+${formatNaira(res.moneyChange * adMul)}` : `−${formatNaira(-res.moneyChange)}`}
                 {adMul > 1 && <strong> ×{adMul}</strong>}
               </p>
             ) : null}
-            {res.moneyChange > 0 && adMul < 3 && (
+            {res.moneyChange > 0 && adMul < 3 && !given.recreational && (
               <button
                 className="btn btn-ad"
                 disabled={adBusy}

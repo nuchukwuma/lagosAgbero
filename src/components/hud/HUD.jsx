@@ -6,7 +6,19 @@ import { campaignOf } from '../../game/narrative/campaigns.js'
 import { STAT_DEFS } from '../../game/narrative/stats.js'
 
 // Always-visible status: who you are, money, energy (red eyes), notoriety.
-export default function HUD({ game, onStatus, onMenu, onMap }) {
+export default function HUD({ game, onStatus, onMenu, onMap, gamesOnly = false }) {
+  // a game played from the Games tab: no story status, just the pause button
+  if (gamesOnly)
+    return (
+      <div className="hud hud-games">
+        <div className="hud-left" />
+        <div className="hud-right">
+          <button className="icon-btn" onClick={onMenu} aria-label="Menu" title="Pause menu">
+            <Icon name="pause" size={22} />
+          </button>
+        </div>
+      </div>
+    )
   const { stats, player } = game
   const { meter = 'redEyes', bar = { stat: 'notoriety', label: 'Notoriety' } } = campaignOf(game).hud || {}
   const pct = (k) => Math.max(0, Math.min(100, ((stats[k] ?? 0) / (STAT_DEFS[k]?.max || 100)) * 100))

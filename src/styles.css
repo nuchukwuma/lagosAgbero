@@ -3976,3 +3976,8 @@ svg .is-chase { fill: #e53935; stroke: #fff; stroke-width: 0.6; animation: map-p
 @media (max-height: 460px) { .tutorial-bubble p { font-size: 14px; margin-bottom: 6px; } .tutorial-bubble { padding: 8px 12px; } }
 .tutorial-row .btn:not(.btn-primary) { background: transparent; color: #1a1408; border-color: rgba(26, 20, 8, 0.5); }
 .how-to-play .tutorial-again { margin-top: 8px; }
+.games-btn { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
+.games-btn small { font-weight: 400; opacity: 0.75; font-size: 12px; }
+.games-best { font-style: normal; font-size: 11px; color: #8ff0a4; }
+.hud-games { pointer-events: none; }
+.hud-games .hud-right { pointer-events: auto; }

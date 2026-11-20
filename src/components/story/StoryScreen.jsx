@@ -95,6 +95,8 @@ export default function StoryScreen() {
   // or the escape run, which have their own roads)
   const modeName = activity ? activity.mode : view?.type === 'mode' ? view.mode : null
   useFirstTimeTutorial(modeName)
+  // a game played on its own from the Games tab (no story around it)
+  const gamesOnly = Boolean(activity?.fromGames)
   const showMini = Boolean(view?.world) && (modeName ? MAP_MODES.has(modeName) : ['freeRoam', 'dialogue', 'choice'].includes(view?.type))
   useEffect(() => {
     if (!canMap) return undefined
@@ -162,9 +164,9 @@ export default function StoryScreen() {
       <CanvasGuard onBack={quitToTitle}>{(safeGl) => <GameCanvas view={view} game={game} activity={activity} paused={paused} onGoalReached={advance} safeGl={safeGl} />}</CanvasGuard>
       {raining && <div className="rain" aria-hidden="true" />}
       <div id="speech-layer" className="speech-layer" aria-live="polite" />
-      <HUD game={game} onStatus={() => setOverlay('status')} onMenu={() => setOverlay('menu')} onMap={view.world ? () => setOverlay('worldMap') : null} />
-      {showMini && !overlay && <MiniMap layout={getLayout(view.world)} goal={view.type === 'freeRoam' ? view.goal : null} onOpen={modeName ? null : () => setOverlay('worldMap')} />}
-      {view.chapterTitle && view.type !== 'cutscene' && <div className="chapter-chip">{view.chapterTitle}</div>}
+      <HUD game={game} gamesOnly={gamesOnly} onStatus={() => setOverlay('status')} onMenu={() => setOverlay('menu')} onMap={view.world ? () => setOverlay('worldMap') : null} />
+      {showMini && !overlay && !gamesOnly && <MiniMap layout={getLayout(view.world)} goal={view.type === 'freeRoam' ? view.goal : null} onOpen={modeName ? null : () => setOverlay('worldMap')} />}
+      {view.chapterTitle && view.type !== 'cutscene' && !gamesOnly && <div className="chapter-chip">{view.chapterTitle}</div>}
       {view.type === 'freeRoam' && !overlay && !activity && (
         <FreeRoamControls
           view={view}
@@ -206,7 +208,11 @@ export default function StoryScreen() {
             load(slot)
             setOverlay(null)
           }}
-          onQuit={quitToTitle}
+          onQuit={gamesOnly ? () => {
+            setOverlay(null)
+            finishActivity({ outcome: 'quit' })
+          } : quitToTitle}
+          gamesOnly={gamesOnly}
           canDress={view.type === 'freeRoam' && !activity}
           onMap={() => setOverlay('map')}
           objective={view.objective || lastObjective}
