@@ -98,6 +98,11 @@ export default function GameMenu({ onClose, onSave, onLoad, onQuit, onMap, canDr
                 </button>
               )}
             </div>
+            {onTutorial && (
+              <button className="btn btn-small tutorial-again" onClick={onTutorial}>
+                Show me the controls (tutorial)
+              </button>
+            )}
           </div>
         )}
         {tab === 'wardrobe' && <WardrobePanel onDone={onClose} />}

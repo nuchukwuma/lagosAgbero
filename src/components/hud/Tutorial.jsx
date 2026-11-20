@@ -12,7 +12,8 @@ export const tutorialOpen = () => Boolean(useTutorial.getState().mode)
 export const showTutorial = (mode) => tutorialFor(mode) && useTutorial.setState({ mode, step: 0 })
 
 const key = (mode) => `tut:${mode}`
-const introUp = () => Boolean(document.querySelector('.arcade-intro, .fee-intro, .arcade-result'))
+// a game's start card (or its result) is up; some games play in a panel styled like one (.haggle)
+const introUp = () => Boolean(document.querySelector('.arcade-intro, .fee-intro:not(.haggle), .arcade-result'))
 
 /** Starts the tour by itself the first time `mode` is being played. */
 export function useFirstTimeTutorial(mode) {

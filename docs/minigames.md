@@ -64,6 +64,24 @@ start screen, for that run only: more time, more patient customers, a tired
 opponent, gentler oil, slower guards, a bigger paste bucket, a Whot card in
 your hand, extra lives and hearts in the escape, and so on.
 
+## Tutorials, pause and retry
+
+The first time you play a game, a guided tour (`components/hud/Tutorial.jsx`,
+steps in `modes/tutorials.js`) puts a spotlight on each control in turn and
+says what it does; the game holds still meanwhile. The pause menu opens on
+the game's rules and has **Retry** (start the game again), **Tutorial** (the
+tour again) and **Resume**.
+
+## Throwing and picking things up
+
+- **Fights**: bottles, stones, a crate and a tyre lie about the arena; stand by
+  one and THROW appears. They fly slowly enough to block, duck (high ones) or
+  jump (the tyre); the opponent throws them too. Walls mark both ends.
+- **Runner**: magnets, stars and charms on the road, and empty bottles (carry
+  3) to THROW down your lane at a Task Force man running at you.
+- **Escape**: bottles to throw (stun and hurt an officer), a heart (+2 health),
+  a star (untouchable, bowls officers over), a magnet (notes come to you).
+
 ## Board and card games: the official rules
 
 - **Draughts** is International draughts (FMJD), as Nigeria plays it: 10×10,
@@ -176,15 +194,15 @@ hit, block, duck, knock-out or dance moves. The 3D streets keep their 3D people.
 | Draughts | the tea table, a plywood 10×10 board (8×8 for the English variant), red and green bottle tops with crimped rims, crowns |
 | Go-Slow | an isometric junction (roads, zebra crossings, corner blocks) with the game's own 3D vehicles as sprites: danfos, molue, taxis, cars, SUVs, lorries, kekes and okadas with riders, the Task Force convoy; they queue bumper to bumper, pull away and turn; the warden in the middle |
 | Ayò | the palm-wine shade (thatch, red earth), a carved board with twelve cups and two stores, seeds |
-| Palm Climb | sky, distant palms, a ringed trunk that scrolls, soldier ants, wasp nests, fronds and the calabash, the rope loop, a height gauge |
+| Palm Climb | a vertical platformer: the ringed trunk, fronds to jump between (some swaying), soldier ants, wasps, falling palm fruit, wind, palm nuts, the calabash at the top |
 | Original or Fake? | the stall's shelves, parts boxes (brand, part, origin, hologram seal, price tag), Mama Ngozi's brand chart |
 | Akara Fry | dawn, firewood, a black pan of oil, akara in six shades from raw to burnt, bubbles, smoke, the order board |
-| Back Gate | a night campus map: buildings with lit windows, paths, hedges, the gate, guards and their torch beams |
+| Back Gate | top-down stealth: tiled paths, raised walls, round hedges, the hostel and the iron gate, guards seen from above with torch beams that walls stop, a ? that fills before ! |
 | Penalties | the pitch, the hostel crowd, goal and net, keeper and kicker, the ball, the power bar, the score sheet |
 | Poster War | a night wall, Teacher and Nephew posters, the boys with paste buckets, your paste bucket |
 | Count the Votes | the counting table, ballot papers with three candidate boxes and symbols, thumbprints, smudges, rubber-banded bundles, the four piles |
 | Rice Day | the canopy, stacks of rice bags, the queue, ward cards, inked thumbs, the crowd's mood bar |
-| Pepper Soup | kitchen tiles, the ticket rail, the pot on a gas ring, ingredients, steam |
+| Pepper Soup | a cooking-game counter from above: the ticket, steel bowls of goat, catfish, chicken, spice, uziza, scent leaf and peppers (tap them; each flies into the pot), the pot on a gas ring with a ladle stirring, bubbles, splashes, steam, the served bowl sliding off |
 | Bar Rush | fairy lights, the bottle shelf, stools, customers with their orders and patience, the counter |
 | Whot! | the green cloth, the full 54-card Whot deck (circles, triangles, crosses, squares, stars, Whot 20), the market pile |
 

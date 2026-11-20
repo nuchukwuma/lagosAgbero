@@ -279,15 +279,19 @@ Optional environment variables:
 Ads appear only as optional "favours" during free roam, never in dialogue,
 fights, chases or any mode. Real money can never buy anything in the story.
 
-## Play any game without the story (developer)
+## Games (no story needed)
 
-The title screen has **All games (dev)** in development builds (`npm run dev`).
-In a built or deployed copy, open it once with `?dev` on the address
-(`…/?dev`) and the button stays on for that browser. It lists every mini-game
-(three or four per story) and every story mode (fights, dance battle, runner,
-chase, fee run, conductor, danfo drive, begging, rally, bluffs, exam, haggle,
-initiation). The **Story point** slider sets how far into a story you'd be, so
-you can feel the difficulty rise. Each game comes back to the list when it ends.
+The home screen has a **Games** tab: every mini-game and every story game
+(fights, dance battle, runner, chase, fee run, conductor, danfo drive,
+begging, rally, bluffs, exam, haggle, initiation), at Easy, Normal or Hard.
+Each comes back to the list when it ends, and every game gets a little harder
+(and pays a little more) the more you play it. Developers (`npm run dev`, or
+any build opened once with `?dev`) also get a slider for the exact point in
+the story, and the chapter picker.
+
+Every game has a short guided **tutorial** the first time you play it (a
+spotlight on each control); the pause menu has **How to play**, **Tutorial**,
+and **Retry** next to Resume.
 
 ## Story, tests and animations
 

@@ -128,7 +128,11 @@ export const TUTORIALS = {
   bluff: [{ at: null, text: 'Answer before the time runs out. Whatever you claim is remembered for the rest of the story.' }],
   exam: [{ at: null, text: 'Pick the right answer before the bar runs out. Too many wrong and you fail.' }],
   initiation: [{ at: null, text: 'Answer as a Tortoise answers, before the candle burns down.' }],
-  haggle: [{ at: null, text: 'Name your price. Too high and they counter or walk; read the customer first.' }],
+  haggle: [
+    { at: '.haggle-hint', text: 'Read the customer first: a car and gold means they can pay more; counting coins means they can\'t.' },
+    { at: '.haggle-price', text: 'Set your price with − and + (or the quick prices).' },
+    { at: '.haggle .result-actions', text: 'Ask. Too high and they counter: take it, or push and risk them walking.' },
+  ],
 }
 
 export const tutorialFor = (mode) => TUTORIALS[mode] || null
