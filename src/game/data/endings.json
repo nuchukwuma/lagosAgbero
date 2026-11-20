@@ -870,6 +870,61 @@
         ]
       },
       "text": "The white chair: you ran from it. It is still waiting, they say, in a house with no number."
+    },
+    {
+      "if": "warnedFleet",
+      "text": "The fleet manager with the duck tie: he buys only from Mama Ngozi now. His buses have the best brakes on Ikorodu Road."
+    },
+    {
+      "if": "sworeForIke",
+      "text": "You swore on Papa's grave that fake brake pads were original. Papa's grave has not said anything. Yet."
+    },
+    {
+      "if": "gaveToBridge",
+      "text": "The beggars under the bridge: they still talk about the man who gave away white-thread money in handfuls, like it was burning him."
+    },
+    {
+      "if": "bigBurialGift",
+      "text": "Papa Ngwo's burial: they still say Nwankwo's son gave ₦50,000. Each year the number grows. Last year it was ₦200,000."
+    },
+    {
+      "if": "triedSaveKalu",
+      "text": "Kalu: he turned up at the dibia's shrine one rainy night, in white, shaking. The old man let him in."
+    },
+    {
+      "if": {
+        "flags": [
+          "recruitedKalu"
+        ],
+        "notFlags": [
+          "triedSaveKalu"
+        ]
+      },
+      "text": "Kalu: an usher now, with soft gloves and a soft voice. He never laughs."
+    },
+    {
+      "if": "warnedKalu",
+      "text": "Kalu: still at Ngozi's stall, still in love with every Benz, still running from white Lexuses. He laughs like a market."
+    },
+    {
+      "if": "giftsForNne",
+      "text": "Nne's good wrapper from Lagos: she wears it only to church, and only when the pastor is preaching about prodigal sons."
+    },
+    {
+      "if": "giftsForCompound",
+      "text": "The compound still talks about the Peak milk."
+    },
+    {
+      "if": "toldIkeMother",
+      "text": "Ike's mother: she knows about the white cars now. She goes to the stream every evening and calls his name, in case it helps."
+    },
+    {
+      "if": "dozieScam",
+      "text": "Uncle Dozie: \"Dozie and Associates\" has opened in Onitsha. Same business card. Different victims."
+    },
+    {
+      "if": "sentDozieHome",
+      "text": "Uncle Dozie: home, quieter, and very good at peeling yams at funerals."
     }
   ],
   "u_firstClass": {
@@ -1258,5 +1313,66 @@
     "epilogue": [
       "Chief Dapo's padlock is very shiny. You sit on the kerb opposite with your one bag, twenty-two years after Warri, and watch your name come down off the gate."
     ]
+  },
+  "grace_quarry": {
+    "title": "The Quarry Man",
+    "campaign": "grace",
+    "epilogue": [
+      "You let the Lagos bus go and went back to the quarry. Every stone is a naira. It will take years. You start anyway.",
+      {
+        "if": {
+          "stats": {
+            "motherBond": ">= 40"
+          }
+        },
+        "text": "Nne brings your lunch at noon, the way she brought it to Papa. She sings on the way. The quarry men tease you. You let them."
+      },
+      {
+        "if": "askedChinweYear",
+        "text": "Chinwe stops counting the year. \"You came back early,\" she says. \"That counts double.\""
+      },
+      "You keep Papa Ngwo's tortoise stick by the door. The tortoise in his stories always broke his shell in the end. Yours is still whole."
+    ],
+    "hint": "Some roads out of Lagos are short."
+  },
+  "grace_usher": {
+    "title": "The Usher",
+    "campaign": "grace",
+    "epilogue": [
+      "White gloves. A soft voice. People trust your face, so you bring them to the white chair and hold the door.",
+      "Kalu becomes an usher too. He is better at it than you. He never laughs. Neither do you.",
+      {
+        "if": {
+          "stats": {
+            "motherBond": ">= 40"
+          }
+        },
+        "text": "Nne still calls on Sundays. She can't say your name. She says \"my son\" instead, and you hold the phone away from your face until she has finished."
+      },
+      "Somewhere in the white book there is a page with your father's name on it, and the word NO. You have never looked for it."
+    ],
+    "hint": "A second price is still a price."
+  },
+  "grace_lagos": {
+    "title": "Lagos Has You",
+    "campaign": "grace",
+    "epilogue": [
+      "You stayed in Lagos. Lagos keeps you very busy. That is its kindness.",
+      {
+        "if": "biodunDrives",
+        "text": "Bíọ́dún drove to Onitsha without you and brought back a bag of ugu for \"the coward who didn't go home\". He means it kindly. Mostly."
+      },
+      {
+        "if": {
+          "anyOf": [
+            "pact",
+            "trickedBook"
+          ]
+        },
+        "text": "The money still arrives under your mat. You don't count it. You don't need to. It counts you."
+      },
+      "Every year, the festival video arrives on WhatsApp. Every year, you watch it twice."
+    ],
+    "hint": "Home is a road. You have to take it."
   }
 }

@@ -1,0 +1,176 @@
+{
+  "id": "g5c_lastNight",
+  "campaign": "grace",
+  "world": "iyanaWahala",
+  "act": 1,
+  "number": 14,
+  "title": "The Last Night",
+  "description": "The last night in Lagos before the festival: a farewell the Chief didn't send, a message from Ike, and two phone calls that matter.",
+  "startScene": "party",
+  "scenes": {
+    "party": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "chiefOdu",
+          "text": "(at your door, which he has never visited before) Going home, brother? For the yams? (He smiles.) Abundance loves festivals. So many people in one place. We will see you there.",
+          "if": {
+            "anyOf": [
+              "pact",
+              "trickedBook"
+            ]
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "A white car is parked opposite your door all evening. Nobody gets out. Nobody needs to.",
+          "if": {
+            "notFlags": [
+              "pact",
+              "trickedBook"
+            ]
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "usher",
+          "text": "(from the car window, as you pass) We remember the bridge. Enjoy your festival, Emeka.",
+          "if": "fellowshipEnemy"
+        },
+        {
+          "type": "goto",
+          "scene": "ike"
+        }
+      ],
+      "location": "backSide",
+      "time": "dusk"
+    },
+    "ike": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "ike",
+          "text": "(a voice note, wind behind it, a sea somewhere) Emeka. I'm in Ghana. I fry plantain at a beach bar. Yesterday a customer slipped on a peel and I... I nearly laughed. Nearly. (A long breath.) Go home. Don't let them have yours.",
+          "if": "savedIke"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "mamaIke",
+          "text": "(on the phone, from Nkwọ-Agụụ) Emeka, my son, have you seen Ike? He sends money every month and never calls. This month the money came. No call. A mother can count both.",
+          "if": "ikeLost"
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "She is waiting.",
+          "options": [
+            {
+              "text": "Tell her the truth about the white cars.",
+              "effects": {
+                "changeStat": {
+                  "conscience": 6,
+                  "ikeTrust": 4
+                },
+                "setFlag": "toldIkeMother"
+              }
+            },
+            {
+              "text": "\"He's busy, Mama. Lagos is busy.\"",
+              "effects": {
+                "changeStat": {
+                  "conscience": -3
+                }
+              }
+            }
+          ],
+          "if": "ikeLost"
+        },
+        {
+          "type": "goto",
+          "scene": "chinwe"
+        }
+      ],
+      "location": "backSide",
+      "time": "night"
+    },
+    "chinwe": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "chinwe",
+          "text": "You're coming for the festival. (A long pause on the line.) I need to tell you something before you arrive, so you don't hear it from my father first.",
+          "variants": [
+            {
+              "if": "chinweInLagos",
+              "text": "(She is right there, folding your shirts into the bag better than you did.) Nkwọ-Agụụ. Together. Like we said."
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "chinwe",
+          "text": "You asked me for one year. It's been eight months. I'm still counting. I'm good at counting. (She doesn't say what the counting will decide.)",
+          "if": "askedChinweYear"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "chinwe",
+          "text": "You asked me to come to Lagos, that week, at the burial. I didn't come. I wanted to see if you would ask again. You didn't.",
+          "if": "invitedChinwe"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "chinwe",
+          "text": "You told me kind is rare. I thought about it every day. You were right. (Her voice breaks a little.) You were also wrong.",
+          "if": "blessedTeacher"
+        },
+        {
+          "type": "goto",
+          "scene": "nne"
+        }
+      ],
+      "location": "backSide",
+      "time": "night"
+    },
+    "nne": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "nneEmeka",
+          "text": "(a voice note, very tired) Come home, my son. Come home and let me look at you. Whatever you have done in Lagos, bring it. I am your mother. I have room.",
+          "variants": [
+            {
+              "if": "toldNneLagos",
+              "text": "(a voice note, very tired) You told me the real Lagos at the burial. I have been praying about the man in white every night since. Come home. Bring all of it. The village knows things Lagos forgot."
+            },
+            {
+              "if": "liedNneLagos",
+              "text": "(a voice note, very tired) You said Lagos was good to you. Your voice said something else. Come home, my son. Mothers don't need the words."
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "You remember the dibia: \"Come back at the festival. Not before.\" It is the festival. It is time.",
+          "if": "dibiaVisited"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "At 5 a.m. Bíọ́dún hoots outside. God's Time Is The Best, washed, decorated with ribbons for the Onitsha wedding. He has packed you a bag of agege bread \"for the road and for your mother\".",
+          "if": "biodunDrives"
+        },
+        {
+          "type": "endChapter",
+          "title": "The Last Night",
+          "summary": "Every voice you love, and every voice you fear, said the same thing tonight: come home. The road is open. So is the fire.",
+          "next": "g6_grace"
+        }
+      ],
+      "location": "backSide",
+      "time": "night"
+    }
+  }
+}

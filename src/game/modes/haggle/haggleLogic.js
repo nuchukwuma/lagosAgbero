@@ -13,6 +13,7 @@ export const GOODS = {
   jollof: { name: 'jollof', unit: 'plate', fair: 1200, seller: 'the canteen' },
   drinks: { name: 'drinks', unit: 'crate', fair: 9000, seller: 'the Sugar Palace bar' },
   favours: { name: 'promises', unit: 'favour', fair: 25000, seller: 'the fundraiser' }, // The Honourable: donors buy "considerations"
+  parts: { name: 'spare parts', unit: 'part', fair: 6000, seller: "Ike's shop at Ọjà" }, // Grass to Grace
 }
 
 const BUYERS = [

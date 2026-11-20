@@ -1,0 +1,271 @@
+{
+  "id": "g4b_firstWeek",
+  "campaign": "grace",
+  "world": "iyanaWahala",
+  "act": 1,
+  "number": 8,
+  "title": "The First Week",
+  "description": "After the White Room, the first week: money that arrives without knocking, or a shop in ashes and an old man's bench.",
+  "startScene": "morning",
+  "scenes": {
+    "morning": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "The first morning after the Night of Increase."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "There is money under your mat. ₦200,000, in new notes, tied with white thread. You did not put it there. Nobody came in. The rats are gone. All of them. Even the brave one.",
+          "if": "pact"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "There is money under your mat. ₦80,000, tied with white thread. Less than they promised. The red thread on your wrist is warm, like a hand.",
+          "if": "trickedBook"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "There is no money under your mat. There is ash in the air from Ọjà. Somebody's shop burnt in the night. Everybody knows whose. Nobody says.",
+          "if": {
+            "notFlags": [
+              "pact",
+              "trickedBook"
+            ]
+          }
+        },
+        {
+          "type": "changeStat",
+          "stats": {
+            "money": 200000,
+            "hold": 10
+          },
+          "if": "pact"
+        },
+        {
+          "type": "changeStat",
+          "stats": {
+            "money": 80000,
+            "hold": 5
+          },
+          "if": "trickedBook"
+        },
+        {
+          "type": "goto",
+          "scene": "count"
+        }
+      ],
+      "location": "backSide",
+      "time": "dawn"
+    },
+    "count": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "ike",
+          "text": "(at the door, looking at the white thread, then at you) So. You went. (He doesn't say congratulations. He says) Don't count it in front of anybody. It doesn't like to be counted.",
+          "variants": [
+            {
+              "if": "askedIkeRich",
+              "text": "(at the door, looking at the white thread) You asked me how I got from the cartons to the Benz. (Very quietly.) Now you know."
+            }
+          ],
+          "if": {
+            "anyOf": [
+              "pact",
+              "trickedBook"
+            ]
+          }
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "The notes smell of nothing. Real money smells of hands.",
+          "options": [
+            {
+              "text": "Count it, right there on the mat, in front of Ike.",
+              "effects": {
+                "changeStat": {
+                  "hold": 6
+                },
+                "setFlag": "countedOpenly"
+              }
+            },
+            {
+              "text": "Hide it in the ceiling. Tell nobody.",
+              "effects": {
+                "changeStat": {
+                  "hold": 2
+                }
+              }
+            },
+            {
+              "text": "Take a handful to the bridge and give it to the beggars.",
+              "effects": {
+                "changeStat": {
+                  "conscience": 6,
+                  "money": -20000,
+                  "hold": -3
+                },
+                "setFlag": "gaveToBridge"
+              }
+            }
+          ],
+          "if": {
+            "anyOf": [
+              "pact",
+              "trickedBook"
+            ]
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "professor",
+          "text": "(on his bench, as if he has been there all night) You said no to them. Good. Now you need a job they can't burn. The motor park needs conductors. Nobody burns a motor park. Too many witnesses.",
+          "if": {
+            "notFlags": [
+              "pact",
+              "trickedBook"
+            ]
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "conductor",
+          "if": {
+            "notFlags": [
+              "pact",
+              "trickedBook"
+            ]
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "prof"
+        }
+      ],
+      "location": "backSide",
+      "time": "dawn"
+    },
+    "conductor": {
+      "beats": [
+        {
+          "type": "startMode",
+          "mode": "conductor",
+          "params": {
+            "route": "oshodi",
+            "slogan": "NO TELLING"
+          },
+          "results": {
+            "done": {
+              "changeStat": {
+                "money": 9000,
+                "energy": -15
+              },
+              "toast": "Your voice is gone. Your pocket is ₦9,000 heavier. \"Oshodi! Oshodi! Enter with your change!\""
+            },
+            "brawl": {
+              "changeStat": {
+                "energy": -20,
+                "policeHeat": 2
+              }
+            },
+            "extorted": {
+              "changeStat": {
+                "money": 3000
+              }
+            }
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "prof"
+        }
+      ],
+      "location": "motorPark",
+      "time": "day"
+    },
+    "prof": {
+      "beats": [
+        {
+          "type": "freeRoam",
+          "objective": "Find Professor at the tea table.",
+          "goal": {
+            "reach": "teaTable"
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "professor",
+          "text": "I had a brother. Kayode. Taller than me, cleverer than me, hungrier than me. In 1998 he went to a white party."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "professor",
+          "text": "He came back rich. He never laughed again. He died in a big house with no visitors. The doctors called it \"heart\". (Prof taps his chest.) It was the book."
+        },
+        {
+          "type": "choice",
+          "speaker": "professor",
+          "text": "Lagos has forgotten how to fight that book. Maybe your village hasn't.",
+          "options": [
+            {
+              "text": "\"Then I'll ask the old men at home. When I can.\"",
+              "effects": {
+                "changeStat": {
+                  "conscience": 3
+                },
+                "setFlag": "professorWarned"
+              }
+            },
+            {
+              "text": "\"Prof, with respect, your brother was unlucky.\"",
+              "effects": {
+                "changeStat": {
+                  "hold": 3
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "news"
+        }
+      ],
+      "location": "teaTable",
+      "time": "day"
+    },
+    "news": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "That night, a text from a village number."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "onyisi",
+          "text": "(a text, in capital letters, because he types with one finger) PAPA NGWO HAS JOINED HIS FATHERS. BURIAL SATURDAY WEEK. EVERY SON OF NKWỌ-AGỤỤ MUST COME. EVERY SON."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Papa Ngwo. The palm-wine shade. \"Stupidity is better planned with palm wine.\" He was the only man in the village who never asked you for anything."
+        },
+        {
+          "type": "endChapter",
+          "title": "The First Week",
+          "summary": "Money that arrives without knocking, or work that nobody can burn. Prof's brother never laughed again. And Papa Ngwo is gone. You are going home for a burial.",
+          "next": "g4c_burial"
+        }
+      ],
+      "location": "backSide",
+      "time": "night"
+    }
+  }
+}

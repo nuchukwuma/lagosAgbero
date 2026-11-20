@@ -1,0 +1,433 @@
+{
+  "id": "g4c_burial",
+  "campaign": "grace",
+  "world": "nkwoAgu",
+  "act": 1,
+  "number": 9,
+  "title": "Papa Ngwo's Burial",
+  "description": "Home for a burial: the levy every son must pay, Nne's medicine, Chinwe's father's patience, and the old man at the shrine.",
+  "startScene": "arrive",
+  "scenes": {
+    "arrive": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Nkwọ-Agụụ. The junction. The same potholes, the same goats, the same children running after anything with an engine."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "You came in a hired Camry with a driver. The children run after it. You remember running after Ike's Benz. You wave. You feel nothing when you wave, and that frightens you more than anything in Lagos.",
+          "if": {
+            "anyOf": [
+              "pact",
+              "trickedBook"
+            ]
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "You came on the night bus, with a bag of Lagos bread for Nne. The conductor tried to charge you a \"village loading fee\". You laughed at him in Lagos.",
+          "if": {
+            "notFlags": [
+              "pact",
+              "trickedBook"
+            ]
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "wake"
+        }
+      ],
+      "location": "junction",
+      "time": "dawn"
+    },
+    "wake": {
+      "beats": [
+        {
+          "type": "freeRoam",
+          "objective": "Go to the palm-wine shade, where Papa Ngwo sat for forty years.",
+          "goal": {
+            "reach": "palmwine"
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "His stool is still there. Nobody sits on it. Someone has put a calabash of palm wine on it, untouched, with a fly floating in it like a guest."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "His son, Ngwo the younger, has the same face and none of the jokes. \"Papa left you something.\" He said: \"Give it to Nwankwo's boy, the one about to do something stupid.\" He hands you a walking stick, carved with a tortoise."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "The tortoise. In every story Papa Ngwo told, the tortoise was clever, greedy, and got his shell broken at the end. Every single story."
+        },
+        {
+          "type": "goto",
+          "scene": "levy"
+        }
+      ],
+      "location": "palmwine",
+      "time": "day"
+    },
+    "levy": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "onyisi",
+          "text": "Sons of Nkwọ-Agụụ! The burial levy. Every son contributes, and every son is announced. Our fathers did it this way so that nobody can hide what they have."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "onyisi",
+          "text": "And the son who borrowed the harvest money for \"Mega Fortune Holdings\"... we will announce him slowly.",
+          "if": {
+            "flags": [
+              "tookHarvest"
+            ],
+            "notFlags": [
+              "repaidVillage"
+            ]
+          }
+        },
+        {
+          "type": "choice",
+          "speaker": "onyisi",
+          "text": "Nwankwo's son, from Lagos. How much?",
+          "options": [
+            {
+              "text": "₦50,000. Announce it loud.",
+              "cost": 50000,
+              "effects": {
+                "changeStat": {
+                  "villageStanding": 12
+                },
+                "setFlag": "bigBurialGift"
+              }
+            },
+            {
+              "text": "₦10,000. What is fair.",
+              "cost": 10000,
+              "effects": {
+                "changeStat": {
+                  "villageStanding": 4
+                },
+                "setFlag": "fairBurialGift"
+              }
+            },
+            {
+              "text": "\"Lagos is hard, Ọnyịsị. I brought my hands. I will dig the grave.\"",
+              "effects": {
+                "changeStat": {
+                  "villageStanding": 2,
+                  "energy": -20,
+                  "conscience": 3
+                },
+                "setFlag": "dugGrave"
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "onyisi",
+          "text": "(He announces it. The elders nod in the exact amounts they nod for ₦50,000. You have never seen nods so precise.)",
+          "variants": [
+            {
+              "if": "fairBurialGift",
+              "text": "(He announces it. A respectable murmur. Your mother, at the back, stands up a little straighter.)"
+            },
+            {
+              "if": "dugGrave",
+              "text": "(Silence. Then old Mazi Okafor laughs and hands you a shovel.) Nwankwo's son digs! That is how Nwankwo paid too."
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "nne"
+        }
+      ],
+      "location": "square",
+      "time": "day"
+    },
+    "nne": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Home. Nne is thinner. She moves around the kitchen like a woman negotiating with her own knees."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "nneEmeka",
+          "text": "The hospital was clean. They gave me tablets the size of groundnuts. (She shows you the bottle.) Every morning I take one and say your name to it.",
+          "variants": [
+            {
+              "if": "paidNneHospital",
+              "text": "The nurse said my son sent the deposit that same night. She told the whole ward. I was the proudest sick woman in Nkwọ-Agụụ."
+            },
+            {
+              "if": "ignoredNne",
+              "text": "Dozie paid the hospital in the end. He reminds me every Sunday after church. Loudly. (She doesn't say anything else about it. She doesn't need to.)"
+            },
+            {
+              "if": "owesIke",
+              "text": "Ike Okafor's money paid the hospital. (She folds the cloth very carefully.) A good boy, Ike. Is he still a good boy, Emeka?"
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "nneEmeka",
+          "text": "Tell me about Lagos. Not the Lagos for the village. The real one."
+        },
+        {
+          "type": "choice",
+          "speaker": "nneEmeka",
+          "text": "She is shelling egusi. Her hands don't stop. Her eyes don't leave your face.",
+          "options": [
+            {
+              "text": "Tell her everything: the shop, the fake parts, the man in white.",
+              "effects": {
+                "changeStat": {
+                  "motherBond": 10,
+                  "conscience": 4
+                },
+                "setFlag": "toldNneLagos"
+              }
+            },
+            {
+              "text": "\"Lagos is good to me, Nne. Don't worry.\"",
+              "effects": {
+                "changeStat": {
+                  "motherBond": -2
+                },
+                "setFlag": "liedNneLagos"
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "nneEmeka",
+          "text": "(She keeps shelling for a long time.) Your father went to Onitsha once and came back with money and no laugh. He found his laugh again on the farm. Took him two years. (She looks up.) Two years, Emeka.",
+          "if": "toldNneLagos"
+        },
+        {
+          "type": "goto",
+          "scene": "chinwe"
+        }
+      ],
+      "location": "emekaHome",
+      "time": "dusk"
+    },
+    "chinwe": {
+      "beats": [
+        {
+          "type": "freeRoam",
+          "objective": "Go and see Chinwe.",
+          "goal": {
+            "reach": "chinweHouse"
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "chinwe",
+          "text": "You came for Papa Ngwo. Not for me. (She smiles anyway.) It's okay. Papa Ngwo deserved it more."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "chinwe",
+          "text": "Lagos has changed your walk. You walk like the ground owes you money.",
+          "variants": [
+            {
+              "if": "toldChinweTruth",
+              "text": "You told me about the cartons and the rats. Everybody else lies about Lagos. I liked that you didn't."
+            },
+            {
+              "if": "liedChinweLagos",
+              "text": "You told me Lagos was beautiful. Then Ike's cousin came home and told everybody you sleep on cartons. (She isn't angry. She is disappointed, which is heavier.)"
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "chinwe",
+          "text": "My father has a man for me. A schoolteacher from Umuahia. He is kind. He is boring. He has a motorcycle. (She waits.)"
+        },
+        {
+          "type": "choice",
+          "speaker": "chinwe",
+          "text": "She is asking you without asking.",
+          "options": [
+            {
+              "text": "\"Give me one more year. One. Then I come for you, or you marry the teacher.\"",
+              "effects": {
+                "changeStat": {
+                  "chinweBond": 8
+                },
+                "setFlag": "askedChinweYear",
+                "noticedBy": [
+                  "Chinwe"
+                ]
+              }
+            },
+            {
+              "text": "\"Come to Lagos with me. Now. This week.\"",
+              "effects": {
+                "changeStat": {
+                  "chinweBond": 6,
+                  "conscience": -2
+                },
+                "setFlag": "invitedChinwe"
+              }
+            },
+            {
+              "text": "\"If he's kind, Chinwe... kind is rare.\"",
+              "effects": {
+                "changeStat": {
+                  "chinweBond": -4,
+                  "conscience": 4
+                },
+                "setFlag": "blessedTeacher"
+              }
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "dibia"
+        }
+      ],
+      "location": "chinweHouse",
+      "time": "dusk"
+    },
+    "dibia": {
+      "beats": [
+        {
+          "type": "freeRoam",
+          "objective": "Walk the stream path to Dibia Ọ̀kwụ̀'s shrine.",
+          "goal": {
+            "reach": "shrine"
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "dibia",
+          "text": "Nwa Nwankwo. You came to bury a friend and you brought a stranger with you. (He looks at your shoulder, at nothing.)",
+          "variants": [
+            {
+              "if": {
+                "notFlags": [
+                  "pact",
+                  "trickedBook"
+                ]
+              },
+              "text": "Nwa Nwankwo. You came to bury a friend. And you came home with your shadow. Good. Many boys come home from Lagos without it."
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "player",
+          "text": "An old man in Lagos told me Lagos has forgotten how to fight the white book. He said maybe the village remembers.",
+          "if": "professorWarned"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "dibia",
+          "text": "The village remembers everything. That is its strength and its curse. Come back at the festival. Not before. Things like that are not fixed with a hurry."
+        },
+        {
+          "type": "setFlag",
+          "flags": [
+            "dibiaVisited"
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "leave"
+        }
+      ],
+      "location": "shrine",
+      "time": "night"
+    },
+    "leave": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Papa Ngwo goes into the ground on Saturday morning, with two bands, one cow and a sermon that runs forty minutes over. He would have hated all of it. He would have loved being complained about."
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "Monday. The Lagos bus is at the junction.",
+          "options": [
+            {
+              "text": "Get on the bus. Lagos isn't finished with you.",
+              "effects": {
+                "changeStat": {
+                  "hold": 2,
+                  "villageStanding": -1
+                }
+              }
+            },
+            {
+              "text": "Let the bus go. Stay in Nkwọ-Agụụ, work the quarry, start again from nothing.",
+              "requires": {
+                "notFlags": [
+                  "pact",
+                  "trickedBook"
+                ]
+              },
+              "showLocked": true,
+              "lockedText": "Something in Lagos has your name in red ink",
+              "effects": {
+                "goto": "stay"
+              }
+            }
+          ]
+        },
+        {
+          "type": "endChapter",
+          "title": "Papa Ngwo's Burial",
+          "summary": "You buried the only man who never asked you for anything, and he left you a tortoise. Nne knows a little more. Chinwe is waiting, or not. The dibia says: come back at the festival.",
+          "next": "g4d_dozie"
+        }
+      ],
+      "location": "junction",
+      "time": "dawn"
+    },
+    "stay": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "The bus coughs and leaves without you. The conductor shouts something rude. You laugh. You find you can laugh."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "You go back to the quarry the next morning. Nne brings you lunch at noon, the way she brought it to Papa."
+        },
+        {
+          "type": "endChapter",
+          "title": "The Quarry Man",
+          "summary": "You let Lagos go before it could finish with you. Smaller money. Smaller life. Your own.",
+          "ending": "grace_quarry"
+        }
+      ],
+      "location": "junction",
+      "time": "dawn"
+    }
+  }
+}

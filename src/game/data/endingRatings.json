@@ -155,5 +155,17 @@
   "sugar_lockedOut": {
     "tier": "early",
     "comment": "Locked out before the story really started. Chief Dapo's padlock wins. Go back: the bar, the girls and a lot of story are waiting behind that door."
+  },
+  "grace_quarry": {
+    "tier": "early",
+    "comment": "Halfway through the story you saw the quarry and said \"enough\". Wise? Maybe. But the White Room, the festival fire and the dibia were still waiting. Go back and see what you were running from."
+  },
+  "grace_usher": {
+    "tier": "bad",
+    "comment": "You were offered a second price and paid it with a seventeen-year-old. The gloves are clean. Nothing else is. There are better endings, and Kalu deserved one."
+  },
+  "grace_lagos": {
+    "tier": "early",
+    "comment": "Three days from the festival, you blinked. Lagos has you now, and the best and worst of this story happened at a fire you never stood beside. Go home next time."
   }
 }

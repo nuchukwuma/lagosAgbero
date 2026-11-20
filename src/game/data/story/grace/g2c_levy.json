@@ -1,0 +1,322 @@
+{
+  "id": "g2c_levy",
+  "campaign": "grace",
+  "world": "iyanaWahala",
+  "act": 1,
+  "number": 4,
+  "title": "Development Levy",
+  "description": "Area boys want their levy, Nne is in the hospital, and a danfo driver needs a second pair of hands.",
+  "startScene": "levy",
+  "scenes": {
+    "levy": {
+      "beats": [
+        {
+          "type": "setFlag",
+          "flags": [
+            "scatterAround"
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Tuesday. Ike is at the wharf. You are alone with the till when four boys walk in, the way weather walks in."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "scatter",
+          "text": "Oga Ike no dey? No problem. Development levy. Ten thousand. The road you are using, somebody developed it."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ngozi",
+          "text": "(from across the road, not looking up) Don't pay from the till. Ike will say you stole it. Don't refuse either. They come back at night."
+        },
+        {
+          "type": "choice",
+          "speaker": "scatter",
+          "text": "Ten thousand. Today.",
+          "options": [
+            {
+              "text": "Pay from the till. It's Ike's road too.",
+              "effects": {
+                "changeStat": {
+                  "ikeTrust": -8
+                },
+                "setFlag": "paidLevyTill"
+              }
+            },
+            {
+              "text": "Pay from your own pocket.",
+              "cost": 10000,
+              "effects": {
+                "changeStat": {
+                  "ikeTrust": 6
+                },
+                "setFlag": "paidLevyOwn"
+              }
+            },
+            {
+              "text": "\"Go and develop another road.\"",
+              "effects": {
+                "setFlag": "foughtLevy",
+                "goto": "fight"
+              }
+            },
+            {
+              "text": "Send a boy running for Professor.",
+              "requires": "knowsRoutes",
+              "showLocked": true,
+              "lockedText": "You don't know the old agbero well enough",
+              "effects": {
+                "changeStat": {
+                  "energy": -5
+                },
+                "setFlag": "professorFavour",
+                "goto": "professorCame"
+              }
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "nneSick"
+        }
+      ],
+      "location": "market",
+      "time": "day"
+    },
+    "fight": {
+      "beats": [
+        {
+          "type": "startMode",
+          "mode": "fight",
+          "params": {
+            "opponent": "scatter",
+            "difficulty": 1
+          },
+          "results": {
+            "won": {
+              "changeStat": {
+                "ikeTrust": 6,
+                "policeHeat": 2
+              },
+              "toast": "Scatter limps off. The whole market saw. The whole market will talk."
+            },
+            "lost": {
+              "changeStat": {
+                "money": -5000,
+                "energy": -15
+              },
+              "toast": "They take ₦5,000 from your pocket and leave the till alone. Strange mercy."
+            }
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "nneSick"
+        }
+      ],
+      "location": "market",
+      "time": "day"
+    },
+    "professorCame": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "professor",
+          "text": "(arriving slowly, on purpose) Scatter. Your mother sells fish at Ẹ̀bútẹ́. Shall I go and greet her? Tell her what her son does on Tuesdays?"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "scatter",
+          "text": "(after a long time) Prof... e no reach that level. (They leave. Scatter salutes, badly.)"
+        },
+        {
+          "type": "goto",
+          "scene": "nneSick"
+        }
+      ],
+      "location": "market",
+      "time": "day"
+    },
+    "nneSick": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Evening. Uncle Dozie calls. Uncle Dozie never calls."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "uncleDozie",
+          "text": "Your mother fell at the stream this morning. Her blood pressure, the nurse says. The hospital wants ₦25,000 deposit before they will even look at her properly."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "uncleDozie",
+          "text": "I don't have it. You are the Lagos man now.",
+          "variants": [
+            {
+              "if": "sentFirstPay",
+              "text": "She was carrying oil for the women you paid. She told everybody the money came from Lagos. Now Lagos must come again."
+            }
+          ]
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "Twenty-five thousand. Tonight.",
+          "options": [
+            {
+              "text": "Send it. All of it. Whatever it takes.",
+              "cost": 25000,
+              "effects": {
+                "changeStat": {
+                  "motherBond": 12,
+                  "conscience": 4
+                },
+                "setFlag": "paidNneHospital",
+                "noticedBy": [
+                  "Nne"
+                ]
+              }
+            },
+            {
+              "text": "Ask Ike for an advance on your wages.",
+              "effects": {
+                "changeStat": {
+                  "motherBond": 8,
+                  "ikeTrust": -4,
+                  "money": 0
+                },
+                "setFlag": "owesIke"
+              }
+            },
+            {
+              "text": "\"Uncle, you are there. Handle it. I will refund you.\"",
+              "effects": {
+                "changeStat": {
+                  "motherBond": -10,
+                  "conscience": -4
+                },
+                "setFlag": "ignoredNne"
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ike",
+          "text": "(sending the money from his phone without looking up) Twenty-five. You owe me thirty. Lagos interest. Don't argue, I'm being kind.",
+          "if": "owesIke"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "The money you saved from your first pay is still in your sock. You think about it for a long time.",
+          "if": "savedFirstPay"
+        },
+        {
+          "type": "goto",
+          "scene": "bridge"
+        }
+      ],
+      "location": "backSide",
+      "time": "dusk"
+    },
+    "bridge": {
+      "beats": [
+        {
+          "type": "freeRoam",
+          "objective": "Walk off the worry. Go under the bridge, where the danfos sleep.",
+          "goal": {
+            "reach": "underBridge"
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "biodun",
+          "text": "(lying on the roof of his danfo, eating groundnuts) You are Ike's boy. The one who looks at the sky like he's owed money by it."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "biodun",
+          "text": "My conductor ran away to Ghana. Saturdays I need someone to drive the evening run while I count. You can drive?"
+        },
+        {
+          "type": "choice",
+          "speaker": "biodun",
+          "text": "Ten thousand a Saturday. You crash it, you buy it.",
+          "options": [
+            {
+              "text": "\"I drove the quarry truck for two years. Give me the keys.\"",
+              "effects": {
+                "setFlag": "metBiodun",
+                "goto": "drive"
+              }
+            },
+            {
+              "text": "\"Not now, oga. Ike owns my Saturdays.\"",
+              "effects": {
+                "setFlag": "metBiodun",
+                "goto": "endLevy"
+              }
+            }
+          ]
+        }
+      ],
+      "location": "underBridge",
+      "time": "night"
+    },
+    "drive": {
+      "beats": [
+        {
+          "type": "startMode",
+          "mode": "drive",
+          "params": {
+            "length": 1500,
+            "stops": 3,
+            "fuel": 65,
+            "checkpoints": 1,
+            "slogan": "NO CONDITION IS PERMANENT",
+            "seed": 141
+          },
+          "results": {
+            "done": {
+              "changeStat": {
+                "money": 10000
+              },
+              "toast": "Bíọ́dún counts the fares twice and gives you ₦10,000. \"You drive like an old woman. Good. Old women don't crash.\""
+            },
+            "caught": {
+              "changeStat": {
+                "money": -3000,
+                "policeHeat": 3
+              },
+              "toast": "A checkpoint. ₦3,000 \"for Christmas\", in March."
+            },
+            "default": {}
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "endLevy"
+        }
+      ],
+      "location": "underBridge",
+      "time": "night"
+    },
+    "endLevy": {
+      "beats": [
+        {
+          "type": "endChapter",
+          "title": "Development Levy",
+          "summary": "You learned what the road costs, who you call when the road sends its boys, and how far ₦25,000 is from a hospital bed in Nkwọ-Agụụ.",
+          "next": "g2d_island"
+        }
+      ],
+      "location": "underBridge",
+      "time": "night"
+    }
+  }
+}

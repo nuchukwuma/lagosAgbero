@@ -1,0 +1,250 @@
+{
+  "id": "g5b_threeDays",
+  "campaign": "grace",
+  "world": "iyanaWahala",
+  "act": 1,
+  "number": 13,
+  "title": "Three Days",
+  "description": "Three days to the New Yam festival. Gifts to buy, a boy to face, an old man to thank, and a decision about whether to go home at all.",
+  "startScene": "packing",
+  "scenes": {
+    "packing": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Three days. Nne is not well. The village has questions. You have a bag, and a list."
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "What goes in the bag?",
+          "options": [
+            {
+              "text": "A good wrapper and medicine for Nne. Proper medicine, from a proper pharmacy.",
+              "cost": 20000,
+              "effects": {
+                "changeStat": {
+                  "motherBond": 6
+                },
+                "setFlag": "giftsForNne"
+              }
+            },
+            {
+              "text": "A box of Lagos things for the whole compound: bread, sardines, Peak milk.",
+              "cost": 12000,
+              "effects": {
+                "changeStat": {
+                  "villageStanding": 5
+                },
+                "setFlag": "giftsForCompound"
+              }
+            },
+            {
+              "text": "Nothing. Just you. That's what they asked for.",
+              "effects": {
+                "changeStat": {
+                  "motherBond": 2
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "kalu"
+        }
+      ],
+      "location": "backSide",
+      "time": "day"
+    },
+    "kalu": {
+      "beats": [
+        {
+          "type": "freeRoam",
+          "objective": "Go and see Kalu at Ọjà before you leave.",
+          "goal": {
+            "reach": "market"
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Kalu is selling at Ngozi's stall in a white shirt. He has a new watch. He makes a joke to a customer and the customer laughs. Kalu doesn't.",
+          "if": "recruitedKalu"
+        },
+        {
+          "type": "choice",
+          "speaker": "kalu",
+          "text": "(He sees you and smiles the smile you know from Ike.) Oga Emeka. Thank you for the party. Everything is going well.",
+          "options": [
+            {
+              "text": "Give him the dibia's address in Nkwọ-Agụụ. \"If it ever gets heavy. Go there.\"",
+              "effects": {
+                "changeStat": {
+                  "conscience": 8
+                },
+                "setFlag": "triedSaveKalu"
+              }
+            },
+            {
+              "text": "\"Good. Keep going.\"",
+              "effects": {
+                "changeStat": {
+                  "hold": 4
+                }
+              }
+            }
+          ],
+          "if": "recruitedKalu"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "kalu",
+          "text": "Oga! A man in a white Lexus offered me a \"party\" last week. I ran. Like you said. Ran so fast I lost a slipper. (He laughs. He laughs properly, with his whole face.)",
+          "if": "warnedKalu"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ngozi",
+          "text": "(pressing a parcel into your hands) Genuine brake pads. For your village's one Peugeot. Tell nobody I gave Igbo man free things. My reputation.",
+          "if": "warnedKalu"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Kalu waves at you from Ngozi's stall. He is still in love with every Benz that passes. You still haven't said anything. You might not get another chance.",
+          "if": {
+            "notFlags": [
+              "recruitedKalu",
+              "warnedKalu"
+            ]
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "prof"
+        }
+      ],
+      "location": "market",
+      "time": "day"
+    },
+    "prof": {
+      "beats": [
+        {
+          "type": "freeRoam",
+          "objective": "Say goodbye to Professor at the tea table.",
+          "goal": {
+            "reach": "teaTable"
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "professor",
+          "text": "Going home for the festival. Good. A man should go home before home forgets his face."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "professor",
+          "text": "Rule number fourteen: the road out of Lagos is the same road in. Only the direction is different. (He gives you his old bus ticket, from 1979. \"For luck.\" It is not valid. It never was.)",
+          "variants": [
+            {
+              "if": "professorWarned",
+              "text": "You remember my brother Kayode. (He looks at the bridge for a long time.) If your village knows how to fight that book, Emeka, fight it for him too. Tell me after."
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "biodun"
+        }
+      ],
+      "location": "teaTable",
+      "time": "dusk"
+    },
+    "biodun": {
+      "beats": [
+        {
+          "type": "freeRoam",
+          "objective": "Go to the motor park.",
+          "goal": {
+            "reach": "motorPark"
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "biodun",
+          "text": "Village boy! You are going home? (He slaps the danfo.) God's Time Is The Best is going to Onitsha on Friday for a wedding. I can drop you at your junction. Free. You drove my Saturdays.",
+          "variants": [
+            {
+              "if": {
+                "notFlags": [
+                  "metBiodun"
+                ]
+              },
+              "text": "You're Ike's boy. Going east? I'm driving to Onitsha Friday. Pay me fuel money and I'll drop you at your junction."
+            }
+          ]
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "The festival is in three days. Everything you've done is waiting at home.",
+          "options": [
+            {
+              "text": "\"Friday, then. Thank you, oga.\"",
+              "effects": {
+                "setFlag": "biodunDrives"
+              }
+            },
+            {
+              "text": "Take the night bus. The way you came.",
+              "effects": {
+                "changeStat": {
+                  "energy": -10,
+                  "conscience": 1
+                }
+              }
+            },
+            {
+              "text": "Don't go. Stay in Lagos. Let the village light its own fire.",
+              "effects": {
+                "goto": "stayLagos"
+              }
+            }
+          ]
+        },
+        {
+          "type": "endChapter",
+          "title": "Three Days",
+          "summary": "You packed, you said your goodbyes, and you looked at Kalu properly for once. Home is a road away.",
+          "next": "g5c_lastNight"
+        }
+      ],
+      "location": "motorPark",
+      "time": "dusk"
+    },
+    "stayLagos": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "You call Nne and say there is a big contract, next month, next festival. She says \"okay, my son\" in the voice she uses for the oil women."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "The festival happens without you. Somebody sends a video: drums, fire, three white cars on the village road, and an empty space where you would have stood."
+        },
+        {
+          "type": "endChapter",
+          "title": "Lagos Has You",
+          "summary": "You chose Lagos over the fire. Lagos keeps you busy. It never asks what you are running from. That is its kindness, and its price.",
+          "ending": "grace_lagos"
+        }
+      ],
+      "location": "motorPark",
+      "time": "night"
+    }
+  }
+}

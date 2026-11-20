@@ -1,0 +1,231 @@
+{
+  "id": "g4d_dozie",
+  "campaign": "grace",
+  "world": "iyanaWahala",
+  "act": 1,
+  "number": 10,
+  "title": "Uncle Dozie Comes to Lagos",
+  "description": "Uncle Dozie arrives with a sack of garri and a scheme. He also knows something about Papa's debts.",
+  "startScene": "arrive",
+  "scenes": {
+    "arrive": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Two weeks after the burial. 6 a.m. Someone is banging on the shop shutter with a shoe."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "uncleDozie",
+          "text": "Nephew! (He has a sack of garri, a radio and no plan to leave.) Lagos! Finally! Your father always said I would make it here one day."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "uncleDozie",
+          "text": "You remember the land business. My twenty per cent was... modest. Lagos owes me the rest.",
+          "variants": [
+            {
+              "if": {
+                "notFlags": [
+                  "soldLand"
+                ]
+              },
+              "text": "Your mother refused to sell the land. Stubborn woman. So now I am here to find my own fortune. With your help, of course."
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "scheme"
+        }
+      ],
+      "location": "market",
+      "time": "dawn"
+    },
+    "scheme": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "By Wednesday Dozie has a business card. DOZIE & ASSOCIATES: LAND, LANDED PROPERTY AND LAND MATTERS."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "uncleDozie",
+          "text": "Your Mama Ngozi. Twenty-two years of savings in that stall. She wants land in Lekki for her old age. I have a plot. (He doesn't have a plot.) You are the honest-faced one. You will introduce me."
+        },
+        {
+          "type": "choice",
+          "speaker": "uncleDozie",
+          "text": "Forty thousand for you. Just for your face.",
+          "options": [
+            {
+              "text": "Introduce him. Ngozi trusts you.",
+              "effects": {
+                "changeStat": {
+                  "money": 40000,
+                  "conscience": -14
+                },
+                "setFlag": "dozieScam"
+              }
+            },
+            {
+              "text": "\"No. Not Ngozi. Not anybody.\"",
+              "effects": {
+                "changeStat": {
+                  "conscience": 4
+                }
+              }
+            },
+            {
+              "text": "Go straight to Ngozi and warn her about your own uncle.",
+              "effects": {
+                "changeStat": {
+                  "conscience": 8
+                },
+                "setFlag": "warnedNgozi",
+                "noticedBy": [
+                  "Mama Ngozi"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ngozi",
+          "text": "(She looks at Dozie's business card for a long time, then tears it into exactly eight pieces.) You warned me about your own blood. (She nods once.) I will remember this, Emeka.",
+          "if": "warnedNgozi"
+        },
+        {
+          "type": "goto",
+          "scene": "chase",
+          "if": "dozieScam"
+        },
+        {
+          "type": "goto",
+          "scene": "truth"
+        }
+      ],
+      "location": "market",
+      "time": "day"
+    },
+    "chase": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Three days later, Ngozi's nephew, who is a policeman, comes looking for \"Dozie and Associates\"."
+        },
+        {
+          "type": "startMode",
+          "mode": "runner",
+          "params": {
+            "chaser": "taskForce",
+            "goal": 260,
+            "difficulty": 1,
+            "seed": 151
+          },
+          "results": {
+            "escaped": {
+              "toast": "You lose them behind the motor park. Dozie is already on a bus to Onitsha. With most of the money."
+            },
+            "caught": {
+              "changeStat": {
+                "money": -20000,
+                "policeHeat": 6
+              },
+              "toast": "₦20,000 to settle it at the station. Ngozi doesn't look at you any more."
+            }
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "truth"
+        }
+      ],
+      "location": "market",
+      "time": "day"
+    },
+    "truth": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Dozie's last night. He drinks two bottles of Ike's Hennessy and becomes a different, sadder uncle."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "uncleDozie",
+          "text": "Your father's debts. You think it was school fees? (He laughs.) It was a loan from a man in Onitsha. A man who wore white. He lent Papa money and asked for \"something small\" in return. Papa said no."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "uncleDozie",
+          "text": "They never collected the money, Emeka. They didn't want the money. They wanted the no to become a yes. Your father died saying no."
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "Your phone is in your pocket. He is drunk. He will never say this again.",
+          "options": [
+            {
+              "text": "Record him.",
+              "effects": {
+                "changeStat": {
+                  "conscience": 2
+                },
+                "setFlag": "recordedDozie"
+              }
+            },
+            {
+              "text": "Just listen.",
+              "effects": {
+                "changeStat": {
+                  "conscience": 1,
+                  "motherBond": 1
+                }
+              }
+            }
+          ],
+          "if": "boughtPhone"
+        },
+        {
+          "type": "choice",
+          "speaker": "uncleDozie",
+          "text": "(He is crying now, into the garri sack.) Send me home, nephew. Or let me stay. Lagos is too big for a small thief like me.",
+          "options": [
+            {
+              "text": "Pay his bus fare home. \"Go and tell Nne the truth about Papa. All of it.\"",
+              "cost": 5000,
+              "effects": {
+                "changeStat": {
+                  "motherBond": 4
+                },
+                "setFlag": "sentDozieHome"
+              }
+            },
+            {
+              "text": "\"Stay, Uncle. There's space on the floor.\"",
+              "effects": {
+                "changeStat": {
+                  "conscience": 2
+                },
+                "setFlag": "dozieStayed"
+              }
+            }
+          ]
+        },
+        {
+          "type": "endChapter",
+          "title": "Uncle Dozie Comes to Lagos",
+          "summary": "Dozie came with a sack of garri and a scheme, and left you a truth: Papa's debts were to men in white, and Papa died saying no.",
+          "next": "g4e_secondPrice"
+        }
+      ],
+      "location": "backSide",
+      "time": "night"
+    }
+  }
+}

@@ -779,7 +779,7 @@
           "type": "endChapter",
           "title": "End of Chapter 2 — The Night Bus",
           "summary": "Lagos has your name now. Money {money}. Conscience {stat:conscience}. Ike's trust {stat:ikeTrust}. Chief Ọ̀dụ̀ has noticed you.",
-          "next": "g3_bigBoys"
+          "next": "g2b_firstPay"
         }
       ],
       "location": "richStreet",

@@ -2,9 +2,9 @@
   "id": "g5_abundance",
   "campaign": "grace",
   "world": "iyanaWahala",
-  "act": 1,
-  "number": 5,
-  "title": "Chapter 5 — Abundance",
+  "act": 3,
+  "number": 12,
+  "title": "Chapter 12 — Abundance",
   "description": "What the money buys, what the price takes, and who Emeka becomes when Ike comes knocking at 3 a.m.",
   "startScene": "start",
   "scenes": {
@@ -677,7 +677,7 @@
           "type": "endChapter",
           "title": "End of Chapter 5 — Abundance",
           "summary": "Money {money}. Conscience {stat:conscience}. The Fellowship's hold {stat:hold}. Nkwọ-Agụụ is calling you home.",
-          "next": "g6_grace"
+          "next": "g5b_threeDays"
         }
       ],
       "location": "backSide",

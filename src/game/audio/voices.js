@@ -76,10 +76,14 @@ for (const female of [false, true]) {
       let rate = style.rate + (((i * 0.381966 + 0.5) % 1) - 0.5) * 0.12
       // too close to someone already placed: talk a little faster or slower (or, failing that, higher)
       const near = () => placed.some((o) => Math.abs(o.pitch - (base + pitch)) < 0.03 && Math.abs(o.rate - rate) < 0.03)
-      const start = rate
-      for (let n = 1; n <= 12 && near(); n++) {
-        rate = Math.max(-0.2, Math.min(0.3, start + (n % 2 ? 1 : -1) * 0.035 * Math.ceil(n / 2)))
-        if (n > 6) pitch = Math.max(-0.25, Math.min(0.25, pitch + 0.035))
+      // search outwards in rings until there's a free spot (a big cast fills the space up)
+      const start = { pitch, rate }
+      for (let ring = 1; ring <= 8 && near(); ring++) {
+        for (let k = 0; k < 8 * ring && near(); k++) {
+          const a = (k / (8 * ring)) * Math.PI * 2
+          rate = Math.max(-0.2, Math.min(0.3, start.rate + Math.cos(a) * 0.035 * ring))
+          pitch = Math.max(-0.25, Math.min(0.25, start.pitch + Math.sin(a) * 0.035 * ring))
+        }
       }
       placed.push({ pitch: base + pitch, rate })
       TUNING.set(id, { pitch, rate })

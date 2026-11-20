@@ -1,0 +1,264 @@
+{
+  "id": "g2d_island",
+  "campaign": "grace",
+  "world": "iyanaWahala",
+  "act": 1,
+  "number": 5,
+  "title": "The Island",
+  "description": "Ike takes Emeka across the bridge to the other Lagos: a client who needs convincing, an owambe that needs dancing, and a friend who cannot laugh.",
+  "startScene": "benz",
+  "scenes": {
+    "benz": {
+      "beats": [
+        {
+          "type": "setFlag",
+          "flags": [
+            "ikeAround"
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Ike's Benz crosses Third Mainland Bridge at seven in the morning. The lagoon is silver. The traffic is not."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ike",
+          "text": "Today you see the real business. Fleet managers. Big companies. They buy forty brake pads at once and nobody checks.",
+          "variants": [
+            {
+              "if": "paidLevyTill",
+              "text": "And next time area boys come, you don't pay them from my till. I counted. I always count. (He doesn't sound angry. He sounds like a man writing something down.)"
+            },
+            {
+              "if": "paidLevyOwn",
+              "text": "Ngozi told me you paid Scatter from your own pocket. (He looks at you sideways.) Stupid. Loyal. Same thing in Lagos."
+            },
+            {
+              "if": "foughtLevy",
+              "text": "The whole market says you fought Scatter. (He grins.) Now they will charge me double. Thank you, Mr Lion."
+            },
+            {
+              "if": "professorFavour",
+              "text": "You know Professor? (A pause.) Be careful. That old man knows too much about too many people."
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ike",
+          "text": "Your mother is fine? Good. You still owe me thirty. I haven't forgotten. I never forget.",
+          "if": "owesIke"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ike",
+          "text": "When the manager asks, you say the parts are original. You are my apprentice. Your face is honest. That is your job today: your face."
+        },
+        {
+          "type": "goto",
+          "scene": "client"
+        }
+      ],
+      "location": "richStreet",
+      "time": "dawn"
+    },
+    "client": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "A glass office. Air conditioning so cold it feels like a lie. A fleet manager in a tie with ducks on it turns a brake pad over in his hands."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "fleetManager",
+          "text": "These are original? Our drivers carry staff. Last month one of our buses lost its brakes on Ikorodu Road."
+        },
+        {
+          "type": "choice",
+          "speaker": "ike",
+          "text": "(Ike is smiling at you. The smile has teeth.)",
+          "options": [
+            {
+              "text": "\"Original, sir. I swear on my father's grave.\"",
+              "effects": {
+                "changeStat": {
+                  "ikeTrust": 8,
+                  "conscience": -8,
+                  "money": 8000
+                },
+                "setFlag": "sworeForIke"
+              }
+            },
+            {
+              "text": "Say nothing. Let Ike do the talking.",
+              "effects": {
+                "changeStat": {
+                  "conscience": -2
+                }
+              }
+            },
+            {
+              "text": "\"Sir... buy from Mama Ngozi at Ọjà. Her parts are original.\"",
+              "effects": {
+                "changeStat": {
+                  "ikeTrust": -14,
+                  "conscience": 8
+                },
+                "setFlag": "warnedFleet",
+                "noticedBy": [
+                  "Ike"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ike",
+          "text": "(in the car, very quiet) Next time, think about who brought you to Lagos before you open your mouth.",
+          "variants": [
+            {
+              "if": "sworeForIke",
+              "text": "(in the car, laughing without sound) On your father's grave! My guy. You are learning faster than I did. (He gives you ₦8,000. It is heavier than eight thousand.)"
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "owambe"
+        }
+      ],
+      "location": "richStreet",
+      "time": "day"
+    },
+    "owambe": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Evening. An owambe on the Island: a chief's sixtieth birthday. Aso-ebi in gold. Two live bands fighting. Money falling like rain on the dancers."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ike",
+          "text": "See that boy in the agbada? Tunde Ten-Ten. He dances at every party in Lagos and collects the money. Go and humble him. For me."
+        },
+        {
+          "type": "startMode",
+          "mode": "dance",
+          "params": {
+            "name": "Tunde Ten-Ten",
+            "skill": 0.6,
+            "prize": 12000
+          },
+          "results": {
+            "won": {
+              "changeStat": {
+                "chiefFavour": 3,
+                "ikeTrust": 4
+              },
+              "toast": "The band leader shouts \"Village boy don land!\" and the whole party laughs. Everybody except one man in white."
+            },
+            "lost": {
+              "changeStat": {
+                "ikeTrust": -1
+              },
+              "toast": "Tunde Ten-Ten sprays you a ₦200 note out of pity. You keep it."
+            }
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "At the edge of the dance floor, a man in white watches you without blinking. Chief Ọ̀dụ̀. He raises his glass half an inch."
+        },
+        {
+          "type": "goto",
+          "scene": "kerb"
+        }
+      ],
+      "location": "richStreet",
+      "time": "night"
+    },
+    "kerb": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "After midnight, back at Ọjà. Ike parks the Benz and doesn't get out. His mother calls. He sends her ₦200,000 while she is still talking."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ike",
+          "text": "I slept on cartons too, you know. In that same shop. The rats knew me by name. (He doesn't smile.) Now look."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "He tells a story about a customer who paid with a cheque from a dead bank. It is a funny story. He tells it like a funeral announcement."
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "He wants you to ask. You can feel it.",
+          "options": [
+            {
+              "text": "\"Ike. How did you really get from the cartons to the Benz?\"",
+              "effects": {
+                "changeStat": {
+                  "ikeTrust": 5
+                },
+                "setFlag": "askedIkeRich"
+              }
+            },
+            {
+              "text": "\"Teach me everything you know. Everything.\"",
+              "effects": {
+                "changeStat": {
+                  "hold": 6,
+                  "chiefFavour": 2
+                },
+                "setFlag": "askedIkeTeach"
+              }
+            },
+            {
+              "text": "\"I want to get there my own way, Ike.\"",
+              "effects": {
+                "changeStat": {
+                  "conscience": 4,
+                  "ikeTrust": -2
+                },
+                "setFlag": "ownWayIke"
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ike",
+          "text": "(He starts the car again.) Not tonight. Some stories you tell, and then you can't un-tell them.",
+          "variants": [
+            {
+              "if": "askedIkeTeach",
+              "text": "Everything? (He looks at you a long time.) Be careful what you ask for in Lagos, Emeka. Somebody is always listening."
+            },
+            {
+              "if": "ownWayIke",
+              "text": "Your own way. (A sound that should be a laugh and isn't.) I said that too. Sleep well, Mr Own-Way."
+            }
+          ]
+        },
+        {
+          "type": "endChapter",
+          "title": "The Island",
+          "summary": "You saw the other Lagos: cold offices, gold aso-ebi, money falling like rain. You also saw a man in white raise his glass, and a friend who tells funny stories like funerals.",
+          "next": "g3_bigBoys"
+        }
+      ],
+      "location": "market",
+      "time": "night"
+    }
+  }
+}

@@ -1,0 +1,313 @@
+{
+  "id": "g4e_secondPrice",
+  "campaign": "grace",
+  "world": "iyanaWahala",
+  "act": 1,
+  "number": 11,
+  "title": "The Second Price",
+  "description": "Abundance needs new branches. Chief Ọ̀dụ̀ asks for one hungry boy, and Kalu, Ngozi's apprentice, is very hungry.",
+  "startScene": "summons",
+  "scenes": {
+    "summons": {
+      "beats": [
+        {
+          "type": "setFlag",
+          "flags": [
+            "chiefOduAround",
+            "usherAround"
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "chiefOdu",
+          "text": "Brother. Abundance grows like a tree. Every branch must grow a branch. Bring us one hungry boy before the new moon.",
+          "variants": [
+            {
+              "if": "countedOpenly",
+              "text": "Brother. You counted your blessing on the floor, in front of Ike. The book noticed. Now it wants a branch: one hungry boy, before the new moon."
+            }
+          ],
+          "if": {
+            "anyOf": [
+              "pact",
+              "trickedBook"
+            ]
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "usher",
+          "text": "(waiting at the Back Side, very polite) You said no to the white chair. The Chief has decided to be generous. Bring us one hungry boy, and your \"no\" will be forgotten.",
+          "if": {
+            "notFlags": [
+              "pact",
+              "trickedBook"
+            ]
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "You know exactly which boy. Everyone at Ọjà knows Kalu: seventeen, Ngozi's apprentice, sharp as a broken bottle, and in love with every Benz that drives past."
+        },
+        {
+          "type": "goto",
+          "scene": "kalu"
+        }
+      ],
+      "location": "richStreet",
+      "time": "dusk"
+    },
+    "kalu": {
+      "beats": [
+        {
+          "type": "freeRoam",
+          "objective": "Find Kalu at the market.",
+          "goal": {
+            "reach": "market"
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "kalu",
+          "text": "Oga Emeka! (He calls you Oga now. Nobody else does.) I hear say you dey go Island parties. Carry me one day. I fit wear white, I fit wear anything."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "kalu",
+          "text": "Madam Ngozi says you are the only honest Igbo man at Ọjà. (He grins.) She also says it is a disease.",
+          "if": "warnedNgozi"
+        },
+        {
+          "type": "choice",
+          "speaker": "kalu",
+          "text": "He is looking at you the way you looked at Ike's Benz.",
+          "options": [
+            {
+              "text": "\"There is a party. White attire. I'll take you.\"",
+              "effects": {
+                "changeStat": {
+                  "hold": 15,
+                  "chiefFavour": 10,
+                  "conscience": -18
+                },
+                "setFlag": "recruitedKalu"
+              }
+            },
+            {
+              "text": "\"Kalu. If a man in white ever invites you anywhere, run. Promise me.\"",
+              "effects": {
+                "changeStat": {
+                  "conscience": 8
+                },
+                "setFlag": "warnedKalu",
+                "noticedBy": [
+                  "Kalu"
+                ]
+              }
+            },
+            {
+              "text": "Say nothing. Buy him a Fanta and leave.",
+              "effects": {
+                "changeStat": {
+                  "conscience": -2
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "gloves",
+          "if": "recruitedKalu"
+        },
+        {
+          "type": "goto",
+          "scene": "ambush"
+        }
+      ],
+      "location": "market",
+      "time": "dusk"
+    },
+    "gloves": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "The Night of Increase. Kalu in white, borrowed from you, too big at the shoulders. He signs fast. He doesn't ask anything. You didn't either."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "chiefOdu",
+          "text": "(handing you a pair of white gloves) Ushers wear these. You have the gift, brother. People trust your face. Stay with us. Bring more."
+        },
+        {
+          "type": "choice",
+          "speaker": "chiefOdu",
+          "text": "The gloves are very soft.",
+          "options": [
+            {
+              "text": "Put on the gloves.",
+              "effects": {
+                "goto": "usherEnd"
+              }
+            },
+            {
+              "text": "\"One was enough, Chief.\"",
+              "effects": {
+                "changeStat": {
+                  "chiefFavour": -5
+                },
+                "goto": "after"
+              }
+            }
+          ]
+        }
+      ],
+      "location": "richStreet",
+      "time": "night"
+    },
+    "usherEnd": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "You are good at it. That is the worst part. Market boys, bus conductors, a nurse, a footballer. They trust your face. You bring them to the white chair and hold the door."
+        },
+        {
+          "type": "endChapter",
+          "title": "The Usher",
+          "summary": "You stopped being the hungry one and became the one who finds them. The gloves never get dirty.",
+          "ending": "grace_usher"
+        }
+      ],
+      "location": "richStreet",
+      "time": "night"
+    },
+    "ambush": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "No boy for the Chief. The new moon comes. So do the ushers, under the bridge, on your way home."
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "Three of them. White cars at both ends of the road.",
+          "options": [
+            {
+              "text": "Take Prof's back way through the market. They don't know it.",
+              "requires": "knowsRoutes",
+              "showLocked": true,
+              "lockedText": "You never learned the back ways",
+              "effects": {
+                "goto": "slip"
+              }
+            },
+            {
+              "text": "Fight your way out.",
+              "effects": {
+                "goto": "fight"
+              }
+            }
+          ]
+        }
+      ],
+      "location": "underBridge",
+      "time": "night"
+    },
+    "slip": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Under the danfo, through Mama Put's kitchen, over the wall behind the motor park. Prof's routes. The white cars wait at both ends of an empty road for an hour."
+        },
+        {
+          "type": "changeStat",
+          "stats": {
+            "conscience": 2
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "after"
+        }
+      ],
+      "location": "motorPark",
+      "time": "night"
+    },
+    "fight": {
+      "beats": [
+        {
+          "type": "startMode",
+          "mode": "fight",
+          "params": {
+            "opponent": "usher",
+            "difficulty": 2
+          },
+          "results": {
+            "won": {
+              "changeStat": {
+                "energy": -15
+              },
+              "setFlag": "fellowshipEnemy",
+              "toast": "Two ushers on the ground in white. White shows dirt very well."
+            },
+            "lost": {
+              "changeStat": {
+                "energy": -30,
+                "money": -15000
+              },
+              "toast": "They don't hit your face. They never hit faces. They take your wallet and your sleep."
+            }
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "after"
+        }
+      ],
+      "location": "underBridge",
+      "time": "night"
+    },
+    "after": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "When you get home, the floor where Uncle Dozie slept is empty. So is the tin under the mattress. A note: \"Nephew. Lagos is too big. I took transport. Forgive. —D.\" He took ₦30,000 in \"transport\".",
+          "if": "dozieStayed"
+        },
+        {
+          "type": "changeStat",
+          "stats": {
+            "money": -30000
+          },
+          "if": "dozieStayed"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "nneEmeka",
+          "text": "(a voice note) Dozie came home. He sat in my kitchen and told me about Papa and the man in white. Then he cried and ate all my fish. (A pause.) Thank you for sending him.",
+          "if": "sentDozieHome"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "You listen to Dozie's recording again, at 2 a.m. \"Your father died saying no.\" You save it in three places.",
+          "if": "recordedDozie"
+        },
+        {
+          "type": "endChapter",
+          "title": "The Second Price",
+          "summary": "The book wanted a branch. You either gave it Kalu, or you gave it a fight. Either way, the Fellowship has written your name a second time.",
+          "next": "g5_abundance"
+        }
+      ],
+      "location": "backSide",
+      "time": "night"
+    }
+  }
+}

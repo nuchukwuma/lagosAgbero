@@ -1,0 +1,252 @@
+{
+  "id": "g2b_firstPay",
+  "campaign": "grace",
+  "world": "iyanaWahala",
+  "act": 1,
+  "number": 3,
+  "title": "First Pay",
+  "description": "A week behind the counter at Ọjà, a rival with a sharp tongue, the first wage, and what Emeka does with it.",
+  "startScene": "counter",
+  "scenes": {
+    "counter": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Your first week at Ike's shop. You learn that a brake pad has four prices: the Igbo price, the Lagos price, the \"my brother\" price, and the price for a man in a hurry."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ngozi",
+          "text": "(from the stall opposite, arms folded) New boy. You are holding that shock absorber like a baby. It is not a baby. It is a shock absorber. Sell it like one."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Mama Ngozi has sold genuine parts at Ọjà for twenty-two years. She calls Ike \"Mr Original\" and does not mean it kindly."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ngozi",
+          "text": "Watch the customer, not the part. A man who came in a taxi will pay. A man who came on foot will count. A man who came with his wife will buy the expensive one so she sees."
+        },
+        {
+          "type": "startMode",
+          "mode": "haggle",
+          "params": {
+            "goods": "parts",
+            "customers": 6
+          },
+          "results": {
+            "good": {
+              "changeStat": {
+                "ikeTrust": 4
+              },
+              "toast": "Ike counts the till twice. \"You get mouth. Good.\""
+            },
+            "ok": {
+              "changeStat": {
+                "ikeTrust": 1
+              }
+            },
+            "bad": {
+              "changeStat": {
+                "ikeTrust": -2
+              },
+              "toast": "Mama Ngozi laughs at you from across the road. Loudly."
+            }
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "pay"
+        }
+      ],
+      "location": "market",
+      "time": "day"
+    },
+    "pay": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "ike",
+          "text": "(Friday evening, peeling notes off a roll) Fifteen thousand. Your first Lagos money. Don't spend it on something stupid. Spend it on something smart, that looks stupid."
+        },
+        {
+          "type": "changeStat",
+          "stats": {
+            "money": 15000
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Fifteen thousand naira. In the village it was a month. In Lagos it is a week, if you don't eat meat."
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "The notes are still warm from Ike's pocket.",
+          "options": [
+            {
+              "text": "Send ₦10,000 to Nne. The oil women are still waiting.",
+              "effects": {
+                "changeStat": {
+                  "money": -10000,
+                  "motherBond": 8,
+                  "conscience": 3
+                },
+                "setFlag": "sentFirstPay",
+                "noticedBy": [
+                  "Nne"
+                ]
+              }
+            },
+            {
+              "text": "Save all of it. Lagos eats people who don't save.",
+              "effects": {
+                "changeStat": {
+                  "hold": 2
+                },
+                "setFlag": "savedFirstPay"
+              }
+            },
+            {
+              "text": "Buy a smartphone. A Lagos man without a camera is a ghost.",
+              "cost": 12000,
+              "effects": {
+                "setFlag": "boughtPhone"
+              }
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "professor"
+        }
+      ],
+      "location": "market",
+      "time": "dusk"
+    },
+    "professor": {
+      "beats": [
+        {
+          "type": "freeRoam",
+          "objective": "Find the old agbero with three fingers at Mallam Garba's tea.",
+          "goal": {
+            "reach": "teaTable"
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "professor",
+          "text": "The JJC from the night bus. Still alive. Good. Sit. Garba, two teas, he's paying."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "professor",
+          "text": "Rule number two: Lagos is not a city. It is a road with people on it. Learn the road, and the road will hide you when you need hiding."
+        },
+        {
+          "type": "choice",
+          "speaker": "professor",
+          "text": "I can show you the back ways. Under the bridge, through the market, behind the motor park. Free. I like your face.",
+          "options": [
+            {
+              "text": "\"Show me everything, Prof.\"",
+              "effects": {
+                "changeStat": {
+                  "energy": -10
+                },
+                "setFlag": "knowsRoutes"
+              }
+            },
+            {
+              "text": "\"I'm too busy, sir. Ike keeps me till ten.\"",
+              "effects": {
+                "changeStat": {
+                  "conscience": 0
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Three evenings. Prof walks slowly and talks fast. By the end you can cross Iyana-Wahala without touching the main road once.",
+          "if": "knowsRoutes"
+        },
+        {
+          "type": "goto",
+          "scene": "call"
+        }
+      ],
+      "location": "teaTable",
+      "time": "dusk"
+    },
+    "call": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Midnight. The shop floor. A carton for a mattress. Your phone lights up."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "nneEmeka",
+          "text": "The oil women came. I paid them. I told them my son sent it from Lagos and I watched their faces. (She laughs.) Thank you, my son.",
+          "variants": [
+            {
+              "if": {
+                "notFlags": [
+                  "sentFirstPay"
+                ]
+              },
+              "text": "The oil women came again. I told them next week. They are tired of my next weeks. (She is not complaining. She is reporting, like weather.)"
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "chinwe",
+          "text": "(a voice note) So? How is Lagos? Have you seen the sea? Are the buildings as tall as Ike says? Tell me true."
+        },
+        {
+          "type": "choice",
+          "speaker": "chinwe",
+          "text": "She will play your answer three times. She always does.",
+          "options": [
+            {
+              "text": "Tell her the truth: cartons, rats, sixteen-hour days, and the sea once from a bus.",
+              "effects": {
+                "changeStat": {
+                  "chinweBond": 6,
+                  "conscience": 2
+                },
+                "setFlag": "toldChinweTruth"
+              }
+            },
+            {
+              "text": "\"It's beautiful. I'm doing well. Very soon, I'll send for you.\"",
+              "effects": {
+                "changeStat": {
+                  "chinweBond": 2
+                },
+                "setFlag": "liedChinweLagos"
+              }
+            }
+          ]
+        },
+        {
+          "type": "endChapter",
+          "title": "First Pay",
+          "summary": "Fifteen thousand naira, a rival who teaches you for free, and an old man who knows every back road. Lagos is a road with people on it. You are on it now.",
+          "next": "g2c_levy"
+        }
+      ],
+      "location": "market",
+      "time": "night"
+    }
+  }
+}

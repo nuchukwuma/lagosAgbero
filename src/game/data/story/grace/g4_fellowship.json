@@ -2,9 +2,9 @@
   "id": "g4_fellowship",
   "campaign": "grace",
   "world": "iyanaWahala",
-  "act": 1,
-  "number": 4,
-  "title": "Chapter 4 — The White Room",
+  "act": 2,
+  "number": 7,
+  "title": "Chapter 7 — The White Room",
   "description": "The Fellowship of Endless Abundance asks who you love. Then it names the price.",
   "startScene": "decide",
   "scenes": {
@@ -582,7 +582,7 @@
           "type": "endChapter",
           "title": "End of Chapter 4 — The White Room",
           "summary": "Money {money}. The Fellowship's hold {stat:hold}. Conscience {stat:conscience}.",
-          "next": "g5_abundance"
+          "next": "g4b_firstWeek"
         }
       ],
       "location": "backSide",

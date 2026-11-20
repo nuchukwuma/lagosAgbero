@@ -1156,5 +1156,53 @@
         }
       ]
     }
+  },
+  "ngozi": {
+    "name": "Mama Ngozi",
+    "fullName": "Mama Ngozi, genuine-parts trader at Ọjà",
+    "color": "#b9770e",
+    "role": "trader",
+    "look": {
+      "body": "mini_female_b",
+      "skin": "#5a3a22",
+      "shirt": "#b9770e",
+      "trousers": "#4a2a12"
+    }
+  },
+  "kalu": {
+    "name": "Kalu",
+    "fullName": "Kalu, Mama Ngozi's apprentice",
+    "color": "#2e86c1",
+    "role": "apprentice",
+    "look": {
+      "body": "mini_male_a",
+      "skin": "#6e4329",
+      "shirt": "#2e86c1",
+      "trousers": "#1b2631"
+    }
+  },
+  "fleetManager": {
+    "name": "Fleet manager",
+    "fullName": "Fleet manager (tie with ducks on it)",
+    "color": "#7f8c8d",
+    "role": "extra",
+    "look": {
+      "body": "mini_male_b",
+      "skin": "#4a2c1a",
+      "shirt": "#d6eaf8",
+      "trousers": "#212f3d"
+    }
+  },
+  "mamaIke": {
+    "name": "Ike's mother",
+    "fullName": "Mama Okafor, Ike's mother",
+    "color": "#a04000",
+    "role": "extra",
+    "look": {
+      "body": "mini_female_a",
+      "skin": "#5a3a22",
+      "shirt": "#a04000",
+      "trousers": "#4a2a12"
+    }
   }
 }
