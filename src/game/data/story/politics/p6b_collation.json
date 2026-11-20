@@ -139,7 +139,7 @@
             {
               "text": "Accept the deal. Deputy is something. Deputy is safe.",
               "effects": {
-                "goto": "deputy"
+                "goto": "deputyThink"
               }
             }
           ]
@@ -175,6 +175,52 @@
       ],
       "location": "southStreet",
       "time": "day"
+    },
+    "deputyThink": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "mamaTiti",
+          "text": "(who has somehow got into the collation centre with a flask of tea) Deputy? (She pours you a cup.) Teacher, the women did not stand in the sun all day for a deputy. Drink your tea and think properly."
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "The nephew's man is waiting for an answer.",
+          "options": [
+            {
+              "text": "Take the deal.",
+              "effects": {
+                "goto": "deputy"
+              }
+            },
+            {
+              "text": "\"No deal. Let the officer read what the people wrote.\"",
+              "effects": {
+                "changeStat": {
+                  "conscience": 4
+                },
+                "setFlag": "noCollationDeal",
+                "goto": "noDeal"
+              }
+            }
+          ]
+        }
+      ],
+      "location": "southStreet",
+      "time": "night"
+    },
+    "noDeal": {
+      "beats": [
+        {
+          "type": "endChapter",
+          "title": "Collation Night",
+          "summary": "You guarded the sheets, or watched them change. At dawn the returning officer clears his throat.",
+          "next": "p7_declaration"
+        }
+      ],
+      "location": "southStreet",
+      "time": "night"
     }
   }
 }

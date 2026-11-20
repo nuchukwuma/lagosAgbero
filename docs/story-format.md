@@ -599,11 +599,17 @@ separate run with its own hero, chapters, world, HUD and endings.
 
 | Campaign | Hero | Chapters | First world |
 |---|---|---|---|
-| `areaBoy` — Area Boy | you name him | `story/act1`–`act4` (12) | Iyana-Wahala |
-| `grace` — Grass to Grace | Emeka | `story/grace` (6) | Nkwọ-Agụụ village |
-| `campus` — Fake It Till You Graduate | Somto | `story/campus` (6) | Royal Crest University |
-| `politics` — The Honourable | Kunle | `story/politics` (7) | Iyana-Wahala |
-| `sugar` — Mama Sugar | Ebiere | `story/sugar` (7) | Iyana-Wahala |
+| `areaBoy` — Area Boy | you name him | `story/act1`–`act4` (15) | Iyana-Wahala |
+| `grace` — Grass to Grace | Emeka | `story/grace` (15) | Nkwọ-Agụụ village |
+| `campus` — Fake It Till You Graduate | Somto | `story/campus` (15) | Royal Crest University |
+| `politics` — The Honourable | Kunle | `story/politics` (15) | Iyana-Wahala |
+| `sugar` — Mama Sugar | Ebiere | `story/sugar` (15) | Iyana-Wahala |
+
+Every story runs to at least 15 chapters at a steady pace: between the big
+turning points there are chapters of ordinary life (a first wage, a burial, a
+night shift, a ward tour) so each big choice has context around it. Early exits
+(going home, stepping down, quitting school) always pass through a moment to
+reconsider, where someone who cares says what the choice gives up.
 
 Side quests with each story's key people live in `story/common/bonds.json`;
 their entries in `quests.json` carry `"campaign"` so they are only offered in

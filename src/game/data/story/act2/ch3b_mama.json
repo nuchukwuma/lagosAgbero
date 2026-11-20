@@ -1,0 +1,359 @@
+{
+  "id": "ch3b_mama",
+  "world": "iyanaWahala",
+  "act": 2,
+  "number": 4,
+  "title": "Chapter 4 — Mama Comes to Lagos",
+  "description": "Mama comes to Lagos for her eye operation. She thinks you work \"in transport\". The Back Side has opinions.",
+  "startScene": "arrive",
+  "scenes": {
+    "arrive": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Monday, 6 a.m. The night bus from Ìlú-Àlàáfíà. Mama gets off with one bag, a cooler of moi-moi and an eye patch the village nurse gave her \"for the journey\"."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "mama",
+          "text": "{name}! (She holds your face with both hands and turns it left and right like a yam at market.) You are thin. Lagos is not feeding you. Where is your office? You said \"transport\".",
+          "variants": [
+            {
+              "if": "liedToMama",
+              "text": "{name}! (She holds your face with both hands.) You are thin. You told me on the phone you are \"a supervisor in transport\". Show me the office, Mr. Supervisor."
+            }
+          ]
+        },
+        {
+          "type": "choice",
+          "speaker": "mama",
+          "text": "The Back Side is right behind you: the drivers, the shouting, Professor on his chair.",
+          "options": [
+            {
+              "text": "\"This is it, Mama. I collect fees. I am an agbero.\" Tell her the truth.",
+              "effects": {
+                "changeStat": {
+                  "mentorBond": 2,
+                  "conscience": 4
+                },
+                "setFlag": "toldMamaAgbero"
+              }
+            },
+            {
+              "text": "\"My office is in Ikeja, Mama. This is just where I wait for the bus.\"",
+              "effects": {
+                "changeStat": {
+                  "conscience": -3
+                },
+                "setFlag": "mamaTransport"
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "mama",
+          "text": "(She looks at the drivers for a long time.) Agbero. (She says it like a word in a hymn she doesn't like.) Your father carried cement for twenty years. Nobody is too good for work. (A pause.) But work that shouts at people... we will discuss.",
+          "if": "toldMamaAgbero"
+        },
+        {
+          "type": "goto",
+          "scene": "professor"
+        }
+      ],
+      "location": "frontStop",
+      "time": "dawn"
+    },
+    "professor": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "professor",
+          "text": "(standing up from his chair, which he never does) Madam. Welcome to Iyana-Wahala. I am the one teaching your son rules. He is a slow student but an honest one.",
+          "variants": [
+            {
+              "if": "mamaTransport",
+              "text": "(standing up from his chair, which he never does) Madam. Welcome. I am... in transport, with your son. (He winks at you so slowly that Mama sees it.)"
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "mama",
+          "text": "(after twenty minutes with Professor) That old man has three fingers and four wives' worth of sense. Listen to him."
+        },
+        {
+          "type": "goto",
+          "scene": "hospital"
+        }
+      ],
+      "location": "backSide",
+      "time": "day"
+    },
+    "hospital": {
+      "beats": [
+        {
+          "type": "freeRoam",
+          "objective": "Take Mama to the general hospital by the market.",
+          "goal": {
+            "reach": "market"
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "The general hospital. The eye clinic. A queue of eighty people and a doctor who has been on duty since Saturday. The cataract operation: ₦45,000, \"before we even talk\"."
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "Mama is pretending she can read the price list. She can't. That's the point.",
+          "options": [
+            {
+              "text": "Pay it. All of it.",
+              "cost": 45000,
+              "effects": {
+                "changeStat": {
+                  "conscience": 4
+                },
+                "setFlag": "paidMamaEyes",
+                "noticedBy": [
+                  "Mama"
+                ]
+              }
+            },
+            {
+              "text": "Use Baba Ticket's quota money. Make it back by Friday.",
+              "effects": {
+                "changeStat": {
+                  "money": 45000
+                },
+                "setFlag": "usedQuotaMoney",
+                "goto": "quotaPay"
+              }
+            },
+            {
+              "text": "Ask Professor. He \"knows somebody\" everywhere.",
+              "effects": {
+                "changeStat": {
+                  "mentorBond": 6
+                },
+                "setFlag": "professorHospital"
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "professor",
+          "text": "(on the phone) Dr. Okonjo? It's me. ...Yes, that one. Three fingers. ...You remember the danfo, 1994? Good. A woman is coming. Treat her like your mother. Then tell me what I owe. (He hangs up.) Free. I owe him a story he doesn't want told.",
+          "if": "professorHospital"
+        },
+        {
+          "type": "goto",
+          "scene": "ada"
+        }
+      ],
+      "location": "market",
+      "time": "day"
+    },
+    "quotaPay": {
+      "beats": [
+        {
+          "type": "changeStat",
+          "stats": {
+            "money": -45000
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "You pay with Baba Ticket's money. It feels heavier going out than it did coming in."
+        },
+        {
+          "type": "goto",
+          "scene": "ada"
+        }
+      ],
+      "location": "market",
+      "time": "day"
+    },
+    "ada": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Two days later. Mama's eye is bandaged. She insists on going to the market anyway \"to see what Lagos is charging for pepper\"."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ada",
+          "text": "(at her shop) Mama! (She has never met her. She hugs her like she has.) Sit. Sit. I have a fan. {name}, why didn't you say your mother was coming? I would have cleaned.",
+          "variants": [
+            {
+              "if": "adaCold",
+              "text": "(at her shop, a little stiff) Good afternoon, ma. (She looks at you, then at Mama's bandage, and softens completely.) Sit. I have a fan."
+            }
+          ]
+        },
+        {
+          "type": "choice",
+          "speaker": "mama",
+          "text": "(Mama is looking at Ada the way she looks at good tomatoes.)",
+          "options": [
+            {
+              "text": "\"Mama, this is Ada. My best friend in Lagos.\"",
+              "effects": {
+                "changeStat": {
+                  "friendBond": 6
+                },
+                "setFlag": "mamaMetAda"
+              }
+            },
+            {
+              "text": "Say nothing. Let them talk. They're already talking.",
+              "effects": {
+                "changeStat": {
+                  "friendBond": 3
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "mama",
+          "text": "(very loudly, to Ada) Best friend. Hm. I had a \"best friend\" once. I married him. (Ada laughs so hard she drops a roll of fabric.)",
+          "if": "mamaMetAda"
+        },
+        {
+          "type": "goto",
+          "scene": "goodbye"
+        }
+      ],
+      "location": "adaShop",
+      "time": "day"
+    },
+    "goodbye": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Friday. The night bus. Mama's bandage is off. She can see the bus number from across the motor park and reads it out loud, twice, to prove it."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "babaTicket",
+          "text": "(that same evening) Boy. My quota was short this week. Forty-five thousand short. (He doesn't shout. He writes it in his book.) You get one week.",
+          "if": "usedQuotaMoney"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "mama",
+          "text": "(at the bus door) Iya Bọ́sẹ̀ is still asking. ₦{stat:debt}. I tell her my son is working. (She touches your cheek.) Don't make me a liar, {name}."
+        },
+        {
+          "type": "choice",
+          "speaker": "mama",
+          "text": "The conductor is shouting \"Ìlú-Àlàáfíà! Last call!\"",
+          "options": [
+            {
+              "text": "Send what you have saved to Iya Bọ́sẹ̀ with her.",
+              "effects": {
+                "changeStat": {
+                  "conscience": 2
+                },
+                "payDebt": "hustleMoney"
+              }
+            },
+            {
+              "text": "\"Soon, Mama. Very soon.\"",
+              "effects": {
+                "changeStat": {
+                  "conscience": -1
+                }
+              }
+            },
+            {
+              "text": "Get on the bus with her. Go home. Lagos can keep its fees.",
+              "effects": {
+                "goto": "homeThink"
+              }
+            }
+          ]
+        },
+        {
+          "type": "endChapter",
+          "title": "Mama Comes to Lagos",
+          "summary": "Mama saw Lagos with one good eye, then two. She saw you too, whichever version you showed her.",
+          "next": "ch4_conductor"
+        }
+      ],
+      "location": "motorPark",
+      "time": "night"
+    },
+    "home": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "You sit next to Mama on the night bus. She falls asleep on your shoulder before the toll gate. The debt is still there. So is the village. So are you."
+        },
+        {
+          "type": "endChapter",
+          "title": "Back to Ìlú-Àlàáfíà",
+          "summary": "You went home before Lagos finished teaching you. The debt came with you. So did the rules.",
+          "ending": "back_home_early"
+        }
+      ],
+      "location": "motorPark",
+      "time": "night"
+    },
+    "homeThink": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "mama",
+          "text": "(one foot on the bus step, turning back) You want to come home? (She looks at the motor park, the danfos, you.) With Iya Bọ́sẹ̀'s money still standing? {name}, if you come, come because you want to. Not because I cried at a bus stop."
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "The conductor is banging on the side of the bus.",
+          "options": [
+            {
+              "text": "\"I want to, Mama. Move over.\"",
+              "effects": {
+                "goto": "home"
+              }
+            },
+            {
+              "text": "\"Go well, Mama. I'll finish what I started.\"",
+              "effects": {
+                "changeStat": {
+                  "conscience": 2
+                },
+                "goto": "stayLagos"
+              }
+            }
+          ]
+        }
+      ],
+      "location": "motorPark",
+      "time": "night"
+    },
+    "stayLagos": {
+      "beats": [
+        {
+          "type": "endChapter",
+          "title": "Mama Comes to Lagos",
+          "summary": "Mama saw Lagos with one good eye, then two. She saw you too, whichever version you showed her.",
+          "next": "ch4_conductor"
+        }
+      ],
+      "location": "motorPark",
+      "time": "night"
+    }
+  }
+}

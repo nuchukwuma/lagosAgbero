@@ -1,0 +1,261 @@
+{
+  "id": "ch9b_chair",
+  "world": "iyanaWahala",
+  "act": 3,
+  "number": 12,
+  "title": "Chapter 12 — The Chair at the Back Side",
+  "description": "After Professor: an empty chair, a notebook of rules, and a street that doesn't know yet who it listens to.",
+  "startScene": "chair",
+  "scenes": {
+    "chair": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "A week after. The Back Side wakes up at 5 a.m. like it always does. The drivers shout. The danfos cough. Something is wrong and it takes you a minute to see what: the chair."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Professor's chair is empty. Somebody has put a tea glass on it, the way he liked it, too sweet. Nobody sits there. Even the drivers walk around it.",
+          "if": "professor_dead"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Professor's chair is empty. He is in Kirikiri, for your crime. Somebody has written on the wall above it in chalk: \"RULE ONE: KNOW WHO YOU OWE.\"",
+          "if": "professor_jailed"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Professor's chair is empty. He is in the village with his sister and her goats. He sends a voice note every morning that is mostly goat.",
+          "if": "professor_village"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Professor's chair is at his buka now, by the Front Stop. He sits on it to supervise the rice. Nobody has ever supervised rice so seriously.",
+          "if": "professor_buka"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Professor is in his chair. But he is slower, and he lets you answer the drivers before he does. You notice. He notices you noticing.",
+          "if": "professor_stays"
+        },
+        {
+          "type": "goto",
+          "scene": "notebook"
+        }
+      ],
+      "location": "backSide",
+      "time": "dawn"
+    },
+    "notebook": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "garba",
+          "text": "(handing you a school exercise book, its cover soft with age) Professor gave me this years ago. He said: \"When I'm gone, give it to the one who argues with me most.\" (He shrugs.) That's you.",
+          "if": {
+            "anyOf": [
+              "professor_dead",
+              "professor_jailed"
+            ]
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "professor",
+          "text": "(handing you a school exercise book, its cover soft with age) My rules. Forty years. Fifty-two rules, three crossed out, one in my son's handwriting. (He doesn't say anything else.) Keep it.",
+          "if": {
+            "anyOf": [
+              "professor_village",
+              "professor_buka",
+              "professor_stays"
+            ]
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "RULE 1: Know who you owe. RULE 7: The rain doesn't care who you are. RULE 19: Never let a driver see you count. RULE 33: Your mother is always listening, even in Lagos."
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "The last page is empty except for the number 53.",
+          "options": [
+            {
+              "text": "Write your own rule 53, and start teaching it to the new JJCs at the Back Side.",
+              "effects": {
+                "changeStat": {
+                  "mentorBond": 8,
+                  "communityGoodwill": 6
+                },
+                "setFlag": "teachesJJCs"
+              }
+            },
+            {
+              "text": "Keep the book in your pocket. Read it when you need it.",
+              "effects": {
+                "changeStat": {
+                  "mentorBond": 4
+                },
+                "setFlag": "keptRules"
+              }
+            },
+            {
+              "text": "\"Rules are for old men.\" Leave it on the chair.",
+              "effects": {
+                "changeStat": {
+                  "mentorBond": -6
+                },
+                "setFlag": "leftRules"
+              }
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "jjc"
+        }
+      ],
+      "location": "backSide",
+      "time": "dawn"
+    },
+    "jjc": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "A boy gets off the night bus with one bag and a face you recognise. You had it. Somebody is already walking towards him with a receipt book. The receipts are blank."
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "The boy is about to pay the \"loading fee\".",
+          "options": [
+            {
+              "text": "Step in. \"Rule number one: in Lagos, nobody gives you a receipt for nothing.\" Show him the way to the Back Side.",
+              "effects": {
+                "changeStat": {
+                  "communityGoodwill": 4,
+                  "notoriety": -1
+                },
+                "setFlag": "savedJJC"
+              }
+            },
+            {
+              "text": "Let Lagos teach him. It taught you.",
+              "effects": {
+                "changeStat": {
+                  "notoriety": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "The boy follows you around for a week, asking questions. Then three more boys come. Then a girl. They sit on crates around the empty chair and you talk until the drivers come.",
+          "options": [
+            {
+              "text": "This is the work. Let the park and the elections go. Teach.",
+              "effects": {
+                "goto": "teacher"
+              }
+            },
+            {
+              "text": "Teach in the mornings. Collect in the afternoons. You can do both.",
+              "effects": {
+                "changeStat": {
+                  "mentorBond": 4
+                }
+              }
+            }
+          ],
+          "if": {
+            "flags": [
+              "teachesJJCs",
+              "savedJJC"
+            ]
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "mama"
+        }
+      ],
+      "location": "frontStop",
+      "time": "day"
+    },
+    "mama": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "mama",
+          "text": "(on the phone) {name}. I heard about your old teacher. (She is quiet.) Did you thank him? Before? (She doesn't wait for an answer.) You must thank people while they can hear.",
+          "variants": [
+            {
+              "if": "toldMamaAgbero",
+              "text": "(on the phone) I heard about Professor. The one who stood up when I came. (She is quiet.) An agbero who stands up for an old woman. Your father would have liked him. Did you thank him?"
+            },
+            {
+              "if": "mamaTransport",
+              "text": "(on the phone) I heard about your \"transport\" colleague. Professor. (A pause.) {name}, a man with three fingers doesn't work in an office in Ikeja. I am old. I am not blind. Not any more."
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "mama",
+          "text": "And greet Ada. Tell her the fan was good. Tell her my son is slow, but he gets there.",
+          "if": "mamaMetAda"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "biodun",
+          "text": "(hooting from the road) Village boy! The key is still on a string! Any time!",
+          "if": {
+            "flags": [
+              "refusedDanfoJob"
+            ]
+          }
+        },
+        {
+          "type": "endChapter",
+          "title": "The Chair at the Back Side",
+          "summary": "An empty chair, a notebook of rules, and a new JJC at the bus stop. Election season is coming, and the street doesn't know yet whose voice it listens to now.",
+          "next": "ch10_election"
+        }
+      ],
+      "location": "backSide",
+      "time": "dusk"
+    },
+    "teacher": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "You give your fee book to Scatter. You give your stick to nobody. Every morning at 5 a.m., on crates around Professor's chair, you teach the rules to whoever came on the night bus."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "The drivers bring tea. Garba refuses payment. Bassey, passing, stops to listen to Rule 19 and laughs out loud, once, and then pretends he didn't."
+        },
+        {
+          "type": "endChapter",
+          "title": "The New Professor",
+          "summary": "You never sat in the chair. You sat beside it, and taught. The Back Side has a teacher again.",
+          "ending": "the_teacher"
+        }
+      ],
+      "location": "backSide",
+      "time": "dawn"
+    }
+  }
+}

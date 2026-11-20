@@ -2,9 +2,9 @@
   "id": "g4b_firstWeek",
   "campaign": "grace",
   "world": "iyanaWahala",
-  "act": 1,
+  "act": 3,
   "number": 8,
-  "title": "The First Week",
+  "title": "Chapter 8 — The First Week",
   "description": "After the White Room, the first week: money that arrives without knocking, or a shop in ashes and an old man's bench.",
   "startScene": "morning",
   "scenes": {

@@ -1,8 +1,8 @@
 {
   "id": "ch9_professor",
   "act": 3,
-  "number": 9,
-  "title": "Chapter 9 — The Laugh",
+  "number": 11,
+  "title": "Chapter 11 — The Laugh",
   "description": "Sunday is a Hyena. The loyalty test. Professor's son. Professor's fate.",
   "startScene": "start",
   "scenes": {
@@ -526,7 +526,7 @@
           "type": "endChapter",
           "title": "End of Act 3 — The Laugh",
           "summary": "Professor is gone. Some rules die with the man who made them.",
-          "next": "ch10_election"
+          "next": "ch9b_chair"
         }
       ]
     },
@@ -578,7 +578,7 @@
           "type": "endChapter",
           "title": "End of Act 3 — The Laugh",
           "summary": "Professor took your fall. Police heat {stat:policeHeat}.",
-          "next": "ch10_election"
+          "next": "ch9b_chair"
         }
       ]
     },
@@ -623,7 +623,7 @@
           "type": "endChapter",
           "title": "End of Act 3 — The Laugh",
           "summary": "Professor's Kitchen is open. Bond with Professor {stat:mentorBond}.",
-          "next": "ch10_election"
+          "next": "ch9b_chair"
         }
       ]
     },
@@ -664,7 +664,7 @@
           "type": "endChapter",
           "title": "End of Act 3 — The Laugh",
           "summary": "Professor went home. You still can't.",
-          "next": "ch10_election"
+          "next": "ch9b_chair"
         }
       ]
     },
@@ -694,7 +694,7 @@
           "type": "endChapter",
           "title": "End of Act 3 — The Laugh",
           "summary": "Professor stays on the street. Bond with Professor {stat:mentorBond}.",
-          "next": "ch10_election"
+          "next": "ch9b_chair"
         }
       ]
     }

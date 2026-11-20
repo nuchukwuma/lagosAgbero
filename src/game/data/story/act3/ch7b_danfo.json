@@ -1,0 +1,277 @@
+{
+  "id": "ch7b_danfo",
+  "world": "iyanaWahala",
+  "act": 3,
+  "number": 9,
+  "title": "Chapter 9 — Bíọ́dún's Danfo",
+  "description": "The Task Force impounds \"God's Time Is The Best\". Bíọ́dún has three days, five children and no plan.",
+  "startScene": "impound",
+  "scenes": {
+    "impound": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Tuesday. A Task Force tow truck drags \"God's Time Is The Best\" away from the Front Stop with three passengers still inside. They get out at the first junction, still arguing about change."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "biodun",
+          "text": "(sitting on the kerb with his head in his hands) Impound. ₦60,000 release fee. Three days, or they auction it. (He looks up.) {name}. The bus is everything I have.",
+          "variants": [
+            {
+              "if": "biodunEnemy",
+              "text": "(sitting on the kerb, not looking at you) Impound. ₦60,000, three days, or auction. (A long pause.) I know we have wahala from your first week. I am asking anyway. The bus is everything I have."
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "chuks",
+          "text": "(passing by, sunglasses at 10 a.m.) The impound yard manager owes the Shell a favour. One phone call. Of course, then the driver owes the Shell. Everybody owes the Shell eventually.",
+          "if": "cultPath"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ada",
+          "text": "(from her shop door) The co-op has savings, abi? This is what savings are for. Or are we just counting it?",
+          "if": "independentPath"
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "Three days.",
+          "options": [
+            {
+              "text": "Pay the release fee yourself.",
+              "cost": 60000,
+              "effects": {
+                "changeStat": {
+                  "conscience": 4,
+                  "notoriety": -1
+                },
+                "setFlag": "paidImpound"
+              }
+            },
+            {
+              "text": "Ask Chuks to make the call.",
+              "requires": "cultPath",
+              "showLocked": true,
+              "lockedText": "Only the Shell can make that call",
+              "effects": {
+                "changeStat": {
+                  "cultLoyalty": 4
+                },
+                "setFlag": "shellImpoundFavour"
+              }
+            },
+            {
+              "text": "Pay it from the co-op savings. Members vote yes.",
+              "requires": "coopSavings",
+              "showLocked": true,
+              "lockedText": "The co-op has no savings box",
+              "effects": {
+                "changeStat": {
+                  "settlementTrust": 0,
+                  "communityGoodwill": 6
+                },
+                "setFlag": "coopPaidImpound"
+              }
+            },
+            {
+              "text": "Break it out of the yard at night. Drive it home yourself.",
+              "effects": {
+                "goto": "yard"
+              }
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "drive"
+        }
+      ],
+      "location": "frontStop",
+      "time": "day"
+    },
+    "yard": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Midnight. The impound yard behind the motor park. One guard, one dog, one padlock older than you. Bíọ́dún has a spare key and a prayer."
+        },
+        {
+          "type": "startMode",
+          "mode": "drive",
+          "params": {
+            "length": 1200,
+            "stops": 0,
+            "fuel": 40,
+            "checkpoints": 2,
+            "slogan": "GOD'S TIME IS THE BEST",
+            "fare": 0,
+            "seed": 77
+          },
+          "results": {
+            "done": {
+              "changeStat": {
+                "policeHeat": 6,
+                "notoriety": 3
+              },
+              "setFlag": "stoleDanfoBack",
+              "toast": "You drive God's Time Is The Best out of the yard with no lights and the dog chasing you for two streets. Bíọ́dún laughs the whole way."
+            },
+            "caught": {
+              "changeStat": {
+                "policeHeat": 12,
+                "money": -10000
+              },
+              "setFlag": "caughtAtYard",
+              "toast": "Caught at the second checkpoint. ₦10,000 and a long talk with Commander Bassey about \"property\"."
+            },
+            "default": {}
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "drive"
+        }
+      ],
+      "location": "motorPark",
+      "time": "night"
+    },
+    "drive": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "biodun",
+          "text": "(polishing the bus with his shirt) Five children. Five! All of them ate today because of you. (He slaps the danfo.) God's Time Is The Best. Now I believe the sticker.",
+          "if": {
+            "anyOf": [
+              "paidImpound",
+              "shellImpoundFavour",
+              "coopPaidImpound",
+              "stoleDanfoBack"
+            ]
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "biodun",
+          "text": "(very quiet) They auctioned it on Friday. A man from Ìkòròdú. (He tries to laugh.) He will paint over the sticker. God's time will be his time now.",
+          "if": "caughtAtYard"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "biodun",
+          "text": "Listen. My cousin has a second danfo. No driver. You know the Oshodi route, you hung on the door for a whole day. Drive for us. Real money, no fees, no cults, no Bassey breakfast. Just the road.",
+          "variants": [
+            {
+              "if": "caughtAtYard",
+              "text": "My cousin still has a second danfo. No driver. You tried for me. Drive for us. No fees, no cults, no Bassey breakfast. Just the road. It's not my bus, but it's a bus."
+            }
+          ]
+        },
+        {
+          "type": "choice",
+          "speaker": "biodun",
+          "text": "He is holding out a key on a string.",
+          "options": [
+            {
+              "text": "Take the key. Leave the fees, the park and the rest of it.",
+              "effects": {
+                "goto": "driverLifeThink"
+              }
+            },
+            {
+              "text": "\"Not yet, Bíọ́dún. I have things to finish here.\"",
+              "effects": {
+                "changeStat": {
+                  "conscience": 1
+                },
+                "setFlag": "refusedDanfoJob"
+              }
+            }
+          ]
+        },
+        {
+          "type": "endChapter",
+          "title": "Bíọ́dún's Danfo",
+          "summary": "A bus, five children and three days. Whatever you did, Bíọ́dún will tell the story at every bus stop for the rest of his life.",
+          "next": "ch8_war"
+        }
+      ],
+      "location": "frontStop",
+      "time": "day"
+    },
+    "driverLife": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "You hang the key round your neck. The next morning you are driving the Oshodi route in \"NO CONDITION IS PERMANENT\", a yellow danfo with one working wiper and a radio stuck on Wahala FM."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "You pay fees now, to agberos at every stop. Some of them are boys you trained. You always have the exact change ready. They always look surprised."
+        },
+        {
+          "type": "endChapter",
+          "title": "No Condition Is Permanent",
+          "summary": "You left the park and took the road. Smaller money, longer days, and every evening ends when you switch off the engine.",
+          "ending": "danfo_life"
+        }
+      ],
+      "location": "frontStop",
+      "time": "day"
+    },
+    "driverLifeThink": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "ada",
+          "text": "(when you show her the key) A danfo driver? (She turns the key over.) Honest work. Long days. And everything you built at the park goes to Scatter by Friday. (She hands it back.) I'll support you either way. Just choose it awake."
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "The key is warm from her hand.",
+          "options": [
+            {
+              "text": "Choose it. Drive.",
+              "effects": {
+                "goto": "driverLife"
+              }
+            },
+            {
+              "text": "Give the key back to Bíọ́dún. \"Not yet.\"",
+              "effects": {
+                "changeStat": {
+                  "conscience": 1
+                },
+                "setFlag": "refusedDanfoJob",
+                "goto": "notYet"
+              }
+            }
+          ]
+        }
+      ],
+      "location": "frontStop",
+      "time": "day"
+    },
+    "notYet": {
+      "beats": [
+        {
+          "type": "endChapter",
+          "title": "Bíọ́dún's Danfo",
+          "summary": "A bus, five children and three days. Whatever you did, Bíọ́dún will tell the story at every bus stop for the rest of his life.",
+          "next": "ch8_war"
+        }
+      ],
+      "location": "frontStop",
+      "time": "day"
+    }
+  }
+}

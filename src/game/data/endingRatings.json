@@ -195,5 +195,17 @@
   "sugar_warri": {
     "tier": "mixed",
     "comment": "You went home to Warri with two bags and your daughter. Peaceful. Also a little like leaving the party before the cake: the house you built never got its last chapter."
+  },
+  "back_home_early": {
+    "tier": "early",
+    "comment": "Mama's eye got fixed and you took that as a sign to go home. Sweet, honestly. But the park, the cults, the co-op and an entire election were still waiting. Lagos has a lot more to teach the JJC."
+  },
+  "danfo_life": {
+    "tier": "mixed",
+    "comment": "You gave up the stick for the steering wheel halfway through. Honest work, long days, and nobody's breakfast but your own. The park's biggest fights went on without you; go back and see who you would have been in them."
+  },
+  "the_teacher": {
+    "tier": "good",
+    "comment": "You didn't take the chair; you sat beside it and taught. Professor would pretend not to be proud. There are louder endings, but few kinder ones."
   }
 }

@@ -2,9 +2,9 @@
   "id": "g4d_dozie",
   "campaign": "grace",
   "world": "iyanaWahala",
-  "act": 1,
+  "act": 3,
   "number": 10,
-  "title": "Uncle Dozie Comes to Lagos",
+  "title": "Chapter 10 — Uncle Dozie Comes to Lagos",
   "description": "Uncle Dozie arrives with a sack of garri and a scheme. He also knows something about Papa's debts.",
   "startScene": "arrive",
   "scenes": {

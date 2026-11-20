@@ -1,8 +1,8 @@
 {
   "id": "ch5_settlement",
   "act": 2,
-  "number": 5,
-  "title": "Chapter 5 — Settlement",
+  "number": 6,
+  "title": "Chapter 6 — Settlement",
   "description": "Election season. Barrister Settlement offers the first rally job: do it, fake it, or warn the other side.",
   "startScene": "morning",
   "scenes": {

@@ -217,7 +217,7 @@
               "showLocked": true,
               "lockedText": "You never built the akara business",
               "effects": {
-                "goto": "empire"
+                "goto": "empireThink"
               }
             }
           ]
@@ -253,6 +253,51 @@
       ],
       "location": "adaShop",
       "time": "day"
+    },
+    "empireThink": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "mamaSomto",
+          "text": "(stopping her stirring) Leave school? With one year left? (She looks at you a long time.) I sold the freezer for that school, Somto. (Then, slowly.) But I would sell it again for whatever you choose with your whole heart. Is it your whole heart?"
+        },
+        {
+          "type": "choice",
+          "speaker": "mamaSomto",
+          "text": "She means the question.",
+          "options": [
+            {
+              "text": "\"My whole heart, Mama. Let's build it.\"",
+              "effects": {
+                "goto": "empire"
+              }
+            },
+            {
+              "text": "\"No. I'll finish. Then we build it.\"",
+              "effects": {
+                "changeStat": {
+                  "momBond": 4
+                },
+                "goto": "finishFirst"
+              }
+            }
+          ]
+        }
+      ],
+      "location": "teaTable",
+      "time": "dusk"
+    },
+    "finishFirst": {
+      "beats": [
+        {
+          "type": "endChapter",
+          "title": "Demolition Notice",
+          "summary": "A red X, seven days, and the first fight you chose for yourself.",
+          "next": "u5d_project"
+        }
+      ],
+      "location": "teaTable",
+      "time": "dusk"
     }
   }
 }

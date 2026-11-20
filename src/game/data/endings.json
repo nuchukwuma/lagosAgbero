@@ -544,6 +544,34 @@
     {
       "if": "coopFairFee",
       "text": "The co-op board: one fair fee, still written in chalk. Drivers touch it for luck."
+    },
+    {
+      "if": "paidMamaEyes",
+      "text": "Mama's eyes: twenty-twenty in the left, \"good enough to see you lying\" in the right."
+    },
+    {
+      "if": "professorHospital",
+      "text": "Dr. Okonjo at the general hospital: still owes Professor a story nobody wants told. He fixes eyes for free on the first Monday of every month \"for the old man\"."
+    },
+    {
+      "if": "usedQuotaMoney",
+      "text": "Baba Ticket's notebook: one line, in red, from the week your mother came. \"45,000. Paid late. Forgiven. Not forgotten.\""
+    },
+    {
+      "if": "stoleDanfoBack",
+      "text": "The impound yard dog: still chases every yellow danfo that passes, just in case."
+    },
+    {
+      "if": "keptRules",
+      "text": "Professor's rule book: in your back pocket, soft as cloth now."
+    },
+    {
+      "if": "leftRules",
+      "text": "Professor's rule book: you left it on his chair. Garba keeps it behind his kettle, waiting for the next one who argues."
+    },
+    {
+      "if": "savedJJC",
+      "text": "The JJC from the night bus: he never paid the loading fee. He tells the story the way you would."
     }
   ],
   "grace_grace": {
@@ -1956,5 +1984,62 @@
       },
       "Sometimes, at night, you can still hear a generator in your head. It is quieter every month."
     ]
+  },
+  "back_home_early": {
+    "title": "Back to Ìlú-Àlàáfíà",
+    "epilogue": [
+      "You went home on the night bus with Mama asleep on your shoulder. The debt came with you: ₦{debt}, and Iya Bọ́sẹ̀'s patience.",
+      "You farm Papa's old plot and carry cement on market days, like he did. It pays slowly. It pays.",
+      {
+        "if": "mamaMetAda",
+        "text": "Ada sends fabric on the Ìlú-Àlàáfíà bus every Christmas, with a note: \"For Mama. Not for you.\""
+      },
+      {
+        "if": "toldMamaAgbero",
+        "text": "Mama tells the village her son was an agbero in Lagos. She says it proudly, the way you say somebody survived a war."
+      }
+    ],
+    "hint": "The first raid isn't the end of the road."
+  },
+  "danfo_life": {
+    "title": "No Condition Is Permanent",
+    "epilogue": [
+      "You drive the Oshodi route in a yellow danfo with one wiper. You pay fees at every stop, with exact change.",
+      {
+        "if": {
+          "anyOf": [
+            "paidImpound",
+            "shellImpoundFavour",
+            "coopPaidImpound",
+            "stoleDanfoBack"
+          ]
+        },
+        "text": "Bíọ́dún drives the bus behind you every morning, hooting \"God's Time Is The Best!\" at every agbero you used to know."
+      },
+      "Some nights you park under the bridge and listen to Wahala FM report on who became chairman of the park. It isn't you. It doesn't need to be."
+    ],
+    "hint": "Some roads are just roads."
+  },
+  "the_teacher": {
+    "title": "The New Professor",
+    "epilogue": [
+      "Every morning at five, on crates around an old chair at the Back Side, you teach the rules to whoever came on the night bus.",
+      {
+        "if": "professor_dead",
+        "text": "Giggles comes once, stands at the back, and doesn't laugh. The next week he brings two boys from Under-Bridge."
+      },
+      {
+        "if": {
+          "anyOf": [
+            "professor_village",
+            "professor_buka",
+            "professor_stays"
+          ]
+        },
+        "text": "Professor comes to listen sometimes. He corrects your Rule 19. You let him."
+      },
+      "Rule 53, in your handwriting: \"Nobody gives you a receipt for nothing. So give one.\""
+    ],
+    "hint": "Somebody has to teach the next JJC."
   }
 }

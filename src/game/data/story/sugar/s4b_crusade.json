@@ -113,7 +113,7 @@
             {
               "text": "Go on Wednesday. Close Sugar Palace. Start again.",
               "effects": {
-                "goto": "bornAgain"
+                "goto": "bornAgainThink"
               }
             },
             {
@@ -204,6 +204,43 @@
       ],
       "location": "southStreet",
       "time": "night"
+    },
+    "bornAgainThink": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "kemi",
+          "text": "(at the gate, when you tell the girls) Close? Mama... and us? (She isn't angry. She is doing arithmetic.) Precious has nowhere. Tari has nowhere. If you close on Wednesday, we're on the street on Thursday. Unless you take us with you."
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "Pastor Femi's card is in your hand.",
+          "options": [
+            {
+              "text": "\"We all go. The programme takes all of you, or it doesn't take me.\"",
+              "effects": {
+                "changeStat": {
+                  "staffTrust": 8
+                },
+                "goto": "bornAgain"
+              }
+            },
+            {
+              "text": "Put the card in your bra. \"Not yet.\"",
+              "effects": {
+                "changeStat": {
+                  "conscience": 4
+                },
+                "setFlag": "keptPastorCard",
+                "goto": "after"
+              }
+            }
+          ]
+        }
+      ],
+      "location": "southStreet",
+      "time": "day"
     }
   }
 }

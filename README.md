@@ -8,26 +8,26 @@ It's a branching narrative game: choices are remembered, characters bring
 them up later, and they decide which endings you can reach. Five stories
 share the engine:
 
-- **Area Boy:** a JJC with ₦2,300 becomes the agbero of Iyana-Wahala. 12
-  chapters, two Act 3 paths (cult or independent), 9 endings (2 secret).
+- **Area Boy:** a JJC with ₦2,300 becomes the agbero of Iyana-Wahala. 15
+  chapters, two Act 3 paths (cult or independent), 12 endings (2 secret).
 - **Grass to Grace:** Emeka will do anything to leave the village for Lagos
   money, including joining a fellowship that wants more than his soul.
-  6 chapters, 6 endings. Inspired by the premise of Nigerian classics about
+  15 chapters, 9 endings. Inspired by the premise of Nigerian classics about
   money rituals; the characters and plot are original.
 - **Fake It Till You Graduate:** Somto, a pap seller's son on a scholarship,
   pretends to be rich at Royal Crest University. Cults, sorting lecturers,
   loan apps, yahoo boys and a girlfriend whose mother is running for office.
-  6 chapters, 10 endings. Inspired by the premise of campus coming-of-age
+  15 chapters, 12 endings. Inspired by the premise of campus coming-of-age
   dramas; the characters and plot are original.
 - **The Honourable:** Kunle, a schoolteacher, runs for councillor of
   Iyana-Wahala with a godfather's money, a wife who knows him too well, and a
   journalist holding a folder. Rallies, a debate, a rigging offer and
-  election day. 7 chapters, 7 endings.
+  election day. 15 chapters, 10 endings.
 - **Mama Sugar:** Ebiere runs Sugar Palace, a tired South Street hotel, and is
   three months behind on rent. Settlement money, a rival madam, a daughter who
   comes visiting, and a man who wants to send five girls to Italy. Kept
   non-explicit: the story is about the business and the line she will or
-  won't cross. 7 chapters, 7 endings.
+  won't cross. 15 chapters, 9 endings.
 
 Every story also has side quests with its key people (a quest-giver stands in
 the street during free roam); doing them raises your bond and changes later

@@ -154,7 +154,7 @@
             {
               "text": "Step down. Take the Supervisor job.",
               "effects": {
-                "goto": "stepDown"
+                "goto": "stepDownThink"
               }
             }
           ]
@@ -277,6 +277,53 @@
       ],
       "location": "motorPark",
       "time": "day"
+    },
+    "stepDownThink": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "seyi",
+          "text": "(grabbing your sleeve) Teacher. Listen to me. Lanre has made this deal four times. Four \"Supervisors\". One of them is still waiting for his car. You won the primary. Ninety-one people said your name."
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "Lanre is waiting with his hand out.",
+          "options": [
+            {
+              "text": "Shake his hand. Step down.",
+              "effects": {
+                "goto": "stepDown"
+              }
+            },
+            {
+              "text": "\"Sorry, Chief. The ward knows my face.\"",
+              "effects": {
+                "changeStat": {
+                  "conscience": 3,
+                  "votes": 1
+                },
+                "setFlag": "refusedLanre",
+                "goto": "stayIn"
+              }
+            }
+          ]
+        }
+      ],
+      "location": "richStreet",
+      "time": "night"
+    },
+    "stayIn": {
+      "beats": [
+        {
+          "type": "endChapter",
+          "title": "The Primary",
+          "summary": "The party has affirmed you, at a price. Chief Lanre is smiling at you from across the hall in a way that has nothing to do with happiness.",
+          "next": "p1c_homeFront"
+        }
+      ],
+      "location": "richStreet",
+      "time": "night"
     }
   }
 }

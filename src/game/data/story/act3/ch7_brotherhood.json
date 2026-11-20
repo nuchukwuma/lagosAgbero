@@ -1,8 +1,8 @@
 {
   "id": "ch7_brotherhood",
   "act": 3,
-  "number": 7,
-  "title": "Chapter 7 — The Brotherhood",
+  "number": 8,
+  "title": "Chapter 8 — The Brotherhood",
   "description": "Cult path: study, initiation and the first Shell job. Independent path: the Ọmọ Onílẹ̀ drivers' co-op.",
   "startScene": "start",
   "scenes": {
@@ -292,7 +292,7 @@
           "type": "endChapter",
           "title": "End of Chapter 7 — The Brotherhood",
           "summary": "You are a Tortoise: {rank}. Cult funds {cultMoney}. Hyena hatred {stat:rivalCultHatred}.",
-          "next": "ch8_war"
+          "next": "ch7b_danfo"
         }
       ]
     },
@@ -523,7 +523,7 @@
           "type": "endChapter",
           "title": "End of Chapter 7 — Ọmọ Onílẹ̀",
           "summary": "The co-op is born. Goodwill {stat:communityGoodwill}. Hustle savings {hustleMoney}.",
-          "next": "ch8_war"
+          "next": "ch7b_danfo"
         }
       ]
     }

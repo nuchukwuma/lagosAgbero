@@ -1,8 +1,8 @@
 {
   "id": "ch6_shellKnock",
   "act": 2,
-  "number": 6,
-  "title": "Chapter 6 — Shell Knock",
+  "number": 7,
+  "title": "Chapter 7 — Shell Knock",
   "description": "Chuks recruits. A begging run goes wrong. The Hyenas beat Professor. Join the Tortoises, or stay independent.",
   "startScene": "morning",
   "scenes": {

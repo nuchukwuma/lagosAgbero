@@ -2,9 +2,9 @@
   "id": "g5c_lastNight",
   "campaign": "grace",
   "world": "iyanaWahala",
-  "act": 1,
+  "act": 4,
   "number": 14,
-  "title": "The Last Night",
+  "title": "Chapter 14 — The Last Night",
   "description": "The last night in Lagos before the festival: a farewell the Chief didn't send, a message from Ike, and two phone calls that matter.",
   "startScene": "party",
   "scenes": {

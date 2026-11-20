@@ -2,9 +2,9 @@
   "id": "g2d_island",
   "campaign": "grace",
   "world": "iyanaWahala",
-  "act": 1,
+  "act": 2,
   "number": 5,
-  "title": "The Island",
+  "title": "Chapter 5 — The Island",
   "description": "Ike takes Emeka across the bridge to the other Lagos: a client who needs convincing, an owambe that needs dancing, and a friend who cannot laugh.",
   "startScene": "benz",
   "scenes": {

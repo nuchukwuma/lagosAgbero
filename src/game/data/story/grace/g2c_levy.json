@@ -2,9 +2,9 @@
   "id": "g2c_levy",
   "campaign": "grace",
   "world": "iyanaWahala",
-  "act": 1,
+  "act": 2,
   "number": 4,
-  "title": "Development Levy",
+  "title": "Chapter 4 — Development Levy",
   "description": "Area boys want their levy, Nne is in the hospital, and a danfo driver needs a second pair of hands.",
   "startScene": "levy",
   "scenes": {

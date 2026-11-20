@@ -52,7 +52,7 @@
             {
               "text": "Withdraw from the race. The classroom is enough.",
               "effects": {
-                "goto": "classroom"
+                "goto": "classroomThink"
               }
             }
           ]
@@ -239,6 +239,51 @@
           200
         ]
       }
+    },
+    "classroomThink": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "funke",
+          "text": "(that evening, when you tell her) You want to withdraw? (She puts down the wrapper.) {name}, I was against this from the beginning. (A pause.) But you didn't sleep for three nights when you decided to run. Don't decide this one in an afternoon."
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "The withdrawal letter is in your pocket.",
+          "options": [
+            {
+              "text": "Withdraw. The classroom is enough.",
+              "effects": {
+                "goto": "classroom"
+              }
+            },
+            {
+              "text": "Resign from teaching instead. Burn the boat.",
+              "effects": {
+                "changeStat": {
+                  "conscience": 2,
+                  "votes": 1
+                },
+                "setFlag": "resignedTeaching",
+                "goto": "tolu"
+              }
+            },
+            {
+              "text": "Take leave without pay. Keep the door open.",
+              "effects": {
+                "changeStat": {
+                  "money": -10000
+                },
+                "setFlag": "leaveWithoutPay",
+                "goto": "tolu"
+              }
+            }
+          ]
+        }
+      ],
+      "location": "mamaPut",
+      "time": "dusk"
     }
   }
 }

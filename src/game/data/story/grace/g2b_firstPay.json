@@ -2,9 +2,9 @@
   "id": "g2b_firstPay",
   "campaign": "grace",
   "world": "iyanaWahala",
-  "act": 1,
+  "act": 2,
   "number": 3,
-  "title": "First Pay",
+  "title": "Chapter 3 — First Pay",
   "description": "A week behind the counter at Ọjà, a rival with a sharp tongue, the first wage, and what Emeka does with it.",
   "startScene": "counter",
   "scenes": {

@@ -136,7 +136,7 @@
             {
               "text": "Take the microphone and announce you are joining the Honourable's Youth Wing full time.",
               "effects": {
-                "goto": "youth"
+                "goto": "youthThink"
               }
             }
           ]
@@ -305,6 +305,39 @@
       ],
       "location": "backGate",
       "time": "night"
+    },
+    "youthThink": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Barrister Àjàyí is already reaching for the microphone, smiling. In the crowd, a girl from your GST class is filming. Somewhere in Iyana-Wahala, Mama is frying the evening batch and doesn't know yet."
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "One sentence and the degree is over.",
+          "options": [
+            {
+              "text": "Say it. \"I am joining the Honourable's Youth Wing, full time!\"",
+              "effects": {
+                "goto": "youth"
+              }
+            },
+            {
+              "text": "Hand the microphone back. \"Thank you, sir.\" Walk off the stage.",
+              "effects": {
+                "changeStat": {
+                  "conscience": 2
+                },
+                "goto": "spike"
+              }
+            }
+          ]
+        }
+      ],
+      "location": "field",
+      "time": "day"
     }
   }
 }

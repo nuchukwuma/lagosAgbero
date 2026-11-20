@@ -2,9 +2,9 @@
   "id": "g4c_burial",
   "campaign": "grace",
   "world": "nkwoAgu",
-  "act": 1,
+  "act": 3,
   "number": 9,
-  "title": "Papa Ngwo's Burial",
+  "title": "Chapter 9 — Papa Ngwo's Burial",
   "description": "Home for a burial: the levy every son must pay, Nne's medicine, Chinwe's father's patience, and the old man at the shrine.",
   "startScene": "arrive",
   "scenes": {
@@ -392,7 +392,7 @@
               "showLocked": true,
               "lockedText": "Something in Lagos has your name in red ink",
               "effects": {
-                "goto": "stay"
+                "goto": "stayThink"
               }
             }
           ]
@@ -424,6 +424,59 @@
           "title": "The Quarry Man",
           "summary": "You let Lagos go before it could finish with you. Smaller money. Smaller life. Your own.",
           "ending": "grace_quarry"
+        }
+      ],
+      "location": "junction",
+      "time": "dawn"
+    },
+    "stayThink": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "nneEmeka",
+          "text": "(at the junction, holding your bag before you can lift it) You want to stay? (She doesn't smile yet.) The quarry breaks backs, Emeka. And whatever you left in Lagos will still be in Lagos. Are you sure, or are you just tired?"
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "The conductor is shouting the last call.",
+          "options": [
+            {
+              "text": "\"I'm sure, Nne. I'm staying.\"",
+              "effects": {
+                "changeStat": {
+                  "motherBond": 4
+                },
+                "goto": "stay"
+              }
+            },
+            {
+              "text": "\"I'm just tired. I'll go back.\"",
+              "effects": {
+                "changeStat": {
+                  "hold": 1
+                },
+                "goto": "leaveAfterAll"
+              }
+            }
+          ]
+        }
+      ],
+      "location": "junction",
+      "time": "dawn"
+    },
+    "leaveAfterAll": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "You get on the bus. Nne waves until the dust takes her. You hold the tortoise stick across your knees all the way to Lagos."
+        },
+        {
+          "type": "endChapter",
+          "title": "Papa Ngwo's Burial",
+          "summary": "You buried the only man who never asked you for anything, and he left you a tortoise. Nne knows a little more. Chinwe is waiting, or not. The dibia says: come back at the festival.",
+          "next": "g4d_dozie"
         }
       ],
       "location": "junction",

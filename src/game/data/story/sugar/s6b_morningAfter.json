@@ -201,7 +201,7 @@
             {
               "text": "\"We are going home to Warri. All of it, behind us.\"",
               "effects": {
-                "goto": "warri"
+                "goto": "warriThink"
               }
             }
           ]
@@ -242,6 +242,51 @@
         }
       ],
       "location": "motorPark",
+      "time": "night"
+    },
+    "warriThink": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "kokoro",
+          "text": "(the only one who speaks) Warri. (He nods slowly.) Mama, if you go, go. Don't look back like Lot's wife. (He looks at the bar, the stairs, the girls.) But know that this house will be somebody else's by Christmas."
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "Every face at the bar is waiting.",
+          "options": [
+            {
+              "text": "\"Then let it be somebody else's. We're going home.\"",
+              "effects": {
+                "goto": "warri"
+              }
+            },
+            {
+              "text": "\"No. Not like this. We finish the month first.\"",
+              "effects": {
+                "changeStat": {
+                  "staffTrust": 4
+                },
+                "goto": "finishMonth"
+              }
+            }
+          ]
+        }
+      ],
+      "location": "southStreet",
+      "time": "night"
+    },
+    "finishMonth": {
+      "beats": [
+        {
+          "type": "endChapter",
+          "title": "The Morning After",
+          "summary": "The city has a version of you now. So do the girls. Only one of them is yours to write.",
+          "next": "s7_sugar"
+        }
+      ],
+      "location": "southStreet",
       "time": "night"
     }
   }

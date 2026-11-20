@@ -2,9 +2,9 @@
   "id": "g5b_threeDays",
   "campaign": "grace",
   "world": "iyanaWahala",
-  "act": 1,
+  "act": 4,
   "number": 13,
-  "title": "Three Days",
+  "title": "Chapter 13 — Three Days",
   "description": "Three days to the New Yam festival. Gifts to buy, a boy to face, an old man to thank, and a decision about whether to go home at all.",
   "startScene": "packing",
   "scenes": {
@@ -209,7 +209,7 @@
             {
               "text": "Don't go. Stay in Lagos. Let the village light its own fire.",
               "effects": {
-                "goto": "stayLagos"
+                "goto": "stayLagosThink"
               }
             }
           ]
@@ -245,6 +245,49 @@
       ],
       "location": "motorPark",
       "time": "night"
+    },
+    "stayLagosThink": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "biodun",
+          "text": "(very serious for once) You are not going home? (He lowers his voice.) My father died in Lagos waiting for the right time to go home. The right time doesn't come, village boy. You go, or you don't."
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "The festival is in three days.",
+          "options": [
+            {
+              "text": "\"I'm not going. Lagos is home now.\"",
+              "effects": {
+                "goto": "stayLagos"
+              }
+            },
+            {
+              "text": "\"You're right. Friday, then.\"",
+              "effects": {
+                "setFlag": "biodunDrives",
+                "goto": "goAfterAll"
+              }
+            }
+          ]
+        }
+      ],
+      "location": "motorPark",
+      "time": "dusk"
+    },
+    "goAfterAll": {
+      "beats": [
+        {
+          "type": "endChapter",
+          "title": "Three Days",
+          "summary": "You packed, you said your goodbyes, and you looked at Kalu properly for once. Home is a road away.",
+          "next": "g5c_lastNight"
+        }
+      ],
+      "location": "motorPark",
+      "time": "dusk"
     }
   }
 }
