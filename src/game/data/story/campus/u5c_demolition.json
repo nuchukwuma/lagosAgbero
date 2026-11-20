@@ -1,0 +1,258 @@
+{
+  "id": "u5c_demolition",
+  "campaign": "campus",
+  "world": "iyanaWahala",
+  "act": 4,
+  "number": 13,
+  "title": "Chapter 13 — Demolition Notice",
+  "description": "A red X on Mama's stall. Road widening, they say. Owó Ńlá's ministry, they don't say.",
+  "startScene": "x",
+  "scenes": {
+    "x": {
+      "beats": [
+        {
+          "type": "setFlag",
+          "flags": [
+            "mamaSomtoAround"
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Saturday morning. A red X is painted on Mama's stall, on Garba's table, on Ada's shop. \"REMOVE WITHIN 7 DAYS. ROAD WIDENING.\" The road is not being widened. The road is being sold."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "mamaSomto",
+          "text": "Twenty-two years on this corner. (She is calm, which frightens you more than crying.) Where will the drivers eat, Somto? Where will I go?"
+        },
+        {
+          "type": "goto",
+          "scene": "options"
+        }
+      ],
+      "location": "teaTable",
+      "time": "day"
+    },
+    "options": {
+      "beats": [
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "Seven days.",
+          "options": [
+            {
+              "text": "Call Barrister Àjàyí. The Honourable owes you one.",
+              "requires": {
+                "anyOf": [
+                  "gaveOwoSpeech",
+                  "calledOwoFather",
+                  "smiledForOwo",
+                  "itOwo"
+                ]
+              },
+              "showLocked": true,
+              "lockedText": "You never did the Honourable a public favour",
+              "effects": {
+                "changeStat": {
+                  "cover": 2,
+                  "conscience": -4
+                },
+                "setFlag": "owesOwo",
+                "goto": "owoFix"
+              }
+            },
+            {
+              "text": "Organise the street. Petition, photographs, Wahala FM.",
+              "effects": {
+                "changeStat": {
+                  "conscience": 6,
+                  "campusRep": 4
+                },
+                "setFlag": "protestedDemolition",
+                "goto": "protest"
+              }
+            },
+            {
+              "text": "Move everything before the bulldozers come. Save what you can.",
+              "effects": {
+                "goto": "move"
+              }
+            }
+          ]
+        }
+      ],
+      "location": "teaTable",
+      "time": "day"
+    },
+    "owoFix": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "settlement",
+          "text": "(on the phone, warmly) For you? Of course. Your mother's stall will be... overlooked. (A pause.) The Honourable will remember this kindness at election time. Very visibly."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "The bulldozers come on Thursday. They take Garba's table and Ada's shop. Mama's stall stands alone in the rubble like a tooth."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ada",
+          "text": "(sitting on the remains of her shop) Royal Crest. (She doesn't say anything else. She doesn't have to.)"
+        },
+        {
+          "type": "goto",
+          "scene": "future"
+        }
+      ],
+      "location": "teaTable",
+      "time": "day"
+    },
+    "protest": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "ada",
+          "text": "You want to fight Lagos State? With what? (She looks at you.) Okay. With what?"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "You print a petition at Ada's. Garba collects two hundred thumbprints in one morning: drivers, traders, the old men who play draughts. You send the photographs to Wahala FM.",
+          "variants": [
+            {
+              "if": "keptOwoPhotos",
+              "text": "You print a petition at Ada's. And you send Wahala FM something else: the dated photographs of forty sewing machines that went back into a warehouse. The Honourable's office calls you nine times."
+            }
+          ]
+        },
+        {
+          "type": "startMode",
+          "mode": "runner",
+          "params": {
+            "chaser": "taskForce",
+            "goal": 300,
+            "difficulty": 2,
+            "seed": 191
+          },
+          "results": {
+            "escaped": {
+              "setFlag": "stallSaved",
+              "toast": "The Task Force arrives early to \"make an example\". You run Mama's pots through every back way you know. By evening the radio is outside. So is a court order."
+            },
+            "caught": {
+              "changeStat": {
+                "energy": -25
+              },
+              "setFlag": "stallLost",
+              "toast": "They take the stall. They don't take the petition. The court case starts on Monday."
+            }
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "future"
+        }
+      ],
+      "location": "teaTable",
+      "time": "day"
+    },
+    "move": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "You carry pots, the bench, the big fryer. Ada carries her sewing machine on her head. Garba carries his kettle like a baby. By Wednesday the corner is empty. By Friday it's rubble."
+        },
+        {
+          "type": "setFlag",
+          "flags": [
+            "stallLost"
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "future"
+        }
+      ],
+      "location": "teaTable",
+      "time": "day"
+    },
+    "future": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "mamaSomto",
+          "text": "(sitting on a bench that isn't hers) Go back to school, Somto. One more year. Then you can save me properly.",
+          "variants": [
+            {
+              "if": "stallSaved",
+              "text": "(behind her stall, which is still a stall) Twenty-two years and a court order. (She laughs.) Go back to school. Finish. Then come and fight the next one with me."
+            }
+          ]
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "Final year starts in a week. Mama has no stall, or half a street.",
+          "options": [
+            {
+              "text": "Go back. Finish what you started.",
+              "effects": {
+                "changeStat": {
+                  "momBond": 2
+                }
+              }
+            },
+            {
+              "text": "Don't go back. Rent a shop, take the akara brand, build it for real.",
+              "requires": {
+                "anyOf": [
+                  "akaraBrand",
+                  "akaraBiz"
+                ]
+              },
+              "showLocked": true,
+              "lockedText": "You never built the akara business",
+              "effects": {
+                "goto": "empire"
+              }
+            }
+          ]
+        },
+        {
+          "type": "endChapter",
+          "title": "Demolition Notice",
+          "summary": "A red X, seven days, and the first fight you chose for yourself.",
+          "next": "u5d_project"
+        }
+      ],
+      "location": "teaTable",
+      "time": "dusk"
+    },
+    "empire": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "You rent a shop with Ada's help, two streets from the old corner. \"MAMA SOMTO'S: AKARA FOR SCHOLARS\". Royal Crest students order by WhatsApp. Danfo drivers order by shouting."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "In a year there are three shops. In two years, a frozen-akara line in a supermarket in Lekki, the place you used to pretend you lived."
+        },
+        {
+          "type": "endChapter",
+          "title": "Akara Empire",
+          "summary": "You left Royal Crest without a degree and built something with your mother's name on it.",
+          "ending": "u_akaraEmpire"
+        }
+      ],
+      "location": "adaShop",
+      "time": "day"
+    }
+  }
+}

@@ -1,0 +1,222 @@
+{
+  "id": "u5d_project",
+  "campaign": "campus",
+  "world": "royalCrest",
+  "act": 4,
+  "number": 14,
+  "title": "Chapter 14 — Final Year Project",
+  "description": "Forty pages of your own work or ₦25,000 at the back gate. Tamara wants to meet your mother. Dubai has a new car.",
+  "startScene": "topic",
+  "scenes": {
+    "topic": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Final year. The project. Forty pages, a defence, a supervisor's signature. The back gate sells finished projects for ₦25,000. \"Any topic, any department, original or your money back.\" Nobody has ever got their money back."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Expelled students don't write projects. You come to campus anyway, to help Tamara with hers and to remember what it felt like.",
+          "if": "expelled"
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "Your topic: \"The Akara Index: Prices at Five Lagos Bus Stops\".",
+          "options": [
+            {
+              "text": "Write it yourself. Every page.",
+              "effects": {
+                "goto": "write"
+              }
+            },
+            {
+              "text": "Buy one at the back gate. You're tired.",
+              "cost": 25000,
+              "effects": {
+                "changeStat": {
+                  "cgpa": 0.2,
+                  "conscience": -8
+                },
+                "setFlag": "boughtProject",
+                "goto": "tamara"
+              }
+            }
+          ],
+          "if": {
+            "notFlags": [
+              "expelled"
+            ]
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "tamara"
+        }
+      ],
+      "location": "library",
+      "time": "day"
+    },
+    "write": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "drBayo",
+          "text": "(your supervisor, reading chapter three) Your data is from bus stops. Your writing is from the library. (He smiles.) That's the whole of economics.",
+          "variants": [
+            {
+              "if": {
+                "notFlags": [
+                  "bayoGroup"
+                ]
+              },
+              "text": "(your supervisor, reading chapter three) You never came to my reading group. (He reads on.) You didn't need to. This is good work, Mr. Somtochukwu."
+            }
+          ]
+        },
+        {
+          "type": "startMode",
+          "mode": "exam",
+          "params": {
+            "bank": "econ201",
+            "count": 5,
+            "seconds": 16
+          },
+          "results": {
+            "perfect": {
+              "changeStat": {
+                "cgpa": 0.25
+              },
+              "setFlag": "honestProject"
+            },
+            "passed": {
+              "changeStat": {
+                "cgpa": 0.15
+              },
+              "setFlag": "honestProject"
+            },
+            "failed": {
+              "changeStat": {
+                "cgpa": 0.05
+              },
+              "setFlag": "honestProject"
+            },
+            "attacked": {
+              "setFlag": "honestProject"
+            }
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "tamara"
+        }
+      ],
+      "location": "drOffice",
+      "time": "day"
+    },
+    "tamara": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "tamara",
+          "text": "(on the library steps) Somto. Convocation is in two months. I want to meet your mother. Properly. Not at a gate. At her stall, or her house, or wherever she is.",
+          "variants": [
+            {
+              "if": "toldTamara",
+              "text": "(on the library steps) You told me everything in third year. Iyana-Wahala, the pap, all of it. (She smiles.) So when do I meet the woman who makes the akara of the gods?"
+            },
+            {
+              "if": "warnedTownHall",
+              "text": "(on the library steps) You warned me about the town hall. My mother hasn't stopped talking about you. Now I want to meet YOUR mother. Fair is fair."
+            }
+          ]
+        },
+        {
+          "type": "choice",
+          "speaker": "tamara",
+          "text": "She waits.",
+          "options": [
+            {
+              "text": "\"Saturday. Iyana-Wahala. Come hungry.\"",
+              "effects": {
+                "changeStat": {
+                  "tamaraBond": 8,
+                  "cover": -10,
+                  "momBond": 4
+                },
+                "setFlag": "inviteTamaraHome",
+                "noticedBy": [
+                  "Tamara"
+                ]
+              }
+            },
+            {
+              "text": "\"After convocation. I promise.\"",
+              "effects": {
+                "changeStat": {
+                  "tamaraBond": -2
+                }
+              }
+            },
+            {
+              "text": "\"My mother is... travelling.\"",
+              "effects": {
+                "changeStat": {
+                  "tamaraBond": -8,
+                  "cover": 4
+                },
+                "setFlag": "hidMamaFinal"
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Saturday. Tamara eats nine akara, burns her tongue on the pap, and argues with Garba about the price of tea. Mama watches her the way she watches dough rise.",
+          "if": "inviteTamaraHome"
+        },
+        {
+          "type": "goto",
+          "scene": "dubai"
+        }
+      ],
+      "location": "library",
+      "time": "day"
+    },
+    "dubai": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Dubai has a Mercedes now. Black. Personalised plate: \"DXB\". He parks it outside the hostel like a dare."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "dubai",
+          "text": "Roomie. After convocation, I'm out. Real Dubai. (He looks at the car, then at you.) Something big is coming. Bigger than Brenda. I'll need a clean face.",
+          "variants": [
+            {
+              "if": "brendaRemark",
+              "text": "Roomie. You remember Brenda? \"Somebody's mother\"? (He laughs, badly.) I think about that every time. It doesn't stop me. It just ruins it."
+            },
+            {
+              "if": "watchedDubai",
+              "text": "Roomie. You watched me work in first year. You never told anyone. (He taps the car.) Loyalty gets paid. Something big is coming."
+            }
+          ]
+        },
+        {
+          "type": "endChapter",
+          "title": "Final Year Project",
+          "summary": "Forty pages, honest or bought. A mother introduced, or hidden. A black car parked like a dare. Convocation is coming.",
+          "next": "u6_convocation"
+        }
+      ],
+      "location": "hostel",
+      "time": "night"
+    }
+  }
+}

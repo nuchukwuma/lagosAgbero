@@ -2,9 +2,9 @@
   "id": "u6_convocation",
   "campaign": "campus",
   "world": "royalCrest",
-  "act": 1,
-  "number": 6,
-  "title": "Chapter 6 — Convocation",
+  "act": 4,
+  "number": 15,
+  "title": "Chapter 15 — Convocation",
   "description": "Final year. Fees, results, Dubai's last offer, Tamara's question, and a woman at the gate with a cooler of pap.",
   "startScene": "final",
   "scenes": {

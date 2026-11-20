@@ -167,5 +167,13 @@
   "grace_lagos": {
     "tier": "early",
     "comment": "Three days from the festival, you blinked. Lagos has you now, and the best and worst of this story happened at a fire you never stood beside. Go home next time."
+  },
+  "u_youthLeader": {
+    "tier": "early",
+    "comment": "You dropped a degree for a microphone at a rally. The Honourable thanks you for your service; the story had six more chapters and a convocation you never saw. Try staying for the cake."
+  },
+  "u_akaraEmpire": {
+    "tier": "good",
+    "comment": "No degree, three shops and a supermarket deal. Mama's name is on the sign. Not bad for a boy who pretended to live in Lekki. There's still a convocation ending waiting if you want the paper too."
   }
 }

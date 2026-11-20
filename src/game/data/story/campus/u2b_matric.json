@@ -1,0 +1,204 @@
+{
+  "id": "u2b_matric",
+  "campaign": "campus",
+  "world": "royalCrest",
+  "act": 2,
+  "number": 4,
+  "title": "Chapter 4 — Matriculation",
+  "description": "The oath, the gown that doesn't fit, the society you join, and the one lecturer who reads your notes and actually likes them.",
+  "startScene": "oath",
+  "scenes": {
+    "oath": {
+      "beats": [
+        {
+          "type": "setFlag",
+          "flags": [
+            "vcAround"
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Matriculation. Two thousand freshers in hired gowns, swearing to uphold the honour of Royal Crest University. Half of them are filming it. The other half are filming the first half."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "vc",
+          "text": "You are the future of this nation. Behave like it. Especially at the back gate. (Several people laugh. The VC does not.)"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "spike",
+          "text": "(two rows behind, whispering) Jambite. After this, back gate. Your first \"dues\" are due.",
+          "if": "donsMember"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "spike",
+          "text": "(two rows behind, whispering) Security lost your report. Funny how files go missing. We haven't lost your face.",
+          "if": "reportedDons"
+        },
+        {
+          "type": "goto",
+          "scene": "societies"
+        }
+      ],
+      "location": "field",
+      "time": "day"
+    },
+    "societies": {
+      "beats": [
+        {
+          "type": "freeRoam",
+          "objective": "Walk the Quad: the societies have stalls out for freshers.",
+          "goal": {
+            "reach": "quad"
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Debate Society. Chapel Choir. Rotaract. Entrepreneurs' Club (three boys selling the same crypto). Each stall wants you, your time and ₦2,000."
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "Where will you spend your evenings?",
+          "options": [
+            {
+              "text": "Debate Society. You've argued with danfo drivers since you were six.",
+              "cost": 2000,
+              "effects": {
+                "changeStat": {
+                  "campusRep": 4
+                },
+                "setFlag": "joinedDebate",
+                "goto": "debate"
+              }
+            },
+            {
+              "text": "Chapel Choir. Quiet, free food on Sundays, nobody asks your father's job.",
+              "effects": {
+                "changeStat": {
+                  "conscience": 3,
+                  "cover": 3
+                },
+                "setFlag": "joinedChoir"
+              }
+            },
+            {
+              "text": "Nothing. Evenings are for reading and frying.",
+              "effects": {
+                "changeStat": {
+                  "cgpa": 0.05
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "drBayo"
+        }
+      ],
+      "location": "quad",
+      "time": "day"
+    },
+    "debate": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "tamara",
+          "text": "(at the Debate Society table, as secretary, raising one eyebrow) You. The boy who reads prices. Prove you can talk as well as you read."
+        },
+        {
+          "type": "startMode",
+          "mode": "exam",
+          "params": {
+            "bank": "debate",
+            "count": 4,
+            "seconds": 16
+          },
+          "results": {
+            "perfect": {
+              "changeStat": {
+                "tamaraBond": 6,
+                "campusRep": 4
+              }
+            },
+            "passed": {
+              "changeStat": {
+                "tamaraBond": 3,
+                "campusRep": 2
+              }
+            },
+            "failed": {
+              "changeStat": {
+                "tamaraBond": 1
+              }
+            },
+            "attacked": {}
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "drBayo"
+        }
+      ],
+      "location": "quad",
+      "time": "day"
+    },
+    "drBayo": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Thursday. ECO 101. A thin man with chalk on his trousers, Dr. Adébáyọ̀, gives back the first assignment by name."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "drBayo",
+          "text": "Mr. Somtochukwu. \"Price discovery at a bus-stop pap stall\". (He holds it up.) This is the only essay in the pile written by someone who has sold something. Stay after class."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "drBayo",
+          "text": "Royal Crest will try to teach you that economics happens in Abuja. It happens at bus stops. Never forget the bus stop."
+        },
+        {
+          "type": "choice",
+          "speaker": "drBayo",
+          "text": "I run a reading group on Fridays. No handouts. No fees. Lots of arguing.",
+          "options": [
+            {
+              "text": "\"I'll be there, sir.\"",
+              "effects": {
+                "changeStat": {
+                  "cgpa": 0.1,
+                  "conscience": 2
+                },
+                "setFlag": "bayoGroup"
+              }
+            },
+            {
+              "text": "\"Fridays are for my business, sir. Akara doesn't sell itself.\"",
+              "effects": {
+                "changeStat": {
+                  "money": 2000
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "endChapter",
+          "title": "Matriculation",
+          "summary": "You swore an oath in a borrowed gown, chose your evenings, and found the one lecturer who believes in bus stops.",
+          "next": "u2c_allowance"
+        }
+      ],
+      "location": "lectureTheatre",
+      "time": "day"
+    }
+  }
+}

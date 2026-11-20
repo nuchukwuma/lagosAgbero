@@ -1,0 +1,241 @@
+{
+  "id": "u1b_sendoff",
+  "campaign": "campus",
+  "world": "iyanaWahala",
+  "act": 1,
+  "number": 2,
+  "title": "Chapter 2 — Send-Forth",
+  "description": "The last week in Iyana-Wahala: the pap stall at dawn, the Honourable's photographers, and a street that throws you a party you didn't ask for.",
+  "startScene": "stall",
+  "scenes": {
+    "stall": {
+      "beats": [
+        {
+          "type": "setFlag",
+          "flags": [
+            "mamaSomtoAround"
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Five a.m. The pap stall by the bus stop. Mama stirs; you fry. The first danfo drivers come for akara before their first passenger."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "mamaSomto",
+          "text": "Last week of frying, my son. After this, you hold books, not ladles. (She laughs.) Fry well, so they remember the scholar's akara."
+        },
+        {
+          "type": "startMode",
+          "mode": "haggle",
+          "params": {
+            "goods": "pap",
+            "customers": 6
+          },
+          "results": {
+            "good": {
+              "changeStat": {
+                "momBond": 4
+              },
+              "toast": "Mama counts the morning's money twice and hides ₦2,000 in your box when she thinks you're not looking."
+            },
+            "ok": {
+              "changeStat": {
+                "momBond": 2
+              }
+            },
+            "bad": {
+              "changeStat": {
+                "momBond": 1
+              },
+              "toast": "\"You gave the conductor credit again? He will pay in heaven.\""
+            }
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "photo"
+        }
+      ],
+      "location": "teaTable",
+      "time": "dawn"
+    },
+    "photo": {
+      "beats": [
+        {
+          "type": "setFlag",
+          "flags": [
+            "settlementAround"
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Ten o'clock. Two Hilux trucks. Photographers. Barrister Àjàyí, and a banner: \"HON. OWÓ ŃLÁ EMPOWERS IYANA-WAHALA YOUTH\". The youth is you."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "settlement",
+          "text": "Mr. Somtochukwu. Stand here. Hold the scholarship letter like this. The Honourable's hand on your shoulder. Smile like the future."
+        },
+        {
+          "type": "choice",
+          "speaker": "settlement",
+          "text": "The cameras are already clicking.",
+          "options": [
+            {
+              "text": "Smile wide. Hold the letter high.",
+              "effects": {
+                "changeStat": {
+                  "cover": 4,
+                  "conscience": -2,
+                  "money": 5000
+                },
+                "setFlag": "smiledForOwo"
+              }
+            },
+            {
+              "text": "Pull Mama into the photo. \"She made me. Not the Foundation.\"",
+              "effects": {
+                "changeStat": {
+                  "momBond": 8,
+                  "cover": -6
+                },
+                "setFlag": "mamaInPhoto",
+                "noticedBy": [
+                  "Mama"
+                ]
+              }
+            },
+            {
+              "text": "Stand in the photo with a straight face. Say nothing.",
+              "effects": {
+                "changeStat": {
+                  "conscience": 2
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "settlement",
+          "text": "(handing you an envelope) Transport money. The Honourable is generous to the grateful.",
+          "variants": [
+            {
+              "if": "mamaInPhoto",
+              "text": "(very tightly) The Honourable prefers... cleaner photos. (Mama stands in front of the banner with her ladle. The Honourable's photographer takes the picture anyway. It's the best one.)"
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "party"
+        }
+      ],
+      "location": "teaTable",
+      "time": "day"
+    },
+    "party": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Evening. Iyana-Wahala throws you a send-forth. Nobody organised it. Garba brings tea, Ada brings her speaker, Mama Put brings rice, and somehow there are fourteen chairs and forty people."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ada",
+          "text": "Scholar! Before you go and forget us for Royal Crest people, dance! If you lose to me you must send me fabric from the Island."
+        },
+        {
+          "type": "startMode",
+          "mode": "dance",
+          "params": {
+            "name": "Ada",
+            "rival": "ada",
+            "skill": 0.5,
+            "prize": 0
+          },
+          "results": {
+            "won": {
+              "changeStat": {
+                "campusRep": 2
+              },
+              "toast": "The street goes wild. Garba gives you a free tea for life. (Conditions apply.)"
+            },
+            "lost": {
+              "changeStat": {
+                "momBond": 2
+              },
+              "toast": "Ada wins. Mama laughs so hard she has to sit down."
+            }
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "blessing"
+        }
+      ],
+      "location": "frontStop",
+      "time": "night"
+    },
+    "blessing": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "After midnight. Everybody has gone. Mama is washing pots and humming. She stops."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "mamaSomto",
+          "text": "Somto. At that school, people will ask who your father is. Who your mother is. What you have. (She dries her hands.) What will you say?"
+        },
+        {
+          "type": "choice",
+          "speaker": "mamaSomto",
+          "text": "She really wants to know.",
+          "options": [
+            {
+              "text": "\"The truth, Mama. Every time.\"",
+              "effects": {
+                "changeStat": {
+                  "momBond": 6,
+                  "cover": -4
+                },
+                "setFlag": "vowedTruth"
+              }
+            },
+            {
+              "text": "\"Whatever keeps me there, Mama. I'll tell you the truth. Them, I don't know yet.\"",
+              "effects": {
+                "changeStat": {
+                  "cover": 4
+                },
+                "setFlag": "vowedCareful"
+              }
+            },
+            {
+              "text": "Hug her instead of answering.",
+              "effects": {
+                "changeStat": {
+                  "momBond": 4
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "endChapter",
+          "title": "Send-Forth",
+          "summary": "A morning frying, a photograph that will follow you, a street that danced for you. Tomorrow: Royal Crest.",
+          "next": "u2_freshers"
+        }
+      ],
+      "location": "teaTable",
+      "time": "night"
+    }
+  }
+}

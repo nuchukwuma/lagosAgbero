@@ -2,9 +2,9 @@
   "id": "u2_freshers",
   "campaign": "campus",
   "world": "royalCrest",
-  "act": 1,
-  "number": 2,
-  "title": "Chapter 2 — Freshers",
+  "act": 2,
+  "number": 3,
+  "title": "Chapter 3 — Freshers",
   "description": "The gate, the roommate, the party where everybody checks everybody, and a red bandana at the back gate.",
   "startScene": "gate",
   "scenes": {
@@ -506,7 +506,7 @@
           "type": "endChapter",
           "title": "End of Chapter 2 — Freshers",
           "summary": "Cover story {stat:cover}%. Campus reputation {stat:campusRep}. The Crimson Dons are interested in you: {stat:donsHeat}.",
-          "next": "u3_sorting"
+          "next": "u2b_matric"
         }
       ],
       "location": "backGate",

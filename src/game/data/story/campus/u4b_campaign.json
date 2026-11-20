@@ -1,0 +1,310 @@
+{
+  "id": "u4b_campaign",
+  "campaign": "campus",
+  "world": "royalCrest",
+  "act": 3,
+  "number": 9,
+  "title": "Chapter 9 — Campaign Season",
+  "description": "Tamara's mother and your sponsor are fighting for the same seat, and the campus is their battlefield.",
+  "startScene": "posters",
+  "scenes": {
+    "posters": {
+      "beats": [
+        {
+          "type": "setFlag",
+          "flags": [
+            "owoNlaAround",
+            "ronkeAround"
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Election season. Royal Crest wakes up covered in posters: Owó Ńlá in agbada, Hon. Mrs. Ronke in white. Someone has drawn moustaches on both. Equal opportunity."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "tamara",
+          "text": "My mother is doing a youth town hall on campus on Friday. Your Honourable is doing a \"rally\" on Thursday. (She looks at you.) Everyone is going to watch which one you stand at."
+        },
+        {
+          "type": "goto",
+          "scene": "rally"
+        }
+      ],
+      "location": "quad",
+      "time": "day"
+    },
+    "rally": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "settlement",
+          "text": "Thursday. Owó Ńlá scholars in the front row in green. ₦5,000 each and lunch. Those who don't come... will be noted."
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "Thursday, Friday. Two stages.",
+          "options": [
+            {
+              "text": "Front row at Owó Ńlá's rally, in green.",
+              "effects": {
+                "changeStat": {
+                  "cover": 3,
+                  "tamaraBond": -6,
+                  "money": 5000
+                },
+                "setFlag": "owoRally",
+                "goto": "owo"
+              }
+            },
+            {
+              "text": "Volunteer for Hon. Ronke's town hall. Openly.",
+              "effects": {
+                "changeStat": {
+                  "tamaraBond": 8,
+                  "conscience": 3
+                },
+                "setFlag": "ronkeVolunteer",
+                "goto": "ronke"
+              }
+            },
+            {
+              "text": "The library. Both days. Let them fight.",
+              "effects": {
+                "changeStat": {
+                  "cgpa": 0.1
+                },
+                "setFlag": "stayedLibrary",
+                "goto": "library"
+              }
+            }
+          ]
+        }
+      ],
+      "location": "quad",
+      "time": "day"
+    },
+    "owo": {
+      "beats": [
+        {
+          "type": "startMode",
+          "mode": "rally",
+          "params": {
+            "job": "crowd",
+            "seed": 171
+          },
+          "results": {
+            "paid": {
+              "changeStat": {
+                "money": 3000
+              }
+            },
+            "default": {}
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "owoNla",
+          "text": "(on stage, pointing at the front row) These are MY scholars! The future! (He calls you up.) Young man, tell them: who is the father of Iyana-Wahala youth?"
+        },
+        {
+          "type": "choice",
+          "speaker": "owoNla",
+          "text": "A microphone. A thousand phones filming.",
+          "options": [
+            {
+              "text": "\"You are, sir!\"",
+              "effects": {
+                "changeStat": {
+                  "cover": 4,
+                  "conscience": -6
+                },
+                "setFlag": "calledOwoFather"
+              }
+            },
+            {
+              "text": "\"Our mothers are, sir.\" Smile. Hand back the microphone.",
+              "effects": {
+                "changeStat": {
+                  "momBond": 4,
+                  "conscience": 4
+                }
+              }
+            },
+            {
+              "text": "Take the microphone and announce you are joining the Honourable's Youth Wing full time.",
+              "effects": {
+                "goto": "youth"
+              }
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "spike"
+        }
+      ],
+      "location": "field",
+      "time": "day"
+    },
+    "youth": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "owoNla",
+          "text": "(delighted, into the microphone) You see?! A scholar who understands loyalty! Barrister, give him a car. A small one. With my face on it."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "You drop out at the end of the semester. Nobody minds. The Youth Wing pays better than a degree, and you are very, very good at microphones."
+        },
+        {
+          "type": "endChapter",
+          "title": "Youth Leader",
+          "summary": "You traded the degree for a microphone and a small car with somebody else's face on it.",
+          "ending": "u_youthLeader"
+        }
+      ],
+      "location": "field",
+      "time": "day"
+    },
+    "ronke": {
+      "beats": [
+        {
+          "type": "startMode",
+          "mode": "exam",
+          "params": {
+            "bank": "debate",
+            "count": 5,
+            "seconds": 14
+          },
+          "results": {
+            "perfect": {
+              "changeStat": {
+                "campusRep": 6,
+                "tamaraBond": 4
+              },
+              "toast": "The hall stands up for the student who asked Ronke the hardest question. Ronke stands up too."
+            },
+            "passed": {
+              "changeStat": {
+                "campusRep": 3
+              }
+            },
+            "failed": {
+              "changeStat": {
+                "campusRep": 1
+              }
+            },
+            "attacked": {}
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ronke",
+          "text": "(after the town hall) You asked me about market toilets in front of my donors. (A pause.) Good. That's the only question I'm afraid of."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "settlement",
+          "text": "(a text) The Honourable saw the town hall photos. The Foundation is reviewing \"loyalty\" this quarter."
+        },
+        {
+          "type": "goto",
+          "scene": "spike"
+        }
+      ],
+      "location": "lectureTheatre",
+      "time": "day"
+    },
+    "library": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Two days in the library. Thursday you hear drums from the field. Friday you hear applause from the lecture theatre. You read the whole of Samuelson chapter nine."
+        },
+        {
+          "type": "goto",
+          "scene": "spike"
+        }
+      ],
+      "location": "library",
+      "time": "day"
+    },
+    "spike": {
+      "beats": [
+        {
+          "type": "freeRoam",
+          "objective": "Go back to the hostel. Through the back gate is shorter.",
+          "goal": {
+            "reach": "backGate"
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "spike",
+          "text": "(at the back gate, counting cash) Election season is Christmas for the Dons. Owó Ńlá's people pay us to scatter Ronke's town hall next week. You want in? Easy money.",
+          "variants": [
+            {
+              "if": "donsMember",
+              "text": "(at the back gate, counting cash) Member. Owó Ńlá is paying us to scatter Ronke's town hall next week. You're coming. That isn't a question."
+            }
+          ]
+        },
+        {
+          "type": "choice",
+          "speaker": "spike",
+          "text": "He holds out a red bandana.",
+          "options": [
+            {
+              "text": "Take it. One night of shouting.",
+              "effects": {
+                "changeStat": {
+                  "donsHeat": 8,
+                  "money": 8000,
+                  "tamaraBond": -10,
+                  "conscience": -8
+                },
+                "setFlag": "scatteredTownHall"
+              }
+            },
+            {
+              "text": "\"Tamara's mother? No.\"",
+              "effects": {
+                "changeStat": {
+                  "donsHeat": 6,
+                  "tamaraBond": 2
+                }
+              }
+            },
+            {
+              "text": "Warn Tamara about the plan tonight.",
+              "effects": {
+                "changeStat": {
+                  "tamaraBond": 8,
+                  "donsHeat": 10
+                },
+                "setFlag": "warnedTownHall",
+                "noticedBy": [
+                  "Tamara"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "type": "endChapter",
+          "title": "Campaign Season",
+          "summary": "Two candidates, one campus, and everybody watching where you stood.",
+          "next": "u4c_sug"
+        }
+      ],
+      "location": "backGate",
+      "time": "night"
+    }
+  }
+}

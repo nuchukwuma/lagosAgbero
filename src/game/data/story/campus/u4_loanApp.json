@@ -2,9 +2,9 @@
   "id": "u4_loanApp",
   "campaign": "campus",
   "world": "royalCrest",
-  "act": 1,
-  "number": 4,
-  "title": "Chapter 4 — QuickCash",
+  "act": 3,
+  "number": 8,
+  "title": "Chapter 8 — QuickCash",
   "description": "A loan app with feelings, a hustle at the back gate, a roommate who knows, a recording, and dinner with a politician.",
   "startScene": "loan",
   "scenes": {
@@ -470,7 +470,7 @@
           "type": "endChapter",
           "title": "End of Chapter 4 — QuickCash",
           "summary": "Cover story {stat:cover}%. CGPA {stat:cgpa}. Money {money}. Tamara {stat:tamaraBond}. Mama {stat:momBond}.",
-          "next": "u5_exposed"
+          "next": "u4b_campaign"
         }
       ],
       "location": "richStreet",

@@ -1,0 +1,269 @@
+{
+  "id": "u4c_sug",
+  "campaign": "campus",
+  "world": "royalCrest",
+  "act": 3,
+  "number": 10,
+  "title": "Chapter 10 — SUG Elections",
+  "description": "Tobi runs for Student Union president against the Dons' candidate. He wants you as campaign manager.",
+  "startScene": "ask",
+  "scenes": {
+    "ask": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "tobi",
+          "text": "Somto. I'm running for SUG president. Against Spike's boy, \"Tunde Capo\". If he wins, the Dons run the union budget. (He looks serious for once.) I need someone who can talk to the hostels. Not just my friends. Everybody."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "tobi",
+          "text": "And before you say anything: forget the fifteen thousand. Consider it your salary. (He grins.) Advance salary.",
+          "if": "borrowedTobi"
+        },
+        {
+          "type": "choice",
+          "speaker": "tobi",
+          "text": "Campaign manager. No pay. Lots of jollof.",
+          "options": [
+            {
+              "text": "\"I'm in. But we win clean.\"",
+              "effects": {
+                "changeStat": {
+                  "campusRep": 4
+                },
+                "setFlag": "tobiManager"
+              }
+            },
+            {
+              "text": "\"I'm in. And we win.\"",
+              "effects": {
+                "changeStat": {
+                  "campusRep": 4,
+                  "conscience": -2
+                },
+                "setFlag": [
+                  "tobiManager",
+                  "winAnyHow"
+                ]
+              }
+            },
+            {
+              "text": "\"I can't, Tobi. I'm one bad semester from losing everything.\"",
+              "effects": {
+                "changeStat": {
+                  "cgpa": 0.05
+                },
+                "goto": "sideline"
+              }
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "debate"
+        }
+      ],
+      "location": "quad",
+      "time": "day"
+    },
+    "debate": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "The manifesto debate. The cafeteria, packed to the ceiling fans. Tunde Capo promises free Wi-Fi, free shuttle buses and free \"protection\". Tobi has your notes."
+        },
+        {
+          "type": "startMode",
+          "mode": "exam",
+          "params": {
+            "bank": "debate",
+            "count": 5,
+            "seconds": 14
+          },
+          "results": {
+            "perfect": {
+              "changeStat": {
+                "campusRep": 8
+              },
+              "setFlag": "tobiDebateWin"
+            },
+            "passed": {
+              "changeStat": {
+                "campusRep": 4
+              },
+              "setFlag": "tobiDebateWin"
+            },
+            "failed": {
+              "changeStat": {
+                "campusRep": 1
+              }
+            },
+            "attacked": {}
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "ballots"
+        }
+      ],
+      "location": "cafeteria",
+      "time": "day"
+    },
+    "ballots": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Election night. The ballot boxes are kept in the Senate basement. At 1 a.m. a hostel porter texts you: \"Red bandanas carrying cartons into the basement.\""
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "The boxes are being swapped. Right now.",
+          "options": [
+            {
+              "text": "Run there with your phone and film everything.",
+              "effects": {
+                "goto": "film"
+              }
+            },
+            {
+              "text": "Get Tobi's boys and stuff a box of your own. Fight fire with fire.",
+              "requires": "winAnyHow",
+              "showLocked": true,
+              "lockedText": "You promised to win clean",
+              "effects": {
+                "changeStat": {
+                  "conscience": -10
+                },
+                "setFlag": "riggedSUG",
+                "goto": "count"
+              }
+            },
+            {
+              "text": "Wake the VC's office. Let the adults handle it.",
+              "effects": {
+                "changeStat": {
+                  "campusRep": 2
+                },
+                "goto": "count"
+              }
+            }
+          ]
+        }
+      ],
+      "location": "senate",
+      "time": "night"
+    },
+    "film": {
+      "beats": [
+        {
+          "type": "startMode",
+          "mode": "runner",
+          "params": {
+            "chaser": "hyenas",
+            "goal": 280,
+            "difficulty": 2,
+            "seed": 181
+          },
+          "results": {
+            "escaped": {
+              "changeStat": {
+                "campusRep": 8,
+                "donsHeat": 12
+              },
+              "setFlag": "exposedSUGRig",
+              "toast": "You get away with four minutes of red bandanas swapping ballot boxes. It goes on every WhatsApp group by sunrise."
+            },
+            "caught": {
+              "changeStat": {
+                "donsHeat": 8,
+                "energy": -25
+              },
+              "toast": "They take your phone and throw it in the fish pond. Your SIM is fine. Your phone is a fish now."
+            }
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "count"
+        }
+      ],
+      "location": "senate",
+      "time": "night"
+    },
+    "count": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "vc",
+          "text": "(announcing, very tired) After... irregularities... the election is decided. Student Union President: Tobiloba Adéyẹmí.",
+          "variants": [
+            {
+              "if": {
+                "notFlags": [
+                  "exposedSUGRig",
+                  "riggedSUG",
+                  "tobiDebateWin"
+                ]
+              },
+              "text": "(announcing, very tired) Student Union President: Tunde Adisa, also known as \"Capo\". (The back gate cheers. The hostels don't.)"
+            }
+          ]
+        },
+        {
+          "type": "setFlag",
+          "flags": [
+            "tobiWon"
+          ],
+          "if": {
+            "anyOf": [
+              "exposedSUGRig",
+              "riggedSUG",
+              "tobiDebateWin"
+            ]
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "tobi",
+          "text": "(lifting you off the ground) We did it! You did it! My dad says I can have any car I want. I said I want a manifesto. (He pauses.) And a car.",
+          "if": "tobiWon"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Tobi never asks how the extra box got there. You never tell him. It sits between you at every party like a third guest.",
+          "if": "riggedSUG"
+        },
+        {
+          "type": "endChapter",
+          "title": "SUG Elections",
+          "summary": "A union, a ballot box, and a choice about how badly you wanted to win.",
+          "next": "u5_exposed"
+        }
+      ],
+      "location": "quad",
+      "time": "day"
+    },
+    "sideline": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "You watch the election from the library window. Tunde Capo wins. The union's budget buys four new red cars for the back gate. Tobi doesn't blame you out loud."
+        },
+        {
+          "type": "endChapter",
+          "title": "SUG Elections",
+          "summary": "You sat it out. Sometimes that is wisdom. Sometimes it's just sitting.",
+          "next": "u5_exposed"
+        }
+      ],
+      "location": "library",
+      "time": "night"
+    }
+  }
+}

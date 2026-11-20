@@ -1,0 +1,190 @@
+{
+  "id": "u3b_holiday",
+  "campaign": "campus",
+  "world": "iyanaWahala",
+  "act": 2,
+  "number": 7,
+  "title": "Chapter 7 — Semester Break",
+  "description": "Home for the holidays: the street calls you \"Royal Crest\", Owó Ńlá wants a speech, and Mama has questions about a loan app.",
+  "startScene": "home",
+  "scenes": {
+    "home": {
+      "beats": [
+        {
+          "type": "setFlag",
+          "flags": [
+            "mamaSomtoAround"
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Iyana-Wahala. The bus stop is exactly the same. You are not. You notice you hold your bag differently. You notice the street noticing."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ada",
+          "text": "Look at Royal Crest! (She circles you.) New shoes. Same face. Okay, you can still enter my shop."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "mamaSomto",
+          "text": "My son! (She sees the shoes.) Where did these come from?",
+          "variants": [
+            {
+              "if": "usedLoanApp",
+              "text": "My son. (She doesn't hug you first.) A man called my phone last week. QuickCash. He called me \"the debtor's mother\". Sit down, Somto."
+            }
+          ]
+        },
+        {
+          "type": "choice",
+          "speaker": "mamaSomto",
+          "text": "Her ladle is very still.",
+          "options": [
+            {
+              "text": "Tell her everything: the birthday, the loan, the interest.",
+              "effects": {
+                "changeStat": {
+                  "momBond": 6,
+                  "conscience": 4
+                },
+                "setFlag": "confessedLoan"
+              }
+            },
+            {
+              "text": "\"They called the wrong number, Mama.\"",
+              "effects": {
+                "changeStat": {
+                  "momBond": -6,
+                  "cover": 2
+                },
+                "setFlag": "liedAboutLoan"
+              }
+            }
+          ],
+          "if": "usedLoanApp"
+        },
+        {
+          "type": "goto",
+          "scene": "speech"
+        }
+      ],
+      "location": "teaTable",
+      "time": "day"
+    },
+    "speech": {
+      "beats": [
+        {
+          "type": "setFlag",
+          "flags": [
+            "owoNlaAround"
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Saturday. The Honourable's \"Youth Empowerment Day\" at the Front Stop. Generators, a canopy, a cake in the shape of a ballot box. You are on the programme: \"Vote of thanks by a beneficiary\"."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "settlement",
+          "text": "(handing you a printed speech) Read it. Smile. Point at the Honourable at the word \"father\". It's on page two."
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "The microphone smells of somebody else's breath. The street is watching.",
+          "options": [
+            {
+              "text": "Read it exactly. \"Our father, the Honourable...\"",
+              "effects": {
+                "changeStat": {
+                  "cover": 4,
+                  "conscience": -4,
+                  "money": 10000
+                },
+                "setFlag": "gaveOwoSpeech"
+              }
+            },
+            {
+              "text": "Put the paper down. Thank Mama, the street, Garba's tea and Dr. Adébáyọ̀. Mention the Honourable once, politely.",
+              "effects": {
+                "changeStat": {
+                  "momBond": 6,
+                  "campusRep": 2,
+                  "cover": -4
+                },
+                "setFlag": "ownSpeech",
+                "noticedBy": [
+                  "Mama"
+                ]
+              }
+            },
+            {
+              "text": "Fake a sore throat. Let someone else read it.",
+              "effects": {
+                "changeStat": {
+                  "cover": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "owoNla",
+          "text": "(afterwards, shaking your hand for the cameras) Good boy. Very good boy.",
+          "variants": [
+            {
+              "if": "ownSpeech",
+              "text": "(afterwards, smiling for the cameras, not with his eyes) \"Garba's tea\". Very creative. (He keeps shaking your hand a little too long.) Barrister will discuss creativity with you."
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "garba"
+        }
+      ],
+      "location": "frontStop",
+      "time": "day"
+    },
+    "garba": {
+      "beats": [
+        {
+          "type": "freeRoam",
+          "objective": "Get a tea from Mallam Garba before you go back.",
+          "goal": {
+            "reach": "teaTable"
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "garba",
+          "text": "Royal Crest. (He pours from very high, showing off.) When you are a big man, don't forget who gave you sugar on credit."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "player",
+          "text": "There's a lecturer at school, Dr. Adébáyọ̀. He says economics happens at bus stops.",
+          "if": "bayoGroup"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "garba",
+          "text": "(delighted) Then I am a professor of economics! Thirty years, never a degree. Tell your lecturer my tea is ₦100. Inflation.",
+          "if": "bayoGroup"
+        },
+        {
+          "type": "endChapter",
+          "title": "Semester Break",
+          "summary": "Home is the same; you aren't. You made a speech, or read one. The street saw which.",
+          "next": "u4_loanApp"
+        }
+      ],
+      "location": "teaTable",
+      "time": "dusk"
+    }
+  }
+}

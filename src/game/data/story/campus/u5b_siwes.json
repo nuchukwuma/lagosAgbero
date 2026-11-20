@@ -1,0 +1,239 @@
+{
+  "id": "u5b_siwes",
+  "campaign": "campus",
+  "world": "iyanaWahala",
+  "act": 4,
+  "number": 12,
+  "title": "Chapter 12 — Industrial Training",
+  "description": "Six months of industrial training in Lagos. Where you work decides who owns you, and one office has a secret about loan apps.",
+  "startScene": "choose",
+  "scenes": {
+    "choose": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "SIWES: six months in a real Lagos office. A letter, a logbook, a supervisor's signature. Every student is scrambling for a placement."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Expelled students don't get SIWES. But Mr. Effiong from PayWahala saw your akara spreadsheets online and doesn't care about letters. \"Intern without a school,\" he calls you. It's a job.",
+          "if": "expelled"
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "Three offers.",
+          "options": [
+            {
+              "text": "Hon. Ronke's policy office in Ikeja.",
+              "requires": {
+                "anyOf": [
+                  "toldRonke",
+                  "dinnerConvinced",
+                  "ronkeVolunteer"
+                ]
+              },
+              "showLocked": true,
+              "lockedText": "Ronke doesn't know you well enough",
+              "effects": {
+                "changeStat": {
+                  "tamaraBond": 4
+                },
+                "setFlag": "itRonke",
+                "goto": "ronkeOffice"
+              }
+            },
+            {
+              "text": "The Owó Ńlá Foundation office. They're your sponsors, after all.",
+              "requires": {
+                "notFlags": [
+                  "lostScholarship"
+                ]
+              },
+              "showLocked": true,
+              "lockedText": "You lost the scholarship",
+              "effects": {
+                "changeStat": {
+                  "cover": 3
+                },
+                "setFlag": "itOwo",
+                "goto": "owoOffice"
+              }
+            },
+            {
+              "text": "PayWahala, a small fintech in Yaba. Mr. Effiong. No air conditioning.",
+              "effects": {
+                "setFlag": "itStartup",
+                "goto": "startup"
+              }
+            }
+          ]
+        }
+      ],
+      "location": "frontStop",
+      "time": "day"
+    },
+    "ronkeOffice": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "ronke",
+          "text": "You'll write the market sanitation brief. Real numbers. If they're wrong, I'll look stupid on television. Don't let me look stupid."
+        },
+        {
+          "type": "freeRoam",
+          "objective": "Survey the market toilets (or the lack of them). Talk to the traders.",
+          "goal": {
+            "reach": "market"
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "You count three toilets for four thousand traders. One is locked. One is a store. One is a rumour."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ronke",
+          "text": "(reading your brief) This is good. This is uncomfortable. (She signs your logbook.) Uncomfortable is the job."
+        },
+        {
+          "type": "goto",
+          "scene": "quickcash"
+        }
+      ],
+      "location": "market",
+      "time": "day"
+    },
+    "owoOffice": {
+      "beats": [
+        {
+          "type": "setFlag",
+          "flags": [
+            "settlementAround"
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "settlement",
+          "text": "Your duty: photographs. Every beneficiary must be photographed receiving their empowerment. Smiling. The generators, the sewing machines, the wheelbarrows."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "You photograph forty sewing machines. On Monday, thirty-eight of them go back into the warehouse for next month's photographs."
+        },
+        {
+          "type": "choice",
+          "speaker": "settlement",
+          "text": "Barrister notices you noticing.",
+          "options": [
+            {
+              "text": "Say nothing. Photograph the next batch.",
+              "effects": {
+                "changeStat": {
+                  "cover": 3,
+                  "conscience": -6
+                },
+                "setFlag": "photoFraud"
+              }
+            },
+            {
+              "text": "Keep copies of the photos, with dates.",
+              "effects": {
+                "changeStat": {
+                  "conscience": 4
+                },
+                "setFlag": "keptOwoPhotos"
+              }
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "quickcash"
+        }
+      ],
+      "location": "richStreet",
+      "time": "day"
+    },
+    "startup": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "effiong",
+          "text": "Somto. We build payment systems for market women. No loans. No harassment. (He gestures at three laptops and a fan.) Welcome to the future. It is hot."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "You build a spreadsheet that tracks the akara economy of six bus stops. Mr. Effiong prints it out and sticks it on the wall like a painting."
+        },
+        {
+          "type": "goto",
+          "scene": "quickcash"
+        }
+      ],
+      "location": "southStreet",
+      "time": "day"
+    },
+    "quickcash": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Week ten. A client file lands on your desk by mistake: a data contract between a phone company and... QuickCash. The loan app. The one that called Mama.",
+          "variants": [
+            {
+              "if": "itOwo",
+              "text": "Week ten. A file on Barrister's desk: QuickCash's \"community partnership\". The loan app pays the Foundation. The Foundation gives it students' phone numbers. Yours was on the list."
+            }
+          ]
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "It's all here. Names, contacts, the scripts the collectors use.",
+          "options": [
+            {
+              "text": "Send it to Ifeoma Nwankwo at Wahala FM.",
+              "effects": {
+                "changeStat": {
+                  "conscience": 10,
+                  "campusRep": 6,
+                  "cover": -6
+                },
+                "setFlag": "leakedQuickCash"
+              }
+            },
+            {
+              "text": "Close the file. Not your fight. You need the logbook signed.",
+              "effects": {
+                "changeStat": {
+                  "cgpa": 0.05
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "newsBroadcast",
+          "source": "Wahala FM",
+          "headline": "Loan app shamed students with stolen contacts",
+          "text": "A source close to the data shows QuickCash bought students' phone books to shame borrowers. The app has \"paused operations\".",
+          "if": "leakedQuickCash"
+        },
+        {
+          "type": "endChapter",
+          "title": "Industrial Training",
+          "summary": "Six months in Lagos taught you more than three years of lectures: who owns what, who photographs whom, and where the phone numbers go.",
+          "next": "u5c_demolition"
+        }
+      ],
+      "location": "southStreet",
+      "time": "day"
+    }
+  }
+}

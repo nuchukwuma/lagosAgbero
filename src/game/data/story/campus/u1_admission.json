@@ -224,7 +224,7 @@
           "type": "endChapter",
           "title": "End of Chapter 1 — Admission",
           "summary": "Money {money}. Tomorrow: Royal Crest University. Your cover story: {stat:cover}%.",
-          "next": "u2_freshers"
+          "next": "u1b_sendoff"
         }
       ],
       "location": "adaShop",

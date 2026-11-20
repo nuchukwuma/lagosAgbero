@@ -2,9 +2,9 @@
   "id": "u5_exposed",
   "campaign": "campus",
   "world": "royalCrest",
-  "act": 1,
-  "number": 5,
-  "title": "Chapter 5 — Exposed",
+  "act": 3,
+  "number": 11,
+  "title": "Chapter 11 — Exposed",
   "description": "A leaked exam, a politician's offer, Tamara's question, and a panel with a fan that doesn't work.",
   "startScene": "econ",
   "scenes": {
@@ -608,7 +608,7 @@
           "type": "endChapter",
           "title": "End of Chapter 5 — Exposed",
           "summary": "CGPA {stat:cgpa}. Fees owed {schoolFees}. Campus reputation {stat:campusRep}. Convocation is coming.",
-          "next": "u6_convocation"
+          "next": "u5b_siwes"
         }
       ],
       "location": "quad",

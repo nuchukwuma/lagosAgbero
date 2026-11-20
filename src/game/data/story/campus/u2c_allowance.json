@@ -1,0 +1,234 @@
+{
+  "id": "u2c_allowance",
+  "campaign": "campus",
+  "world": "royalCrest",
+  "act": 2,
+  "number": 5,
+  "title": "Chapter 5 — The Allowance Is Late",
+  "description": "The Foundation's money doesn't come. Garri stops being a snack. Dubai's laptop glows all night, and Tobi offers a loan like it's nothing.",
+  "startScene": "late",
+  "scenes": {
+    "late": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "The scholarship allowance was due on the first. It is the twentieth. You have ₦600, a bag of garri, and a sachet of sugar you are saving for a special occasion."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "settlement",
+          "text": "(on the phone) The allowance will come after the Honourable's rally. Everything comes after the rally. Be patient. Be visible."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "dubai",
+          "text": "(not looking up from his laptop) Roomie. You've drunk garri three times today. That's not a meal, that's a cry for help."
+        },
+        {
+          "type": "goto",
+          "scene": "money"
+        }
+      ],
+      "location": "hostel",
+      "time": "day"
+    },
+    "money": {
+      "beats": [
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "Rent for the hostel corner, food, transport. You need ₦15,000 by Friday.",
+          "options": [
+            {
+              "text": "Tutor freshers in GST. You passed it. They didn't.",
+              "effects": {
+                "goto": "tutor"
+              }
+            },
+            {
+              "text": "Sell your lecture notes at the cafeteria.",
+              "effects": {
+                "goto": "notes"
+              }
+            },
+            {
+              "text": "Borrow from Tobi. He won't even notice.",
+              "effects": {
+                "changeStat": {
+                  "money": 15000,
+                  "cover": 2
+                },
+                "setFlag": "borrowedTobi"
+              }
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "dubai"
+        }
+      ],
+      "location": "hostel",
+      "time": "day"
+    },
+    "tutor": {
+      "beats": [
+        {
+          "type": "freeRoam",
+          "objective": "Find your tutoring group at the library.",
+          "goal": {
+            "reach": "library"
+          }
+        },
+        {
+          "type": "startMode",
+          "mode": "exam",
+          "params": {
+            "bank": "gst101",
+            "count": 5,
+            "seconds": 16
+          },
+          "results": {
+            "perfect": {
+              "changeStat": {
+                "money": 15000,
+                "campusRep": 4
+              },
+              "toast": "Six freshers pay ₦2,500 each and tell their friends. You have a waiting list."
+            },
+            "passed": {
+              "changeStat": {
+                "money": 10000,
+                "campusRep": 2
+              }
+            },
+            "failed": {
+              "changeStat": {
+                "money": 4000
+              }
+            },
+            "attacked": {
+              "changeStat": {
+                "money": 4000
+              }
+            }
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "dubai"
+        }
+      ],
+      "location": "library",
+      "time": "day"
+    },
+    "notes": {
+      "beats": [
+        {
+          "type": "freeRoam",
+          "objective": "Set up at the cafeteria with your notes.",
+          "goal": {
+            "reach": "cafeteria"
+          }
+        },
+        {
+          "type": "startMode",
+          "mode": "haggle",
+          "params": {
+            "goods": "notes",
+            "customers": 6
+          },
+          "results": {
+            "good": {
+              "changeStat": {
+                "campusRep": 2
+              }
+            },
+            "ok": {},
+            "bad": {
+              "changeStat": {
+                "campusRep": -1
+              }
+            }
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "dubai"
+        }
+      ],
+      "location": "cafeteria",
+      "time": "day"
+    },
+    "dubai": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Night. Dubai's laptop is the only light in the room. He is talking in an American accent to a woman in Ohio called Brenda. He calls her \"babe\". He has never been to Ohio."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "dubai",
+          "text": "(muting the call) Watch this. Learn. In twenty minutes Brenda will send six hundred dollars for my \"customs fees\". That's your allowance for a year."
+        },
+        {
+          "type": "choice",
+          "speaker": "dubai",
+          "text": "He turns the screen towards you.",
+          "options": [
+            {
+              "text": "Watch. Just watch.",
+              "effects": {
+                "changeStat": {
+                  "dubaiBond": 6,
+                  "conscience": -4
+                },
+                "setFlag": "watchedDubai"
+              }
+            },
+            {
+              "text": "Put your earphones in and face the wall.",
+              "effects": {
+                "changeStat": {
+                  "conscience": 2,
+                  "dubaiBond": -2
+                }
+              }
+            },
+            {
+              "text": "\"Brenda is somebody's mother, Dubai.\"",
+              "effects": {
+                "changeStat": {
+                  "conscience": 4,
+                  "dubaiBond": -5
+                },
+                "setFlag": "brendaRemark"
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "dubai",
+          "text": "(after the call) Brenda sent seven hundred. (He doesn't look happy. He looks like a man who has done arithmetic.)",
+          "variants": [
+            {
+              "if": "brendaRemark",
+              "text": "(after the call, very quietly) Brenda is somebody's mother. (He closes the laptop.) So is mine. Mine sells tomatoes at Mile 12. Goodnight, roomie."
+            }
+          ]
+        },
+        {
+          "type": "endChapter",
+          "title": "The Allowance Is Late",
+          "summary": "Hunger teaches fast. You found ₦15,000 one way or another, and you saw exactly how Dubai finds his.",
+          "next": "u3_sorting"
+        }
+      ],
+      "location": "hostel",
+      "time": "night"
+    }
+  }
+}

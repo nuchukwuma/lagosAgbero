@@ -1194,6 +1194,109 @@
         }
       },
       "text": "Final CGPA: {stat:cgpa}. Some employers will ask. Most won't care."
+    },
+    {
+      "if": "mamaInPhoto",
+      "text": "The Foundation photograph: Mama with her ladle in front of the Honourable's banner. It ended up on the Foundation's website by mistake. It's still the best picture they have."
+    },
+    {
+      "if": "vowedTruth",
+      "text": "You promised Mama the truth \"every time\" on your last night at home. She kept count."
+    },
+    {
+      "if": "joinedDebate",
+      "text": "Debate Society: they still play the recording of your first-year debate to scare freshers."
+    },
+    {
+      "if": "joinedChoir",
+      "text": "Chapel Choir: they sang at your convocation without being asked. Off-key. Perfect."
+    },
+    {
+      "if": "confessedLoan",
+      "text": "QuickCash: Mama paid it back with you, ₦2,000 a week, with a notebook. She still has the notebook."
+    },
+    {
+      "if": "liedAboutLoan",
+      "text": "QuickCash: Mama found the messages on your phone in final year. She didn't say anything. She just stopped answering unknown numbers."
+    },
+    {
+      "if": "ownSpeech",
+      "text": "Garba's tea: famous now. \"As mentioned by a Royal Crest scholar at the Honourable's event.\" He put it on a signboard."
+    },
+    {
+      "if": "owoRally",
+      "text": "The green T-shirt from Owó Ńlá's rally: you use it to clean your shoes."
+    },
+    {
+      "if": "stayedLibrary",
+      "text": "Samuelson chapter nine: you can still recite it. Nobody has ever asked."
+    },
+    {
+      "if": "scatteredTownHall",
+      "text": "Ronke's town hall: scattered by red bandanas. She never found out you were one of them. Tamara did."
+    },
+    {
+      "if": "tobiManager",
+      "text": "Tobi: he still calls you \"Campaign Manager\" in group chats. He means it as a title."
+    },
+    {
+      "if": "tobiWon",
+      "text": "Tobi's union fixed the hostel water. Nobody has ever thanked him for anything more sincerely."
+    },
+    {
+      "if": "itRonke",
+      "text": "Ronke's market sanitation brief: three new toilets. Traders call them \"the scholar's toilets\". You have never been so proud of a toilet."
+    },
+    {
+      "if": "itStartup",
+      "text": "PayWahala: Mr. Effiong still has your akara spreadsheet on the wall. Next to it, a job offer with your name on it."
+    },
+    {
+      "if": "photoFraud",
+      "text": "The sewing machines: still being photographed, still going back into the warehouse. You know exactly how many."
+    },
+    {
+      "if": "leakedQuickCash",
+      "text": "QuickCash: shut down after the Wahala FM story. Somewhere, a thousand mothers stopped getting phone calls."
+    },
+    {
+      "if": "owesOwo",
+      "text": "The Honourable's favour: he saved Mama's stall and bulldozed Garba's table. He reminds you every election."
+    },
+    {
+      "if": "protestedDemolition",
+      "text": "The petition: two hundred thumbprints, framed in Ada's new shop."
+    },
+    {
+      "if": {
+        "flags": [
+          "stallLost"
+        ],
+        "notFlags": [
+          "stallSaved"
+        ]
+      },
+      "text": "Mama's corner: rubble, then a filling station. She sells from a cooler at the motor park now. The drivers found her in a day."
+    },
+    {
+      "if": "boughtProject",
+      "text": "Your final-year project: bought at the back gate. Its title was about \"cement prices in Abuja\". You never read it."
+    },
+    {
+      "if": "honestProject",
+      "text": "The Akara Index: Dr. Adébáyọ̀ submitted it to a journal. It was accepted. Mama's prices are now cited in footnotes."
+    },
+    {
+      "if": "inviteTamaraHome",
+      "text": "Tamara at Iyana-Wahala: nine akara, a burnt tongue and an argument with Garba. The street approves."
+    },
+    {
+      "if": "hidMamaFinal",
+      "text": "You told Tamara your mother was \"travelling\". Mama has never left Lagos State."
+    },
+    {
+      "if": "vowedCareful",
+      "text": "On your last night at home you told Mama: the truth for her, \"whatever keeps me there\" for everyone else. She has been watching which was which ever since."
     }
   ],
   "p_peoples": {
@@ -1374,5 +1477,43 @@
       "Every year, the festival video arrives on WhatsApp. Every year, you watch it twice."
     ],
     "hint": "Home is a road. You have to take it."
+  },
+  "u_youthLeader": {
+    "title": "Youth Leader",
+    "campaign": "campus",
+    "epilogue": [
+      "You left Royal Crest for the Honourable's Youth Wing. The car is small. Your face is on the back of it, under his.",
+      {
+        "if": {
+          "stats": {
+            "momBond": ">= 50"
+          }
+        },
+        "text": "Mama tells the bus stop her son works \"in government\". She stops saying it after the third Youth Wing rally ends in a fight."
+      },
+      "Every year the Honourable promises you something bigger. Every year he forgets. You learn to remind him, very visibly."
+    ],
+    "hint": "Microphones are not degrees."
+  },
+  "u_akaraEmpire": {
+    "title": "Akara Empire",
+    "campaign": "campus",
+    "epilogue": [
+      "MAMA SOMTO'S: AKARA FOR SCHOLARS. Three shops, a supermarket deal, and a frozen line in Lekki, where you used to pretend you lived.",
+      {
+        "if": "stallSaved",
+        "text": "The old corner, saved by a court order, is still the first shop. Mama refuses to move to the nicer one. \"The drivers know where I am.\""
+      },
+      {
+        "if": {
+          "stats": {
+            "tamaraBond": ">= 50"
+          }
+        },
+        "text": "Tamara designs your packaging. She charges you full price. You pay it."
+      },
+      "Dr. Adébáyọ̀ uses your shops as a case study. Students come to interview Mama. She charges them for the akara."
+    ],
+    "hint": "Sometimes the business is the degree."
   }
 }

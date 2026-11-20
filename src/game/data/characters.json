@@ -1204,5 +1204,30 @@
       "shirt": "#a04000",
       "trousers": "#4a2a12"
     }
+  },
+  "drBayo": {
+    "name": "Dr. Adébáyọ̀",
+    "fullName": "Dr. Adébáyọ̀, economics lecturer",
+    "color": "#1e8449",
+    "role": "lecturer",
+    "look": {
+      "body": "mini_male_c",
+      "skin": "#4a2c1a",
+      "shirt": "#f4f6f7",
+      "trousers": "#566573",
+      "height": 1.05
+    }
+  },
+  "effiong": {
+    "name": "Mr. Effiong",
+    "fullName": "Mr. Effiong, founder of PayWahala",
+    "color": "#2874a6",
+    "role": "boss",
+    "look": {
+      "body": "mini_male_d",
+      "skin": "#5a3a22",
+      "shirt": "#2874a6",
+      "trousers": "#1c2833"
+    }
   }
 }
