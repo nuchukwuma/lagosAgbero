@@ -271,6 +271,30 @@ describe('arcade mini-games', () => {
     expect(s.takings).toBeLessThan(before)
   })
 
+  it('go-slow: cars turn into the right lane, queue without overlapping, and pull away', () => {
+    // a right turn from the north road ends heading west, on the westbound lane; a left turn heads east
+    const r = traffic.pathPoint('N', 'R', 100)
+    expect(r.dx).toBeCloseTo(-1)
+    expect(r.dz).toBeCloseTo(0)
+    expect(r.z).toBeCloseTo(-1.75)
+    const l = traffic.pathPoint('N', 'L', 100)
+    expect(l.dx).toBeCloseTo(1)
+    expect(l.z).toBeCloseTo(1.75)
+    // the path is continuous where the turn starts
+    const a0 = traffic.pathPoint('E', 'R', 0)
+    const a1 = traffic.pathPoint('E', 'R', 0.01)
+    expect(Math.hypot(a1.x - a0.x, a1.z - a0.z)).toBeLessThan(0.05)
+    const s = traffic.create({ spawnMul: 3 }, 4)
+    s.green = 'EW'
+    for (let i = 0; i < 80; i++) traffic.step(s, 0.1)
+    for (const d of traffic.DIRS) {
+      const q = s.q[d]
+      for (let i = 1; i < q.length; i++) expect(q[i - 1].u - q[i - 1].m / 2).toBeGreaterThan(q[i].u + q[i].m / 2)
+      if (q.length) expect(q[0].u + q[0].m / 2).toBeLessThanOrEqual(0)
+    }
+    expect(s.moving.length + s.passed).toBeGreaterThan(0)
+  })
+
   it('poster war, traffic and penalties hold together', () => {
     const p = posters.create({}, 1)
     p.wall = p.wall.map(() => null)

@@ -1,0 +1,30 @@
+{
+ "source": "the game's own 3D vehicles (Kenney Car Kit models, danfo/keke/okada from the game), isometric",
+ "cell": 144,
+ "ppm": 15,
+ "headings": 8,
+ "rows": [
+  "danfo",
+  "molue",
+  "taxi",
+  "car",
+  "suv",
+  "lorry",
+  "truck",
+  "keke",
+  "okada",
+  "convoy"
+ ],
+ "kinds": {
+  "danfo": "danfo",
+  "molue": "molue",
+  "taxi": "taxi",
+  "car": "privateCar",
+  "suv": "bigManSuv",
+  "lorry": "lorry",
+  "truck": "boxTruck",
+  "keke": "keke",
+  "okada": "okada",
+  "convoy": "taskForceVan"
+ }
+}

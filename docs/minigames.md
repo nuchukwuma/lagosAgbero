@@ -28,13 +28,18 @@ the action button, the others appear as small buttons above it.
 ## Playing
 
 Every game shows how to play the first time; after that the intro shows your
-best score. The game pauses with the pause menu. At the end: your score, any
-money earned, **Continue** (the story takes the result) and, if you lost,
-**Try again**. Best scores are kept on the device (`systems/records.js`).
+best score. The pause menu opens on the game's rules (**How to play**, from
+`modes/howToPlay.js`, which also has the rules of every story mode). At the
+end: your score, any money earned, **Continue** (the story takes the result)
+and, if you lost, **Try again**. When a game pays, one rewarded ad doubles the
+money and a second triples it. Best scores are kept on the device
+(`systems/records.js`).
 
 Controls are taps on the scene and a pad of chunky buttons at the bottom; on a
 keyboard every button has a key (shown in its corner). Swipes work where they
-are natural (Original or Fake, Rice Day).
+are natural (Original or Fake, Rice Day). The moving games (the escape, Back
+Gate) use an analog stick by default; Settings → Controls switches to arrow
+buttons.
 
 ## Harder as the story goes on, easier with power-ups
 
@@ -48,10 +53,33 @@ hardest level). The start screen shows the difficulty as stars.
 
 Free-roam fights, runs and chases step up the same way (`systems/heat.js`).
 
+**Practice** (`systems/records.js`): every game, mini-game or story mode, also
+counts how often you've played and won it. Each play and each win makes it a
+little harder (up to +0.35 on the 0–1 scale), and the pay grows with the story
+and with your wins: ×1 at the start up to ×2.2 (shown on the start screen as
+"rewards ×1.4" and so on).
+
 Each game also has its own power-ups, bought by watching a short ad on the
 start screen, for that run only: more time, more patient customers, a tired
 opponent, gentler oil, slower guards, a bigger paste bucket, a Whot card in
 your hand, extra lives and hearts in the escape, and so on.
+
+## Board and card games: the official rules
+
+- **Draughts** is International draughts (FMJD), as Nigeria plays it: 10×10,
+  20 men each, men capture backwards as well, flying kings, the biggest capture
+  is compulsory, captured pieces come off at the end of the move, a man is
+  crowned only if his move ends on the far row, and 25 moves each of kings only
+  is a draw. `variant: "english"` plays English draughts (8×8).
+- **Ayò** is Ayò Ọlọ́pọ́n: anticlockwise sowing, laps skip the starting cup,
+  captures of 2 or 3 from the last cup backwards on their side, no capture that
+  would take everything, compulsory feeding, more than 24 seeds wins.
+- **Whot** uses the standard 54-card deck and specials (1 Hold On, 2 Pick Two,
+  5 Pick Three, 8 Suspension, 14 General Market, 20 Whot), stars count double.
+
+Each opponent has five levels (Beginner, Casual, Club/Village player, Strong,
+Master): how far ahead they look and how often they just play something. The
+level rises with the story and with practice, and is shown in the score bar.
 
 ## Escape (the platformer)
 
@@ -60,6 +88,13 @@ side-scrolling platformer (`modes/platformer/`, mode `escape`): move freely,
 jump and double jump, roll, strike and stomp; cars, awnings and roofs are
 platforms; gutters kill; officers only see what's in front of them. Params:
 `metres` (700), `difficulty` (1–3), `lives` (3), `to` (the destination).
+Once an officer sees you he whistles, the officers within earshot join in, and
+they all rush you faster than you can run: get up where they can't climb, roll
+past, or fight. Creeping (a small push on the stick, or CREEP/Shift) or standing
+still halves how far they see; a strike from behind on one who hasn't seen you
+takes him down at once. Every officer down pays a bounty (₦250 in a fight, ₦300
+for a stomp, ₦400 from behind, times the reward multiplier).
+
 The runner and the Task Force are Eris Esra's character template (see *People*
 below): run, walk, idle, jump (the landing frame on touchdown), the attack swing
 for strikes and baton blows; the roll and double jump spin the tuck frame, and a
@@ -93,7 +128,7 @@ All of them end `won` or `lost`, and may pay `moneyChange`. Parameters:
 | Mode | Params |
 |---|---|
 | `change` | `target` (8), `seconds` (60), `tip` (₦50) |
-| `draughts` | `name` ("Professor"), `skill` 0–1 (0.7) |
+| `draughts` | `name` ("Professor"), `skill` 0–1 → level 1–5 (or `aiLevel`), `variant` ("international" or "english") |
 | `traffic` | `target` vehicles (30), `seconds` (60) |
 | `ayo` | `name` ("Papa Ngwo"), `skill` (0.6) |
 | `palmClimb` | `height` rings (32), `seconds` (45) |
@@ -138,8 +173,8 @@ hit, block, duck, knock-out or dance moves. The 3D streets keep their 3D people.
 | Game | What it draws |
 |---|---|
 | Exact Change | the inside of a yellow danfo, the open door and road, naira notes (₦500 to ₦10, each its own colour), the passenger, a patience bar |
-| Draughts | the tea table, a plywood 8×8 board, red and green bottle tops with crimped rims, crowns |
-| Go-Slow | a junction from above: roads, kerbs, lane marks, cars, danfos, okadas and trailers in queues, the warden, the convoy siren |
+| Draughts | the tea table, a plywood 10×10 board (8×8 for the English variant), red and green bottle tops with crimped rims, crowns |
+| Go-Slow | an isometric junction (roads, zebra crossings, corner blocks) with the game's own 3D vehicles as sprites: danfos, molue, taxis, cars, SUVs, lorries, kekes and okadas with riders, the Task Force convoy; they queue bumper to bumper, pull away and turn; the warden in the middle |
 | Ayò | the palm-wine shade (thatch, red earth), a carved board with twelve cups and two stores, seeds |
 | Palm Climb | sky, distant palms, a ringed trunk that scrolls, soldier ants, wasp nests, fronds and the calabash, the rope loop, a height gauge |
 | Original or Fake? | the stall's shelves, parts boxes (brand, part, origin, hologram seal, price tag), Mama Ngozi's brand chart |
@@ -154,6 +189,14 @@ hit, block, duck, knock-out or dance moves. The 3D streets keep their 3D people.
 | Whot! | the green cloth, the full 54-card Whot deck (circles, triangles, crosses, squares, stars, Whot 20), the market pile |
 
 Sound effects come from the game's existing synthesised set (`audio.js`).
+
+## Go-Slow's vehicles
+
+`scripts/bake-goslow-sprites.mjs` photographs the game's own 3D vehicles
+(`src/dev/bakeVehicles.jsx`, through the dev server) from an isometric camera at
+eight headings into `public/assets/goslow/vehicles.png` (+ `goslowSprites.json`).
+Re-run it after changing a vehicle: `npx vite --port 5179` then
+`node scripts/bake-goslow-sprites.mjs`.
 
 ## Code
 
