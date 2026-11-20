@@ -1367,7 +1367,59 @@
     "title": "The Woman Who Said No",
     "epilogue": [
       "Officer Grace's commendation hangs behind the bar, next to the price list.",
-      "Twelve girls who were going to Tripoli are in school, in salons, at home. Some of them send you a message on your birthday."
+      "Twelve girls who were going to Tripoli are in school, in salons, at home. Some of them send you a message on your birthday.",
+      {
+        "if": "houseRules",
+        "text": "The rules on the bar wall: still there, in Kemi's handwriting. Somebody laminated them."
+      },
+      {
+        "if": "sentBoyHome",
+        "text": "The boy you put in a taxi home: he passed his WAEC. His mother found out where he had been that night. She brought you a cake. You didn't ask how she knew."
+      },
+      {
+        "if": "servedBoy",
+        "text": "The schoolboy you let into the bar: his mother came to the gate a week later. You remember her face better than his."
+      },
+      {
+        "if": "paidKemiMotherDrugs",
+        "text": "Kemi's mother: her blood pressure is down. She sends agege bread every month, addressed to \"the good madam\"."
+      },
+      {
+        "if": "caughtAjo",
+        "text": "Iya Ajo: back on South Street, collecting again, under supervision. Rukky and you take turns watching her."
+      },
+      {
+        "if": "toldProprietress",
+        "text": "Mrs. Adéwálé, the proprietress: she invites you to speak at the school's Career Day. You speak about catering. Everybody knows. Nobody says."
+      },
+      {
+        "if": "preciousCourse",
+        "text": "Precious: Microsoft Excel, distinction. She does the books for three shops on South Street now and still laughs too loud."
+      },
+      {
+        "if": "threwOutJide",
+        "text": "Jide's borrowed suit jacket still hangs on the bar. It has become a kind of flag."
+      },
+      {
+        "if": "outPraised",
+        "text": "The crusade: South Street still calls it \"the day Mama Sugar turned a crusade into an owambe\"."
+      },
+      {
+        "if": "showedPrecious",
+        "text": "Italy: Precious never went. She keeps Officer Grace's photos in a drawer, for the next girl who asks."
+      },
+      {
+        "if": "girlsChoose",
+        "text": "Tari went home to Edo with ₦50,000 and a phone. She calls on the first of every month."
+      },
+      {
+        "if": "interviewTruth",
+        "text": "The Wahala FM interview: Ifeoma played it three times. Your real name is out now. It turns out to be lighter to carry than Mama Sugar."
+      },
+      {
+        "if": "basseyScared",
+        "text": "Commander Bassey: still collects on South Street. Never at your gate."
+      }
     ]
   },
   "sugar_kitchen": {
@@ -1375,7 +1427,59 @@
     "title": "Sugar's Kitchen",
     "epilogue": [
       "Sugar's Kitchen & Suites. Rooms by the night. Pepper soup by the bowl. Receipts for everything, which Chief Dapo finds very confusing.",
-      "Ivie puts it on Instagram. Somebody from Lekki drives two hours for your pepper soup and leaves a tip bigger than the bill."
+      "Ivie puts it on Instagram. Somebody from Lekki drives two hours for your pepper soup and leaves a tip bigger than the bill.",
+      {
+        "if": "houseRules",
+        "text": "The rules on the bar wall: still there, in Kemi's handwriting. Somebody laminated them."
+      },
+      {
+        "if": "sentBoyHome",
+        "text": "The boy you put in a taxi home: he passed his WAEC. His mother found out where he had been that night. She brought you a cake. You didn't ask how she knew."
+      },
+      {
+        "if": "servedBoy",
+        "text": "The schoolboy you let into the bar: his mother came to the gate a week later. You remember her face better than his."
+      },
+      {
+        "if": "paidKemiMotherDrugs",
+        "text": "Kemi's mother: her blood pressure is down. She sends agege bread every month, addressed to \"the good madam\"."
+      },
+      {
+        "if": "caughtAjo",
+        "text": "Iya Ajo: back on South Street, collecting again, under supervision. Rukky and you take turns watching her."
+      },
+      {
+        "if": "toldProprietress",
+        "text": "Mrs. Adéwálé, the proprietress: she invites you to speak at the school's Career Day. You speak about catering. Everybody knows. Nobody says."
+      },
+      {
+        "if": "preciousCourse",
+        "text": "Precious: Microsoft Excel, distinction. She does the books for three shops on South Street now and still laughs too loud."
+      },
+      {
+        "if": "threwOutJide",
+        "text": "Jide's borrowed suit jacket still hangs on the bar. It has become a kind of flag."
+      },
+      {
+        "if": "outPraised",
+        "text": "The crusade: South Street still calls it \"the day Mama Sugar turned a crusade into an owambe\"."
+      },
+      {
+        "if": "showedPrecious",
+        "text": "Italy: Precious never went. She keeps Officer Grace's photos in a drawer, for the next girl who asks."
+      },
+      {
+        "if": "girlsChoose",
+        "text": "Tari went home to Edo with ₦50,000 and a phone. She calls on the first of every month."
+      },
+      {
+        "if": "interviewTruth",
+        "text": "The Wahala FM interview: Ifeoma played it three times. Your real name is out now. It turns out to be lighter to carry than Mama Sugar."
+      },
+      {
+        "if": "basseyScared",
+        "text": "Commander Bassey: still collects on South Street. Never at your gate."
+      }
     ]
   },
   "sugar_mama": {
@@ -1383,7 +1487,59 @@
     "title": "Mama, Just Mama",
     "epilogue": [
       "Your stall at the market has four chairs and a queue.",
-      "Ivie's school sends a letter: she has been made a prefect. You read it nine times, at the stall, out loud, to customers who did not ask."
+      "Ivie's school sends a letter: she has been made a prefect. You read it nine times, at the stall, out loud, to customers who did not ask.",
+      {
+        "if": "houseRules",
+        "text": "The rules on the bar wall: still there, in Kemi's handwriting. Somebody laminated them."
+      },
+      {
+        "if": "sentBoyHome",
+        "text": "The boy you put in a taxi home: he passed his WAEC. His mother found out where he had been that night. She brought you a cake. You didn't ask how she knew."
+      },
+      {
+        "if": "servedBoy",
+        "text": "The schoolboy you let into the bar: his mother came to the gate a week later. You remember her face better than his."
+      },
+      {
+        "if": "paidKemiMotherDrugs",
+        "text": "Kemi's mother: her blood pressure is down. She sends agege bread every month, addressed to \"the good madam\"."
+      },
+      {
+        "if": "caughtAjo",
+        "text": "Iya Ajo: back on South Street, collecting again, under supervision. Rukky and you take turns watching her."
+      },
+      {
+        "if": "toldProprietress",
+        "text": "Mrs. Adéwálé, the proprietress: she invites you to speak at the school's Career Day. You speak about catering. Everybody knows. Nobody says."
+      },
+      {
+        "if": "preciousCourse",
+        "text": "Precious: Microsoft Excel, distinction. She does the books for three shops on South Street now and still laughs too loud."
+      },
+      {
+        "if": "threwOutJide",
+        "text": "Jide's borrowed suit jacket still hangs on the bar. It has become a kind of flag."
+      },
+      {
+        "if": "outPraised",
+        "text": "The crusade: South Street still calls it \"the day Mama Sugar turned a crusade into an owambe\"."
+      },
+      {
+        "if": "showedPrecious",
+        "text": "Italy: Precious never went. She keeps Officer Grace's photos in a drawer, for the next girl who asks."
+      },
+      {
+        "if": "girlsChoose",
+        "text": "Tari went home to Edo with ₦50,000 and a phone. She calls on the first of every month."
+      },
+      {
+        "if": "interviewTruth",
+        "text": "The Wahala FM interview: Ifeoma played it three times. Your real name is out now. It turns out to be lighter to carry than Mama Sugar."
+      },
+      {
+        "if": "basseyScared",
+        "text": "Commander Bassey: still collects on South Street. Never at your gate."
+      }
     ]
   },
   "sugar_manager": {
@@ -1391,7 +1547,59 @@
     "title": "Golden Fleece II",
     "epilogue": [
       "The hotel is busier than ever. Rukky is very pleased with you.",
-      "Some nights you walk past the gate and read the sign out of habit. Then you remember."
+      "Some nights you walk past the gate and read the sign out of habit. Then you remember.",
+      {
+        "if": "houseRules",
+        "text": "The rules on the bar wall: still there, in Kemi's handwriting. Somebody laminated them."
+      },
+      {
+        "if": "sentBoyHome",
+        "text": "The boy you put in a taxi home: he passed his WAEC. His mother found out where he had been that night. She brought you a cake. You didn't ask how she knew."
+      },
+      {
+        "if": "servedBoy",
+        "text": "The schoolboy you let into the bar: his mother came to the gate a week later. You remember her face better than his."
+      },
+      {
+        "if": "paidKemiMotherDrugs",
+        "text": "Kemi's mother: her blood pressure is down. She sends agege bread every month, addressed to \"the good madam\"."
+      },
+      {
+        "if": "caughtAjo",
+        "text": "Iya Ajo: back on South Street, collecting again, under supervision. Rukky and you take turns watching her."
+      },
+      {
+        "if": "toldProprietress",
+        "text": "Mrs. Adéwálé, the proprietress: she invites you to speak at the school's Career Day. You speak about catering. Everybody knows. Nobody says."
+      },
+      {
+        "if": "preciousCourse",
+        "text": "Precious: Microsoft Excel, distinction. She does the books for three shops on South Street now and still laughs too loud."
+      },
+      {
+        "if": "threwOutJide",
+        "text": "Jide's borrowed suit jacket still hangs on the bar. It has become a kind of flag."
+      },
+      {
+        "if": "outPraised",
+        "text": "The crusade: South Street still calls it \"the day Mama Sugar turned a crusade into an owambe\"."
+      },
+      {
+        "if": "showedPrecious",
+        "text": "Italy: Precious never went. She keeps Officer Grace's photos in a drawer, for the next girl who asks."
+      },
+      {
+        "if": "girlsChoose",
+        "text": "Tari went home to Edo with ₦50,000 and a phone. She calls on the first of every month."
+      },
+      {
+        "if": "interviewTruth",
+        "text": "The Wahala FM interview: Ifeoma played it three times. Your real name is out now. It turns out to be lighter to carry than Mama Sugar."
+      },
+      {
+        "if": "basseyScared",
+        "text": "Commander Bassey: still collects on South Street. Never at your gate."
+      }
     ]
   },
   "sugar_queen": {
@@ -1399,7 +1607,59 @@
     "title": "Queen of South Street",
     "epilogue": [
       "Sugar Palace is the biggest hotel on South Street.",
-      "The girls come and go. Not many of them stay long enough for you to learn their real names."
+      "The girls come and go. Not many of them stay long enough for you to learn their real names.",
+      {
+        "if": "houseRules",
+        "text": "The rules on the bar wall: still there, in Kemi's handwriting. Somebody laminated them."
+      },
+      {
+        "if": "sentBoyHome",
+        "text": "The boy you put in a taxi home: he passed his WAEC. His mother found out where he had been that night. She brought you a cake. You didn't ask how she knew."
+      },
+      {
+        "if": "servedBoy",
+        "text": "The schoolboy you let into the bar: his mother came to the gate a week later. You remember her face better than his."
+      },
+      {
+        "if": "paidKemiMotherDrugs",
+        "text": "Kemi's mother: her blood pressure is down. She sends agege bread every month, addressed to \"the good madam\"."
+      },
+      {
+        "if": "caughtAjo",
+        "text": "Iya Ajo: back on South Street, collecting again, under supervision. Rukky and you take turns watching her."
+      },
+      {
+        "if": "toldProprietress",
+        "text": "Mrs. Adéwálé, the proprietress: she invites you to speak at the school's Career Day. You speak about catering. Everybody knows. Nobody says."
+      },
+      {
+        "if": "preciousCourse",
+        "text": "Precious: Microsoft Excel, distinction. She does the books for three shops on South Street now and still laughs too loud."
+      },
+      {
+        "if": "threwOutJide",
+        "text": "Jide's borrowed suit jacket still hangs on the bar. It has become a kind of flag."
+      },
+      {
+        "if": "outPraised",
+        "text": "The crusade: South Street still calls it \"the day Mama Sugar turned a crusade into an owambe\"."
+      },
+      {
+        "if": "showedPrecious",
+        "text": "Italy: Precious never went. She keeps Officer Grace's photos in a drawer, for the next girl who asks."
+      },
+      {
+        "if": "girlsChoose",
+        "text": "Tari went home to Edo with ₦50,000 and a phone. She calls on the first of every month."
+      },
+      {
+        "if": "interviewTruth",
+        "text": "The Wahala FM interview: Ifeoma played it three times. Your real name is out now. It turns out to be lighter to carry than Mama Sugar."
+      },
+      {
+        "if": "basseyScared",
+        "text": "Commander Bassey: still collects on South Street. Never at your gate."
+      }
     ]
   },
   "sugar_italy": {
@@ -1407,14 +1667,118 @@
     "title": "The Price of Italy",
     "epilogue": [
       "The trial takes two years. Half a million naira of lawyers.",
-      "Blessing's mother comes to court every day, sits in the back row, and never looks at you once."
+      "Blessing's mother comes to court every day, sits in the back row, and never looks at you once.",
+      {
+        "if": "houseRules",
+        "text": "The rules on the bar wall: still there, in Kemi's handwriting. Somebody laminated them."
+      },
+      {
+        "if": "sentBoyHome",
+        "text": "The boy you put in a taxi home: he passed his WAEC. His mother found out where he had been that night. She brought you a cake. You didn't ask how she knew."
+      },
+      {
+        "if": "servedBoy",
+        "text": "The schoolboy you let into the bar: his mother came to the gate a week later. You remember her face better than his."
+      },
+      {
+        "if": "paidKemiMotherDrugs",
+        "text": "Kemi's mother: her blood pressure is down. She sends agege bread every month, addressed to \"the good madam\"."
+      },
+      {
+        "if": "caughtAjo",
+        "text": "Iya Ajo: back on South Street, collecting again, under supervision. Rukky and you take turns watching her."
+      },
+      {
+        "if": "toldProprietress",
+        "text": "Mrs. Adéwálé, the proprietress: she invites you to speak at the school's Career Day. You speak about catering. Everybody knows. Nobody says."
+      },
+      {
+        "if": "preciousCourse",
+        "text": "Precious: Microsoft Excel, distinction. She does the books for three shops on South Street now and still laughs too loud."
+      },
+      {
+        "if": "threwOutJide",
+        "text": "Jide's borrowed suit jacket still hangs on the bar. It has become a kind of flag."
+      },
+      {
+        "if": "outPraised",
+        "text": "The crusade: South Street still calls it \"the day Mama Sugar turned a crusade into an owambe\"."
+      },
+      {
+        "if": "showedPrecious",
+        "text": "Italy: Precious never went. She keeps Officer Grace's photos in a drawer, for the next girl who asks."
+      },
+      {
+        "if": "girlsChoose",
+        "text": "Tari went home to Edo with ₦50,000 and a phone. She calls on the first of every month."
+      },
+      {
+        "if": "interviewTruth",
+        "text": "The Wahala FM interview: Ifeoma played it three times. Your real name is out now. It turns out to be lighter to carry than Mama Sugar."
+      },
+      {
+        "if": "basseyScared",
+        "text": "Commander Bassey: still collects on South Street. Never at your gate."
+      }
     ]
   },
   "sugar_lockedOut": {
     "campaign": "sugar",
     "title": "Locked Out",
     "epilogue": [
-      "Chief Dapo's padlock is very shiny. You sit on the kerb opposite with your one bag, twenty-two years after Warri, and watch your name come down off the gate."
+      "Chief Dapo's padlock is very shiny. You sit on the kerb opposite with your one bag, twenty-two years after Warri, and watch your name come down off the gate.",
+      {
+        "if": "houseRules",
+        "text": "The rules on the bar wall: still there, in Kemi's handwriting. Somebody laminated them."
+      },
+      {
+        "if": "sentBoyHome",
+        "text": "The boy you put in a taxi home: he passed his WAEC. His mother found out where he had been that night. She brought you a cake. You didn't ask how she knew."
+      },
+      {
+        "if": "servedBoy",
+        "text": "The schoolboy you let into the bar: his mother came to the gate a week later. You remember her face better than his."
+      },
+      {
+        "if": "paidKemiMotherDrugs",
+        "text": "Kemi's mother: her blood pressure is down. She sends agege bread every month, addressed to \"the good madam\"."
+      },
+      {
+        "if": "caughtAjo",
+        "text": "Iya Ajo: back on South Street, collecting again, under supervision. Rukky and you take turns watching her."
+      },
+      {
+        "if": "toldProprietress",
+        "text": "Mrs. Adéwálé, the proprietress: she invites you to speak at the school's Career Day. You speak about catering. Everybody knows. Nobody says."
+      },
+      {
+        "if": "preciousCourse",
+        "text": "Precious: Microsoft Excel, distinction. She does the books for three shops on South Street now and still laughs too loud."
+      },
+      {
+        "if": "threwOutJide",
+        "text": "Jide's borrowed suit jacket still hangs on the bar. It has become a kind of flag."
+      },
+      {
+        "if": "outPraised",
+        "text": "The crusade: South Street still calls it \"the day Mama Sugar turned a crusade into an owambe\"."
+      },
+      {
+        "if": "showedPrecious",
+        "text": "Italy: Precious never went. She keeps Officer Grace's photos in a drawer, for the next girl who asks."
+      },
+      {
+        "if": "girlsChoose",
+        "text": "Tari went home to Edo with ₦50,000 and a phone. She calls on the first of every month."
+      },
+      {
+        "if": "interviewTruth",
+        "text": "The Wahala FM interview: Ifeoma played it three times. Your real name is out now. It turns out to be lighter to carry than Mama Sugar."
+      },
+      {
+        "if": "basseyScared",
+        "text": "Commander Bassey: still collects on South Street. Never at your gate."
+      }
     ]
   },
   "grace_quarry": {
@@ -1551,6 +1915,46 @@
         "if": "blockedVan",
         "text": "Seyi tells you, once, drunk: \"They were losing, Teacher. You had them. You blinked.\" He never says it again."
       }
+    ]
+  },
+  "sugar_bornAgain": {
+    "campaign": "sugar",
+    "title": "Born Again",
+    "epilogue": [
+      "You closed Sugar Palace on a Wednesday and walked into Redeemed Light with your whole past behind you.",
+      "The catering business does weddings, burials and church harvests. Your pepper soup converts more people than Pastor Femi's sermons. He says so himself, on the microphone.",
+      {
+        "if": "houseRules",
+        "text": "The girls you looked after come to the harvest. Some of them sit in the front row. Mrs. Dapo moves up to make room."
+      },
+      {
+        "if": {
+          "stats": {
+            "iviBond": ">= 60"
+          }
+        },
+        "text": "Ivie sings in the youth choir. Better than you. She says so herself, also on the microphone."
+      }
+    ]
+  },
+  "sugar_warri": {
+    "campaign": "sugar",
+    "title": "Back to Warri",
+    "epilogue": [
+      "Warri. Your mother's compound, a stall for starch and banga, and a daughter who sleeps through the night for the first time in years.",
+      {
+        "if": "realRooms",
+        "text": "Kokoro runs Sugar Palace as a real hotel now. Receipts. Locks on the inside. He sends you a photo of every customer complaint, so you can laugh."
+      },
+      {
+        "if": {
+          "notFlags": [
+            "realRooms"
+          ]
+        },
+        "text": "Sugar Palace is somebody else's now. Kokoro still sleeps at the gate. Old habits."
+      },
+      "Sometimes, at night, you can still hear a generator in your head. It is quieter every month."
     ]
   }
 }

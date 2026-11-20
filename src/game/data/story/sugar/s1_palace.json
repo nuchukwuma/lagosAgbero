@@ -364,7 +364,7 @@
           "type": "endChapter",
           "title": "Sugar Palace",
           "summary": "The rent is a clock, and you can hear it ticking over the generator.",
-          "next": "s2_settlement"
+          "next": "s1b_nightShift"
         }
       ],
       "location": "southStreet",

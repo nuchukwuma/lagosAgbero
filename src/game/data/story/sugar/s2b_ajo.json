@@ -1,0 +1,163 @@
+{
+  "id": "s2b_ajo",
+  "campaign": "sugar",
+  "world": "iyanaWahala",
+  "act": 2,
+  "number": 5,
+  "title": "Chapter 5 — The Ajo",
+  "description": "The South Street women's thrift collector has run away with three months of everybody's savings. Including yours.",
+  "startScene": "gone",
+  "scenes": {
+    "gone": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Monday. The ajo: every woman on South Street pays ₦5,000 a week to Iya Ajo, and every month one of them collects the whole pot. This month was your turn. ₦120,000. Iya Ajo's shop is empty. Even the shelves are gone."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "rukky",
+          "text": "(across the road, gold flashing) She took mine too, Sugar. Two hundred thousand. (For once she is not smiling.) Somebody saw her at the motor park this morning. Going to Ọ̀yọ́."
+        },
+        {
+          "type": "choice",
+          "speaker": "rukky",
+          "text": "Rukky is holding out her hand. To shake. For the first time in nine years.",
+          "options": [
+            {
+              "text": "Shake. \"We find her together.\"",
+              "effects": {
+                "changeStat": {
+                  "sugarRep": 4
+                },
+                "setFlag": "ajoAlliance",
+                "goto": "chase"
+              }
+            },
+            {
+              "text": "\"I will find her myself.\" Run to the motor park.",
+              "effects": {
+                "goto": "chase"
+              }
+            },
+            {
+              "text": "Let it go. Ajo money is gone money.",
+              "effects": {
+                "changeStat": {
+                  "money": 0
+                },
+                "setFlag": "ajoLost",
+                "goto": "after"
+              }
+            }
+          ]
+        }
+      ],
+      "location": "southStreet",
+      "time": "day"
+    },
+    "chase": {
+      "beats": [
+        {
+          "type": "freeRoam",
+          "objective": "Get to the motor park before the Ọ̀yọ́ bus leaves.",
+          "goal": {
+            "reach": "motorPark"
+          }
+        },
+        {
+          "type": "startMode",
+          "mode": "chase",
+          "params": {
+            "target": "thief",
+            "name": "Iya Ajo",
+            "kind": "okada",
+            "difficulty": 1,
+            "timeLimit": 35
+          },
+          "results": {
+            "won": {
+              "changeStat": {
+                "money": 120000,
+                "sugarRep": 6
+              },
+              "setFlag": "caughtAjo",
+              "toast": "Iya Ajo, caught between two danfos with a Ghana-must-go full of South Street's savings. She cries. She also counts out your ₦120,000 very accurately."
+            },
+            "lost": {
+              "setFlag": "ajoLost",
+              "toast": "The Ọ̀yọ́ bus pulls out with Iya Ajo waving from the window. She actually waves."
+            }
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "after"
+        }
+      ],
+      "location": "motorPark",
+      "time": "day"
+    },
+    "after": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "rukky",
+          "text": "(counting her own money at your bar, which she has never sat at) Sugar. (She pushes a bottle of Hennessy across.) This doesn't make us friends. It makes us... South Street.",
+          "variants": [
+            {
+              "if": {
+                "notFlags": [
+                  "ajoAlliance"
+                ]
+              },
+              "text": "(at your gate) You caught her alone? (She looks at you differently.) Hm. Maybe you are not finished, Sugar."
+            }
+          ],
+          "if": "caughtAjo"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "That night the women of South Street sit outside your gate and do arithmetic out loud. Three months of savings. Somebody's school fees. Somebody's shop. Your rent.",
+          "if": "ajoLost"
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "There is money in the drawer from the week.",
+          "options": [
+            {
+              "text": "Send ₦50,000 to Chief Dapo while you still have it.",
+              "cost": 50000,
+              "effects": {
+                "changeStat": {
+                  "rentDebt": -50000
+                },
+                "setFlag": "rentInstalment"
+              }
+            },
+            {
+              "text": "Keep it for emergencies. There is always an emergency.",
+              "effects": {
+                "changeStat": {
+                  "sugarRep": 0,
+                  "staffTrust": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "endChapter",
+          "title": "The Ajo",
+          "summary": "The street's money ran away on a bus to Ọ̀yọ́. What came back, and who you stood with, the street will remember.",
+          "next": "s3_ivie"
+        }
+      ],
+      "location": "southStreet",
+      "time": "night"
+    }
+  }
+}

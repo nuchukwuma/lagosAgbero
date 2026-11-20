@@ -2,9 +2,9 @@
   "id": "s2_settlement",
   "campaign": "sugar",
   "world": "iyanaWahala",
-  "act": 1,
-  "number": 2,
-  "title": "Chapter 2 — Settlement",
+  "act": 2,
+  "number": 4,
+  "title": "Chapter 4 — Settlement",
   "description": "Commander Bassey wants his envelope, a customer forgets his manners, and Ivie is coming on Saturday.",
   "startScene": "bassey",
   "scenes": {
@@ -263,7 +263,7 @@
           "type": "endChapter",
           "title": "Settlement",
           "summary": "Everybody on South Street has a price. You are learning which ones you can still afford to pay.",
-          "next": "s3_ivie"
+          "next": "s2b_ajo"
         }
       ],
       "location": "southStreet",

@@ -2,9 +2,9 @@
   "id": "s5_italy",
   "campaign": "sugar",
   "world": "iyanaWahala",
-  "act": 1,
-  "number": 5,
-  "title": "Chapter 5 — The Italy Man",
+  "act": 3,
+  "number": 11,
+  "title": "Chapter 11 — The Italy Man",
   "description": "Oga Felix offers a million naira for five girls. This is the line. Which side of it are you on?",
   "startScene": "felix",
   "scenes": {
@@ -337,7 +337,7 @@
           "type": "endChapter",
           "title": "The Italy Man",
           "summary": "You were offered the price of a life, five times over. What you did with it is already in the street's mouth.",
-          "next": "s6_raid"
+          "next": "s5b_beforeFriday"
         }
       ],
       "location": "southStreet",

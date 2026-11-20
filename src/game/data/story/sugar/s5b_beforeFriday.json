@@ -1,0 +1,237 @@
+{
+  "id": "s5b_beforeFriday",
+  "campaign": "sugar",
+  "world": "iyanaWahala",
+  "act": 3,
+  "number": 12,
+  "title": "Chapter 12 — Before Friday",
+  "description": "Felix comes back on Friday. Three days to decide who stays, who hides, and who believes in Italy.",
+  "startScene": "tuesday",
+  "scenes": {
+    "tuesday": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Tuesday. Felix's deadline is Friday. Everybody in the house knows. Nobody says it."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "His bag is in your ceiling. Half a million naira. You can hear it at night, like a generator in another house.",
+          "if": {
+            "flags": [
+              "acceptedFelix"
+            ],
+            "notFlags": [
+              "backedOut"
+            ]
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "precious",
+          "text": "(at the bar, too casually) Mama. Is Italy really that bad? Joy's sister is in Milan. She posts pictures. Shoes. A balcony. A dog in a jacket.",
+          "variants": [
+            {
+              "if": "preciousCourse",
+              "text": "(at the bar, with her computer-course notebook) Mama. Joy's sister is in Milan. Shoes, a balcony. (She closes the notebook.) Sometimes I think, why am I learning Excel when I could be on a balcony?"
+            }
+          ]
+        },
+        {
+          "type": "choice",
+          "speaker": "precious",
+          "text": "She wants you to say it's fine.",
+          "options": [
+            {
+              "text": "Show her the NAPTIP pictures Officer Grace gave you. All of them.",
+              "effects": {
+                "changeStat": {
+                  "staffTrust": 6,
+                  "conscience": 4
+                },
+                "setFlag": "showedPrecious"
+              }
+            },
+            {
+              "text": "\"Ask Kemi about her cousin.\" Leave it there.",
+              "effects": {
+                "changeStat": {
+                  "staffTrust": 2
+                }
+              }
+            },
+            {
+              "text": "\"Italy is whatever you make it, my dear.\"",
+              "effects": {
+                "changeStat": {
+                  "conscience": -8
+                },
+                "setFlag": "preciousWantsItaly"
+              }
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "hide"
+        }
+      ],
+      "location": "southStreet",
+      "time": "day"
+    },
+    "hide": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "kemi",
+          "text": "Mama, my aunt in Agege has two rooms. If you want the girls out of the house on Friday, she won't ask questions. She owes me."
+        },
+        {
+          "type": "choice",
+          "speaker": "kemi",
+          "text": "Kokoro is listening from the gate.",
+          "options": [
+            {
+              "text": "Send all the girls to Kemi's aunt on Thursday night.",
+              "cost": 10000,
+              "effects": {
+                "changeStat": {
+                  "staffTrust": 8
+                },
+                "setFlag": "girlsHidden"
+              }
+            },
+            {
+              "text": "\"Nobody leaves. This is our house. We face him here.\"",
+              "effects": {
+                "changeStat": {
+                  "sugarRep": 4
+                },
+                "setFlag": "standHere"
+              }
+            },
+            {
+              "text": "Send only the youngest ones.",
+              "cost": 5000,
+              "effects": {
+                "changeStat": {
+                  "staffTrust": 4
+                },
+                "setFlag": "someHidden"
+              }
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "kokoro"
+        }
+      ],
+      "location": "southStreet",
+      "time": "dusk"
+    },
+    "kokoro": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "kokoro",
+          "text": "(cleaning a broom handle like it is a rifle) Mama. On Friday I need two things. Boys from the motor park, and you not to do anything foolish."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "kokoro",
+          "text": "Head of security. (He says it to himself, like a man trying on a jacket.) Okay. I will earn it this week.",
+          "if": "kokoroPromoted"
+        },
+        {
+          "type": "choice",
+          "speaker": "kokoro",
+          "text": "Motor park boys cost money. Brave ones cost more.",
+          "options": [
+            {
+              "text": "Hire four boys from Baba Ticket's park.",
+              "cost": 20000,
+              "effects": {
+                "changeStat": {
+                  "staffTrust": 4
+                },
+                "setFlag": "hiredBoys"
+              }
+            },
+            {
+              "text": "\"You and me, Kokoro. That's enough.\"",
+              "effects": {
+                "changeStat": {
+                  "staffTrust": 2
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "ivie"
+        }
+      ],
+      "location": "southStreet",
+      "time": "night"
+    },
+    "ivie": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "ivie",
+          "text": "(calling at midnight, whispering from the dormitory) Mummy, Kemi texted me. She said \"pray for us on Friday\". What is Friday?"
+        },
+        {
+          "type": "choice",
+          "speaker": "ivie",
+          "text": "She is sixteen. She is not stupid.",
+          "options": [
+            {
+              "text": "\"Something bad is coming, and Mummy is going to stop it.\"",
+              "effects": {
+                "changeStat": {
+                  "iviBond": 6
+                },
+                "setFlag": "warnedIvie"
+              }
+            },
+            {
+              "text": "\"Nothing, my love. Kemi is dramatic.\"",
+              "effects": {
+                "changeStat": {
+                  "iviBond": -2,
+                  "secretKept": 2
+                }
+              }
+            },
+            {
+              "text": "Tell her everything, including the bag.",
+              "requires": "acceptedFelix",
+              "showLocked": true,
+              "lockedText": "There is nothing like that to tell",
+              "effects": {
+                "changeStat": {
+                  "iviBond": -10,
+                  "conscience": 10
+                },
+                "setFlag": "toldIvieBag"
+              }
+            }
+          ]
+        },
+        {
+          "type": "endChapter",
+          "title": "Before Friday",
+          "summary": "Three days. You hid who you could, armed who you could, and told your daughter whatever you could bear to.",
+          "next": "s6_raid"
+        }
+      ],
+      "location": "southStreet",
+      "time": "night"
+    }
+  }
+}

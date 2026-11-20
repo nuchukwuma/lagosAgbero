@@ -1,0 +1,187 @@
+{
+  "id": "s3b_fees",
+  "campaign": "sugar",
+  "world": "iyanaWahala",
+  "act": 2,
+  "number": 7,
+  "title": "Chapter 7 — Ivie's Fees",
+  "description": "The school wants ₦120,000 and a letter stating \"the parent's source of income\". And another mother at the PTA meeting has seen you before.",
+  "startScene": "letter",
+  "scenes": {
+    "letter": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "A letter from Ivie's school, Bright Future College, Ikorodu: \"Second term fees: ₦120,000. Parents are also required to submit a statement of their source of income, as part of our new values policy.\""
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ivie",
+          "text": "(on the phone) Mummy, they're making everybody do it. Tobi's dad wrote \"oil and gas\". Chiamaka's mum wrote \"importation\". What will you write?",
+          "variants": [
+            {
+              "if": "iviKnows",
+              "text": "(on the phone, very carefully) Mummy. The form. Whatever you write... just write something they will accept. Please."
+            }
+          ]
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "Source of income.",
+          "options": [
+            {
+              "text": "\"Hospitality and catering.\" It's not a lie.",
+              "effects": {
+                "changeStat": {
+                  "secretKept": 4
+                },
+                "setFlag": "wroteHospitality"
+              }
+            },
+            {
+              "text": "Go to the school and tell the proprietress in person.",
+              "effects": {
+                "changeStat": {
+                  "conscience": 6,
+                  "iviBond": 2
+                },
+                "setFlag": "toldProprietress",
+                "goto": "proprietress"
+              }
+            },
+            {
+              "text": "Pay a man at Ojota to make a letter from \"Sugar Holdings Ltd\".",
+              "cost": 8000,
+              "effects": {
+                "changeStat": {
+                  "secretKept": 8,
+                  "conscience": -4
+                },
+                "setFlag": "fakeLetter"
+              }
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "pta"
+        }
+      ],
+      "location": "southStreet",
+      "time": "day"
+    },
+    "proprietress": {
+      "beats": [
+        {
+          "type": "freeRoam",
+          "objective": "Take the danfo to Ikorodu. Bright Future College.",
+          "goal": {
+            "reach": "frontStop"
+          }
+        },
+        {
+          "type": "dialogue",
+          "speaker": "proprietress",
+          "text": "(Mrs. Adéwálé, in her office, after you finish) Madam. (She takes off her glasses.) I have one parent who sells \"importation\" that I know is Indian hemp, and another whose \"oil and gas\" is a filling station he stole from his brother. (She signs the form herself.) Your daughter is top of her class. That is the only income I care about."
+        },
+        {
+          "type": "goto",
+          "scene": "pta"
+        }
+      ],
+      "location": "frontStop",
+      "time": "day"
+    },
+    "pta": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "The PTA meeting. You wear your church clothes. Halfway through the bursar's speech, a woman across the hall stares at you. You know her. Her husband comes to Sugar Palace every second Thursday."
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "She is crossing the hall towards you.",
+          "options": [
+            {
+              "text": "Smile. \"Madam. How is Oga? Tell him the pepper soup misses him.\"",
+              "effects": {
+                "changeStat": {
+                  "sugarRep": 4,
+                  "iviBond": -2
+                },
+                "setFlag": "ptaThreat"
+              }
+            },
+            {
+              "text": "\"I think you are mistaking me.\" Hold her eyes.",
+              "effects": {
+                "changeStat": {
+                  "secretKept": 4
+                }
+              }
+            },
+            {
+              "text": "Leave before she reaches you.",
+              "effects": {
+                "changeStat": {
+                  "iviBond": -4
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "fees"
+        }
+      ],
+      "location": "frontStop",
+      "time": "day"
+    },
+    "fees": {
+      "beats": [
+        {
+          "type": "freeRoam",
+          "objective": "Raise ₦120,000 for Ivie's fees. Sell drinks at the bar, take door duty, anything honest.",
+          "goal": {
+            "until": {
+              "stats": {
+                "money": ">= 120000"
+              }
+            }
+          }
+        },
+        {
+          "type": "changeStat",
+          "stats": {
+            "money": -120000,
+            "iviBond": 6
+          }
+        },
+        {
+          "type": "setFlag",
+          "flags": [
+            "feesPaid"
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ivie",
+          "text": "(a voice note) Mummy, the bursar said \"paid in full\". In front of everybody. (A pause.) I know how hard it is. I'm not stupid. Thank you."
+        },
+        {
+          "type": "endChapter",
+          "title": "Ivie's Fees",
+          "summary": "One hundred and twenty thousand naira and a form asking where it came from. You answered, one way or another.",
+          "next": "s3c_precious"
+        }
+      ],
+      "location": "southStreet",
+      "time": "night"
+    }
+  }
+}

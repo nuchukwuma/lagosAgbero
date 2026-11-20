@@ -1291,5 +1291,65 @@
       "shirt": "#2e4053",
       "trousers": "#17202a"
     }
+  },
+  "precious": {
+    "name": "Precious",
+    "fullName": "Precious, who laughs too loud",
+    "color": "#ff6f91",
+    "role": "staff",
+    "look": {
+      "body": "mini_female_e",
+      "skin": "#5a3a22",
+      "shirt": "#ff6f91",
+      "trousers": "#34495e"
+    }
+  },
+  "mamaKemi": {
+    "name": "Kemi's mother",
+    "fullName": "Mrs. Adéṣínà, Kemi's mother from Ibadan",
+    "color": "#16a085",
+    "role": "elder",
+    "look": {
+      "body": "mini_female_f",
+      "skin": "#4a2c1a",
+      "shirt": "#16a085",
+      "trousers": "#0e6251"
+    }
+  },
+  "jide": {
+    "name": "Jide",
+    "fullName": "Jide, Precious's \"fiancé\"",
+    "color": "#566573",
+    "role": "thug",
+    "look": {
+      "body": "mini_male_e",
+      "skin": "#4a2c1a",
+      "shirt": "#566573",
+      "trousers": "#1b2631"
+    }
+  },
+  "proprietress": {
+    "name": "Mrs. Adéwálé",
+    "fullName": "Mrs. Adéwálé, proprietress of Bright Future College",
+    "color": "#5b2c6f",
+    "role": "elder",
+    "look": {
+      "body": "mini_female_d",
+      "skin": "#5a3a22",
+      "shirt": "#5b2c6f",
+      "trousers": "#212f3d"
+    }
+  },
+  "mrsDapo": {
+    "name": "Mrs. Dapo",
+    "fullName": "Mrs. Dapo, the landlord's wife",
+    "color": "#f5f5f5",
+    "role": "elder",
+    "look": {
+      "body": "mini_female_a",
+      "skin": "#4a2c1a",
+      "shirt": "#fdfefe",
+      "trousers": "#fdfefe"
+    }
   }
 }

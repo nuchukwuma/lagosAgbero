@@ -2,9 +2,9 @@
   "id": "s4_goldenFleece",
   "campaign": "sugar",
   "world": "iyanaWahala",
-  "act": 1,
-  "number": 4,
-  "title": "Chapter 4 — Golden Fleece",
+  "act": 3,
+  "number": 9,
+  "title": "Chapter 9 — Golden Fleece",
   "description": "Alhaja Rukky makes an offer, the Task Force makes a visit, and Chief Dapo brings his padlock.",
   "startScene": "rukky",
   "scenes": {
@@ -244,7 +244,7 @@
           "type": "endChapter",
           "title": "Golden Fleece",
           "summary": "South Street has noticed you are still standing. So has a man from Benin who sells \"jobs in Italy\".",
-          "next": "s5_italy"
+          "next": "s4b_crusade"
         }
       ],
       "location": "southStreet",
@@ -268,7 +268,7 @@
           "type": "endChapter",
           "title": "Golden Fleece",
           "summary": "South Street has noticed you are still standing. So has a man from Benin who sells \"jobs in Italy\".",
-          "next": "s5_italy"
+          "next": "s4b_crusade"
         }
       ],
       "location": "southStreet",

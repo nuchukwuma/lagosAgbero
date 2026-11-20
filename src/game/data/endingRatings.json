@@ -187,5 +187,13 @@
   "p_deputy": {
     "tier": "bad",
     "comment": "Three a.m., a power-sharing deal, and the ward's votes went into somebody else's pocket with your signature on the receipt. Deputy is not a consolation prize. It's a price."
+  },
+  "sugar_bornAgain": {
+    "tier": "good",
+    "comment": "You walked out of the crusade and into the choir, mid-month. A brave turn, and a peaceful life. But Felix, the raid and the girls' futures were still waiting down the road. There's more of South Street to see."
+  },
+  "sugar_warri": {
+    "tier": "mixed",
+    "comment": "You went home to Warri with two bags and your daughter. Peaceful. Also a little like leaving the party before the cake: the house you built never got its last chapter."
   }
 }

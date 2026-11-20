@@ -1,0 +1,248 @@
+{
+  "id": "s6b_morningAfter",
+  "campaign": "sugar",
+  "world": "iyanaWahala",
+  "act": 4,
+  "number": 14,
+  "title": "Chapter 14 — The Morning After",
+  "description": "Wahala FM wants an interview. Bassey wants a cut of your fame. And every girl in the house wants to know what happens to her now.",
+  "startScene": "radio",
+  "scenes": {
+    "radio": {
+      "beats": [
+        {
+          "type": "setFlag",
+          "flags": [
+            "ifeomaAround"
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Monday. South Street is still talking about Friday. Wahala FM's Ifeoma Nwankwo is at your gate with a recorder."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ifeoma",
+          "text": "Madam Sugar. The whole of Lagos wants to know who you are. A madam who fought traffickers? Or a madam who got caught? (She clicks the recorder on.) Your version.",
+          "variants": [
+            {
+              "if": "raided",
+              "text": "Madam Sugar. NAPTIP says your name was on the bus manifest. (She clicks the recorder on.) Do you want to say anything before the court does?"
+            }
+          ]
+        },
+        {
+          "type": "choice",
+          "speaker": "ifeoma",
+          "text": "The recorder is on.",
+          "options": [
+            {
+              "text": "Tell her everything: Warri, the house, Felix, the girls. Your real name.",
+              "effects": {
+                "changeStat": {
+                  "conscience": 8,
+                  "sugarRep": 4,
+                  "secretKept": -20
+                },
+                "setFlag": "interviewTruth"
+              }
+            },
+            {
+              "text": "\"No comment. I run a hotel.\"",
+              "effects": {
+                "changeStat": {
+                  "secretKept": 4
+                }
+              }
+            },
+            {
+              "text": "Tell a good story. Make yourself the hero, whatever happened.",
+              "effects": {
+                "changeStat": {
+                  "sugarRep": 6,
+                  "conscience": -4
+                },
+                "setFlag": "interviewSpin"
+              }
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "bassey"
+        }
+      ],
+      "location": "southStreet",
+      "time": "day"
+    },
+    "bassey": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "bassey",
+          "text": "(in your best chair again) Mama Sugar! Famous now! (He opens his palm.) Fame is expensive. Forty thousand. Weekly. Like a bigger church."
+        },
+        {
+          "type": "choice",
+          "speaker": "bassey",
+          "text": "His boys are at the bar again.",
+          "options": [
+            {
+              "text": "Pay.",
+              "cost": 40000,
+              "effects": {
+                "changeStat": {
+                  "policeHeat": -8
+                },
+                "setFlag": "paidFamousBassey"
+              }
+            },
+            {
+              "text": "\"Officer Grace from NAPTIP has your phone number now, Commander. She asked me for it.\"",
+              "requires": {
+                "anyOf": [
+                  "savedGirls",
+                  "felixTaped"
+                ]
+              },
+              "showLocked": true,
+              "lockedText": "You have no friend in uniform",
+              "effects": {
+                "changeStat": {
+                  "policeHeat": -15,
+                  "sugarRep": 6
+                },
+                "setFlag": "basseyScared"
+              }
+            },
+            {
+              "text": "\"Not one kobo more, Commander.\"",
+              "effects": {
+                "changeStat": {
+                  "policeHeat": 15
+                },
+                "setFlag": "basseyRefused2"
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "bassey",
+          "text": "(standing up very fast for a big man) Mama Sugar, we are friends, now? Old friends. (He leaves without his envelope. For the first time in eleven years.)",
+          "if": "basseyScared"
+        },
+        {
+          "type": "goto",
+          "scene": "girls"
+        }
+      ],
+      "location": "southStreet",
+      "time": "day",
+      "positions": {
+        "bassey": [
+          -18.4,
+          8.9,
+          200
+        ]
+      }
+    },
+    "girls": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Evening. The girls, around the bar, shoes off. Nobody made Indomie. Everybody is waiting for you to say what happens now."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "ivie",
+          "text": "(a text) Mummy. Grandma called from Warri. She said come home, both of us, and \"leave Lagos to Lagos\". I'm just telling you."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "kemi",
+          "text": "Mama. Whatever you decide about the house, we want to know before Chief Dapo does."
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "Every face at the bar.",
+          "options": [
+            {
+              "text": "\"Each of you will choose. Stay and work the bar and kitchen, or go and start something. I'll help whoever goes.\"",
+              "effects": {
+                "changeStat": {
+                  "staffTrust": 10,
+                  "conscience": 6
+                },
+                "setFlag": "girlsChoose"
+              }
+            },
+            {
+              "text": "\"Nothing changes. We open at six.\"",
+              "effects": {
+                "changeStat": {
+                  "staffTrust": -4
+                },
+                "setFlag": "nothingChanges"
+              }
+            },
+            {
+              "text": "\"Tomorrow we start turning the rooms into real hotel rooms. Receipts. Locks on the inside.\"",
+              "effects": {
+                "changeStat": {
+                  "staffTrust": 8
+                },
+                "setFlag": "realRooms"
+              }
+            },
+            {
+              "text": "\"We are going home to Warri. All of it, behind us.\"",
+              "effects": {
+                "goto": "warri"
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Tari says she wants to go home to Edo. It's the first time she has ever said where she's from. Everybody cries, including Kokoro, who says it's pepper.",
+          "if": "girlsChoose"
+        },
+        {
+          "type": "endChapter",
+          "title": "The Morning After",
+          "summary": "The city has a version of you now. So do the girls. Only one of them is yours to write.",
+          "next": "s7_sugar"
+        }
+      ],
+      "location": "southStreet",
+      "time": "night"
+    },
+    "warri": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "You give Kokoro the keys. You give Kemi the books. You give Blessing the good mirror. You and Ivie take the night bus to Warri with two bags, which is one more than you came with."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Your mother is waiting at the motor park in Warri with a cooler of starch and banga. She has not seen you in eleven years. She says, \"You are late,\" and then she doesn't let go."
+        },
+        {
+          "type": "endChapter",
+          "title": "Back to Warri",
+          "summary": "You left Lagos to Lagos. It doesn't notice. Your mother does.",
+          "ending": "sugar_warri"
+        }
+      ],
+      "location": "motorPark",
+      "time": "night"
+    }
+  }
+}

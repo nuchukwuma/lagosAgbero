@@ -1,0 +1,195 @@
+{
+  "id": "s1b_nightShift",
+  "campaign": "sugar",
+  "world": "iyanaWahala",
+  "act": 1,
+  "number": 2,
+  "title": "Chapter 2 — Night Shift",
+  "description": "One full night at Sugar Palace, from the first Star lager to the last taxi, and the house rules that decide what kind of house it is.",
+  "startScene": "six",
+  "scenes": {
+    "six": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Six p.m. The generator coughs awake. Kokoro hangs the sign: SUGAR PALACE: COLD DRINKS, HOT PEPPER SOUP, NO FIGHTING. Somebody has added in marker: \"NO CREDIT\"."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "kemi",
+          "text": "Mama, before the customers come. The new girls are asking what the rules are. The real ones, not the sign."
+        },
+        {
+          "type": "choice",
+          "speaker": "kemi",
+          "text": "Every house on South Street has rules. Yours have never been written down.",
+          "options": [
+            {
+              "text": "Write them on the wall: no girl under eighteen, no man who hits, no girl who doesn't want to, and Mama decides who leaves.",
+              "effects": {
+                "changeStat": {
+                  "staffTrust": 10,
+                  "conscience": 6
+                },
+                "setFlag": "houseRules",
+                "noticedBy": [
+                  "The girls"
+                ]
+              }
+            },
+            {
+              "text": "\"One rule: the customer pays first.\"",
+              "effects": {
+                "changeStat": {
+                  "money": 5000,
+                  "staffTrust": -4
+                },
+                "setFlag": "payFirstRule"
+              }
+            },
+            {
+              "text": "\"The rules are me. If you have a problem, come to me.\"",
+              "effects": {
+                "changeStat": {
+                  "sugarRep": 3
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "bar"
+        }
+      ],
+      "location": "southStreet",
+      "time": "dusk"
+    },
+    "bar": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Nine p.m. Full house. A wedding party that has escaped its own wedding. Three Shell engineers on their last night of leave. A man in a choir robe who asks for \"the quiet table\"."
+        },
+        {
+          "type": "startMode",
+          "mode": "haggle",
+          "params": {
+            "goods": "drinks",
+            "customers": 6
+          },
+          "results": {
+            "good": {
+              "changeStat": {
+                "sugarRep": 3
+              },
+              "toast": "The wedding party buys a round for the whole bar, twice. The groom cries. The bride pays."
+            },
+            "ok": {
+              "changeStat": {
+                "sugarRep": 1
+              }
+            },
+            "bad": {
+              "changeStat": {
+                "sugarRep": -1
+              }
+            }
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "boy"
+        }
+      ],
+      "location": "southStreet",
+      "time": "night"
+    },
+    "boy": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Midnight. A boy at the gate. School shoes under his trousers. Sixteen, maybe, holding ₦5,000 like a ticket to adulthood. He asks for \"the new girl. The one who smiles.\""
+        },
+        {
+          "type": "dialogue",
+          "speaker": "kokoro",
+          "text": "(waking up for this) Mama?"
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "The ₦5,000 is shaking in his hand.",
+          "options": [
+            {
+              "text": "Take his money, buy him a Fanta, put him in a taxi home and tell his mother's street name to the driver.",
+              "effects": {
+                "changeStat": {
+                  "conscience": 6,
+                  "sugarRep": 2
+                },
+                "setFlag": "sentBoyHome"
+              }
+            },
+            {
+              "text": "\"Not tonight. Come back when your voice has broken.\" Turn him away.",
+              "effects": {
+                "changeStat": {
+                  "conscience": 2
+                }
+              }
+            },
+            {
+              "text": "\"Money is money.\" Let him in to the bar to drink.",
+              "effects": {
+                "changeStat": {
+                  "money": 5000,
+                  "conscience": -8,
+                  "sugarRep": -3
+                },
+                "setFlag": "servedBoy"
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "kemi",
+          "text": "(pointing at the wall) Rule one, Mama. You wrote it yourself, four hours ago.",
+          "if": "houseRules"
+        },
+        {
+          "type": "goto",
+          "scene": "four"
+        }
+      ],
+      "location": "southStreet",
+      "time": "night"
+    },
+    "four": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Four a.m. The last taxi. You count the drawer while Blessing stacks chairs and sings Asa songs badly. Kokoro is asleep across the gate like a bolt."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "player",
+          "text": "This is the house. This is what it pays for: Ivie's school, the girls' rent, Kokoro's chair, Chief Dapo's mortgage."
+        },
+        {
+          "type": "endChapter",
+          "title": "Night Shift",
+          "summary": "One night, start to finish. Whatever rules you wrote, the girls read them on your face before they read them on the wall.",
+          "next": "s1c_kemiMother"
+        }
+      ],
+      "location": "southStreet",
+      "time": "dawn"
+    }
+  }
+}

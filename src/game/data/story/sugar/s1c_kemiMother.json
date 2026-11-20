@@ -1,0 +1,146 @@
+{
+  "id": "s1c_kemiMother",
+  "campaign": "sugar",
+  "world": "iyanaWahala",
+  "act": 1,
+  "number": 3,
+  "title": "Chapter 3 — Kemi's Mother",
+  "description": "Kemi's mother arrives from Ibadan without warning. She thinks her daughter works at a \"hotel reception\". Technically, she does.",
+  "startScene": "arrive",
+  "scenes": {
+    "arrive": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Tuesday, 10 a.m. A woman in a church wrapper is standing at the gate with a basket of agege bread and a photograph of Kemi in her secondary school uniform."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "mamaKemi",
+          "text": "Good morning. Please, is this Sugar Hotel? My daughter Kemi works here at reception. I came to surprise her. (She looks at the bar, the stairs, the sign that says NO FIGHTING.) It is... a lively hotel."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "kemi",
+          "text": "(from the stairs, freezing) Mummy?"
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "Kemi is looking at you. Her mother is looking at you. The stairs are looking at everybody.",
+          "options": [
+            {
+              "text": "\"Kemi is my receptionist and my accountant. The best I've had.\" Show her the books Kemi keeps.",
+              "effects": {
+                "changeStat": {
+                  "staffTrust": 8,
+                  "secretKept": 4
+                },
+                "setFlag": "coveredKemi",
+                "noticedBy": [
+                  "Kemi"
+                ]
+              }
+            },
+            {
+              "text": "Take her mother aside. Tell her the truth, gently, woman to woman.",
+              "effects": {
+                "changeStat": {
+                  "conscience": 6,
+                  "staffTrust": -6
+                },
+                "setFlag": "toldKemiMother"
+              }
+            },
+            {
+              "text": "Say nothing. Let Kemi decide what to say.",
+              "effects": {
+                "changeStat": {
+                  "staffTrust": 4
+                },
+                "setFlag": "kemiDecides"
+              }
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "drugs"
+        }
+      ],
+      "location": "southStreet",
+      "time": "day"
+    },
+    "drugs": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "mamaKemi",
+          "text": "(later, over pepper soup, quietly) My blood pressure. The doctor wants me on new drugs, ₦18,000 a month. Kemi sends ₦10,000. I didn't want to tell her the rest."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "mamaKemi",
+          "text": "(She hasn't touched the soup.) You told me the truth about this place. Nobody in Ibadan would believe me. (She looks at the stairs a long time.) Is my daughter safe here?",
+          "if": "toldKemiMother"
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "Kemi is in the kitchen pretending not to listen.",
+          "options": [
+            {
+              "text": "Pay for six months of her drugs.",
+              "cost": 40000,
+              "effects": {
+                "changeStat": {
+                  "staffTrust": 10,
+                  "conscience": 6
+                },
+                "setFlag": "paidKemiMotherDrugs"
+              }
+            },
+            {
+              "text": "Give Kemi a raise so she can pay it herself.",
+              "effects": {
+                "changeStat": {
+                  "staffTrust": 6,
+                  "money": -5000
+                },
+                "setFlag": "kemiRaise"
+              }
+            },
+            {
+              "text": "\"Lagos is hard for all of us, Mama.\"",
+              "effects": {
+                "changeStat": {
+                  "staffTrust": -4
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "dialogue",
+          "speaker": "kemi",
+          "text": "(at the gate, watching her mother's bus go) She said, \"Your madam is a good woman.\" (A pause.) She didn't say \"good hotel\". She's not stupid, Mama.",
+          "variants": [
+            {
+              "if": "kemiDecides",
+              "text": "(at the gate, watching her mother's bus go) I told her I do the accounts. It's true. I just didn't say for what. (She laughs, almost.) Thank you for letting me choose."
+            }
+          ]
+        },
+        {
+          "type": "endChapter",
+          "title": "Kemi's Mother",
+          "summary": "A mother came to see her daughter's \"hotel\". What she saw depended on you.",
+          "next": "s2_settlement"
+        }
+      ],
+      "location": "southStreet",
+      "time": "dusk"
+    }
+  }
+}

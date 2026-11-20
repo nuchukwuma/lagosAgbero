@@ -1,0 +1,209 @@
+{
+  "id": "s4b_crusade",
+  "campaign": "sugar",
+  "world": "iyanaWahala",
+  "act": 3,
+  "number": 10,
+  "title": "Chapter 10 — The Crusade",
+  "description": "The churches of Iyana-Wahala are marching against \"the houses of South Street\". Chief Dapo's wife is leading the choir.",
+  "startScene": "march",
+  "scenes": {
+    "march": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Sunday afternoon. A crusade comes down South Street: two hundred people in white, a brass band, a lorry with loudspeakers. At the front, holding a banner, is Mrs. Dapo."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "pastorFemi",
+          "text": "(on the lorry, into the microphone) South Street! We have come to CAST OUT! The spirit of Golden Fleece! The spirit of Sugar Palace! Repent, Jezebel!"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "mrsDapo",
+          "text": "(stopping right at your gate, very loudly) And THIS is the one! My husband says he collects RENT here on Thursday NIGHTS! (The crusade gasps. Somebody films.)",
+          "if": "threatenedDapo"
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "Two hundred people in white at your gate. Your girls are at the windows.",
+          "options": [
+            {
+              "text": "Go out and dance with the choir. Out-praise them.",
+              "effects": {
+                "goto": "dance"
+              }
+            },
+            {
+              "text": "Close the gate. Turn up the generator. Wait it out.",
+              "effects": {
+                "changeStat": {
+                  "sugarRep": -2
+                },
+                "setFlag": "waitedCrusade",
+                "goto": "after"
+              }
+            },
+            {
+              "text": "Walk out to the lorry and ask Pastor Femi to pray for you. Mean it.",
+              "effects": {
+                "goto": "altar"
+              }
+            }
+          ]
+        }
+      ],
+      "location": "southStreet",
+      "time": "day"
+    },
+    "dance": {
+      "beats": [
+        {
+          "type": "startMode",
+          "mode": "dance",
+          "params": {
+            "name": "The crusade choir leader",
+            "rival": "pastorFemi",
+            "skill": 0.6
+          },
+          "results": {
+            "won": {
+              "changeStat": {
+                "sugarRep": 10
+              },
+              "setFlag": "outPraised",
+              "toast": "By the third song, half the crusade is dancing with you. The brass band switches to highlife. Pastor Femi pretends not to notice."
+            },
+            "lost": {
+              "changeStat": {
+                "sugarRep": -2
+              },
+              "toast": "The choir leader dances like a woman who has fasted for this. She wins. She is gracious about it."
+            }
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "after"
+        }
+      ],
+      "location": "southStreet",
+      "time": "day"
+    },
+    "altar": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "pastorFemi",
+          "text": "(off the microphone, surprised) You want prayer? (He puts a hand on your head. He actually prays. For a long time. For you, for your daughter, for the girls. Not one word about Jezebel.)"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "pastorFemi",
+          "text": "Sister. If you close this house, the church will help you open another one. A real one. (He gives you a card.) I mean it. Come on Wednesday."
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "The card says \"Redeemed Light Women's Empowerment Programme\".",
+          "options": [
+            {
+              "text": "Go on Wednesday. Close Sugar Palace. Start again.",
+              "effects": {
+                "goto": "bornAgain"
+              }
+            },
+            {
+              "text": "Keep the card. Not yet.",
+              "effects": {
+                "changeStat": {
+                  "conscience": 4
+                },
+                "setFlag": "keptPastorCard"
+              }
+            }
+          ]
+        },
+        {
+          "type": "goto",
+          "scene": "after"
+        }
+      ],
+      "location": "southStreet",
+      "time": "day"
+    },
+    "bornAgain": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "You close Sugar Palace on a Wednesday. The girls cry, then pack, then argue about who gets the good mirror. Pastor Femi's programme finds you a small catering contract: church events, weddings, burials."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "You sing in the back row of the choir. Badly. Mrs. Dapo sits in the front row. You never discuss Thursday."
+        },
+        {
+          "type": "endChapter",
+          "title": "Born Again",
+          "summary": "You closed the house in the middle of the month and walked into a church with your whole past behind you. They let you in.",
+          "ending": "sugar_bornAgain"
+        }
+      ],
+      "location": "southStreet",
+      "time": "day"
+    },
+    "after": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Evening. The crusade has moved on to Golden Fleece, where Rukky has hired a louder brass band."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "kokoro",
+          "text": "Mama, you turned a crusade into an owambe. (He shakes his head.) They will talk about this on South Street until the next one.",
+          "if": "outPraised"
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "The rent is still due. There is a week's money in the drawer.",
+          "options": [
+            {
+              "text": "Send ₦50,000 to Chief Dapo. Let him explain THAT to his wife.",
+              "cost": 50000,
+              "effects": {
+                "changeStat": {
+                  "rentDebt": -50000
+                },
+                "setFlag": "rentInstalment"
+              }
+            },
+            {
+              "text": "Keep it.",
+              "effects": {
+                "changeStat": {
+                  "staffTrust": 1
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "endChapter",
+          "title": "The Crusade",
+          "summary": "South Street was called Jezebel by a brass band. You answered, or you didn't. Either way, the rent is still due.",
+          "next": "s5_italy"
+        }
+      ],
+      "location": "southStreet",
+      "time": "night"
+    }
+  }
+}

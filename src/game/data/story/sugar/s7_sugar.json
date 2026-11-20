@@ -2,9 +2,9 @@
   "id": "s7_sugar",
   "campaign": "sugar",
   "world": "iyanaWahala",
-  "act": 1,
-  "number": 7,
-  "title": "Chapter 7 — Sugar",
+  "act": 4,
+  "number": 15,
+  "title": "Chapter 15 — Sugar",
   "description": "Whatever Sugar Palace becomes, it becomes today.",
   "startScene": "last",
   "scenes": {

@@ -1,0 +1,182 @@
+{
+  "id": "s3c_precious",
+  "campaign": "sugar",
+  "world": "iyanaWahala",
+  "act": 2,
+  "number": 8,
+  "title": "Chapter 8 — Precious",
+  "description": "Precious laughs louder than anyone in the bar. Her boyfriend Jide is why. He has come to take her home, and her money.",
+  "startScene": "jide",
+  "scenes": {
+    "jide": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Saturday. Precious has a bruise she says is from the kitchen door. The kitchen door has never hit anybody."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "jide",
+          "text": "(at the gate, in a borrowed suit, smiling with every tooth) Madam. I'm Precious's fiancé. I have come to collect her. And her savings. We are getting married. She keeps it with you, abi? The savings."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "player",
+          "text": "(Precious is behind the bar. She is not laughing.)"
+        },
+        {
+          "type": "choice",
+          "speaker": "player",
+          "text": "Jide is very relaxed. Men like Jide always are.",
+          "options": [
+            {
+              "text": "\"Precious, do you want to go with him?\" Ask her in front of him.",
+              "effects": {
+                "changeStat": {
+                  "staffTrust": 6
+                },
+                "setFlag": "askedPrecious",
+                "goto": "ask"
+              }
+            },
+            {
+              "text": "\"Kokoro. Escort this gentleman to the gate. Permanently.\"",
+              "effects": {
+                "goto": "throw"
+              }
+            },
+            {
+              "text": "Give him her savings. It's her life.",
+              "effects": {
+                "changeStat": {
+                  "staffTrust": -12,
+                  "conscience": -6
+                },
+                "setFlag": "gaveJideMoney",
+                "goto": "after"
+              }
+            }
+          ]
+        }
+      ],
+      "location": "southStreet",
+      "time": "day"
+    },
+    "ask": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "precious",
+          "text": "(after a very long time, very quietly) No."
+        },
+        {
+          "type": "dialogue",
+          "speaker": "jide",
+          "text": "(not smiling now) She doesn't mean that. (He steps forward.)"
+        },
+        {
+          "type": "goto",
+          "scene": "throw"
+        }
+      ],
+      "location": "southStreet",
+      "time": "day"
+    },
+    "throw": {
+      "beats": [
+        {
+          "type": "startMode",
+          "mode": "fight",
+          "params": {
+            "opponent": "thug",
+            "difficulty": 1
+          },
+          "results": {
+            "won": {
+              "changeStat": {
+                "staffTrust": 10,
+                "sugarRep": 4
+              },
+              "setFlag": "threwOutJide",
+              "toast": "Jide leaves without his borrowed suit jacket. Precious hangs it on the bar like a trophy."
+            },
+            "lost": {
+              "changeStat": {
+                "staffTrust": 4
+              },
+              "setFlag": "jideReturns",
+              "toast": "Jide leaves on his own feet, promising to come back. Kokoro sleeps at the gate with his eyes open for a week."
+            }
+          }
+        },
+        {
+          "type": "goto",
+          "scene": "after"
+        }
+      ],
+      "location": "southStreet",
+      "time": "day"
+    },
+    "after": {
+      "beats": [
+        {
+          "type": "dialogue",
+          "speaker": "narrator",
+          "text": "Precious goes with Jide and her savings on Sunday. On Wednesday she is back, without the savings, with a new bruise and a smaller laugh. She doesn't look at you for a week.",
+          "if": "gaveJideMoney"
+        },
+        {
+          "type": "dialogue",
+          "speaker": "precious",
+          "text": "(that night, at the bar) Mama. I want to learn something. Not hair, Blessing has that. Something with numbers, like Kemi. Can I?",
+          "if": {
+            "notFlags": [
+              "gaveJideMoney"
+            ]
+          }
+        },
+        {
+          "type": "choice",
+          "speaker": "precious",
+          "text": "She has never asked for anything before.",
+          "options": [
+            {
+              "text": "\"Kemi will teach you the books. You start Monday.\"",
+              "effects": {
+                "changeStat": {
+                  "staffTrust": 6
+                },
+                "setFlag": "preciousBooks"
+              }
+            },
+            {
+              "text": "Pay for a computer course at the polytechnic.",
+              "cost": 25000,
+              "effects": {
+                "changeStat": {
+                  "staffTrust": 10,
+                  "conscience": 6
+                },
+                "setFlag": "preciousCourse"
+              }
+            }
+          ],
+          "if": {
+            "notFlags": [
+              "gaveJideMoney"
+            ]
+          }
+        },
+        {
+          "type": "endChapter",
+          "title": "Precious",
+          "summary": "A man came to take a woman from your house. What the girls learned about you that day, they won't forget.",
+          "next": "s4_goldenFleece"
+        }
+      ],
+      "location": "southStreet",
+      "time": "night"
+    }
+  }
+}

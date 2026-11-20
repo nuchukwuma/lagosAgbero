@@ -2,9 +2,9 @@
   "id": "s6_raid",
   "campaign": "sugar",
   "world": "iyanaWahala",
-  "act": 1,
-  "number": 6,
-  "title": "Chapter 6 — The Raid",
+  "act": 4,
+  "number": 13,
+  "title": "Chapter 13 — The Raid",
   "description": "Felix comes back. Somebody comes with him. Ivie is watching.",
   "startScene": "friday",
   "scenes": {
@@ -285,7 +285,7 @@
           "type": "endChapter",
           "title": "The Raid",
           "summary": "Something happened on South Street that people will tell their children about. Whether they tell it with your name as the hero is up to you now.",
-          "next": "s7_sugar"
+          "next": "s6b_morningAfter"
         }
       ],
       "location": "southStreet",
