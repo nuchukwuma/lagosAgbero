@@ -23,6 +23,12 @@ import { effectsFor } from '../systems/reactions.js'
 import { useStreet } from '../world/streetState.js'
 import { tunedActivity, recordRun } from '../systems/heat.js'
 import { clearPowerups } from '../systems/powerups.js'
+import { recordPlay, practiceBump, rewardMulFor } from '../systems/records.js'
+import { ARCADE_IDS } from '../modes/arcade/ids.js'
+
+// did this story game go your way? (for practice: wins make it harder and pay more)
+const WIN_OUTCOMES = { chase: ['caught'], runner: ['escaped'] }
+const wonOutcome = (mode, outcome) => (WIN_OUTCOMES[mode] || ['won', 'escaped', 'ok', 'done', 'success']).includes(outcome)
 import { useSettings } from './settings.js'
 
 let toastId = 0
@@ -211,7 +217,8 @@ export const useGameStore = create((set, get) => {
     startActivity: (activity) => {
       // repeat runs get hot (systems/heat.js): harder, or staked out for a while
       const { game } = get()
-      const tuned = game ? tunedActivity(game, activity, storyLevel(game, storyCtx.chapters)) : activity
+      // and harder the more you've played that kind of game (records.js: practice)
+      const tuned = game ? tunedActivity(game, activity, Math.min(1, storyLevel(game, storyCtx.chapters) + (ARCADE_IDS.has(activity.mode) ? 0 : practiceBump(activity.mode)))) : activity
       if (tuned.blocked) return set((s) => ({ toasts: [...s.toasts, { id: ++toastId, text: tuned.blocked }].slice(-4) }))
       set({ activity: tuned })
     },
@@ -220,10 +227,19 @@ export const useGameStore = create((set, get) => {
       const { game } = get()
       if (game) set({ game: { ...game, stats: { ...game.stats, stopFee: clampStat('stopFee', Math.round(fee / 50) * 50) } } })
     },
-    finishActivity: (result) => {
+    finishActivity: (given) => {
       clearPowerups() // used up
       const { game, activity } = get()
       if (!game || !activity) return set({ activity: null })
+      // the story's games (fights, runs, chases...) count towards practice and pay
+      // more the further into the story and the more you've won them; the
+      // mini-games do their own (ArcadeHost)
+      let result = given
+      if (!ARCADE_IDS.has(activity.mode)) {
+        const mul = rewardMulFor(activity.mode, storyLevel(game, storyCtx.chapters))
+        recordPlay(activity.mode, wonOutcome(activity.mode, given.outcome))
+        if (given.moneyChange > 0 && mul > 1) result = { ...given, moneyChange: Math.round((given.moneyChange * mul) / 10) * 10 }
+      }
       let r = applyEffects(game, resultToEffects(result))
       // world JSON activities may add their own rewards per outcome:
       //   "results": { "won": { "changeStat": { "cultMoney": 3000 } } }

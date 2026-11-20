@@ -93,6 +93,14 @@ export const step = stepEscape
 
 export function input(s, ev) {
   if (ev.type === 'button') press(s, ev.id, ev.down !== false)
+  // the analog stick: push a little to creep, all the way to run; push up to jump
+  else if (ev.type === 'stick') {
+    s.stick = ev.x
+    if (ev.y > 0.7 && !s.stickUp) press(s, 'jump')
+    if (ev.y < -0.7 && !s.stickDown) press(s, 'roll')
+    s.stickUp = ev.y > 0.7
+    s.stickDown = ev.y < -0.7
+  }
 }
 
 function runnerPose(p, t) {
@@ -305,6 +313,8 @@ export function draw(ctx, s, v, t) {
     drawFrame(ctx, you, anim, f, X(p.x), Y(p.y), p.dir, k, blink)
     if (!you) box(ctx, X(p.x - 8), Y(p.y - STAND_H), 16 * k, STAND_H * k, '#2f8f83', k)
   }
+  // what each officer down paid, rising off him
+  for (const q of s.pops) label(ctx, q.text, X(q.x), Y(q.y - q.t * 30), { size: Math.max(11, 5 * k), color: '#8ff0a4', alpha: clamp(1.2 - q.t, 0, 1), weight: 800 })
   // the messages
   if (s.msgT > 0) label(ctx, s.msg, W / 2, Math.max(16, H * 0.12), { size: Math.max(12, 5 * k), alpha: clamp(s.msgT, 0, 1) })
   // the distance bar along the top
@@ -318,12 +328,17 @@ export const hud = (s) => [
   { label: s.to.toUpperCase(), value: `${metresLeft(s)} m` },
   { label: 'HEALTH', value: '♥'.repeat(Math.max(0, s.p.hp)) || '✖', warn: s.p.hp <= 2 },
   { label: 'LIVES', value: s.lives, warn: s.lives <= 1 },
-  { label: '₦', value: (s.notes * 100).toLocaleString('en-NG') },
+  { label: '₦', value: earned(s).toLocaleString('en-NG') },
+  ...(s.downed ? [{ label: 'DOWN', value: s.downed }] : []),
 ]
 
-export const buttons = () => [
-  { id: 'left', label: '◀', hold: true, side: 'left', big: true, key: 'A' },
-  { id: 'right', label: '▶', hold: true, side: 'left', big: true, key: 'D' },
+/** Notes picked up plus the bounty for every officer down. */
+export const earned = (s) => Math.round(s.notes * 100 * s.rewardMul) + s.bounty
+
+export const buttons = (s) => [
+  { id: 'left', label: '◀', hold: true, side: 'left', big: true, key: 'A', move: true },
+  { id: 'right', label: '▶', hold: true, side: 'left', big: true, key: 'D', move: true },
+  { id: 'creep', label: 'CREEP', hold: true, side: 'left', key: '⇧', color: s?.held?.creep ? '#2e6b3a' : '#3a3a4a', move: true },
   { id: 'roll', label: 'ROLL', color: '#5a4a8a', key: 'S' },
   { id: 'hit', label: 'HIT', color: '#b3261e', key: 'J' },
   { id: 'jump', label: 'JUMP', color: '#1e8449', big: true, key: 'W' },
@@ -334,23 +349,27 @@ export function result(s) {
   return {
     outcome: s.escaped ? 'escaped' : 'caught',
     score: reached + s.notes * 5 + s.downed * 10 + (s.escaped && s.seen === 0 ? 100 : 0),
-    moneyChange: s.notes * 100,
+    moneyChange: earned(s),
     headline: s.escaped ? (s.seen === 0 ? `${s.to}, and not one of them saw you!` : `You made it to ${s.to}!`) : 'Caught. The Task Force van door slams.',
-    line: s.escaped ? `${s.downed} officers knocked down · spotted ${s.seen} time${s.seen === 1 ? '' : 's'} · ₦${(s.notes * 100).toLocaleString('en-NG')} picked up.` : `You got ${reached} m of ${Math.round(s.level.goal / PX_PER_M)} m.`,
+    line: `${s.escaped ? '' : `You got ${reached} m of ${Math.round(s.level.goal / PX_PER_M)} m. `}${s.downed} officer${s.downed === 1 ? '' : 's'} down${s.sneaks ? ` (${s.sneaks} from behind)` : ''} · spotted ${s.seen} time${s.seen === 1 ? '' : 's'} · ₦${earned(s).toLocaleString('en-NG')} earned.`,
   }
 }
 
 export default {
   id: 'escape', title: (p) => `Escape to ${p.to || 'Under the Bridge'}`, scoreLabel: 'points', start: 'Run!',
   rules: [
-    '◀ ▶ to move (or stand still), JUMP (press again in the air to jump higher), ROLL under banners and past batons, HIT to strike.',
+    'Move with the stick (a little push creeps, a full push runs) or ◀ ▶ (hold CREEP or Shift to sneak). JUMP, and again in the air to go higher; ROLL under banners and past batons; HIT to strike.',
     'Cars, danfos, awnings and rooftops are platforms. Open gutters are deadly; broken bottles and banners hurt.',
-    'The Task Force sees what\'s in front of them: get past behind them or over their heads and they never know. Seen, they run at you and swing.',
-    'Three hits, or landing on an officer\'s head, puts him down. Lose all your health or fall in a gutter and you start again from the last bus stop.',
+    'The Task Force sees what\'s in front of them, and sees a running man from further away than a creeping one. Once one spots you he whistles, the others nearby come too, and they all rush you faster than you can run: get up where they can\'t climb, roll past, or fight.',
+    'Creep up behind an officer who hasn\'t seen you and HIT: he goes down in one blow (a sneak takedown). Otherwise it takes three hits, or land on his head.',
+    'Every officer down pays: ₦250 in a fight, ₦300 for a stomp, ₦400 from behind. Watch an ad at the end to double it, or two to triple it.',
+    'Lose all your health or fall in a gutter and you start again from the last bus stop.',
   ],
   short: 'Move, jump, roll, hit. Over their heads is safest.',
-  keys: { ArrowLeft: 'left', KeyA: 'left', ArrowRight: 'right', KeyD: 'right', ArrowUp: 'jump', KeyW: 'jump', Space: 'jump', ArrowDown: 'roll', KeyS: 'roll', KeyJ: 'hit', KeyK: 'hit', KeyF: 'hit' },
-  holdIds: ['left', 'right'],
+  stick: true,
+  scalesReward: true, // the bounty and the notes already use params.rewardMul
+  keys: { ShiftLeft: 'creep', ShiftRight: 'creep', ArrowLeft: 'left', KeyA: 'left', ArrowRight: 'right', KeyD: 'right', ArrowUp: 'jump', KeyW: 'jump', Space: 'jump', ArrowDown: 'roll', KeyS: 'roll', KeyJ: 'hit', KeyK: 'hit', KeyF: 'hit' },
+  holdIds: ['left', 'right', 'creep'],
   winOutcome: 'escaped',
   create, step, input, draw, hud, buttons, result,
 }

@@ -87,14 +87,16 @@ export function tuneParams(id, params = {}, level = 0, boosts = []) {
       p.patienceMul = quick(L)
       break
     case 'draughts':
-      p.skill = clamp(n(params.skill, 0.6) + (L - 0.4) * 0.35, 0.3, 0.9)
+      // Professor's level: 2 (Casual) at the start of the story up to 5 (Master) at the end and with practice
+      p.skill = clamp(0.25 + L * 0.75 + (n(params.skill, 0.6) - 0.6) * 0.5, 0.2, 1)
       break
     case 'traffic':
       p.target = Math.round(n(params.target, 30) * ease(L))
       p.spawnMul = lerp(0.85, 1.15, L)
       break
     case 'ayo':
-      p.skill = clamp(n(params.skill, 0.55) + (L - 0.4) * 0.35, 0.3, 0.9)
+      // level 2 at the start of the story up to 5 (Master) at the end and with practice
+      p.skill = clamp(0.25 + L * 0.75 + (n(params.skill, 0.55) - 0.55) * 0.5, 0.2, 1)
       break
     case 'palmClimb':
       p.height = Math.round(n(params.height, 32) * ease(L))
@@ -106,7 +108,7 @@ export function tuneParams(id, params = {}, level = 0, boosts = []) {
       break
     case 'akara':
       p.target = Math.round(n(params.target, 5) * ease(L))
-      p.cookMul = lerp(0.9, 1.15, L)
+      p.cookMul = lerp(1, 2, L * L) // a slow, readable fry early on; really hot oil only late in the story
       break
     case 'sneak':
       p.tickMul = quick(L)
@@ -135,7 +137,7 @@ export function tuneParams(id, params = {}, level = 0, boosts = []) {
       p.patienceMul = quick(L)
       break
     case 'whot':
-      p.skill = clamp(n(params.skill, 0.6) + (L - 0.4) * 0.35, 0.3, 0.9)
+      p.skill = clamp(0.25 + L * 0.75 + (n(params.skill, 0.6) - 0.6) * 0.5, 0.2, 1)
       break
     case 'dance':
       p.skill = clamp(n(params.skill, 0.55) + (L - 0.4) * 0.3, 0.3, 0.85)

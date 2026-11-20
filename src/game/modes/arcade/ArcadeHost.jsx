@@ -4,13 +4,16 @@ import { viewFor } from './px.js'
 import { isPaused } from '../../store/pauseStore.js'
 import { sfx } from '../../audio/audio.js'
 import { formatNaira } from '../../narrative/stats.js'
-import { seenIntro, markIntroSeen, bestScore, recordScore } from '../../systems/records.js'
+import { seenIntro, markIntroSeen, bestScore, recordScore, recordPlay, practiceBump, rewardMulFor } from '../../systems/records.js'
 import { useGameStore } from '../../store/gameStore.js'
 import { storyCtx } from '../../narrative/storyData.js'
 import { storyLevel } from '../../systems/progress.js'
 import { usePowerups } from '../../systems/powerups.js'
 import PowerupOffer from '../../../components/hud/PowerupOffer.jsx'
 import { tuneParams } from './tuning.js'
+import Joystick from '../../../components/hud/Joystick.jsx'
+import { useSettings } from '../../store/settings.js'
+import { showRewardedAd } from '../../services/adService.js'
 
 // Runs one arcade mini-game (games/*.js) full screen over the frozen street:
 // the how-to-play intro (in full the first time, then your best score), the
@@ -26,15 +29,24 @@ export function makeArcadeMode(game) {
     const you = useGameStore((s) => s.game?.player?.look)
     const params = useMemo(() => ({ ...given, you: given.you || you || null }), []) // eslint-disable-line react-hooks/exhaustive-deps
     // harder as the story goes on (0 = the first chapter, 1 = the last)
-    const level = useMemo(() => given.level ?? storyLevel(useGameStore.getState().game, storyCtx.chapters), []) // eslint-disable-line react-hooks/exhaustive-deps
+    // ... and the more you've played this game (records.js: practice), which also pays more
+    const storyAt = useMemo(() => given.level ?? storyLevel(useGameStore.getState().game, storyCtx.chapters), []) // eslint-disable-line react-hooks/exhaustive-deps
+    const level = useMemo(() => Math.min(1, storyAt + practiceBump(game.id)), [storyAt])
+    const rewardMul = useMemo(() => rewardMulFor(game.id, storyAt), [storyAt])
     const seed = useMemo(() => params.seed ?? Math.floor(Math.random() * 99999), []) // eslint-disable-line react-hooks/exhaustive-deps
     const [round, setRound] = useState(0) // "Try again" starts a new round
     // the run's settings: what the story asked, tuned to the story level and the power-ups bought on the start screen
-    const state = useMemo(() => game.create(tuneParams(game.id, params, level, usePowerups.getState().active), seed + round * 101), [round]) // eslint-disable-line react-hooks/exhaustive-deps
+    const state = useMemo(() => game.create({ ...tuneParams(game.id, params, level, usePowerups.getState().active), rewardMul }, seed + round * 101), [round]) // eslint-disable-line react-hooks/exhaustive-deps
     const [stage, setStage] = useState('intro') // intro | play | done
     const [hud, setHud] = useState(() => game.hud?.(state) || [])
     const [buttons, setButtons] = useState(() => game.buttons?.(state) || [])
     const firstTime = useState(() => !seenIntro(game.id))[0]
+    // moving games: the analog stick or the arrow buttons (Settings → Controls)
+    const stickChosen = useSettings((s) => (s.moveControl || 'stick') === 'stick')
+    const useStick = Boolean(game.stick) && stickChosen
+    // watch ads after a paying game: one doubles the money, a second triples it
+    const [adMul, setAdMul] = useState(1)
+    const [adBusy, setAdBusy] = useState(false)
     const best = useState(() => bestScore(game.id))[0]
     const live = useRef({ stage, state })
     live.current = { stage, state }
@@ -191,9 +203,14 @@ export function makeArcadeMode(game) {
       </button>
     )
 
-    const res = stage === 'done' ? game.result(state, params) : null
+    // the result, its money scaled by the reward multiplier (games that pay per
+    // thing, like the escape's bounty, scale it themselves: scalesReward)
+    const raw = stage === 'done' ? game.result(state, params) : null
+    const res = raw && raw.moneyChange > 0 && !game.scalesReward ? { ...raw, moneyChange: Math.round((raw.moneyChange * rewardMul) / 10) * 10 } : raw
     useEffect(() => {
-      if (res) recordScore(game.id, res.score || 0)
+      if (!res) return
+      recordScore(game.id, res.score || 0)
+      recordPlay(game.id, res.outcome === (game.winOutcome || 'won'))
     }, [stage]) // eslint-disable-line react-hooks/exhaustive-deps
 
     const host = typeof document !== 'undefined' ? document.querySelector('.story-screen') : null
@@ -220,8 +237,9 @@ export function makeArcadeMode(game) {
               </p>
             )}
             {params.prize ? <p>Prize: {formatNaira(params.prize)}</p> : null}
-            <p className="arcade-level" title="Rises as the story goes on">
+            <p className="arcade-level" title="Rises as the story goes on, and the more you play">
               Difficulty <strong>{'★'.repeat(1 + Math.round(level * 4))}{'☆'.repeat(4 - Math.round(level * 4))}</strong>
+              {rewardMul > 1 && <span className="arcade-mul"> · rewards ×{rewardMul}</span>}
             </p>
             <PowerupOffer mode={game.id} />
             <button
@@ -250,7 +268,10 @@ export function makeArcadeMode(game) {
             {buttons.length > 0 &&
               (buttons.some((b) => b.side) ? (
                 <div className="arcade-pad split">
-                  <div className="pad-side">{buttons.filter((b) => b.side === 'left').map(padButton)}</div>
+                  <div className="pad-side">
+                    {useStick && <Joystick className="arcade-stick" onMove={(x, y) => !isPaused() && game.input(live.current.state, { type: 'stick', x, y }, viewFor(1, 1))} />}
+                    {buttons.filter((b) => b.side === 'left' && !(useStick && b.move)).map(padButton)}
+                  </div>
                   <div className="pad-side">{buttons.filter((b) => b.side !== 'left').map(padButton)}</div>
                 </div>
               ) : (
@@ -266,9 +287,27 @@ export function makeArcadeMode(game) {
               {game.scoreLabel ? `${res.score} ${game.scoreLabel}` : `Score ${res.score}`}
               {res.score >= best && res.score > 0 ? ' · new best!' : best > 0 ? ` · best ${Math.max(best, res.score)}` : ''}
             </p>
-            {res.moneyChange ? <p>{res.moneyChange > 0 ? `+${formatNaira(res.moneyChange)}` : `−${formatNaira(-res.moneyChange)}`}</p> : null}
+            {res.moneyChange ? (
+              <p className="arcade-pay">
+                {res.moneyChange > 0 ? `+${formatNaira(res.moneyChange * adMul)}` : `−${formatNaira(-res.moneyChange)}`}
+                {adMul > 1 && <strong> ×{adMul}</strong>}
+              </p>
+            ) : null}
+            {res.moneyChange > 0 && adMul < 3 && (
+              <button
+                className="btn btn-ad"
+                disabled={adBusy}
+                onClick={async () => {
+                  setAdBusy(true)
+                  if (await showRewardedAd(`reward:${game.id}`)) setAdMul((m) => m + 1)
+                  setAdBusy(false)
+                }}
+              >
+                ▶ Watch an ad: {adMul === 1 ? 'double it' : 'triple it'} ({formatNaira(res.moneyChange * (adMul + 1))})
+              </button>
+            )}
             <div className="result-actions">
-              <button className="btn btn-primary" onClick={() => onFinish(res)}>
+              <button className="btn btn-primary" disabled={adBusy} onClick={() => onFinish(adMul > 1 ? { ...res, moneyChange: res.moneyChange * adMul } : res)}>
                 Continue
               </button>
               {res.outcome !== (game.winOutcome || 'won') && (
@@ -276,6 +315,7 @@ export function makeArcadeMode(game) {
                   className="btn"
                   onClick={() => {
                     setRound((n) => n + 1)
+                    setAdMul(1)
                     setStage('play')
                   }}
                 >

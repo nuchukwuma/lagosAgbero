@@ -17,6 +17,7 @@ import DialogueBox from './DialogueBox.jsx'
 import { usePause } from '../../game/store/pauseStore.js'
 import { useAd } from '../../game/services/adService.js'
 import ChoiceMenu from './ChoiceMenu.jsx'
+import { howToPlay } from '../../game/modes/howToPlay.js'
 import NewsBroadcast from './NewsBroadcast.jsx'
 import CutsceneCards from './CutsceneCards.jsx'
 import ChapterEndCard from './ChapterEndCard.jsx'
@@ -206,6 +207,7 @@ export default function StoryScreen() {
           objective={view.objective || lastObjective}
           chapter={view.chapterTitle}
           activity={activity?.label || null}
+          howTo={modeName ? howToPlay(modeName, (activity ? activity.params : view.params) || {}) : null}
         />
       )}
     </div>

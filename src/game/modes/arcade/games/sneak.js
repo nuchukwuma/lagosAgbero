@@ -110,8 +110,20 @@ export function move(s, d) {
   if (seen(s)) caught(s)
 }
 
+// the stick: hold a direction and you keep stepping that way, one square at a time
+const STICK_STEP = 0.22
+function stickStep(s, dt) {
+  if (!s.stickDir) return
+  s.stickT -= dt
+  if (s.stickT <= 0) {
+    move(s, s.stickDir)
+    s.stickT = STICK_STEP
+  }
+}
+
 export function step(s, dt) {
   s.msgT -= dt
+  stickStep(s, dt)
   if (s.caughtT > 0) {
     s.caughtT -= dt
     return
@@ -136,6 +148,14 @@ export function layoutOf(v, lv) {
 
 export function input(s, ev, v) {
   if (ev.type === 'button') return move(s, ev.id)
+  if (ev.type === 'stick') {
+    const d = Math.hypot(ev.x, ev.y) < 0.5 ? null : Math.abs(ev.x) > Math.abs(ev.y) ? (ev.x > 0 ? 'right' : 'left') : ev.y > 0 ? 'up' : 'down'
+    if (d !== s.stickDir) {
+      s.stickDir = d
+      s.stickT = 0 // step at once, then keep stepping while held
+    }
+    return
+  }
   if (ev.type !== 'down') return
   const L = layoutOf(v, s.lv)
   const px = L.x + (s.pos[0] + 0.5) * L.cell
@@ -205,10 +225,10 @@ export const hud = (s) => [
   { label: 'STEPS', value: s.moves },
 ]
 export const buttons = () => [
-  { id: 'left', label: '◀', key: '←' },
-  { id: 'up', label: '▲', key: '↑' },
-  { id: 'down', label: '▼', key: '↓' },
-  { id: 'right', label: '▶', key: '→' },
+  { id: 'left', label: '◀', key: '←', side: 'left', move: true },
+  { id: 'up', label: '▲', key: '↑', side: 'left', move: true },
+  { id: 'down', label: '▼', key: '↓', side: 'left', move: true },
+  { id: 'right', label: '▶', key: '→', side: 'left', move: true },
 ]
 
 export function result(s) {
@@ -222,8 +242,9 @@ export function result(s) {
 
 export default {
   id: 'sneak', title: 'Back Gate After Curfew', scoreLabel: 'points', start: 'Lights out',
-  rules: ['Move one square at a time: arrow keys, the pad, or tap beside yourself. H is the hostel; get to the GATE.', 'Guards walk their rounds. The bright squares in front of them are what their torches see: don\'t be there.', 'Green hedges hide you, even in the beam.', 'Get caught and it\'s back to the hostel. Three times and you\'re done for the night.'],
+  rules: ['Move one square at a time: the stick (hold it to keep walking), arrow keys, the pad, or tap beside yourself. H is the hostel; get to the GATE.', 'Guards walk their rounds. The bright squares in front of them are what their torches see: don\'t be there.', 'Green hedges hide you, even in the beam.', 'Get caught and it\'s back to the hostel. Three times and you\'re done for the night.'],
   short: 'Stay out of the torch beams. Hedges hide you.',
+  stick: true,
   keys: { ArrowUp: 'up', ArrowDown: 'down', ArrowLeft: 'left', ArrowRight: 'right', KeyW: 'up', KeyS: 'down', KeyA: 'left', KeyD: 'right' },
   create, step, input, draw, hud, buttons, result,
 }

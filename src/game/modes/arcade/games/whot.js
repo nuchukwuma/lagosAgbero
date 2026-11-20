@@ -279,6 +279,7 @@ export const hud = (s) => [
   { label: 'YOUR CARDS', value: s.hands.p.length },
   { label: s.name.toUpperCase(), value: s.hands.o.length },
   { label: 'MARKET', value: s.deck.length },
+  { label: 'LEVEL', value: `${1 + Math.round(s.skill * 4)} · ${['Beginner', 'Casual', 'Regular', 'Shark', 'Master'][Math.round(s.skill * 4)]}` },
 ]
 export const buttons = (s) =>
   s.choosing
@@ -290,6 +291,7 @@ export function result(s) {
   return {
     outcome: won ? 'won' : 'lost',
     score: won ? 50 + s.hands.o.length * 5 : Math.max(0, 20 - s.hands.p.length * 2),
+    moneyChange: won ? 500 * (1 + Math.round(s.skill * 4)) : 0, // the table stake
     headline: won ? `You beat ${s.name} at Whot!` : s.winner === 'draw' ? 'A draw. He counts again to be sure.' : `${s.name} wins, and laughs about it all week.`,
     line: won ? '"Mama Sugar! You dey play like soldier!" He leaves without his envelope. For once.' : '"Next Friday," he says. "Same time. Same envelope."',
   }

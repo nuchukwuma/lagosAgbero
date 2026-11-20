@@ -3,7 +3,9 @@
 // browns. Tap it when it's golden to flip it; tap it golden again to lift it
 // into the basket. Too early and it's raw inside; too late and it burns.
 // Finished akara fills the orders on the board, and customers won't wait forever.
-// Params: target (orders to fill, 5) · seconds (70)
+// Gentle at first: a ball takes about 5 s to go golden and stays golden for
+// almost 3 s; the oil gets hotter later in the story (cookMul, up to 2x).
+// Params: target (orders to fill, 5) · seconds (70) · cookMul (1)
 // Outcomes: won | lost
 import { rng, rect, box, label, disc, clamp, ui } from '../px.js'
 
@@ -23,12 +25,12 @@ export function shade(cook) {
 function newOrder(s) {
   const n = 2 + Math.floor(s.r() * 4)
   const who = ['Danfo driver', 'Conductor', 'Mama Bisi', 'Bus-stop pastor', 'Okada man', 'Schoolgirl'][Math.floor(s.r() * 6)]
-  return { n, got: 0, patience: 12 + n * 3, max: 12 + n * 3, who }
+  return { n, got: 0, patience: 16 + n * 4, max: 16 + n * 4, who }
 }
 
 export function create(params = {}, seed = 1) {
   const r = rng(seed)
-  const s = { r, time: params.seconds ?? 70, target: params.target ?? 5, slots: Array.from({ length: 6 }, (_, i) => ({ state: 'empty', cook: 0, speed: (0.16 + ((i * 7) % 5) * 0.012) * (params.cookMul ?? 1) })), orders: [], filled: 0, burnt: 0, perfect: 0, walked: 0, msg: '', msgT: 0, over: false, sound: [] }
+  const s = { r, time: params.seconds ?? 70, target: params.target ?? 5, slots: Array.from({ length: 6 }, (_, i) => ({ state: 'empty', cook: 0, speed: (0.1 + ((i * 7) % 5) * 0.004) * (params.cookMul ?? 1) })), orders: [], filled: 0, burnt: 0, perfect: 0, walked: 0, msg: '', msgT: 0, over: false, sound: [] }
   s.orders.push(newOrder(s), newOrder(s))
   return s
 }

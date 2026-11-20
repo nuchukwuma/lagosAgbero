@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
-import { createEscape, stepEscape, press, buildLevel, surfaceUnder, canSee, metresLeft, PX_PER_M, RUN, G, JUMP_V, DOUBLE_V } from './platformerLogic.js'
+import { createEscape, stepEscape, press, buildLevel, surfaceUnder, canSee, metresLeft, PX_PER_M, RUN, G, JUMP_V, DOUBLE_V, OFFICER_RUN, BOUNTY, SIGHT } from './platformerLogic.js'
+import { earned } from './escape.js'
 import dummy from './dummy.json'
 import vehicles from './vehicles.json'
 
@@ -120,5 +121,60 @@ describe('escape platformer', () => {
     expect(surfaceUnder(lv, 40, 50, 2, -5)).toBe(0)
     expect(surfaceUnder(lv, 210, 220, -48, -60)).toBe(-50)
     expect(surfaceUnder(lv, 140, 150, 5, -5)).toBe(null)
+  })
+
+  const cop = (x, dir, extra = {}) => ({ x, y: 0, home: [x - 200, x + 200], dir, state: 'patrol', hp: 3, t: 0, alertT: 0, windup: 0, cool: 0, stun: 0, seenT: 0, lostT: 0, ...extra })
+
+  it('a creeping runner is seen from about half as far as a running one', () => {
+    const o = { x: 100, y: 0, dir: 1 }
+    const at = SIGHT * 0.75 + 100
+    expect(canSee(o, { x: at, y: 0, roll: 0, vx: RUN })).toBe(true)
+    expect(canSee(o, { x: at, y: 0, roll: 0, vx: 40 })).toBe(false)
+    expect(canSee(o, { x: at, y: 0, roll: 0, vx: 0 })).toBe(false)
+  })
+
+  it('once seen, officers rush faster than you can run, and the whistle brings the others', () => {
+    expect(OFFICER_RUN).toBeGreaterThan(RUN)
+    const s = createEscape({}, 7)
+    s.level.officers = [cop(200, -1), cop(420, 1), cop(1400, -1)]
+    s.p.x = 120
+    s.p.invul = 99
+    run(s, 0.6)
+    const [a, b, far] = s.level.officers
+    expect(a.state).toBe('chase')
+    expect(b.state).toBe('chase') // heard the whistle, though he was looking away
+    expect(far.state).toBe('patrol') // too far to hear
+  })
+
+  it('a strike from behind on an officer who has not seen you is a one-blow takedown, and it pays', () => {
+    const s = createEscape({ rewardMul: 1 }, 8)
+    s.level.officers = [cop(60, 1)] // facing away from you
+    s.p.x = 30
+    press(s, 'hit')
+    run(s, 0.3)
+    expect(s.level.officers[0].state).toBe('down')
+    expect(s.sneaks).toBe(1)
+    expect(s.bounty).toBe(BOUNTY.sneak)
+    expect(earned(s)).toBe(BOUNTY.sneak + s.notes * 100)
+  })
+
+  it('the bounty grows with the reward multiplier', () => {
+    const s = createEscape({ rewardMul: 1.5 }, 9)
+    s.level.officers = [cop(60, 1)]
+    s.p.x = 30
+    press(s, 'hit')
+    run(s, 0.3)
+    expect(s.bounty).toBe(Math.round((BOUNTY.sneak * 1.5) / 10) * 10)
+  })
+
+  it('the stick moves you: a small push creeps, a full push runs', () => {
+    const s = createEscape({}, 10)
+    s.level.officers = []
+    s.stick = 0.3
+    run(s, 1)
+    expect(Math.abs(s.p.vx)).toBeLessThan(70)
+    s.stick = 1
+    run(s, 1)
+    expect(s.p.vx).toBeGreaterThan(RUN * 0.9)
   })
 })

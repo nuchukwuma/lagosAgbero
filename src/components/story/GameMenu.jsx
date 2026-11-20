@@ -3,11 +3,12 @@ import SaveSlots from '../SaveSlots.jsx'
 import WardrobePanel from '../menu/WardrobePanel.jsx'
 import SettingsPanel from '../menu/SettingsPanel.jsx'
 
-const TITLES = { main: 'Paused', save: 'Save game', load: 'Load game', wardrobe: 'Wardrobe', settings: 'Settings' }
+const TITLES = { main: 'Paused', save: 'Save game', load: 'Load game', wardrobe: 'Wardrobe', settings: 'Settings', rules: 'How to play' }
 
-// Pause menu: resume, wardrobe, save, load, settings, quit to title.
-export default function GameMenu({ onClose, onSave, onLoad, onQuit, onMap, canDress = true, objective = null, chapter = null, activity = null }) {
-  const [tab, setTab] = useState('main')
+// Pause menu: resume, the rules of the game you're in, wardrobe, save, load,
+// settings, quit to title. Paused in the middle of a game, it opens on the rules.
+export default function GameMenu({ onClose, onSave, onLoad, onQuit, onMap, canDress = true, objective = null, chapter = null, activity = null, howTo = null }) {
+  const [tab, setTab] = useState(howTo ? 'rules' : 'main')
   return (
     <div className="overlay" onClick={onClose}>
       <div className="panel" onClick={(e) => e.stopPropagation()}>
@@ -37,6 +38,11 @@ export default function GameMenu({ onClose, onSave, onLoad, onQuit, onMap, canDr
             <button className="btn btn-primary" onClick={onClose}>
               Resume
             </button>
+            {howTo && (
+              <button className="btn" onClick={() => setTab('rules')}>
+                How to play
+              </button>
+            )}
             {onMap && (
               <button className="btn" onClick={onMap}>
                 Story map
@@ -60,6 +66,19 @@ export default function GameMenu({ onClose, onSave, onLoad, onQuit, onMap, canDr
               Quit to title
             </button>
             <p className="footnote">The game also autosaves after every choice.</p>
+          </div>
+        )}
+        {tab === 'rules' && howTo && (
+          <div className="how-to-play">
+            <h3>{howTo.title}</h3>
+            <ul>
+              {howTo.rules.map((r) => (
+                <li key={r}>{r}</li>
+              ))}
+            </ul>
+            <button className="btn btn-primary" onClick={onClose}>
+              Resume
+            </button>
           </div>
         )}
         {tab === 'wardrobe' && <WardrobePanel onDone={onClose} />}

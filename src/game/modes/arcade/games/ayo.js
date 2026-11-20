@@ -4,7 +4,9 @@
 // the far side and makes 2 or 3, you take them, and the cups before it too,
 // while they hold 2 or 3. If your opponent's side is empty you must give them
 // seeds if you can. More than 24 seeds wins.
-// Params: skill (0..1, 0.6) · name (opponent, "Papa Ngwo")
+// Ayò Ọlọ́pọ́n as the Yoruba play it: anticlockwise, laps skip the cup they
+// started from, no capture that would take every seed (no grand slam).
+// Params: skill (0..1: level 1-5, or aiLevel) · name (opponent, "Papa Ngwo")
 // Outcomes: won | lost
 import { rng, rect, box, label, disc, inside } from '../px.js'
 
@@ -57,30 +59,50 @@ export function legal(b, side) {
   return cups
 }
 
-function score(b, store, depth, side, r) {
+function score(b, store, depth, side, alpha, beta) {
   const other = side === 'p' ? 'o' : 'p'
   const moves = legal(b, side)
   if (depth === 0 || !moves.length || store.o > 24 || store.p > 24) return store.o - store.p
-  let best = side === 'o' ? -Infinity : Infinity
+  if (side === 'o') {
+    let best = -Infinity
+    for (const k of moves) {
+      const res = play(b, k, side)
+      best = Math.max(best, score(res.board, { ...store, o: store.o + res.taken }, depth - 1, other, alpha, beta))
+      alpha = Math.max(alpha, best)
+      if (beta <= alpha) break
+    }
+    return best
+  }
+  let best = Infinity
   for (const k of moves) {
     const res = play(b, k, side)
-    const st = { ...store, [side]: store[side] + res.taken }
-    const val = score(res.board, st, depth - 1, other, r)
-    best = side === 'o' ? Math.max(best, val) : Math.min(best, val)
+    best = Math.min(best, score(res.board, { ...store, p: store.p + res.taken }, depth - 1, other, alpha, beta))
+    beta = Math.min(beta, best)
+    if (beta <= alpha) break
   }
   return best
 }
 
-export function aiMove(b, store, skill, r) {
+// the opponent's five levels: how far ahead they count, and how often they just play
+export const LEVELS = [
+  { name: 'Beginner', depth: 1, random: 0.45 },
+  { name: 'Casual', depth: 2, random: 0.25 },
+  { name: 'Village player', depth: 4, random: 0.1 },
+  { name: 'Strong', depth: 6, random: 0.03 },
+  { name: 'Master', depth: 8, random: 0 },
+]
+export const levelOf = (skill) => Math.max(1, Math.min(5, 1 + Math.round((skill ?? 0.6) * 4)))
+
+export function aiMove(b, store, level, r) {
   const moves = legal(b, 'o')
   if (!moves.length) return null
-  if (r() > skill) return moves[Math.floor(r() * moves.length)]
-  const depth = skill > 0.8 ? 6 : 4
+  const L = LEVELS[level - 1] || LEVELS[2]
+  if (r() < L.random) return moves[Math.floor(r() * moves.length)]
   let best = moves[0]
   let bestV = -Infinity
   for (const k of moves) {
     const res = play(b, k, 'o')
-    const v = score(res.board, { ...store, o: store.o + res.taken }, depth - 1, 'p', r) + r() * 0.01
+    const v = score(res.board, { ...store, o: store.o + res.taken }, L.depth - 1, 'p', -Infinity, Infinity) + r() * 0.01
     if (v > bestV) {
       bestV = v
       best = k
@@ -90,7 +112,7 @@ export function aiMove(b, store, skill, r) {
 }
 
 export function create(params = {}, seed = 1) {
-  return { r: rng(seed), board: new Array(12).fill(4), store: { p: 0, o: 0 }, turn: 'p', aiWait: 0, skill: params.skill ?? 0.6, name: params.name || 'Papa Ngwo', glow: [], lastTaken: 0, lastBy: null, over: false, winner: null, moves: 0, sound: [] }
+  return { r: rng(seed), board: new Array(12).fill(4), store: { p: 0, o: 0 }, turn: 'p', aiWait: 0, level: params.aiLevel ?? levelOf(params.skill ?? 0.6), name: params.name || 'Papa Ngwo', glow: [], lastTaken: 0, lastBy: null, over: false, winner: null, moves: 0, sound: [] }
 }
 
 function finishIfDone(s) {
@@ -127,7 +149,7 @@ export function step(s, dt) {
   if (s.turn !== 'o') return
   s.aiWait -= dt
   if (s.aiWait > 0) return
-  const k = aiMove(s.board, s.store, s.skill, s.r)
+  const k = aiMove(s.board, s.store, s.level, s.r)
   if (k == null) return finishIfDone(s)
   doMove(s, k, 'o')
 }
@@ -195,6 +217,7 @@ export const hud = (s) => [
   { label: 'YOU', value: s.store.p },
   { label: s.name.toUpperCase(), value: s.store.o },
   { label: 'TO WIN', value: 25 },
+  { label: 'LEVEL', value: `${s.level} · ${LEVELS[s.level - 1].name}` },
 ]
 
 export function result(s) {
@@ -202,6 +225,7 @@ export function result(s) {
   return {
     outcome: won ? 'won' : 'lost',
     score: s.store.p,
+    moneyChange: won ? 400 * s.level : 0, // the stake on the side
     headline: won ? `You beat ${s.name} at Ayò!` : s.winner === 'draw' ? 'Twenty-four each. A draw.' : `${s.name} wins.`,
     line: won ? '"Hm! Lagos has not spoilt your hands." He pours you the first cup from the new keg.' : '"Stupidity is better planned with palm wine," he says, and sets up the seeds again.',
   }

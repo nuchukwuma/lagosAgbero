@@ -28,12 +28,10 @@ const BOTS = {
     if (r() < 0.2) escapeGame.input(s, { type: 'button', id: r() < 0.7 ? 'jump' : r() < 0.5 ? 'hit' : 'roll', down: true })
   },
   draughts: (s, r) => {
-    if (s.turn !== 'p') return
-    const ms = draughts.legalMoves(s.board, 'p', s.chain)
-    const m = ms[Math.floor(r() * ms.length)]
+    if (s.turn !== 'p' || s.over) return
+    const m = s.turns[Math.floor(r() * s.turns.length)]
     if (!m) return
-    draughts.tapSquare(s, m.from)
-    draughts.tapSquare(s, m.to)
+    for (const sq of m.path) draughts.tapSquare(s, sq)
   },
   ayo: (s, r) => {
     const ms = ayo.legal(s.board, 'p')
@@ -100,16 +98,67 @@ describe('arcade mini-games', () => {
     expect(s.strikes).toBe(1)
   })
 
-  it('draughts: captures are compulsory, and a capture removes the piece', () => {
+  it('draughts (international): men capture backwards, the biggest capture is compulsory, kings fly', () => {
+    const R = draughts.VARIANTS.international
+    const at = (r, c) => draughts.idx(r, c, 10)
+    const empty = () => new Array(100).fill(null)
+    expect(draughts.turnsFor(draughts.initialBoard(R), 'p', R)).toHaveLength(9)
+    // a man takes backwards
+    let b = empty()
+    b[at(5, 4)] = { side: 'p', king: false }
+    b[at(6, 5)] = { side: 'o', king: false }
+    b[at(0, 9)] = { side: 'o', king: false }
+    let turns = draughts.turnsFor(b, 'p', R)
+    expect(turns).toHaveLength(1)
+    expect(turns[0].caps).toEqual([at(6, 5)])
+    // majority rule: of a single and a double capture, only the double is allowed
+    b = empty()
+    b[at(6, 1)] = { side: 'p', king: false }
+    b[at(5, 2)] = { side: 'o', king: false }
+    b[at(3, 4)] = { side: 'o', king: false }
+    b[at(6, 7)] = { side: 'p', king: false }
+    b[at(5, 8)] = { side: 'o', king: false }
+    turns = draughts.turnsFor(b, 'p', R)
+    expect(turns.every((t) => t.caps.length === 2)).toBe(true)
+    expect(draughts.countOf(turns[0].board, 'o')).toBe(1)
+    // a flying king takes from a distance and may land on any free square beyond
+    b = empty()
+    b[at(9, 0)] = { side: 'p', king: true }
+    b[at(5, 4)] = { side: 'o', king: false }
+    turns = draughts.turnsFor(b, 'p', R)
+    expect(turns.map((t) => t.path[1]).sort((x, y) => x - y)).toEqual([at(0, 9), at(1, 8), at(2, 7), at(3, 6), at(4, 5)].sort((x, y) => x - y))
+    // a man passing the far row mid-capture is not crowned; one ending there is
+    b = empty()
+    b[at(2, 1)] = { side: 'p', king: false }
+    b[at(1, 2)] = { side: 'o', king: false }
+    b[at(1, 4)] = { side: 'o', king: false }
+    turns = draughts.turnsFor(b, 'p', R)
+    expect(turns[0].caps).toHaveLength(2) // up to the far row and back down
+    expect(turns[0].board[turns[0].path.at(-1)].king).toBe(false)
+  })
+
+  it('draughts (english): 8x8, men capture forwards only, crowning ends the move', () => {
+    const R = draughts.VARIANTS.english
+    const at = (r, c) => draughts.idx(r, c, 8)
+    expect(draughts.turnsFor(draughts.initialBoard(R), 'p', R)).toHaveLength(7)
     const b = new Array(64).fill(null)
-    b[draughts.idx(5, 0)] = { side: 'p', king: false }
-    b[draughts.idx(5, 4)] = { side: 'p', king: false }
-    b[draughts.idx(4, 1)] = { side: 'o', king: false }
-    const moves = draughts.legalMoves(b, 'p')
-    expect(moves.every((m) => m.cap != null)).toBe(true)
-    const after = draughts.applyStep(b, moves[0]).board
-    expect(draughts.countOf(after, 'o')).toBe(0)
-    expect(draughts.turnsFor(draughts.initialBoard(), 'p')).toHaveLength(7)
+    b[at(4, 3)] = { side: 'p', king: false }
+    b[at(5, 4)] = { side: 'o', king: false } // behind: can't be taken by a man
+    b[at(3, 2)] = { side: 'o', king: false }
+    const turns = draughts.turnsFor(b, 'p', R)
+    expect(turns).toHaveLength(1)
+    expect(turns[0].caps).toEqual([at(3, 2)])
+  })
+
+  it('draughts: tapping each landing square plays a multiple capture; Professor plays a legal move at every level', () => {
+    const s = draughts.default.create({ aiLevel: 1 }, 3)
+    const t = s.turns[0]
+    for (const sq of t.path) draughts.tapSquare(s, sq)
+    expect(s.turn).toBe('o')
+    for (let level = 1; level <= 5; level++) {
+      const m = draughts.aiTurn(s.board, level, rng(level), draughts.VARIANTS.international)
+      expect(draughts.turnsFor(s.board, 'o').some((x) => x.path.join() === m.path.join())).toBe(true)
+    }
   })
 
   it('ayo: last seed making two or three on their side is captured; feeding is compulsory', () => {

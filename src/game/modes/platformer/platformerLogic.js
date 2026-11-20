@@ -4,9 +4,12 @@
 // the air), roll under things, strike, and stomp an officer's head. Parked
 // cars and danfos, market awnings and rooftops are platforms; open drains are
 // death; broken bottles hurt; low banners must be rolled under. Officers walk
-// their beat and only chase what they see in front of them; once they've seen
-// you they run at you and swing the baton. Three strikes (or one stomp) put an
-// officer down. Lose all your health, or fall in a drain, and you start again
+// their beat and only see what's in front of them (less of you when you creep
+// or stand still). Once one sees you he whistles, the officers nearby come
+// running too, and they sprint at you faster than you can run: get up where
+// they can't climb, roll past the baton, or fight. Three strikes (or one stomp)
+// put an officer down; strike one who hasn't seen you and he goes down at once
+// (a sneak takedown). Every officer down pays a bounty. Lose all your health, or fall in a drain, and you start again
 // from the last bus stop; lose every life and you're caught.
 //
 // World units are the sprite's pixels (the runner is about 68 tall), y grows
@@ -22,13 +25,16 @@ export const ROLL_TIME = 0.55
 export const STAND_H = 60
 export const LOW_H = 26 // rolling: under the banners
 export const PW = 18 // the runner's width
-export const OFFICER_RUN = 118
+export const OFFICER_RUN = 172 // faster than you: once they've seen you, you can't just outrun them
 export const OFFICER_WALK = 40
 export const SIGHT = 210
 export const DEATH_Y = 260
 export const VEHICLE_SCALE = 2.4
 export const PX_PER_M = 10 // 1 metre = 10 world px
-
+export const CREEP = 70 // moving slower than this (or standing still) is sneaking
+export const HEAR = 320 // a whistle brings the officers this close
+// what an officer down is worth (naira), before the run's reward multiplier
+export const BOUNTY = { fight: 250, stomp: 300, sneak: 400 }
 // vehicle sizes (crop sizes from the atlas, before scaling): width, height
 export const VEHICLES = {
   danfo: [46, 25], corolla: [49, 20], datsun: [49, 20], blueCar: [47, 27], jeep: [50, 27],
@@ -167,6 +173,10 @@ export function createEscape(params = {}, seed = 1) {
     lives: params.lives ?? 3,
     maxHp: params.hp ?? 5,
     sightMul: params.sightMul ?? 1,
+    rewardMul: params.rewardMul ?? 1,
+    bounty: 0,
+    sneaks: 0,
+    pops: [],
     checkpoint: 0,
     held: { left: false, right: false },
     notes: 0,
@@ -204,7 +214,7 @@ export function surfaceUnder(lv, x0, x1, y, fromY) {
 
 export function press(s, id, down = true) {
   const p = s.p
-  if (id === 'left' || id === 'right') {
+  if (id === 'left' || id === 'right' || id === 'creep') {
     s.held[id] = down
     return
   }
@@ -296,9 +306,11 @@ export function stepEscape(s, dt) {
   } else if (p.hit > 0) {
     p.vx *= 0.92
   } else {
-    const want = (s.held.right ? 1 : 0) - (s.held.left ? 1 : 0)
-    if (want) p.dir = want
-    const target = want * RUN * (p.attack > 0 && p.ground ? 0.3 : 1)
+    // the stick (s.stick, -1..1) or the buttons; holding creep (or a half push) is sneaking
+    const want = s.stick != null && Math.abs(s.stick) > 0.15 ? s.stick : (s.held.right ? 1 : 0) - (s.held.left ? 1 : 0)
+    if (want) p.dir = Math.sign(want)
+    const pace = s.held.creep ? Math.min(Math.abs(want), 0.4) * Math.sign(want) : want
+    const target = pace * RUN * (p.attack > 0 && p.ground ? 0.3 : 1)
     p.vx += (target - p.vx) * Math.min(1, dt * (p.ground ? 14 : 6))
   }
   if (p.attack > 0) p.attack -= dt
@@ -361,6 +373,8 @@ export function stepEscape(s, dt) {
       s.notes++
       s.sound.push('coin')
     }
+  for (const q of s.pops) q.t += dt
+  s.pops = s.pops.filter((q) => q.t < 1.2)
   // bus stops
   for (const c of lv.checkpoints)
     if (c > s.checkpoint && p.x >= c) {
@@ -378,12 +392,29 @@ export function stepEscape(s, dt) {
 }
 
 // ---------------------------------------------------------------- the Task Force
-/** Can this officer see the runner? In front of them, near, on about their level; rolling or crouching is harder to spot. */
+/**
+ * Can this officer see the runner? In front of them, near, on about their
+ * level. Rolling is harder to spot, and so is creeping or standing still:
+ * a runner at full tilt is seen from SIGHT away, a creeping one from about half.
+ */
 export function canSee(o, p, mul = 1) {
   const dx = p.x - o.x
   if (Math.sign(dx) !== o.dir && Math.abs(dx) > 12) return false
-  const range = (p.roll > 0 ? SIGHT * 0.5 : SIGHT) * mul
-  return Math.abs(dx) < range && Math.abs(p.y - o.y) < 40
+  const speed = Math.min(1, Math.abs(p.vx || 0) / RUN)
+  const stealth = p.roll > 0 ? 0.5 : speed * RUN < CREEP ? 0.5 : 0.55 + 0.45 * speed
+  return Math.abs(dx) < SIGHT * stealth * mul && Math.abs(p.y - o.y) < 40
+}
+
+/** Sound the alarm: this officer and every free one within earshot comes running. */
+function raiseAlarm(s, o) {
+  s.seen++
+  s.sound.push('whistle')
+  for (const q of s.level.officers)
+    if (q.state === 'patrol' && Math.abs(q.x - o.x) < HEAR && Math.abs(q.y - o.y) < 60) {
+      q.state = 'chase'
+      q.alertT = q === o ? 0.5 : 0.8 + Math.abs(q.x - o.x) / 600
+      q.seenT = 0
+    }
 }
 
 function stepOfficers(s, dt) {
@@ -405,16 +436,11 @@ function stepOfficers(s, dt) {
       else o.x = nx
       if (sees) {
         o.seenT += dt
-        if (o.seenT > 0.35) {
-          o.state = 'chase'
-          o.alertT = 0.6
-          s.seen++
-          s.sound.push('whistle')
-        }
+        if (o.seenT > 0.35) raiseAlarm(s, o)
       } else o.seenT = Math.max(0, o.seenT - dt)
+    } else if (o.state === 'chase' && o.alertT > 0) {
+      o.alertT = Math.max(0, o.alertT - dt) // the "!" moment: you have a breath to run (or hit him first)
     } else if (o.state === 'chase') {
-      o.alertT = Math.max(0, o.alertT - dt)
-      if (o.alertT > 0) continue // the "!" moment: you have a breath to run
       o.dir = Math.sign(dx) || o.dir
       const close = Math.abs(dx) < 34 && Math.abs(p.y - o.y) < 24
       if (o.windup > 0) {
@@ -428,7 +454,7 @@ function stepOfficers(s, dt) {
       } else if (close && o.cool <= 0 && p.dead <= 0) {
         o.windup = 0.45
       } else if (!close) {
-        // run at you, but they can't climb: they wait below and lose interest
+        // rush at you, but they can't climb: they wait below and lose interest
         const nx = o.x + Math.sign(dx) * OFFICER_RUN * dt
         if (walkable(s.level, nx)) o.x = nx
       }
@@ -445,20 +471,22 @@ function stepOfficers(s, dt) {
     // your strike
     if (p.attack > 0.08 && p.attack < 0.28 && !p.struck && Math.sign(o.x - p.x) === p.dir && Math.abs(o.x - p.x) < 40 && Math.abs(o.y - p.y) < 30) {
       p.struck = true
+      s.sound.push('punch')
+      // he never saw you coming: one blow and he's down
+      if (o.state === 'patrol' && !canSee(o, p, s.sightMul)) {
+        knockDown(s, o, 'sneak')
+        continue
+      }
       o.hp--
       o.stun = 0.5
       o.windup = 0
       o.x += p.dir * 26
-      s.sound.push('punch')
-      if (o.state === 'patrol') {
-        o.state = 'chase'
-        s.seen++
-      }
-      if (o.hp <= 0) knockDown(s, o)
+      if (o.state === 'patrol') raiseAlarm(s, o)
+      if (o.hp <= 0) knockDown(s, o, 'fight')
     }
     // stomp: land on their head
     if (o.state !== 'down' && p.vy > 120 && Math.abs(o.x - p.x) < 20 && p.y > o.y - STAND_H - 6 && p.y < o.y - STAND_H + 18) {
-      knockDown(s, o)
+      knockDown(s, o, 'stomp')
       p.vy = -460
       p.jumps = 1
       s.sound.push('kick')
@@ -468,13 +496,20 @@ function stepOfficers(s, dt) {
   }
 }
 
-function knockDown(s, o) {
+function knockDown(s, o, how = 'fight') {
   o.state = 'down'
   o.hp = 0
   o.t = 0
   s.downed++
-  s.msg = ['"Ah! My back!"', 'He stays down. His cap rolls into the gutter.', '"Oga, abeg! Abeg!"'][s.downed % 3]
+  const pay = Math.round((BOUNTY[how] * s.rewardMul) / 10) * 10
+  s.bounty += pay
+  s.pops.push({ x: o.x, y: o.y - STAND_H - 14, text: `+₦${pay}`, t: 0 })
+  if (how === 'sneak') {
+    s.sneaks++
+    s.msg = ['Sneak takedown. He never saw you.', '"Wetin—" Down. Silent.', 'From behind: one blow, no whistle.'][s.sneaks % 3]
+  } else s.msg = ['"Ah! My back!"', 'He stays down. His cap rolls into the gutter.', '"Oga, abeg! Abeg!"'][s.downed % 3]
   s.msgT = 1.2
+  s.sound.push('cash')
 }
 
 export const metresLeft = (s) => Math.max(0, Math.ceil((s.level.goal - s.p.x) / PX_PER_M))

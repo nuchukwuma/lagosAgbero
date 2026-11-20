@@ -20,13 +20,6 @@ import escape from '../platformer/escape.js'
 
 export const ARCADE_GAMES = [escape, change, draughts, traffic, ayo, palmClimb, fakeParts, akara, sneak, penalty, posters, ballots, riceQueue, pepperSoup, barRush, whot]
 
-/** Which story each game belongs to (and is first met in). */
-export const ARCADE_BY_STORY = {
-  areaBoy: ['escape', 'change', 'draughts', 'traffic'],
-  grace: ['ayo', 'palmClimb', 'fakeParts'],
-  campus: ['akara', 'sneak', 'penalty'],
-  politics: ['posters', 'ballots', 'riceQueue'],
-  sugar: ['pepperSoup', 'barRush', 'whot'],
-}
+export { ARCADE_BY_STORY } from './ids.js'
 
 export const ARCADE_MODES = Object.fromEntries(ARCADE_GAMES.map((g) => [g.id, makeArcadeMode(g)]))

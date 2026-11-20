@@ -31,6 +31,12 @@ body,
   flex-direction: column;
   padding: 16px;
   padding-top: max(16px, env(safe-area-inset-top));
+  /* anything taller than the phone scrolls (never squashed or cut off) */
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.screen > * {
+  flex-shrink: 0;
 }
 
 .title-screen {
@@ -256,7 +262,7 @@ body,
 .new-game-screen,
 .load-screen {
   align-items: center;
-  justify-content: center;
+  justify-content: safe center; /* centred when it fits, from the top when it doesn't */
   gap: 16px;
   text-align: center;
 }
@@ -376,7 +382,7 @@ body,
   padding-bottom: max(12px, env(safe-area-inset-bottom));
   z-index: 6;
   display: flex;
-  justify-content: center;
+  justify-content: safe center;
 }
 
 .dialogue-box,
@@ -393,6 +399,15 @@ body,
 .dialogue-box,
 .choice-panel {
   position: relative;
+}
+/* never taller than the screen: a long line or many choices scroll inside */
+.dialogue-box,
+.news-box,
+.choice-panel {
+  max-height: calc(100dvh - 24px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
 }
 /* say it again (when voices are on): bottom corner of the line, beside "tap" */
 .dialogue-replay {
@@ -623,7 +638,7 @@ body,
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: safe center;
   padding: 24px;
   background: rgba(10, 8, 4, 0.88);
   z-index: 20;
@@ -674,7 +689,7 @@ body,
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: safe center;
   gap: 16px;
   padding: 24px 16px;
   text-align: center;
@@ -720,7 +735,7 @@ body,
   background: rgba(0, 0, 0, 0.6);
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: safe center;
   padding: 16px;
   z-index: 30;
 }
@@ -2537,7 +2552,7 @@ body,
   z-index: 60;
   background: var(--bg);
   overflow-y: auto;
-  justify-content: center;
+  justify-content: safe center;
   padding-left: max(16px, calc((100vw - 560px) / 2));
   padding-right: max(16px, calc((100vw - 560px) / 2));
 }
@@ -3899,3 +3914,37 @@ svg .is-chase { fill: #e53935; stroke: #fff; stroke-width: 0.6; animation: map-p
 /* the pixel portrait: crisp, filling the disc down to the shoulders */
 .portrait.pixel-face { background: #3a2c22; }
 .portrait.pixel-face img { image-rendering: pixelated; object-fit: contain; padding: 4px 6px 0; box-sizing: border-box; object-position: 50% 100%; }
+
+/* short landscape phones: the choices sit tighter so they usually all fit; when
+   they still don't, the panel scrolls and fades at the edge that has more */
+@media (max-height: 460px) {
+  .choice-panel { padding: 8px 12px; }
+  .choice-prompt p { font-size: 15px; margin-bottom: 6px; }
+  .choice-panel .dialogue-speaker { margin-bottom: 2px; }
+  .choice-panel .portrait.has-face { width: 38px; height: 38px; }
+  .choice-options { gap: 5px; }
+  .choice-btn { min-height: 40px; padding: 6px 10px; font-size: 14.5px; }
+}
+.choice-panel,
+.dialogue-box {
+  --fade: rgba(26, 20, 8, 0.92);
+  background:
+    linear-gradient(var(--fade) 30%, transparent) top / 100% 24px no-repeat local,
+    linear-gradient(transparent, var(--fade) 70%) bottom / 100% 24px no-repeat local,
+    radial-gradient(farthest-side at 50% 0, rgba(242, 195, 0, 0.35), transparent) top / 100% 10px no-repeat scroll,
+    radial-gradient(farthest-side at 50% 100%, rgba(242, 195, 0, 0.35), transparent) bottom / 100% 10px no-repeat scroll,
+    var(--fade);
+}
+/* the pause menu's How to play */
+.how-to-play h3 { margin: 0 0 6px; color: var(--danfo); }
+.how-to-play ul { margin: 0 0 12px; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; line-height: 1.4; }
+.how-to-play .btn { width: 100%; }
+/* the analog stick in moving mini-games (Settings → Controls) */
+.arcade-stick { width: 108px; height: 108px; }
+.arcade-stick .joystick-knob { width: 48px; height: 48px; }
+@media (max-height: 430px) {
+  .arcade-stick { width: 92px; height: 92px; }
+}
+.arcade-pay strong { color: #8ff0a4; }
+.btn-ad { width: 100%; margin: 4px 0 8px; background: #2e6b3a; border-color: #8ff0a4; color: #fff; }
+.arcade-mul { color: #8ff0a4; letter-spacing: 0; }

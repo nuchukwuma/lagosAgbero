@@ -16,6 +16,7 @@ export default function SettingsPanel() {
   const music = useSettings((s) => s.music !== false)
   const sound = useSettings((s) => s.sound !== false)
   const orientation = useSettings((s) => s.orientation || 'landscape')
+  const moveControl = useSettings((s) => s.moveControl || 'stick')
   const voiceMode = useSettings((s) => (s.voices === false ? 'off' : s.handsFree ? 'hands' : 'on'))
   const update = useSettings((s) => s.update)
   const [full, setFull] = useState(Boolean(document.fullscreenElement))
@@ -57,6 +58,17 @@ export default function SettingsPanel() {
           ))}
         </div>
       )}
+      <div className="swatch-row">
+        <span>Controls</span>
+        {[
+          ['stick', 'Analog stick'],
+          ['buttons', 'Arrow buttons'],
+        ].map(([id, label]) => (
+          <button key={id} className={`chip ${moveControl === id ? 'on' : ''}`} onClick={() => update({ moveControl: id })} aria-pressed={moveControl === id}>
+            {label}
+          </button>
+        ))}
+      </div>
       <div className="swatch-row">
         <span>Audio</span>
         <button className={`chip ${music ? 'on' : ''}`} onClick={() => update({ music: !music })} aria-pressed={music}>
