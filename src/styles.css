@@ -3651,3 +3651,48 @@ svg .is-chase { fill: #e53935; stroke: #fff; stroke-width: 0.6; animation: map-p
   justify-content: center;
   margin-bottom: 10px;
 }
+/* ending: the game's verdict and the player's stars */
+.ending-verdict {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  text-align: left;
+  max-width: 560px;
+  margin: 18px auto 0;
+  padding: 12px 14px;
+  border: 2px solid var(--danfo);
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.35);
+  opacity: 0;
+  animation: fadeInUp 0.8s ease-out forwards;
+}
+.ending-verdict h3 { margin: 0 0 4px; }
+.ending-verdict p { margin: 4px 0; }
+.verdict-grade {
+  flex: none;
+  width: 64px;
+  height: 64px;
+  display: grid;
+  place-items: center;
+  font: 900 40px ui-monospace, Menlo, Consolas, monospace;
+  color: #120a08;
+  background: var(--danfo);
+  border-radius: 10px;
+  box-shadow: 3px 3px 0 #000;
+}
+.tier-early .verdict-grade, .tier-bad .verdict-grade { background: #e2553a; color: #fff; }
+.tier-best .verdict-grade { background: #8ff0a4; }
+.verdict-nudge { font-weight: 700; color: var(--danfo); }
+.ending-rate { margin: 14px auto 0; opacity: 0; animation: fadeInUp 0.8s ease-out forwards; }
+.ending-rate h3 { margin: 0 0 4px; }
+.stars { display: flex; gap: 6px; justify-content: center; }
+.stars .star {
+  font-size: 34px;
+  line-height: 1;
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  padding: 2px;
+}
+.stars .star.on { color: #ffd23a; text-shadow: 0 0 10px rgba(255, 210, 58, 0.6); }
