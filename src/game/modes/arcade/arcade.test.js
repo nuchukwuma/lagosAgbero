@@ -187,61 +187,63 @@ describe('arcade mini-games', () => {
     expect(s.turn).toBe('p') // pick two: you go again
   })
 
-  it('sneak: every level has a way from the hostel to the gate', () => {
+  it('sneak: every level can be walked from the hostel to the gate, and every guard round is walkable', () => {
     for (const lv of sneak.LEVELS) {
       let start
-      lv.map.forEach((row, y) => [...row].forEach((c, x) => c === 'S' && (start = [x, y])))
-      const seen = new Set([start.join()])
-      const q = [start]
-      let found = false
-      while (q.length) {
-        const [x, y] = q.shift()
-        if (lv.map[y][x] === 'E') found = true
-        for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
-          const nx = x + dx
-          const ny = y + dy
-          const c = lv.map[ny]?.[nx]
-          if (!c || c === '#' || seen.has(`${nx},${ny}`)) continue
-          seen.add(`${nx},${ny}`)
-          q.push([nx, ny])
-        }
+      let gate
+      lv.map.forEach((row, y) => [...row].forEach((ch, x) => {
+        if (ch === 'S') start = [x + 0.5, y + 0.5]
+        if (ch === 'E') gate = [x + 0.5, y + 0.5]
+      }))
+      expect(sneak.findPath(lv, start, gate), lv.name).toBeTruthy()
+      for (const g of lv.guards) {
+        for (const [x, y] of g.path) expect('#C'.includes(lv.map[y][x]), `${lv.name} guard at ${x},${y}`).toBe(false)
+        expect(sneak.findPath(lv, [g.path[0][0] + 0.5, g.path[0][1] + 0.5], start), `${lv.name}: a guard can reach you`).toBeTruthy()
       }
-      expect(found, lv.name).toBe(true)
-      for (const g of lv.guards) for (const [x, y] of g.path) expect(lv.map[y][x], `${lv.name} guard at ${x},${y}`).not.toBe('#')
     }
   })
 
-  it('sneak: torch beams stop at walls, hedges hide you, the ? fills before you are caught, the gate moves you on', () => {
+  it('sneak: tap-to-walk goes round crates; beams stop at crates; a takedown from outside the beam; caught by a chasing guard', () => {
     const s = sneak.create({}, 1)
     const lv = s.lv
-    // a guard in the open sees ahead, not through a wall
-    const g = { x: 1.5, y: 3.5, fx: 1, fy: 0 }
-    expect(sneak.inBeam(lv, g, 3.5, 3.5)).toBe(true)
-    expect(sneak.inBeam(lv, g, 1.5, 1.5)).toBe(false) // behind the wall above, and off to the side
-    expect(sneak.inBeam(lv, g, 1.5 + sneak.RANGE + 0.5, 3.5)).toBe(false) // too far
-    // standing in a beam: caught only after the ? has filled
-    s.guards = [{ path: [[1, 3], [2, 3], [3, 3], [4, 3]], kind: 'security', u: 0, dir: 1, wait: 0, x: 1.5, y: 3.5, fx: 1, fy: 0 }]
-    s.pos = [3.5, 3.5]
-    sneak.step(s, 0.1)
-    expect(s.lives).toBe(3)
-    expect(s.spot).toBeGreaterThan(0)
-    for (let i = 0; i < 10; i++) sneak.step(s, 0.1)
-    expect(s.lives).toBe(2)
-    // in a hedge, nobody sees you
-    const h = sneak.create({}, 1)
-    h.guards = [{ path: [[1, 3], [2, 3]], kind: 'security', u: 0, dir: 1, wait: 99, x: 3.5, y: 3.5, fx: 1, fy: 0 }]
-    h.pos = [5.5, 3.5] // the B at (5, 3)
-    h.guards[0].wait = 0
-    h.guards[0].path = [[3, 3], [4, 3]]
-    for (let i = 0; i < 4; i++) sneak.step(h, 0.1)
-    expect(h.lives).toBe(3)
-    // the stick walks you; reaching the gate is the next level
-    const w = sneak.create({}, 1)
-    w.guards = []
-    w.pos = [9.5, 5.5]
-    w.stick = { x: 1, y: 0 }
-    for (let i = 0; i < 30 && w.level === 0; i++) sneak.step(w, 0.1)
-    expect(w.level).toBe(1)
+    // a route round the crate at (2, 2)
+    const route = sneak.findPath(lv, [1.5, 1.5], [3.5, 3.5])
+    expect(route.every(([x, y]) => !'#C'.includes(lv.map[Math.floor(y)][Math.floor(x)]))).toBe(true)
+    // a crate blocks the beam
+    expect(sneak.clearLine(lv, 1.5, 2.5, 3.5, 2.5)).toBe(false)
+    // takedown: walk up behind a guard who faces away
+    s.guards = [{ kind: 'security', path: [[5.5, 3.5], [6.5, 3.5]], wp: 1, x: 5.5, y: 3.5, fx: 1, fy: 0, route: [], state: 'patrol', spot: 0, lostT: 0, down: false, walk: 0 }]
+    s.tickMul = 999 // he barely moves
+    s.pos = [5.5, 6.5] // below him, out of his beam
+    sneak.walkTo(s, 5.5, 3.5)
+    for (let i = 0; i < 40 && !s.guards[0].down; i++) sneak.step(s, 0.05)
+    expect(s.guards[0].down).toBe(true)
+    expect(sneak.gateOpen(s)).toBe(true)
+    // caught: a guard chasing you who reaches you
+    const c = sneak.create({}, 1)
+    c.guards = [{ kind: 'don', path: [[5.5, 3.5]], wp: 0, x: 5.5, y: 3.5, fx: 0, fy: 1, route: [], state: 'chase', spot: 1, lostT: 0, lastSeen: [5.5, 4.5], down: false, walk: 0 }]
+    c.pos = [5.5, 4.5]
+    for (let i = 0; i < 20 && c.lives === 3; i++) sneak.step(c, 0.05)
+    expect(c.lives).toBe(2)
+  })
+
+  it('sneak: seen in a beam, the guard gives chase; the gate stays shut until every guard is down', () => {
+    const s = sneak.create({}, 1)
+    const g = s.guards[0]
+    Object.assign(g, { x: 5.5, y: 3.5, fx: 1, fy: 0, state: 'patrol', spot: 0 })
+    s.guards = [g, { ...s.guards[1], x: 1.5, y: 8.5 }]
+    s.pos = [7.5, 3.5] // two squares ahead of him, in his beam
+    s.tickMul = 999
+    for (let i = 0; i < 10; i++) sneak.step(s, 0.05)
+    expect(g.state).toBe('chase')
+    const t = sneak.create({}, 1)
+    for (const q of t.guards) Object.assign(q, { x: 1.5, y: 6.5, fx: -1, fy: 0 })
+    t.pos = [7.5, 8.5] // on the gate
+    sneak.step(t, 0.05)
+    expect(t.level).toBe(0) // locked
+    t.guards.forEach((q) => (q.down = true))
+    sneak.step(t, 0.05)
+    expect(t.level).toBe(1)
   })
 
   it('akara: flip at golden, lift at golden, and orders fill', () => {

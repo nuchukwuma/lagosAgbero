@@ -26,9 +26,10 @@ export const TUTORIALS = {
     { at: BOARD, text: 'Ants, wasps and falling fruit sting. When the wind comes, stand still on a frond.' },
   ],
   sneak: [
-    { at: BOARD, text: 'Get from the HOSTEL to the GATE without being seen. You have the green ring.' },
-    { at: `${STICK}, ${btn('up')}`, text: 'Move with the stick or the arrows, or tap where you want to walk.' },
-    { at: BOARD, text: 'A torch beam is what a guard sees (not through walls). In it, a ? fills up: get out before it turns to !. Hedges hide you.' },
+    { at: BOARD, text: 'Tap where you want to go: you walk there, round the crates and walls. You have the green ring.' },
+    { at: BOARD, text: 'A torch beam is what a guard sees. Reach him from outside it and you take him down (he drops naira).' },
+    { at: BOARD, text: 'Seen? A ? fills, then ! and he comes after you. Break his line of sight and he gives up.' },
+    { at: SCORE, text: 'Take down every guard and the back gate opens. Be out before dawn.' },
   ],
   change: [
     { at: BOARD, text: 'A passenger pays: work out their change (fare taken from what they paid).' },
