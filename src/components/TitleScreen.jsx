@@ -68,6 +68,9 @@ export default function TitleScreen({ onNavigate, onContinue }) {
         <button className={`btn ${hasSave ? '' : 'btn-primary'}`} onClick={() => onNavigate('newGame')}>
           New Game
         </button>
+        <button className="btn btn-online" onClick={() => onNavigate('online')}>
+          Lagos Online <small>play with friends</small>
+        </button>
         {hasSave && (
           <button className="btn" onClick={() => onNavigate('load')}>
             Load

@@ -1,0 +1,36 @@
+{
+  "id": "online_world",
+  "act": 0,
+  "title": "Lagos Online",
+  "description": "The open world, shared with other players: Iyana-Wahala, Nkwo Agu and Royal Crest, joined by bus routes. Not part of any story.",
+  "startScene": "lagos",
+  "scenes": {
+    "lagos": {
+      "world": "iyanaWahala",
+      "location": "motorPark",
+      "time": "day",
+      "beats": [
+        { "type": "freeRoam", "objective": "Iyana-Wahala. Meet people, play, bet. The motor park has buses to Nkwo Agu and the campus." },
+        { "type": "endChapter", "title": "See you on the street" }
+      ]
+    },
+    "village": {
+      "world": "nkwoAgu",
+      "location": "junction",
+      "time": "day",
+      "beats": [
+        { "type": "freeRoam", "objective": "Nkwo Agu. Ayò under the palm-wine shade, palms to climb. Buses back at the junction." },
+        { "type": "endChapter", "title": "See you on the street" }
+      ]
+    },
+    "campus": {
+      "world": "royalCrest",
+      "location": "gate",
+      "time": "day",
+      "beats": [
+        { "type": "freeRoam", "objective": "Royal Crest University. Akara, penalties, the back gate. Buses at the main gate." },
+        { "type": "endChapter", "title": "See you on the street" }
+      ]
+    }
+  }
+}

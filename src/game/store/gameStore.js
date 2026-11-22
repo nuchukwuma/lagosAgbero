@@ -25,6 +25,8 @@ import { tunedActivity, recordRun } from '../systems/heat.js'
 import { clearPowerups } from '../systems/powerups.js'
 import { recordPlay, practiceBump, rewardMulFor } from '../systems/records.js'
 import { ARCADE_IDS } from '../modes/arcade/ids.js'
+import { duelResult, soloResult, forfeit } from '../online/net.js'
+import { DUEL_GAMES } from '../online/catalog.js'
 
 // did this story game go your way? (for practice: wins make it harder and pay more)
 const WIN_OUTCOMES = { chase: ['caught'], runner: ['escaped'] }
@@ -101,6 +103,14 @@ export const useGameStore = create((set, get) => {
     retryN: 0,
     retryGame: () => set((s) => ({ retryN: s.retryN + 1 })),
 
+    // Lagos Online: the open world (all three places, joined by buses), with
+    // the mini-games out on the street. look: how you look (from your story save or chosen)
+    startOnline: ({ name, look }) => {
+      set({ game: engine.newGameState({ name: name || 'Guest', nickname: 'online', look: look || null, campaign: 'areaBoy', stats: {} }), screen: 'story', toasts: [] })
+      set((s) => ({ game: { ...s.game, flags: { ...s.game.flags, online: true, dayLoop: true } } }))
+      dispatch((g) => engine.startChapter(storyCtx, g, 'online_world', 'lagos'))
+    },
+
     // Jump straight into any chapter (used by the dev chapter picker).
     startChapter: (chapterId) => dispatch((g) => engine.startChapter(storyCtx, g, chapterId)),
 
@@ -151,8 +161,8 @@ export const useGameStore = create((set, get) => {
      */
     tick: (dt, { running = false } = {}) => {
       const { game, view, activity } = get()
-      // no clock, drain or events inside interruptions (collapse, raids, evenings...)
-      if (!game || game.story.ending || storyCtx.chapters[game.story.chapterId]?.common) return
+      // no clock, drain or events inside interruptions (collapse, raids, evenings...), nor in Lagos Online
+      if (!game || game.story.ending || storyCtx.chapters[game.story.chapterId]?.common || game.flags?.online) return
       const clock = (game.clock || 0) + dt
       const raining = Boolean(game.flags.raining)
       // only Area Boy has the energy (red eyes) system
@@ -220,6 +230,10 @@ export const useGameStore = create((set, get) => {
     /** Free-roam activities the player starts (e.g. a fee run at the Back Side). */
     activity: null,
     startActivity: (activity) => {
+      // the open world's buses: off to another place (Lagos Online)
+      if (activity.mode === 'travel') return get().interrupt(`online_world:${activity.params.scene}`)
+      // online: no story heat or practice tuning; everybody plays the same game
+      if (get().game?.flags?.online) return set({ activity })
       // repeat runs get hot (systems/heat.js): harder, or staked out for a while
       const { game } = get()
       // and harder the more you've played that kind of game (records.js: practice)
@@ -236,6 +250,16 @@ export const useGameStore = create((set, get) => {
       clearPowerups() // used up
       const { game, activity } = get()
       if (!game || !activity) return set({ activity: null })
+      // Lagos Online: a duel's score goes to the server; any game played out on the street counts for quests
+      if (game.flags?.online) {
+        const score = given.score ?? given.metres ?? 0
+        const on = activity.params?.online
+        if (on?.kind === 'duel') duelResult(on.matchId, given.outcome === 'quit' ? 0 : score)
+        else if (on?.kind === 'live') {
+          if (given.outcome === 'quit') forfeit(on.matchId) // walking away from a board game gives it up
+        }
+        else if (DUEL_GAMES[activity.mode] && given.outcome !== 'quit') soloResult(activity.mode, score)
+      }
       // the story's games (fights, runs, chases...) count towards practice and pay
       // more the further into the story and the more you've won them; the
       // mini-games do their own (ArcadeHost)

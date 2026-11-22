@@ -1529,6 +1529,32 @@
           }
         }
       }
+    },
+    {
+      "id": "travel_lagos",
+      "label": "BUS TO LAGOS",
+      "icon": "wheel",
+      "spot": "gate",
+      "if": "online",
+      "mode": "travel",
+      "minutes": 0,
+      "params": {
+        "scene": "lagos"
+      },
+      "where": "the bus to Lagos"
+    },
+    {
+      "id": "travel_village",
+      "label": "BUS TO NKWO AGU",
+      "icon": "wheel",
+      "spot": "gate",
+      "if": "online",
+      "mode": "travel",
+      "minutes": 0,
+      "params": {
+        "scene": "village"
+      },
+      "where": "the bus to Nkwo Agu"
     }
   ],
   "mapLabels": {

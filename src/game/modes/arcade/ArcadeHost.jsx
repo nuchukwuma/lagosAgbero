@@ -14,6 +14,7 @@ import { tuneParams } from './tuning.js'
 import Joystick from '../../../components/hud/Joystick.jsx'
 import { useSettings } from '../../store/settings.js'
 import { showRewardedAd } from '../../services/adService.js'
+import { useOnline, liveMove } from '../../online/net.js'
 
 // Runs one arcade mini-game (games/*.js) full screen over the frozen street:
 // the how-to-play intro (in full the first time, then your best score), the
@@ -31,7 +32,7 @@ export function makeArcadeMode(game) {
     // harder as the story goes on (0 = the first chapter, 1 = the last)
     // ... and the more you've played this game (records.js: practice), which also pays more
     const storyAt = useMemo(() => given.level ?? storyLevel(useGameStore.getState().game, storyCtx.chapters), []) // eslint-disable-line react-hooks/exhaustive-deps
-    const level = useMemo(() => Math.min(1, storyAt + practiceBump(game.id)), [storyAt])
+    const level = useMemo(() => Math.min(1, storyAt + (given.online ? 0 : practiceBump(game.id))), [storyAt]) // eslint-disable-line react-hooks/exhaustive-deps -- online: the same level for both players
     const rewardMul = useMemo(() => rewardMulFor(game.id, storyAt), [storyAt])
     const seed = useMemo(() => params.seed ?? Math.floor(Math.random() * 99999), []) // eslint-disable-line react-hooks/exhaustive-deps
     const [round, setRound] = useState(0) // "Try again" starts a new round
@@ -97,6 +98,15 @@ export function makeArcadeMode(game) {
         last = now
         const { stage: st, state: s } = live.current
         const running = st === 'play' && !s.over && !isPaused()
+        // Lagos Online, a live game: the other player's moves in, ours out
+        if (params.online?.kind === 'live' && st === 'play') {
+          const inbox = useOnline.getState().liveInbox.filter((x) => x.id === params.online.matchId)
+          if (inbox.length) {
+            useOnline.setState((o) => ({ liveInbox: o.liveInbox.filter((x) => x.id !== params.online.matchId) }))
+            for (const x of inbox) game.input(s, { type: 'remote', move: x.move }, v)
+          }
+          while (s.outbox?.length) liveMove(params.online.matchId, s.outbox.shift())
+        }
         if (running) {
           t += dt
           try {
@@ -326,7 +336,7 @@ export function makeArcadeMode(game) {
               <button className="btn btn-primary" disabled={adBusy} onClick={() => onFinish(adMul > 1 ? { ...res, moneyChange: res.moneyChange * adMul } : res)}>
                 Continue
               </button>
-              {res.outcome !== (game.winOutcome || 'won') && (
+              {res.outcome !== (game.winOutcome || 'won') && !given.online && (
                 <button
                   className="btn"
                   onClick={() => {

@@ -40,6 +40,7 @@ import ShaderWarmup, { useWarmup } from './ShaderWarmup.jsx'
 import FrameCap from './FrameCap.jsx'
 import PortraitStudio from '../characters/PortraitStudio.jsx'
 import ReactionDirector from './ReactionDirector.jsx'
+import RemotePlayers from '../online/RemotePlayers.jsx'
 
 // The 3D street behind the story. The story view decides:
 //   location   where the player stands when a scene starts
@@ -174,6 +175,7 @@ export default function GameCanvas({ view, game, activity = null, paused = false
           <NPCs layout={layout} flags={game.flags} positions={view.positions} speaker={speaker} mood={view.mood} hidden={fightOpponent ? [fightOpponent] : []} lite={quality === 'low'} />
           </group>
           {!(fightOn && modeName === 'fight') && !busOn && <PlayerController layout={layout} look={look} enabled={(freeRoam || feeRunActive || chaseActive) && !paused} eyeRed={eyeRed} tired={game.stats.energy < LOW_ENERGY} />}
+          {game.flags.online && <RemotePlayers world={layout.id} />}
           {freeRoam && <VendorTracker />}
           {freeRoam && <ActivityTracker layout={layout} game={game} />}
           {freeRoam && <QuestTracker key={`quests-${layout.id}`} game={game} />}

@@ -217,8 +217,9 @@ export const countOf = (b, side) => b.filter((p) => p?.side === side).length
 
 export function create(params = {}, seed = 1) {
   const R = VARIANTS[params.variant] || VARIANTS.international
-  const s = { r: rng(seed), R, board: initialBoard(R), turn: 'p', path: [], turns: [], aiWait: 0, plies: 0, kingPlies: 0, level: params.aiLevel ?? levelOf(params.skill ?? 0.6), name: params.name || 'Professor', last: [], over: false, winner: null, msg: '', msgT: 0, sound: [] }
-  s.turns = turnsFor(s.board, 'p', R)
+  // online (params.remote): the other side is a real person; seat 1 waits for seat 0's first move
+  const s = { r: rng(seed), R, remote: Boolean(params.remote), outbox: [], board: initialBoard(R), turn: params.remote && params.seat === 1 ? 'o' : 'p', path: [], turns: [], aiWait: 0, plies: 0, kingPlies: 0, level: params.aiLevel ?? levelOf(params.skill ?? 0.6), name: params.name || 'Professor', last: [], over: false, winner: null, msg: '', msgT: 0, sound: [] }
+  s.turns = s.turn === 'p' ? turnsFor(s.board, 'p', R) : []
   return s
 }
 
@@ -242,7 +243,7 @@ function nextTurn(s, turn) {
 
 export function step(s, dt) {
   s.msgT -= dt
-  if (s.turn !== 'o' || s.over) return
+  if (s.turn !== 'o' || s.over || s.remote) return
   s.aiWait -= dt
   if (s.aiWait > 0) return
   const t = aiTurn(s.board, s.level, s.r, s.R)
@@ -291,10 +292,23 @@ export function tapSquare(s, sq) {
   s.board = done.board
   s.last = done.path.slice()
   s.sound.push(done.caps.length ? 'punch' : 'click')
+  if (s.remote) s.outbox.push({ path: done.path })
   nextTurn(s, done)
 }
 
 export function input(s, ev, v) {
+  if (ev.type === 'remote') {
+    // the other player's move, already turned round to your side of the board
+    if (s.turn !== 'o' || s.over) return
+    const path = ev.move.path || []
+    const t = turnsFor(s.board, 'o', s.R).find((x) => x.path.length === path.length && x.path.every((q, i) => q === path[i]))
+    if (!t) return
+    s.board = t.board
+    s.last = t.path.slice()
+    s.sound.push(t.caps.length ? 'punch' : 'click')
+    nextTurn(s, t)
+    return
+  }
   if (ev.type !== 'down') return
   const n = s.R.n
   const br = boardRect(v, n)
@@ -366,7 +380,7 @@ export function draw(ctx, s, v, t) {
 export const hud = (s) => [
   { label: 'YOU', value: countOf(s.board, 'p') },
   { label: s.name.toUpperCase(), value: countOf(s.board, 'o') },
-  { label: 'LEVEL', value: `${s.level} · ${LEVELS[s.level - 1].name}` },
+  s.remote ? { label: 'ONLINE', value: 'live game' } : { label: 'LEVEL', value: `${s.level} · ${LEVELS[s.level - 1].name}` },
 ]
 
 export function result(s) {

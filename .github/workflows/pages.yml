@@ -40,6 +40,8 @@ jobs:
         env:
           BASE_PATH: /${{ github.event.repository.name }}/
           NOINDEX: '1'
+          # Lagos Online's server (docs/online.md), e.g. wss://lagos-online.onrender.com
+          VITE_ONLINE_URL: ${{ vars.ONLINE_URL }}
       # links to a page inside the game still open the game
       - run: cp dist/index.html dist/404.html
       - uses: actions/configure-pages@v5

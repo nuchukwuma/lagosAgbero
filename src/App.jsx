@@ -3,6 +3,7 @@ import TitleScreen from './components/TitleScreen.jsx'
 import AboutScreen from './components/AboutScreen.jsx'
 import EndingsScreen from './components/EndingsScreen.jsx'
 import GamesScreen from './components/GamesScreen.jsx'
+import OnlineScreen from './components/OnlineScreen.jsx'
 import { lazy, Suspense } from 'react'
 // dev tool: loaded only when opened, so it stays out of the main bundle
 const AssetBrowser = lazy(() => import('./components/AssetBrowser.jsx'))
@@ -25,6 +26,8 @@ function Screen() {
       return <EndingsScreen onBack={back} />
     case 'games':
       return <GamesScreen onBack={back} />
+    case 'online':
+      return <OnlineScreen onBack={back} />
     case 'assets':
       return (
         <Suspense fallback={null}>

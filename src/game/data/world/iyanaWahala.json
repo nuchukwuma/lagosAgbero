@@ -2308,6 +2308,32 @@
           }
         }
       }
+    },
+    {
+      "id": "travel_village",
+      "label": "BUS TO NKWO AGU",
+      "icon": "wheel",
+      "spot": "motorPark",
+      "if": "online",
+      "mode": "travel",
+      "minutes": 0,
+      "params": {
+        "scene": "village"
+      },
+      "where": "the bus to Nkwo Agu"
+    },
+    {
+      "id": "travel_campus",
+      "label": "BUS TO CAMPUS",
+      "icon": "wheel",
+      "spot": "motorPark",
+      "if": "online",
+      "mode": "travel",
+      "minutes": 0,
+      "params": {
+        "scene": "campus"
+      },
+      "where": "the bus to Campus"
     }
   ],
   "rows": [

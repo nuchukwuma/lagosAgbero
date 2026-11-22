@@ -23,6 +23,7 @@ function migrate(data) {
 
 /** game = { player, stats, flags, memory, story }; summary is shown in the load menu. */
 export function saveGame(slot, game, summary = {}) {
+  if (game?.flags?.online) return false // Lagos Online lives on the server, never over a story save
   const s = storage()
   if (!s) return false
   try {

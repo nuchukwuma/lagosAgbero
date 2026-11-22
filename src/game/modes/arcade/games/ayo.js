@@ -111,8 +111,11 @@ export function aiMove(b, store, level, r) {
   return best
 }
 
+// Online (params.remote): the other side is a real person. Your moves go out
+// through s.outbox; theirs come in as { type: 'remote', move: { cup } } (cup
+// already on their side of your board, 6-11). Seat 1 waits for seat 0 to start.
 export function create(params = {}, seed = 1) {
-  return { r: rng(seed), board: new Array(12).fill(4), store: { p: 0, o: 0 }, turn: 'p', aiWait: 0, level: params.aiLevel ?? levelOf(params.skill ?? 0.6), name: params.name || 'Papa Ngwo', glow: [], lastTaken: 0, lastBy: null, over: false, winner: null, moves: 0, sound: [] }
+  return { r: rng(seed), remote: Boolean(params.remote), outbox: [], board: new Array(12).fill(4), store: { p: 0, o: 0 }, turn: params.remote && params.seat === 1 ? 'o' : 'p', aiWait: 0, level: params.aiLevel ?? levelOf(params.skill ?? 0.6), name: params.name || 'Papa Ngwo', glow: [], lastTaken: 0, lastBy: null, over: false, winner: null, moves: 0, sound: [] }
 }
 
 function finishIfDone(s) {
@@ -146,7 +149,7 @@ function doMove(s, cup, side) {
 }
 
 export function step(s, dt) {
-  if (s.turn !== 'o') return
+  if (s.turn !== 'o' || s.remote) return
   s.aiWait -= dt
   if (s.aiWait > 0) return
   const k = aiMove(s.board, s.store, s.level, s.r)
@@ -158,6 +161,7 @@ export function tapCup(s, cup) {
   if (s.turn !== 'p' || s.over) return
   if (!legal(s.board, 'p').includes(cup)) return void s.sound.push('wrong')
   doMove(s, cup, 'p')
+  if (s.remote) s.outbox.push({ cup })
 }
 
 export function cupRect(v, k) {
@@ -171,6 +175,11 @@ export function cupRect(v, k) {
 }
 
 export function input(s, ev, v) {
+  if (ev.type === 'remote') {
+    // the other player's move, on their side of the board
+    if (s.turn === 'o' && !s.over && legal(s.board, 'o').includes(ev.move.cup)) doMove(s, ev.move.cup, 'o')
+    return
+  }
   if (ev.type !== 'down') return
   for (let k = 0; k < 6; k++) if (inside(ev.x, ev.y, cupRect(v, k))) return tapCup(s, k)
 }
@@ -217,7 +226,7 @@ export const hud = (s) => [
   { label: 'YOU', value: s.store.p },
   { label: s.name.toUpperCase(), value: s.store.o },
   { label: 'TO WIN', value: 25 },
-  { label: 'LEVEL', value: `${s.level} · ${LEVELS[s.level - 1].name}` },
+  s.remote ? { label: 'ONLINE', value: 'live game' } : { label: 'LEVEL', value: `${s.level} · ${LEVELS[s.level - 1].name}` },
 ]
 
 export function result(s) {

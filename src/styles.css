@@ -4006,3 +4006,295 @@ svg .is-chase { fill: #e53935; stroke: #fff; stroke-width: 0.6; animation: map-p
 .drive-hud-min .drive-meter.low .bar > span { background: #e2553a; }
 .drive-next-min { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .drive-hud-min .task-toggle { position: absolute; right: 8px; }
+
+/* ---------------------------------------------------------------- Lagos Online */
+.btn-online {
+  background: linear-gradient(90deg, #1e8449, #2c5aa0);
+  color: #fff;
+  border-color: transparent;
+}
+.btn-online small {
+  display: block;
+  font-size: 11px;
+  opacity: 0.85;
+  font-weight: 400;
+}
+.hud-online {
+  pointer-events: none;
+}
+.hud-online .hud-left,
+.hud-online .hud-right {
+  pointer-events: auto;
+}
+.ol-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+  background: rgba(26, 20, 8, 0.78);
+  border-radius: 10px;
+  padding: 6px 10px;
+  max-width: min(70vw, 420px);
+}
+.ol-bar small {
+  color: var(--muted);
+  flex-basis: 100%;
+}
+.ol-money {
+  color: var(--danfo);
+  font-weight: 700;
+}
+.ol-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #888;
+}
+.ol-dot.ol-online {
+  background: #2ecc71;
+}
+.ol-dot.ol-connecting {
+  background: #f2c300;
+}
+.ol-dot.ol-error {
+  background: var(--danger);
+}
+.ol-tabs {
+  position: fixed;
+  left: calc(8px + env(safe-area-inset-left));
+  top: calc(84px + env(safe-area-inset-top));
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  z-index: 12;
+}
+.ol-tab {
+  position: relative;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  border: 2px solid rgba(242, 195, 0, 0.35);
+  background: rgba(26, 20, 8, 0.8);
+  font-size: 20px;
+  cursor: pointer;
+}
+.ol-tab.on {
+  border-color: var(--danfo);
+  background: #3a2c12;
+}
+.ol-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 9px;
+  background: var(--danger);
+  color: #fff;
+  font: 700 11px/18px system-ui, sans-serif;
+  font-style: normal;
+}
+.ol-panel {
+  position: fixed;
+  left: calc(58px + env(safe-area-inset-left));
+  top: calc(84px + env(safe-area-inset-top));
+  width: min(400px, calc(100vw - 74px));
+  max-height: calc(100dvh - 110px - env(safe-area-inset-top));
+  overflow-y: auto;
+  background: var(--panel);
+  border: 2px solid rgba(242, 195, 0, 0.4);
+  border-radius: 14px;
+  padding: 10px 12px;
+  z-index: 13;
+}
+.ol-panel h2 {
+  font-size: 18px;
+}
+.ol-panel h3 {
+  margin: 12px 0 6px;
+  color: var(--danfo);
+  font-size: 13px;
+  text-transform: uppercase;
+}
+.ol-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+.ol-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg);
+  border-radius: 10px;
+  padding: 8px 10px;
+}
+.ol-row.ol-mine {
+  outline: 2px solid var(--danfo);
+}
+.ol-row.ol-done {
+  opacity: 0.6;
+}
+.ol-info {
+  flex: 1;
+  min-width: 140px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.ol-info small {
+  color: var(--muted);
+}
+.ol-perk {
+  color: #7fdc9a !important;
+}
+.ol-tick {
+  color: #2ecc71;
+  font-size: 20px;
+  padding: 0 6px;
+}
+.ol-btns {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.ol-form {
+  flex-basis: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+.ol-form select,
+.ol-stake input,
+.ol-chat-say input {
+  background: #120d05;
+  color: var(--ink);
+  border: 1px solid rgba(242, 195, 0, 0.4);
+  border-radius: 8px;
+  padding: 6px 8px;
+  font-size: 14px;
+}
+.ol-form select {
+  flex: 1;
+  min-width: 150px;
+}
+.ol-stake {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--danfo);
+}
+.ol-stake input {
+  width: 96px;
+}
+.ol-chat {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.ol-chat-log {
+  max-height: 40dvh;
+  overflow-y: auto;
+}
+.ol-chat-log p {
+  margin: 4px 0;
+  word-break: break-word;
+}
+.ol-news {
+  color: var(--danfo);
+}
+.ol-chat-say {
+  display: flex;
+  gap: 6px;
+}
+.ol-chat-say input {
+  flex: 1;
+  min-width: 0;
+}
+.ol-board {
+  margin: 0;
+  padding-left: 22px;
+}
+.ol-board li {
+  padding: 2px 0;
+}
+.ol-board li b {
+  float: right;
+  color: var(--danfo);
+}
+.ol-invite {
+  position: fixed;
+  left: 50%;
+  top: calc(70px + env(safe-area-inset-top));
+  transform: translateX(-50%);
+  width: min(360px, calc(100vw - 24px));
+  background: var(--panel);
+  border: 2px solid var(--danfo);
+  border-radius: 14px;
+  padding: 10px 14px;
+  z-index: 40;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.5);
+}
+.ol-invite p {
+  margin: 0 0 8px;
+}
+.ol-end {
+  text-align: center;
+}
+.ol-toasts {
+  position: fixed;
+  right: calc(10px + env(safe-area-inset-right));
+  bottom: calc(110px + env(safe-area-inset-bottom));
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-end;
+  z-index: 41;
+  pointer-events: none;
+}
+.ol-toast {
+  pointer-events: auto;
+  max-width: min(320px, calc(100vw - 24px));
+  background: rgba(26, 20, 8, 0.92);
+  border-left: 4px solid var(--danfo);
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 14px;
+}
+.ol-ticker {
+  position: fixed;
+  left: calc(58px + env(safe-area-inset-left));
+  bottom: calc(120px + env(safe-area-inset-bottom));
+  max-width: min(360px, calc(100vw - 150px));
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  background: rgba(26, 20, 8, 0.7);
+  color: var(--ink);
+  border: 0;
+  border-radius: 8px;
+  padding: 6px 10px;
+  text-align: left;
+  font-size: 13px;
+  z-index: 11;
+}
+.online-tag {
+  white-space: nowrap;
+  background: rgba(26, 20, 8, 0.75);
+  color: #fff;
+  font: 700 13px/1.2 system-ui, sans-serif;
+  padding: 2px 8px;
+  border-radius: 8px;
+  text-align: center;
+  transform: translateY(-50%);
+}
+.online-tag small {
+  display: block;
+  color: var(--danfo);
+  font-weight: 400;
+  font-size: 10px;
+}

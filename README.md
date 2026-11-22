@@ -330,11 +330,21 @@ npm run assets:slim      # shrink the .glb models (1-byte normals and skin weigh
 - Driving handling (gearbox, spring steering) adapted from
   [Sketchbook](https://github.com/swift502/Sketchbook) by swift502, MIT licence.
 
+## Lagos Online (multiplayer)
+
+**Lagos Online** on the home screen is an open world shared with other
+players: Iyana-Wahala, Nkwo Agu and the campus joined by buses, live Draughts
+and Ayò, score duels in the other games, stakes and bets (game money only),
+groups and quests from the stories, a shop and leaderboards. It needs the
+small server in `server/`: `npm run server` locally; how to put it online is
+in `docs/online.md`.
+
 ## Docs
 
 - `docs/asset-table.md`: every model, its file, size and planned use
 - `docs/story-outline.md`: cast, backstory, acts, endings and the Ada paths (approved)
 - `docs/story-format.md`: how to write story JSON (beats, choices, effects, callbacks, free roam, campaigns, bluff and exam modes, the consequence audit)
+- `docs/online.md`: Lagos Online, the multiplayer open world, and how to run and host its server
 - `docs/world-format.md`: how the 3D worlds are laid out (Iyana-Wahala, the village, the campus) and the `?cam=top` map view
 
 ## Folder layout

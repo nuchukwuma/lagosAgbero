@@ -3,6 +3,8 @@ import { useGameStore } from '../../game/store/gameStore.js'
 import GameCanvas from '../../game/world/GameCanvas.jsx'
 import CanvasGuard from '../help/CanvasGuard.jsx'
 import HUD from '../hud/HUD.jsx'
+import OnlineHUD from '../online/OnlineHUD.jsx'
+import { disconnect } from '../../game/online/net.js'
 import FreeRoamControls from '../hud/FreeRoamControls.jsx'
 import LoadingOverlay from '../hud/LoadingOverlay.jsx'
 import EnergyTicker from '../hud/EnergyTicker.jsx'
@@ -96,7 +98,9 @@ export default function StoryScreen() {
   const modeName = activity ? activity.mode : view?.type === 'mode' ? view.mode : null
   useFirstTimeTutorial(modeName)
   // a game played on its own from the Games tab (no story around it)
-  const gamesOnly = Boolean(activity?.fromGames)
+  // Lagos Online: the shared open world (no story status, no saves)
+  const online = Boolean(game?.flags?.online)
+  const gamesOnly = Boolean(activity?.fromGames) || online
   const showMini = Boolean(view?.world) && (modeName ? MAP_MODES.has(modeName) : ['freeRoam', 'dialogue', 'choice'].includes(view?.type))
   useEffect(() => {
     if (!canMap) return undefined
@@ -164,8 +168,9 @@ export default function StoryScreen() {
       <CanvasGuard onBack={quitToTitle}>{(safeGl) => <GameCanvas view={view} game={game} activity={activity} paused={paused} onGoalReached={advance} safeGl={safeGl} />}</CanvasGuard>
       {raining && <div className="rain" aria-hidden="true" />}
       <div id="speech-layer" className="speech-layer" aria-live="polite" />
-      <HUD game={game} gamesOnly={gamesOnly} onStatus={() => setOverlay('status')} onMenu={() => setOverlay('menu')} onMap={view.world ? () => setOverlay('worldMap') : null} />
-      {showMini && !overlay && !gamesOnly && <MiniMap layout={getLayout(view.world)} goal={view.type === 'freeRoam' ? view.goal : null} onOpen={modeName ? null : () => setOverlay('worldMap')} />}
+      {online && <OnlineHUD onMenu={() => setOverlay('menu')} hidden={Boolean(overlay)} />}
+      {(!online || activity) && <HUD game={game} gamesOnly={gamesOnly} onStatus={() => setOverlay('status')} onMenu={() => setOverlay('menu')} onMap={view.world ? () => setOverlay('worldMap') : null} />}
+      {showMini && !overlay && (!gamesOnly || (online && !activity)) && <MiniMap layout={getLayout(view.world)} goal={view.type === 'freeRoam' ? view.goal : null} onOpen={modeName ? null : () => setOverlay('worldMap')} />}
       {view.chapterTitle && view.type !== 'cutscene' && !gamesOnly && <div className="chapter-chip">{view.chapterTitle}</div>}
       {view.type === 'freeRoam' && !overlay && !activity && (
         <FreeRoamControls
@@ -183,7 +188,7 @@ export default function StoryScreen() {
       {activity && <ActivityHost activity={activity} onFinish={finishActivity} retryN={retryN} />}
       {view.type === 'freeRoam' && !overlay && <Confrontation />}
       <EnergyTicker active={(view.type === 'freeRoam' || streetMode) && !overlay} />
-      <FavourButton view={view} activity={activity} overlay={overlay} />
+      {!online && <FavourButton view={view} activity={activity} overlay={overlay} />}
       <div className="story-content">{content}</div>
       {error && (
         <div className="story-error">
@@ -208,7 +213,11 @@ export default function StoryScreen() {
             load(slot)
             setOverlay(null)
           }}
-          onQuit={gamesOnly ? () => {
+          quitLabel={online && !activity ? 'Leave Lagos Online' : activity && online ? 'Give up this game' : null}
+          onQuit={online && !activity ? () => {
+            disconnect()
+            quitToTitle()
+          } : gamesOnly ? () => {
             setOverlay(null)
             finishActivity({ outcome: 'quit' })
           } : quitToTitle}
@@ -223,7 +232,7 @@ export default function StoryScreen() {
             setOverlay(null)
             showTutorial(modeName)
           } : null}
-          onRetry={modeName ? () => {
+          onRetry={modeName && !activity?.params?.online ? () => {
             setOverlay(null)
             retryGame()
           } : null}

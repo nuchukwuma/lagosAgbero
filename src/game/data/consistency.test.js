@@ -50,7 +50,8 @@ describe('data cross-references', () => {
   })
 
   it('every mode used in a story or world is a real mode', () => {
-    const bad = uses.filter((u) => !MODES.has(u.mode)).map((u) => `${u.where}: "${u.mode}"`)
+    // "travel" is the open world's bus between places (gameStore.startActivity), not a game
+    const bad = uses.filter((u) => !MODES.has(u.mode) && u.mode !== 'travel').map((u) => `${u.where}: "${u.mode}"`)
     expect(bad).toEqual([])
   })
 

@@ -9,7 +9,7 @@ const TITLES = { main: 'Paused', save: 'Save game', load: 'Load game', wardrobe:
 // settings, quit to title. Paused in the middle of a game, it opens on the rules.
 // A game started from the Games tab (gamesOnly) has no story bits: no save,
 // load, wardrobe or story map, and Quit goes back to the Games list.
-export default function GameMenu({ onClose, onSave, onLoad, onQuit, onMap, canDress = true, objective = null, chapter = null, activity = null, howTo = null, onRetry = null, onTutorial = null, gamesOnly = false }) {
+export default function GameMenu({ onClose, onSave, onLoad, onQuit, onMap, canDress = true, objective = null, chapter = null, activity = null, howTo = null, onRetry = null, onTutorial = null, gamesOnly = false, quitLabel = null }) {
   const [tab, setTab] = useState(howTo ? 'rules' : 'main')
   return (
     <div className="overlay" onClick={onClose}>
@@ -81,7 +81,7 @@ export default function GameMenu({ onClose, onSave, onLoad, onQuit, onMap, canDr
               Settings
             </button>
             <button className="btn" onClick={onQuit}>
-              {gamesOnly ? 'Quit to Games' : 'Quit to title'}
+              {quitLabel || (gamesOnly ? 'Quit to Games' : 'Quit to title')}
             </button>
             {!gamesOnly && <p className="footnote">The game also autosaves after every choice.</p>}
           </div>

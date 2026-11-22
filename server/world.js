@@ -536,7 +536,7 @@ const num = (v) => (Number.isFinite(Number(v)) ? Number(v) : 0)
 function clean2(look) {
   const out = {}
   for (const [k, v] of Object.entries(look).slice(0, 20)) if (/^#[0-9a-f]{6}$/i.test(v) || (typeof v === 'string' && v.length < 24)) out[clean(k, 16)] = v
-  if (Array.isArray(look.accessories)) out.accessories = look.accessories.slice(0, 4)
+  if (Array.isArray(look.accessories)) out.accessories = look.accessories.filter((x) => typeof x === 'string' && x.length < 24).slice(0, 4)
   return out
 }
 
