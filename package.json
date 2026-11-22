@@ -10,7 +10,8 @@
     "assets:check": "node scripts/check-assets.mjs",
     "assets:animations": "node scripts/import-animations.mjs",
     "story:check": "node scripts/check-story.mjs",
-    "lint": "eslint src scripts",
+    "lint": "eslint src scripts server",
+    "server": "node server/index.js",
     "test": "vitest run",
     "assets:characters": "node scripts/import-characters.mjs",
     "assets:clean": "node scripts/clean-assets.mjs",
@@ -40,6 +41,7 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "three": "^0.169.0",
+    "ws": "^8.23.0",
     "zustand": "^4.5.5"
   },
   "devDependencies": {
