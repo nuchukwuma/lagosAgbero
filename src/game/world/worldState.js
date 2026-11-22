@@ -22,6 +22,9 @@ export const playerState = {
   vehicleView: null, // { x, z } the conductor's danfo (camera)
   photo: null, // { pos, target, fov } a fixed camera for the menu art (tools only)
   shake: { until: 0, amp: 0 }, // camera shake (hits, crashes); see shake()
+  sneaking: false, // a stealth mission: walking is a crouched sneak, standing a crouch
+  extraColliders: null, // a mode's own walls and cover ([{ x, z, hw, hd, angle }]), on top of the world's
+  restore: null, // { x, z, facing }: put the player back here when the world returns (after a mission elsewhere)
 }
 
 // Light mode (budget phones): set by GameCanvas, read by the people's animation loop

@@ -5,7 +5,7 @@
 export const ARCADE_BY_STORY = {
   areaBoy: ['escape', 'change', 'draughts', 'traffic'],
   grace: ['ayo', 'palmClimb', 'fakeParts'],
-  campus: ['akara', 'sneak', 'penalty'],
+  campus: ['akara', 'penalty'], // (and Back Gate, a 3D mission: modes/stealth)
   politics: ['posters', 'ballots', 'riceQueue'],
   sugar: ['pepperSoup', 'barRush', 'whot'],
 }

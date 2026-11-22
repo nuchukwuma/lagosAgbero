@@ -11,6 +11,8 @@ import { create } from 'zustand'
 import { ARCADE_BOOSTS } from '../modes/arcade/tuning.js'
 
 export const POWERUPS = {
+  friendlyPorter: { mode: 'sneak', name: 'Friendly Porter', text: 'Two more tries', icon: 'door' },
+  sleepyGuards: { mode: 'sneak', name: 'Sleepy Guards', text: 'Guards take 40% longer to notice you', icon: 'shield' },
   heavyHands: { mode: 'fight', name: 'Heavy Hands', text: 'Your blows hit 30% harder', icon: 'fist' },
   ironJaw: { mode: 'fight', name: 'Iron Jaw', text: 'Take 35% less damage', icon: 'shield' },
   fullMeter: { mode: 'fight', name: 'Full Meter', text: 'Start with the Lagos Roundabout ready', icon: 'bolt' },

@@ -13,7 +13,7 @@ of its own. They play full screen over the frozen street, like the fights.
 | Grass to Grace | **Palm Climb**: tap the palm, mind the ants | `palmClimb` | Ch. *Papa Ngwo's Burial* | TAP PALM, the farm (village) |
 | Grass to Grace | **Original or Fake?**: Mama Ngozi's test | `fakeParts` | Ch. *First Pay* | ORIGINAL?, the market (Lagos) |
 | Campus | **Akara Fry**: drop, flip, lift | `akara` | Ch. *Send-Forth* | FRY AKARA, cafeteria |
-| Campus | **Back Gate After Curfew**: stealth past the torches | `sneak` | Ch. *Campaign Season* (warning Tamara) | SNEAK OUT, hostel |
+| Campus | **Back Gate After Curfew**: a 3D stealth mission on the campus at night (see below) | `sneak` | Ch. *Campaign Season* (warning Tamara) | SNEAK OUT, hostel |
 | Campus | **Hostel Cup Penalties** | `penalty` | Ch. *SUG Elections* (the cup final) | PENALTIES, sports field |
 | The Honourable | **Poster War**: hold the wall overnight | `posters` | Ch. *The Rumour* | POSTERS, Front Stop |
 | The Honourable | **Count the Votes**: sort every ballot | `ballots` | Ch. *Collation Night* | COUNT, South Street |
@@ -152,7 +152,6 @@ All of them end `won` or `lost`, and may pay `moneyChange`. Parameters:
 | `palmClimb` | `height` rings (32), `seconds` (45) |
 | `fakeParts` | `count` (20), `need` (15) |
 | `akara` | `target` orders (5), `seconds` (70) |
-| `sneak` | `lives` (3) |
 | `penalty` | `name` (the other hostel), `skill` (0.5) |
 | `posters` | `seconds` (45), `need` spots of 9 (5) |
 | `ballots` | `count` (30), `need` accuracy (0.85) |
@@ -197,7 +196,6 @@ hit, block, duck, knock-out or dance moves. The 3D streets keep their 3D people.
 | Palm Climb | a vertical platformer: the ringed trunk, fronds to jump between (some swaying), soldier ants, wasps, falling palm fruit, wind, palm nuts, the calabash at the top |
 | Original or Fake? | the stall's shelves, parts boxes (brand, part, origin, hologram seal, price tag), Mama Ngozi's brand chart |
 | Akara Fry | dawn, firewood, a black pan of oil, akara in six shades from raw to burnt, bubbles, smoke, the order board |
-| Back Gate | top-down stealth: tiled paths, raised walls, round hedges, the hostel and the iron gate, guards seen from above with torch beams that walls stop, a ? that fills before ! |
 | Penalties | the pitch, the hostel crowd, goal and net, keeper and kicker, the ball, the power bar, the score sheet |
 | Poster War | a night wall, Teacher and Nephew posters, the boys with paste buckets, your paste bucket |
 | Count the Votes | the counting table, ballot papers with three candidate boxes and symbols, thumbprints, smudges, rubber-banded bundles, the four piles |
@@ -221,4 +219,27 @@ Re-run it after changing a vehicle: `npx vite --port 5179` then
 - `src/game/modes/arcade/ArcadeHost.jsx`: the host (intro, loop, pause, HUD, pad, result, retry).
 - `src/game/modes/arcade/games/*.js`: one file per game: `create`, `step`, `input`, `draw`, `hud`, `buttons`, `result`, and the how-to-play text. The rules are plain functions with no drawing, so they are tested directly.
 - `src/game/modes/arcade/index.js`: the list, and which story each belongs to.
-- `src/game/modes/arcade/arcade.test.js`: rule tests (forced captures in draughts, Ayò captures and feeding, Whot specials, solvable sneak maps, …) and a random-input bot that plays every game to the end.
+- `src/game/modes/arcade/arcade.test.js`: rule tests (forced captures in draughts, Ayò captures and feeding, Whot specials, …) and a random-input bot that plays every game to the end.
+
+## Back Gate (3D)
+
+Back Gate is not a 2D game: it is played in the 3D Royal Crest campus at night,
+with the free-roam player, camera (drag or V to turn it) and controls
+(`src/game/modes/stealth/`). Whatever world the story or the Games tab is in,
+the mode switches to the campus (`worldForMode` in `modeRegistry.js`) and puts
+you back where you were afterwards.
+
+- Guards (4 to 6, more as the story goes on) walk patrol rounds on A* paths
+  between the buildings and the night's cover (containers, bins, walls, cars:
+  `COVER` and `ROUTES` in `stealthLogic.js`).
+- Their torch beam is drawn on the ground and stops at walls; in it a ? fills
+  (faster up close and when you run), then ! and he runs for you. Break his line
+  of sight for a few seconds and he searches, then goes back to his rounds.
+  Running close by is heard.
+- Next to a guard who hasn't seen you: TAKE DOWN (E). He sleeps and drops his
+  money; a guard who finds him goes to look.
+- Every guard asleep opens the back gate. Caught: back to the hostel door
+  (3 tries). Dawn (5 minutes) ends the night.
+- Power-ups: Friendly Porter (two more tries), Sleepy Guards (40% slower to notice you).
+- Tests: `stealthLogic.test.js` (routes walkable on the real campus, sight
+  blocked by containers, spotted then caught, takedowns open the gate, dawn).

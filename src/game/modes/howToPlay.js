@@ -20,6 +20,17 @@ const STORY_MODES = {
     title: 'Chase',
     rules: ['Run along the pavement after the vehicle and dodge the people in the way.', 'Running burns stamina: ease off before you run dry.', 'Press GRAB when you reach the door. Run out of time and they get away.'],
   }),
+  sneak: () => ({
+    title: 'Back Gate',
+    rules: [
+      'Night on the Royal Crest campus: get from the hostel out through the back gate before dawn.',
+      "A guard sees inside his torch beam (the patch of light in front of him). In it, a ? fills over his head; full, he runs for you. Containers, bins and walls block his view.",
+      'You walk crouched. Running is quicker, but a guard close by hears it and turns round.',
+      "Come up beside a guard who hasn't seen you and TAKE DOWN (E): he sleeps till morning and drops his money. A guard who finds him comes looking.",
+      'Every guard asleep opens the back gate. Caught, you start again from the hostel; out of tries, or dawn, and the night is over.',
+      'Move with the stick or WASD / arrows; run with RUN or Shift; drag the screen or press V to turn the camera.',
+    ],
+  }),
   fight: () => ({
     title: 'Fight',
     rules: [

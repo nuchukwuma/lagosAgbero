@@ -57,7 +57,7 @@ export default function PlayerController({ layout, look, enabled, eyeRed = 0, ti
       vel.current.x = vel.current.z = 0 // arrive standing still
     }
 
-    let next = { name: 'idle', speed: 1 }
+    let next = { name: playerState.sneaking ? 'crouchIdle' : 'idle', speed: 1 }
     const stunned = performance.now() < playerState.stunUntil
     const gesture = playerState.gesture && performance.now() < playerState.gesture.until ? playerState.gesture : null
     if (!gesture) playerState.gesture = null
@@ -102,10 +102,11 @@ export default function PlayerController({ layout, look, enabled, eyeRed = 0, ti
       p.z += v.z * dt
       resolveCollisions(p, RADIUS, layout.colliders, layout.bounds)
       resolveCollisions(p, RADIUS, vehicleColliders(), layout.bounds)
+      if (playerState.extraColliders) resolveCollisions(p, RADIUS, playerState.extraColliders, layout.bounds)
     }
     if (!stunned && !gesture && moving > 0.35) {
       playerState.moving = true
-      const clip = moving > WALK_SPEED * 1.25 && playerState.running ? 'run' : tired ? 'drunkWalk' : 'walk'
+      const clip = moving > WALK_SPEED * 1.25 && playerState.running ? 'run' : playerState.sneaking ? 'sneak' : tired ? 'drunkWalk' : 'walk'
       next = { name: clip, speed: Math.round(clipRate(clip, moving, clipSet) * 10) / 10 }
     }
 

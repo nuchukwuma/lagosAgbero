@@ -33,10 +33,6 @@ export const ARCADE_BOOSTS = {
     { id: 'ak_cool', name: 'Gentle Fire', text: 'Akara cooks 25% slower: easier to catch golden', icon: 'gas', apply: (p) => ({ cookMul: (p.cookMul ?? 1) * 0.75 }) },
     { id: 'ak_time', name: 'Early Start', text: '20 more seconds', icon: 'gas', apply: (p) => ({ seconds: (p.seconds ?? 70) + 20 }) },
   ],
-  sneak: [
-    { id: 'sn_life', name: 'Friendly Porter', text: 'Two more tries', icon: 'door', apply: (p) => ({ lives: (p.lives ?? 3) + 2 }) },
-    { id: 'sn_slow', name: 'Sleepy Guards', text: 'Guards walk 30% slower', icon: 'run', apply: (p) => ({ tickMul: (p.tickMul ?? 1) * 1.3 }) },
-  ],
   penalty: [
     { id: 'pen_foot', name: 'Steady Foot', text: 'The power bar moves 30% slower', icon: 'boot', apply: (p) => ({ powerMul: (p.powerMul ?? 1) * 0.7 }) },
     { id: 'pen_keeper', name: 'Nervous Kickers', text: 'They shoot worse', icon: 'shield', apply: (p) => ({ skill: Math.max(0.1, (p.skill ?? 0.5) - 0.3) }) },

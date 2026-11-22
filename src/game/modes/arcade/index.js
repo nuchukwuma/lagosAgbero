@@ -8,7 +8,6 @@ import ayo from './games/ayo.js'
 import palmClimb from './games/palmClimb.js'
 import fakeParts from './games/fakeParts.js'
 import akara from './games/akara.js'
-import sneak from './games/sneak.js'
 import penalty from './games/penalty.js'
 import posters from './games/posters.js'
 import ballots from './games/ballots.js'
@@ -18,7 +17,7 @@ import barRush from './games/barRush.js'
 import whot from './games/whot.js'
 import escape from '../platformer/escape.js'
 
-export const ARCADE_GAMES = [escape, change, draughts, traffic, ayo, palmClimb, fakeParts, akara, sneak, penalty, posters, ballots, riceQueue, pepperSoup, barRush, whot]
+export const ARCADE_GAMES = [escape, change, draughts, traffic, ayo, palmClimb, fakeParts, akara, penalty, posters, ballots, riceQueue, pepperSoup, barRush, whot]
 
 export { ARCADE_BY_STORY } from './ids.js'
 

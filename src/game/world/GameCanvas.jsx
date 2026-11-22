@@ -29,7 +29,9 @@ import { withAllegiance } from '../characters/look.js'
 import { useRunner } from '../modes/runner/runnerStore.js'
 import ConductorDirector from '../modes/conductor/ConductorDirector.jsx'
 import { useBus } from '../modes/conductor/ConductorMode.jsx'
-import { WORLD_MODES, FULLSCREEN_MODES } from '../modes/modeRegistry.js'
+import { WORLD_MODES, FULLSCREEN_MODES, worldForMode } from '../modes/modeRegistry.js'
+import StealthDirector from '../modes/stealth/StealthDirector.jsx'
+import { useStealth } from '../modes/stealth/stealthStore.js'
 import { LOW_ENERGY } from '../systems/energy.js'
 import VendorTracker from './VendorTracker.jsx'
 import ActivityTracker from './ActivityTracker.jsx'
@@ -62,6 +64,12 @@ function useSceneTeleport(view, layout) {
     // first scene, or a different world (village -> Lagos): start somewhere sensible
     const first = last.current === null || !last.current.startsWith(`${layout.id}/`)
     last.current = key
+    // back from a mission in another world (Back Gate): where you stood before it
+    if (first && playerState.restore) {
+      playerState.teleport = playerState.restore
+      playerState.restore = null
+      return
+    }
     if (storyCtx.chapters[view.chapterId]?.common) return // side quests, events, raids: stay put
     // back from a quest / event / raid to the scene that was interrupted:
     // the player stays where they were
@@ -88,15 +96,18 @@ function FrozenFrame() {
 }
 
 export default function GameCanvas({ view, game, activity = null, paused = false, onGoalReached, safeGl = false }) {
-  const layout = getLayout(view.world) // Iyana-Wahala, the village, the campus...
+  // a street mode started by the story, or by the player (activity)
+  const modeName = activity ? activity.mode : view.type === 'mode' ? view.mode : null
+  const layout = getLayout(worldForMode(modeName, view.world)) // Iyana-Wahala, the village, the campus...
   useSceneTeleport(view, layout)
   useEffect(() => {
     loadClips(COMMON_CLIPS, 'kenney').catch(() => {}) // everyone wears a Kenney Mini body (clipSets.json)
   }, [])
 
   const freeRoam = view.type === 'freeRoam' && !activity
-  // a street mode started by the story, or by the player (activity)
-  const modeName = activity ? activity.mode : view.type === 'mode' ? view.mode : null
+  // Back Gate: the campus at night, empty but for the guards
+  const stealth = modeName === 'sneak'
+  const stealthOn = useStealth((s) => s.active && s.started && !s.ended)
   const worldMode = Boolean(modeName && WORLD_MODES.has(modeName))
   const feeRunActive = useFeeRun((s) => s.active && s.started && !s.ended)
   const chaseActive = useChase((s) => s.active && s.started && !s.ended)
@@ -157,7 +168,7 @@ export default function GameCanvas({ view, game, activity = null, paused = false
       {capped && !paused && !fight2d && <FrameCap fps={30} />}
       {(paused || fight2d) && <FrozenFrame />}
       {settled && profile.dpr.min !== profile.dpr.max && <PerformanceMonitor onDecline={() => setDpr(range.min)} onIncline={() => setDpr(range.max)} flipflops={3} bounds={capped ? () => [22, 29] : undefined} onFallback={() => setDpr(range.min)} />}
-      <Lighting time={view.time} raining={Boolean(game.flags.raining)} />
+      <Lighting time={stealth ? 'night' : view.time} raining={Boolean(game.flags.raining)} />
       <Sky />
       <BlobShadows />
       {driveOn ? (
@@ -172,24 +183,25 @@ export default function GameCanvas({ view, game, activity = null, paused = false
       <Suspense fallback={null}>
           <StreetScene key={`scene-${layout.id}`} layout={layout} />
           <group userData={{ tag: 'npcs' }}>
-          <NPCs layout={layout} flags={game.flags} positions={view.positions} goalNpc={view.type === 'freeRoam' ? view.goal?.talkTo || null : null} speaker={speaker} mood={view.mood} hidden={fightOpponent ? [fightOpponent] : []} lite={quality === 'low'} />
+          {!stealth && <NPCs layout={layout} flags={game.flags} positions={view.positions} goalNpc={view.type === 'freeRoam' ? view.goal?.talkTo || null : null} speaker={speaker} mood={view.mood} hidden={fightOpponent ? [fightOpponent] : []} lite={quality === 'low'} />}
           </group>
-          {!(fightOn && modeName === 'fight') && !busOn && <PlayerController layout={layout} look={look} enabled={(freeRoam || feeRunActive || chaseActive) && !paused} eyeRed={eyeRed} tired={game.stats.energy < LOW_ENERGY} />}
-          {game.flags.online && <RemotePlayers world={layout.id} />}
+          {!(fightOn && modeName === 'fight') && !busOn && <PlayerController layout={layout} look={look} enabled={(freeRoam || feeRunActive || chaseActive || stealthOn) && !paused} eyeRed={eyeRed} tired={game.stats.energy < LOW_ENERGY} />}
+          {game.flags.online && !stealth && <RemotePlayers world={layout.id} />}
           {freeRoam && <VendorTracker />}
           {freeRoam && <ActivityTracker layout={layout} game={game} />}
           {freeRoam && <QuestTracker key={`quests-${layout.id}`} game={game} />}
           {freeRoam && <Pickups layout={layout} game={game} />}
           <group userData={{ tag: 'traffic' }}>
-            {layout.raw.traffic !== false && <Traffic key={`traffic-${layout.id}`} density={Math.min(layout.raw.traffic?.density ?? 3, quality === 'low' ? 2 : 9)} paused={paused} raining={Boolean(game.flags.raining)} />}
+            {layout.raw.traffic !== false && !stealth && <Traffic key={`traffic-${layout.id}`} density={Math.min(layout.raw.traffic?.density ?? 3, quality === 'low' ? 2 : 9)} paused={paused} raining={Boolean(game.flags.raining)} />}
           </group>
           <Suspense fallback={null}>
             <group userData={{ tag: 'crowd' }}>
-              <Crowd key={`crowd-${layout.id}`} layout={layout} quality={quality} paused={paused} />
+              {!stealth && <Crowd key={`crowd-${layout.id}`} layout={layout} quality={quality} paused={paused} />}
             </group>
           </Suspense>
           {worldMode && modeName === 'feeCollection' && <FeeRunDirector />}
           {worldMode && modeName === 'chase' && <ChaseDirector />}
+          {stealth && <StealthDirector layout={layout} />}
           {busOn && <ConductorDirector playerLook={look} slogan={(activity?.params || view.params)?.slogan} />}
         </Suspense>
       )}

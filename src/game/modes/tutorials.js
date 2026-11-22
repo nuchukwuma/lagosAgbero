@@ -26,10 +26,10 @@ export const TUTORIALS = {
     { at: BOARD, text: 'Ants, wasps and falling fruit sting. When the wind comes, stand still on a frond.' },
   ],
   sneak: [
-    { at: BOARD, text: 'Tap where you want to go: you walk there, round the crates and walls. You have the green ring.' },
-    { at: BOARD, text: 'A torch beam is what a guard sees. Reach him from outside it and you take him down (he drops naira).' },
-    { at: BOARD, text: 'Seen? A ? fills, then ! and he comes after you. Break his line of sight and he gives up.' },
-    { at: SCORE, text: 'Take down every guard and the back gate opens. Be out before dawn.' },
+    { at: '.joystick, .controls', text: 'Move with the stick (or WASD / arrows). You walk crouched; running (hold RUN, or Shift) is quicker but guards close by hear it. Drag the screen (or V) to turn the camera.' },
+    { at: '.task-panel', text: 'Guards still awake, time till dawn, your tries and the money you have taken. Every guard asleep opens the back gate.' },
+    { at: null, text: 'The yellow patch in front of a guard is his torch. Inside it a ? fills over his head; when it is full he runs for you. Containers, bins and walls block his view.' },
+    { at: null, text: 'Come up behind a guard who has not seen you: TAKE DOWN appears (or press E). He sleeps till morning and drops his money.' },
   ],
   change: [
     { at: BOARD, text: 'A passenger pays: work out their change (fare taken from what they paid).' },

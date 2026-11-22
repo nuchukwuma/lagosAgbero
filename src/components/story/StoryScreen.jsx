@@ -13,7 +13,8 @@ import EnergyTicker from '../hud/EnergyTicker.jsx'
 import ShopPanel from '../hud/ShopPanel.jsx'
 import { useFeeRun } from '../../game/modes/feeCollection/feeRunStore.js'
 import { useChase } from '../../game/modes/chase/chaseStore.js'
-import { modeComponent, FULLSCREEN_MODES } from '../../game/modes/modeRegistry.js'
+import { modeComponent, FULLSCREEN_MODES, worldForMode } from '../../game/modes/modeRegistry.js'
+import { useStealth } from '../../game/modes/stealth/stealthStore.js'
 import { worldJson, getLayout } from '../../game/world/worlds.js'
 import { MiniMap, MapScreen, useMapStore } from '../hud/WorldMap.jsx'
 import Confrontation from '../hud/Confrontation.jsx'
@@ -39,7 +40,7 @@ import RotateHint, { useTurnHint } from '../hud/RotateHint.jsx'
 import { applyOrientation } from '../../game/systems/orientation.js'
 import { useSettings } from '../../game/store/settings.js'
 
-const MAP_MODES = new Set(['feeCollection', 'chase']) // (fights are 2D: no map)
+const MAP_MODES = new Set(['feeCollection', 'chase', 'sneak']) // (fights are 2D: no map)
 
 // The story screen: the 3D street + HUD + whatever the engine says to show.
 // During a freeRoam beat the player walks; otherwise the story has the floor.
@@ -107,6 +108,8 @@ export default function StoryScreen() {
   const guide = useOnline((s) => s.guide)
   const guideHere = online && guide && view?.world && QUEST_GIVERS[guide]?.map === mapForWorld(view.world)
   const mapGoal = guideHere ? { talkTo: guide } : view?.type === 'freeRoam' ? view.goal : null
+  // Back Gate: the campus map, pointing at the gate once it's open
+  const gateOpen = useStealth((s) => s.hud.open)
   const showMini = Boolean(view?.world) && (modeName ? MAP_MODES.has(modeName) : ['freeRoam', 'dialogue', 'choice'].includes(view?.type))
   useEffect(() => {
     if (!canMap) return undefined
@@ -176,7 +179,7 @@ export default function StoryScreen() {
       <div id="speech-layer" className="speech-layer" aria-live="polite" />
       {online && <OnlineHUD onMenu={() => setOverlay('menu')} hidden={Boolean(overlay)} />}
       {(!online || activity) && <HUD game={game} gamesOnly={gamesOnly} onStatus={() => setOverlay('status')} onMenu={() => setOverlay('menu')} onMap={view.world ? () => setOverlay('worldMap') : null} />}
-      {showMini && !overlay && (!gamesOnly || (online && !activity)) && <MiniMap layout={getLayout(view.world)} goal={mapGoal} onOpen={modeName ? null : () => setOverlay('worldMap')} />}
+      {showMini && !overlay && (!gamesOnly || (online && !activity)) && <MiniMap layout={getLayout(worldForMode(modeName, view.world))} goal={modeName === 'sneak' ? (gateOpen ? { reach: 'backGate' } : null) : mapGoal} onOpen={modeName ? null : () => setOverlay('worldMap')} />}
       {view.chapterTitle && view.type !== 'cutscene' && !gamesOnly && <div className="chapter-chip">{view.chapterTitle}</div>}
       {view.type === 'freeRoam' && !overlay && !activity && (
         <FreeRoamControls

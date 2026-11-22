@@ -5,7 +5,6 @@ import * as change from './games/change.js'
 import * as draughts from './games/draughts.js'
 import * as ayo from './games/ayo.js'
 import * as whot from './games/whot.js'
-import * as sneak from './games/sneak.js'
 import * as akara from './games/akara.js'
 import * as palm from './games/palmClimb.js'
 import * as traffic from './games/traffic.js'
@@ -67,9 +66,9 @@ function mash(game, seed) {
 }
 
 describe('arcade mini-games', () => {
-  it('three games for every story', () => {
+  it('three games for every story (the campus has its third, Back Gate, in 3D: modes/stealth)', () => {
     const stories = (campaigns.campaigns || campaigns).map((c) => c.id)
-    for (const id of stories) expect(ARCADE_BY_STORY[id].length, id).toBeGreaterThanOrEqual(3)
+    for (const id of stories) expect(ARCADE_BY_STORY[id].length + (id === 'campus' ? 1 : 0), id).toBeGreaterThanOrEqual(3)
     const ids = ARCADE_GAMES.map((g) => g.id)
     expect(new Set(ids).size).toBe(ids.length)
     for (const list of Object.values(ARCADE_BY_STORY)) for (const id of list) expect(ids).toContain(id)
@@ -185,65 +184,6 @@ describe('arcade mini-games', () => {
     whot.playCard(s, 'p', 0)
     expect(s.hands.o.length).toBe(before + 2)
     expect(s.turn).toBe('p') // pick two: you go again
-  })
-
-  it('sneak: every level can be walked from the hostel to the gate, and every guard round is walkable', () => {
-    for (const lv of sneak.LEVELS) {
-      let start
-      let gate
-      lv.map.forEach((row, y) => [...row].forEach((ch, x) => {
-        if (ch === 'S') start = [x + 0.5, y + 0.5]
-        if (ch === 'E') gate = [x + 0.5, y + 0.5]
-      }))
-      expect(sneak.findPath(lv, start, gate), lv.name).toBeTruthy()
-      for (const g of lv.guards) {
-        for (const [x, y] of g.path) expect('#C'.includes(lv.map[y][x]), `${lv.name} guard at ${x},${y}`).toBe(false)
-        expect(sneak.findPath(lv, [g.path[0][0] + 0.5, g.path[0][1] + 0.5], start), `${lv.name}: a guard can reach you`).toBeTruthy()
-      }
-    }
-  })
-
-  it('sneak: tap-to-walk goes round crates; beams stop at crates; a takedown from outside the beam; caught by a chasing guard', () => {
-    const s = sneak.create({}, 1)
-    const lv = s.lv
-    // a route round the crate at (2, 2)
-    const route = sneak.findPath(lv, [1.5, 1.5], [3.5, 3.5])
-    expect(route.every(([x, y]) => !'#C'.includes(lv.map[Math.floor(y)][Math.floor(x)]))).toBe(true)
-    // a crate blocks the beam
-    expect(sneak.clearLine(lv, 1.5, 2.5, 3.5, 2.5)).toBe(false)
-    // takedown: walk up behind a guard who faces away
-    s.guards = [{ kind: 'security', path: [[5.5, 3.5], [6.5, 3.5]], wp: 1, x: 5.5, y: 3.5, fx: 1, fy: 0, route: [], state: 'patrol', spot: 0, lostT: 0, down: false, walk: 0 }]
-    s.tickMul = 999 // he barely moves
-    s.pos = [5.5, 6.5] // below him, out of his beam
-    sneak.walkTo(s, 5.5, 3.5)
-    for (let i = 0; i < 40 && !s.guards[0].down; i++) sneak.step(s, 0.05)
-    expect(s.guards[0].down).toBe(true)
-    expect(sneak.gateOpen(s)).toBe(true)
-    // caught: a guard chasing you who reaches you
-    const c = sneak.create({}, 1)
-    c.guards = [{ kind: 'don', path: [[5.5, 3.5]], wp: 0, x: 5.5, y: 3.5, fx: 0, fy: 1, route: [], state: 'chase', spot: 1, lostT: 0, lastSeen: [5.5, 4.5], down: false, walk: 0 }]
-    c.pos = [5.5, 4.5]
-    for (let i = 0; i < 20 && c.lives === 3; i++) sneak.step(c, 0.05)
-    expect(c.lives).toBe(2)
-  })
-
-  it('sneak: seen in a beam, the guard gives chase; the gate stays shut until every guard is down', () => {
-    const s = sneak.create({}, 1)
-    const g = s.guards[0]
-    Object.assign(g, { x: 5.5, y: 3.5, fx: 1, fy: 0, state: 'patrol', spot: 0 })
-    s.guards = [g, { ...s.guards[1], x: 1.5, y: 8.5 }]
-    s.pos = [7.5, 3.5] // two squares ahead of him, in his beam
-    s.tickMul = 999
-    for (let i = 0; i < 10; i++) sneak.step(s, 0.05)
-    expect(g.state).toBe('chase')
-    const t = sneak.create({}, 1)
-    for (const q of t.guards) Object.assign(q, { x: 1.5, y: 6.5, fx: -1, fy: 0 })
-    t.pos = [7.5, 8.5] // on the gate
-    sneak.step(t, 0.05)
-    expect(t.level).toBe(0) // locked
-    t.guards.forEach((q) => (q.down = true))
-    sneak.step(t, 0.05)
-    expect(t.level).toBe(1)
   })
 
   it('akara: flip at golden, lift at golden, and orders fill', () => {
