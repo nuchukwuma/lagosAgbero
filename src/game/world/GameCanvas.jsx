@@ -172,7 +172,7 @@ export default function GameCanvas({ view, game, activity = null, paused = false
       <Suspense fallback={null}>
           <StreetScene key={`scene-${layout.id}`} layout={layout} />
           <group userData={{ tag: 'npcs' }}>
-          <NPCs layout={layout} flags={game.flags} positions={view.positions} speaker={speaker} mood={view.mood} hidden={fightOpponent ? [fightOpponent] : []} lite={quality === 'low'} />
+          <NPCs layout={layout} flags={game.flags} positions={view.positions} goalNpc={view.type === 'freeRoam' ? view.goal?.talkTo || null : null} speaker={speaker} mood={view.mood} hidden={fightOpponent ? [fightOpponent] : []} lite={quality === 'low'} />
           </group>
           {!(fightOn && modeName === 'fight') && !busOn && <PlayerController layout={layout} look={look} enabled={(freeRoam || feeRunActive || chaseActive) && !paused} eyeRed={eyeRed} tired={game.stats.energy < LOW_ENERGY} />}
           {game.flags.online && <RemotePlayers world={layout.id} />}

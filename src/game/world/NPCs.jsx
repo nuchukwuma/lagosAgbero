@@ -49,9 +49,10 @@ function NPC({ id, look, pos, facing, anim, speaking, mood }) {
   return <Character ref={ref} look={look} animation={animation} speed={animation === 'preach' ? 0.55 : 1} position={[pos[0], GROUND_Y, pos[1]]} />
 }
 
-export default function NPCs({ layout, flags, positions = {}, speaker, mood, hidden = [], lite = false }) {
+export default function NPCs({ layout, flags, positions = {}, speaker, mood, hidden = [], lite = false, goalNpc = null }) {
   const state = { flags, stats: {}, memory: {} }
-  const npcs = (layout.raw.npcs || []).filter((n) => (positions[n.id] || checkCondition(n.if, state)) && !hidden.includes(n.id))
+  // whoever the story sends you to talk to is always there, whatever their flags say
+  const npcs = (layout.raw.npcs || []).filter((n) => (positions[n.id] || n.id === goalNpc || checkCondition(n.if, state)) && !hidden.includes(n.id))
   return (
     <>
       {npcs.map((n) => {

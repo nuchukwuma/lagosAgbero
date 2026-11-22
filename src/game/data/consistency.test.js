@@ -97,4 +97,23 @@ describe('data cross-references', () => {
         for (const who of Object.keys(s.positions || {})) if (!characters[who] && !npcIds.has(who) && who !== 'player') bad.push(`${file} ${sid}: "${who}"`)
     expect(bad).toEqual([])
   })
+
+  it('everyone a scene sends you to talk to stands in that world (or is placed by the scene)', () => {
+    const npcsOf = Object.fromEntries(Object.values(worlds).map((w) => [w.id, new Set((w.npcs || []).map((n) => n.id))]))
+    const bad = []
+    const goals = (o, out = []) => {
+      if (Array.isArray(o)) o.forEach((v) => goals(v, out))
+      else if (o && typeof o === 'object') {
+        if (o.type === 'freeRoam' && o.goal?.talkTo) out.push(o.goal.talkTo)
+        Object.values(o).forEach((v) => goals(v, out))
+      }
+      return out
+    }
+    for (const [file, ch] of Object.entries(chapters))
+      for (const [sid, s] of Object.entries(ch.scenes || {})) {
+        const world = s.world || ch.world || 'iyanaWahala'
+        for (const who of goals(s.beats)) if (!s.positions?.[who] && !npcsOf[world]?.has(who)) bad.push(`${file} ${sid}: talk to "${who}", who isn't in ${world}`)
+      }
+    expect(bad).toEqual([])
+  })
 })
