@@ -3,7 +3,7 @@ import { useGameStore } from '../../game/store/gameStore.js'
 import { formatNaira } from '../../game/narrative/stats.js'
 import characters from '../../game/data/characters.json'
 import { useOnline, say, challenge, answerInvite, bet, joinGroup, leaveGroup, claimQuest, buy, askLeaders, clearEnd, dismissToast } from '../../game/online/net.js'
-import { DUEL_GAMES, GROUPS, QUESTS, SHOP, MAPS, MAX_STAKE } from '../../game/online/catalog.js'
+import { DUEL_GAMES, GROUPS, QUESTS, SHOP, MAPS, MAX_STAKE, QUEST_GIVERS, giverState } from '../../game/online/catalog.js'
 
 // Lagos Online, on top of the street: who you are and what you have, the
 // people here, chat, challenges and bets, groups, quests, the shop and the
@@ -19,6 +19,8 @@ const TABS = [
   ['leaders', '🏆', 'Leaders'],
 ]
 const who = (id) => characters[id]?.name || id
+let localToast = 0
+const addLocalToast = (text) => useOnline.setState((s) => ({ toasts: [...s.toasts, { id: `l${++localToast}`, text }].slice(-4) }))
 
 /** Starts the game for a match the server just made (yours, both sides). */
 function useMatchStarter() {
@@ -181,15 +183,22 @@ function Bets({ me }) {
 
 function Quests({ me }) {
   const boost = GROUPS[me.group]?.perk?.quests || 0
+  const near = useOnline((s) => s.nearGiver)
+  const guide = useOnline((s) => s.guide)
+  const map = useOnline((s) => s.map)
+  // the person you're talking to first
+  const list = [...QUESTS].sort((a, b) => (b.from === near) - (a.from === near))
   return (
     <div className="ol-list">
-      <p className="muted">New every day. People from the stories want things done.</p>
-      {QUESTS.map((q) => {
+      <p className="muted">{near ? `${who(near)} is listening.` : 'New every day. Do the job anywhere, then go to the person to collect. ! = a job going, ✓ = money waiting.'}</p>
+      {list.map((q) => {
         const n = Math.min(q.goal.count, me.quests?.progress?.[q.id] || 0)
         const done = n >= q.goal.count
         const claimed = me.quests?.claimed?.[q.id]
+        const g = QUEST_GIVERS[q.from]
+        const here = near === q.from
         return (
-          <div key={q.id} className={`ol-row ${claimed ? 'ol-done' : ''}`}>
+          <div key={q.id} className={`ol-row ${claimed ? 'ol-done' : ''} ${here ? 'ol-mine' : ''}`}>
             <div className="ol-info">
               <strong>
                 {who(q.from)} <small>({q.story})</small>
@@ -198,12 +207,23 @@ function Quests({ me }) {
               <small>
                 {n}/{q.goal.count} · {formatNaira(Math.round(q.reward * (1 + boost)))}
               </small>
+              {!claimed && !here && g && <small className="ol-where">📍 {MAPS[g.map].name}, {g.place}</small>}
             </div>
             {claimed ? (
               <span className="ol-tick">✓</span>
-            ) : (
+            ) : here ? (
               <button className="btn btn-small btn-primary" disabled={!done} onClick={() => claimQuest(q.id)}>
-                Claim
+                {done ? 'Collect' : 'Not done'}
+              </button>
+            ) : (
+              <button
+                className={`btn btn-small ${done ? 'btn-primary' : ''}`}
+                onClick={() => {
+                  useOnline.setState({ guide: guide === q.from ? null : q.from })
+                  if (g && g.map !== map) addLocalToast(`${who(q.from)} is in ${MAPS[g.map].name}. Take the bus there, then follow the arrow.`)
+                }}
+              >
+                {guide === q.from ? 'Stop guiding' : done ? 'Go collect' : 'Show the way'}
               </button>
             )}
           </div>
@@ -396,6 +416,7 @@ export default function OnlineHUD({ onMenu, hidden = false }) {
   const invites = useOnline((s) => s.invites.length)
   const matches = useOnline((s) => s.matches.length)
   const activity = useGameStore((s) => s.activity)
+  const nearGiver = useOnline((s) => s.nearGiver)
   const [tab, setTab] = useState(null)
   useMatchStarter()
   useLiveEndCloser()
@@ -453,6 +474,12 @@ export default function OnlineHUD({ onMenu, hidden = false }) {
         </div>
       )}
       {!tab && <ChatTicker onOpen={() => setTab('chat')} />}
+      {nearGiver && me && tab !== 'quests' && (
+        <button className={`ol-talk ${giverState(nearGiver, me) === 'ready' ? 'is-ready' : ''}`} onClick={() => setTab('quests')}>
+          💬 Talk to {who(nearGiver)}
+          {giverState(nearGiver, me) === 'ready' && <small>money waiting</small>}
+        </button>
+      )}
       {tab && me && (
         <div className="ol-panel">
           <div className="panel-head">

@@ -26,7 +26,12 @@ Iyana-Wahala's motor park.
   Tortoises, Honourable's Campaign Team, Sugar Palace Crew, Umunna Age Grade,
   Campus Fellowship. One at a time; joining is free.
 - **Quests** from the stories' people (Professor, Baba Ticket, Papa Ngwo,
-  Mama Titi...), new every day, paid when claimed.
+  Mama Titi...), new every day. They stand in the street with a sign over
+  their heads (**!** a job going, **✓** money waiting). Do the job anywhere,
+  then go to them and **Talk** to collect. In the Quests panel, **Show the
+  way** puts an arrow over them and points the minimap at them (take the bus
+  first if they're in another place). Where they are is in
+  `QUEST_GIVERS` (`src/game/online/catalog.js`).
 - **Shop:** Lucky Cap (+5% on match wins), Bet Insurance (half back on a lost
   bet), Power-up Tokens (a power-up for your next game, instead of an ad), and
   clothes.

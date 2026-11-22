@@ -6,6 +6,7 @@ import { GROUND_Y } from '../world/layout.js'
 import { playerState } from '../world/worldState.js'
 import { useOnline, joinPlace, send } from './net.js'
 import { MAPS, GROUPS } from './catalog.js'
+import QuestGivers from './QuestGivers.jsx'
 
 // Lagos Online in the 3D street: the other players here, walking about with
 // their names over their heads, and our own position sent to the server.
@@ -85,6 +86,7 @@ export default function RemotePlayers({ world }) {
   return (
     <>
       <Sync map={map} />
+      <QuestGivers map={map} />
       {shown.map((p) => (
         <Remote key={`${p.id}-${JSON.stringify(p.look || {})}`} p={p} />
       ))}

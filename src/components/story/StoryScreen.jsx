@@ -4,7 +4,9 @@ import GameCanvas from '../../game/world/GameCanvas.jsx'
 import CanvasGuard from '../help/CanvasGuard.jsx'
 import HUD from '../hud/HUD.jsx'
 import OnlineHUD from '../online/OnlineHUD.jsx'
-import { disconnect } from '../../game/online/net.js'
+import { disconnect, useOnline } from '../../game/online/net.js'
+import { QUEST_GIVERS } from '../../game/online/catalog.js'
+import { mapForWorld } from '../../game/online/RemotePlayers.jsx'
 import FreeRoamControls from '../hud/FreeRoamControls.jsx'
 import LoadingOverlay from '../hud/LoadingOverlay.jsx'
 import EnergyTicker from '../hud/EnergyTicker.jsx'
@@ -101,6 +103,10 @@ export default function StoryScreen() {
   // Lagos Online: the shared open world (no story status, no saves)
   const online = Boolean(game?.flags?.online)
   const gamesOnly = Boolean(activity?.fromGames) || online
+  // online: the way to the quest giver you asked for (when they're in this place)
+  const guide = useOnline((s) => s.guide)
+  const guideHere = online && guide && view?.world && QUEST_GIVERS[guide]?.map === mapForWorld(view.world)
+  const mapGoal = guideHere ? { talkTo: guide } : view?.type === 'freeRoam' ? view.goal : null
   const showMini = Boolean(view?.world) && (modeName ? MAP_MODES.has(modeName) : ['freeRoam', 'dialogue', 'choice'].includes(view?.type))
   useEffect(() => {
     if (!canMap) return undefined
@@ -170,7 +176,7 @@ export default function StoryScreen() {
       <div id="speech-layer" className="speech-layer" aria-live="polite" />
       {online && <OnlineHUD onMenu={() => setOverlay('menu')} hidden={Boolean(overlay)} />}
       {(!online || activity) && <HUD game={game} gamesOnly={gamesOnly} onStatus={() => setOverlay('status')} onMenu={() => setOverlay('menu')} onMap={view.world ? () => setOverlay('worldMap') : null} />}
-      {showMini && !overlay && (!gamesOnly || (online && !activity)) && <MiniMap layout={getLayout(view.world)} goal={view.type === 'freeRoam' ? view.goal : null} onOpen={modeName ? null : () => setOverlay('worldMap')} />}
+      {showMini && !overlay && (!gamesOnly || (online && !activity)) && <MiniMap layout={getLayout(view.world)} goal={mapGoal} onOpen={modeName ? null : () => setOverlay('worldMap')} />}
       {view.chapterTitle && view.type !== 'cutscene' && !gamesOnly && <div className="chapter-chip">{view.chapterTitle}</div>}
       {view.type === 'freeRoam' && !overlay && !activity && (
         <FreeRoamControls
@@ -202,7 +208,7 @@ export default function StoryScreen() {
       <RotateHint want={turnTo} />
       {overlay === 'status' && <StatusPanel game={game} onClose={() => setOverlay(null)} />}
       {overlay === 'map' && <StoryMap game={game} onClose={() => setOverlay(null)} />}
-      {overlay === 'worldMap' && view.world && <MapScreen layout={getLayout(view.world)} goal={view.type === 'freeRoam' ? view.goal : null} onClose={() => setOverlay(null)} />}
+      {overlay === 'worldMap' && view.world && <MapScreen layout={getLayout(view.world)} goal={mapGoal} onClose={() => setOverlay(null)} />}
       {overlay?.startsWith('shop:') && <ShopPanel vendor={overlay.slice(5)} onClose={() => setOverlay(null)} />}
       <Tutorial />
       {overlay === 'menu' && (

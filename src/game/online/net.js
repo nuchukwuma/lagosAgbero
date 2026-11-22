@@ -24,6 +24,8 @@ export const useOnline = create(() => ({
   leaders: null,
   toasts: [],
   liveInbox: [], // moves from the other player in a live game, oldest first
+  nearGiver: null, // the quest giver you're standing next to (QuestGivers.jsx)
+  guide: null, // the quest giver you asked the way to
 }))
 
 let ws = null
@@ -165,7 +167,7 @@ export function disconnect() {
   wanted = null
   if (ws) ws.close()
   ws = null
-  useOnline.setState({ status: 'off', players: {}, map: null, match: null, invites: [] })
+  useOnline.setState({ status: 'off', players: {}, map: null, match: null, invites: [], guide: null, nearGiver: null })
 }
 
 // the things you can do

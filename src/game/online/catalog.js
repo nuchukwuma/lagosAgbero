@@ -60,6 +60,22 @@ export const QUESTS = [
   { id: 'basseyWins', from: 'bassey', story: 'Area Boy', text: 'Win three matches. "I like winners. They settle faster."', goal: { event: 'win', count: 3 }, reward: 3000 },
 ]
 
+// Where to find each quest giver in the open world. You claim a quest's reward
+// from them in person. `pos` [x, z]: Lagos Online puts them there; without it,
+// they already stand in that world (world JSON npcs).
+export const QUEST_GIVERS = {
+  professor: { map: 'lagos', place: 'under the bridge' },
+  babaTicket: { map: 'lagos', place: 'his office at the motor park' },
+  ada: { map: 'lagos', place: 'her shop in the market' },
+  ngozi: { map: 'lagos', place: 'the market, by the parts stalls', pos: [18.5, -12], facing: 90 },
+  mamaTiti: { map: 'lagos', place: 'the paraga joint', pos: [-1.5, -17], facing: 0 },
+  chiefDapo: { map: 'lagos', place: 'South Street', pos: [-18.8, 9.3], facing: 180 },
+  bassey: { map: 'lagos', place: 'Rich Street', pos: [28, 22], facing: 180 },
+  papaNgwo: { map: 'village', place: 'the palm-wine shade' },
+  mamaSomto: { map: 'campus', place: 'the cafeteria', pos: [10, 14.5], facing: 180 },
+  babaGate: { map: 'campus', place: 'the main gate' },
+}
+
 // The shop. Advantages are small and fair; looks are just for style.
 //   kind: perm (keep it) · uses (spent as used) · look (changes how you look)
 export const SHOP = {
@@ -85,4 +101,15 @@ export function questCounts(q, ev) {
   if (g.game && g.game !== ev.game) return false
   if (g.score != null && !(ev.score >= g.score)) return false
   return true
+}
+
+/** How a giver's quests stand for you: 'ready' (a reward to collect), 'open', or null (all claimed). */
+export function giverState(id, me) {
+  let open = false
+  for (const q of QUESTS) {
+    if (q.from !== id || me?.quests?.claimed?.[q.id]) continue
+    if ((me?.quests?.progress?.[q.id] || 0) >= q.goal.count) return 'ready'
+    open = true
+  }
+  return open ? 'open' : null
 }
