@@ -1,7 +1,7 @@
 import { useMemo, useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
-import { StaticWorld } from '../Scenery.jsx'
+import { StaticWorld, Props } from '../Scenery.jsx'
 import { GROUND_Y, WALL_THICKNESS } from '../layout.js'
 import { playerState } from '../worldState.js'
 
@@ -51,13 +51,21 @@ export default function InteriorScene({ layout }) {
   const it = layout.raw.interior
   const height = it.height || 2.8
   const rooms = useMemo(() => it.rooms || [], [it])
+  const around = layout.fill.around
   return (
     <group userData={{ tag: 'interior' }}>
-      {/* the ground outside (so the edges don't look cut off) */}
-      <mesh rotation-x={-Math.PI / 2} position-y={-0.02}>
-        <planeGeometry args={[80, 80]} />
-        <meshStandardMaterial color="#3d3a33" roughness={1} />
+      {/* the ground outside, and the compound's yard */}
+      <mesh rotation-x={-Math.PI / 2} position-y={-0.03}>
+        <planeGeometry args={[160, 160]} />
+        <meshStandardMaterial color={around?.ground || '#3d3a33'} roughness={1} />
       </mesh>
+      {around?.yard && (
+        <mesh rotation-x={-Math.PI / 2} position={[(around.yard.minX + around.yard.maxX) / 2, -0.015, (around.yard.minZ + around.yard.maxZ) / 2]}>
+          <planeGeometry args={[around.yard.maxX - around.yard.minX, around.yard.maxZ - around.yard.minZ]} />
+          <meshStandardMaterial color={around.yardColor} roughness={0.95} />
+        </mesh>
+      )}
+      <Props prims={layout.fill.prims} />
       {rooms.map((r) => (
         <mesh key={r.name} position={[r.x + r.w / 2, GROUND_Y - 0.01, r.z + r.d / 2]} receiveShadow>
           <boxGeometry args={[r.w, 0.04, r.d]} />

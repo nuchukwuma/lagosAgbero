@@ -78,10 +78,11 @@ export const QUEST_GIVERS = {
 
 // Property: places you can buy (each is a building you walk into, data/world/interiors)
 // and furnish. Friends in your room can visit.
+// Prices start at ₦100,000 and go up with the floor area (m²) and the address.
 export const PROPERTIES = {
-  hostelRoom: { name: 'Hostel room, Royal Crest', map: 'campus', price: 5000, blurb: 'Six bunks, one window, endless noise.' },
-  shrine: { name: 'Shrine compound, Nkwo Agu', map: 'village', price: 25000, blurb: 'The elders will talk. Let them talk.' },
-  duplex: { name: 'Rich Street duplex, Iyana-Wahala', map: 'lagos', price: 60000, blurb: 'Four rooms, a safe, and a gateman who salutes.' },
+  hostelRoom: { name: 'Hostel room, Royal Crest', map: 'campus', size: 80, price: 100000, blurb: 'Six bunks, one window, endless noise.' },
+  shrine: { name: 'Shrine compound, Nkwo Agu', map: 'village', size: 140, price: 350000, blurb: 'A walled yard and an altar. The elders will talk. Let them talk.' },
+  duplex: { name: 'Rich Street duplex, Iyana-Wahala', map: 'lagos', size: 192, price: 1200000, blurb: 'Four rooms, a walled compound, a safe, and a gateman who salutes.' },
 }
 // What you can put in a place you own, and its price.
 export const FURNITURE_SHOP = {

@@ -3,6 +3,7 @@
   "name": "Hostel room, Royal Crest",
   "notes": "Interior. A six-bunk hostel room; the door is in the middle of the south wall.",
   "interior": {
+    "setting": "campus",
     "height": 2.7,
     "wall": "#cfd8c4",
     "trim": "#5c6b52",

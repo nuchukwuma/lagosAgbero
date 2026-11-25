@@ -9,6 +9,7 @@
 import { getAsset } from '../../assets/assetManifest.js'
 import { generateFill } from './cityFill.js'
 import { buildStalls } from './stalls.js'
+import { surroundings } from './interiors/surroundings.js'
 
 // Kenney road tiles have their asphalt at y = 0 (only kerbs rise to 0.16 m),
 // so people, buildings and pavements stand just above zero.
@@ -105,7 +106,10 @@ export function parseLayout(json, { reserved = [], lite = false } = {}) {
   ]
   // an interior (a building you walk into): its walls block, and nothing is generated around it
   if (json.interior) colliders.push(...interiorWalls(json.interior))
-  const fill = json.interior ? { groups: [], prims: [], colliders: [], blocks: [], lights: [], shadows: [], people: [] } : generateFill(json, colliders, marks, { lite })
+  // ... and what's around it (the yard, the neighbours, trees): to look at, not to walk to
+  const around = json.interior ? surroundings(json.interior) : null
+  if (around) add(around.groups, 'prop')
+  const fill = json.interior ? { groups: [], prims: around.prims, colliders: [], blocks: [], lights: [], shadows: [], people: [], around } : generateFill(json, colliders, marks, { lite })
   groups.push(...fill.groups)
   // market stalls: containers join the batched models, the rest the props
   const stalls = buildStalls(json.stalls)

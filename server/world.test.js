@@ -246,21 +246,27 @@ describe('Lagos Online: property', () => {
   beforeEach(() => (W = setup()))
   const fund = (name, money) => (W.world.store.players[`token-${name}-0123456789`].money = money)
 
+  it('prices start at ₦100,000 and grow with the floor area', () => {
+    const list = Object.values(PROPERTIES).sort((x, y) => x.size - y.size)
+    expect(list[0].price).toBeGreaterThanOrEqual(100000)
+    for (let i = 1; i < list.length; i++) expect(list[i].price).toBeGreaterThan(list[i - 1].price)
+  })
+
   it('buy a place, furnish it, take a piece back, and a friend in the room can visit', () => {
     const a = W.join('Ada')
     const b = W.join('Bayo')
+    a.send({ t: 'buyProperty', id: 'hostelRoom' })
+    expect(a.last('error').text).toMatch(/don't have/) // property starts at ₦100,000: not for a new guest
+    fund('Ada', 2000000)
     a.send({ t: 'buyProperty', id: 'duplex' })
-    expect(a.last('error').text).toMatch(/don't have/) // ₦60,000 is a lot for a new guest
-    fund('Ada', 100000)
-    a.send({ t: 'buyProperty', id: 'duplex' })
-    expect(a.me().money).toBe(100000 - PROPERTIES.duplex.price)
+    expect(a.me().money).toBe(2000000 - PROPERTIES.duplex.price)
     expect(a.me().properties.duplex.furniture).toEqual([])
     a.send({ t: 'buyProperty', id: 'duplex' })
     expect(a.last('error').text).toMatch(/already/)
     // furnish: a sofa (paid), placed where she stands
     a.send({ t: 'furnish', id: 'duplex', model: 'sofa', x: 1.234, z: -2, rot: 90 })
     expect(a.me().properties.duplex.furniture).toEqual([{ model: 'sofa', x: 1.23, z: -2, rot: 90 }])
-    expect(a.me().money).toBe(100000 - PROPERTIES.duplex.price - FURNITURE_SHOP.sofa)
+    expect(a.me().money).toBe(2000000 - PROPERTIES.duplex.price - FURNITURE_SHOP.sofa)
     a.send({ t: 'furnish', id: 'duplex', model: 'goldThrone', x: 0, z: 0 })
     expect(a.last('error').text).toMatch(/No such/)
     a.send({ t: 'furnish', id: 'hostelRoom', model: 'sofa', x: 0, z: 0 })

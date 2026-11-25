@@ -3,6 +3,7 @@
   "name": "Rich Street duplex",
   "notes": "Interior. Metres, +X east, +Z south; the front door is in the middle of the south wall. Living room (west) and kitchen-dining (east) at the front, bedroom (west) and office (east) at the back.",
   "interior": {
+    "setting": "estate",
     "height": 2.8,
     "wall": "#e7ddc9",
     "trim": "#8a6a45",

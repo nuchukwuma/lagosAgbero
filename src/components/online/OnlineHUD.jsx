@@ -404,7 +404,7 @@ function Places({ me }) {
             <strong>{pl.name}</strong>
             <small>{pl.blurb}</small>
             <small>
-              {owned[id] ? `Yours · ${owned[id].furniture.length} pieces of furniture · its door is in ${MAPS[pl.map].name}` : formatNaira(pl.price)}
+              {pl.size} m² · {owned[id] ? `yours · ${owned[id].furniture.length} pieces of furniture · its door is in ${MAPS[pl.map].name}` : `${formatNaira(pl.price)} · in ${MAPS[pl.map].name}`}
             </small>
           </div>
           {owned[id] ? (

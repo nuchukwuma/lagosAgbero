@@ -344,7 +344,7 @@ export const PROPS = {
   },
 }
 
-function transformPrims(prims, x, z, yaw) {
+export function transformPrims(prims, x, z, yaw) {
   return prims.map((q) => {
     const [px, pz] = rotate(q.p[0], q.p[2], yaw)
     return { ...q, p: [x + px, q.p[1], z + pz], ry: (q.ry || 0) + yaw }

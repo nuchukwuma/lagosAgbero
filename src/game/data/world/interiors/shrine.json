@@ -3,6 +3,7 @@
   "name": "The shrine compound",
   "notes": "Interior. A walled mud compound with the altar at the back (north); the entrance is in the south wall.",
   "interior": {
+    "setting": "bush",
     "height": 2.3,
     "wall": "#8a5a3a",
     "trim": "#5e3b22",
