@@ -4,6 +4,7 @@ import { formatNaira } from '../../game/narrative/stats.js'
 import characters from '../../game/data/characters.json'
 import { useOnline, say, challenge, answerInvite, bet, joinGroup, leaveGroup, claimQuest, buy, askLeaders, clearEnd, dismissToast, createRoom, joinRoom, leaveRoom, give, askBoard, buyProperty, furnish, unfurnish, visit } from '../../game/online/net.js'
 import { whatsappLink, shareRoom, copyRoomLink } from '../../game/online/invite.js'
+import { openShareCard } from '../share/shareCard.js'
 import { useInterior } from '../../game/world/interiors/interiorStore.js'
 import { playerState } from '../../game/world/worldState.js'
 import { MODELS } from '../../assets/assetManifest.js'
@@ -570,6 +571,18 @@ function MatchEnd({ me }) {
           {end.gameName}: {end.players[0].name} vs {end.players[1].name} ({end.why})
         </p>
         {got > 0 && <p className="arcade-pay">{end.winner ? '+' : 'Stake back: '}{formatNaira(got)}</p>}
+        {won && (
+          <button
+            className="btn"
+            onClick={() => {
+              const opp = end.players.find((p) => p.id !== me.id)?.name || 'them'
+              clearEnd()
+              openShareCard({ kicker: `Lagos Online · ${end.gameName}`, title: `Beat ${opp}`, line: end.why, stats: [['Won', formatNaira(got)], ['Wins', me.stats?.wins ?? 0], ['Respect', me.stats?.respect ?? 0]], tone: 'green' })
+            }}
+          >
+            Share the win
+          </button>
+        )}
         <button className="btn btn-primary" onClick={clearEnd}>
           OK
         </button>

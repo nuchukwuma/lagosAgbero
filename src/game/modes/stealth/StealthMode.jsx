@@ -9,6 +9,8 @@ import MoveControls from '../../../components/hud/MoveControls.jsx'
 import TaskPanel from '../../../components/hud/TaskPanel.jsx'
 import PowerupOffer from '../../../components/hud/PowerupOffer.jsx'
 import { formatNaira } from '../../narrative/stats.js'
+import { openShareCard } from '../../../components/share/shareCard.js'
+import { playVoice, preloadVoices } from '../../audio/voice/voice.js'
 
 // Back Gate: the overlay for the 3D stealth mission (StealthDirector runs the
 // night inside the campus). Intro, the mission panel, TAKE DOWN, the result.
@@ -28,6 +30,7 @@ export default function StealthMode({ params = {}, onFinish }) {
     const home = { x: playerState.position.x, z: playerState.position.z, facing: playerState.facing }
     const world = useGameStore.getState().view?.world
     useStealth.getState().start(params)
+    preloadVoices(['brief_backGate'])
     return () => {
       input.runButton = false
       useStealth.getState().reset()
@@ -71,7 +74,13 @@ export default function StealthMode({ params = {}, onFinish }) {
         </ul>
         <p className="muted">Move with the stick or WASD / arrows; turn the camera by dragging, or V.</p>
         <PowerupOffer mode="sneak" />
-        <button className="btn btn-primary" onClick={() => useStealth.getState().begin()}>
+        <button
+          className="btn btn-primary"
+          onClick={() => {
+            useStealth.getState().begin()
+            playVoice('brief_backGate', { fx: 'radio' })
+          }}
+        >
           Sneak out
         </button>
       </div>
@@ -87,6 +96,26 @@ export default function StealthMode({ params = {}, onFinish }) {
           <button className="btn btn-primary" onClick={() => onFinish(result)}>
             Continue
           </button>
+          {won && (
+            <button
+              className="btn"
+              onClick={() =>
+                openShareCard({
+                  kicker: 'Back Gate · Royal Crest',
+                  title: 'Out through the back gate',
+                  line: `${result.headline}`,
+                  stats: [
+                    ['Guards asleep', mission.current?.takedowns ?? 0],
+                    ['Taken', formatNaira(result.moneyChange || 0)],
+                    ['Score', result.score],
+                  ],
+                  tone: 'neon',
+                })
+              }
+            >
+              Share
+            </button>
+          )}
           {!won && !online && (
             <button
               className="btn"

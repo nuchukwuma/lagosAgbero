@@ -1,0 +1,33 @@
+{
+  "provider": "system",
+  "voice": "en-gb",
+  "speed": 0.92,
+  "pause": 0.3,
+  "segments": [
+    { "id": "brief_backGate", "kind": "briefing", "text": "Night on campus. The porter has locked the hostel. Stay out of the torch beams, take the guards down from behind, and be out of the back gate before dawn." },
+    { "id": "brief_feeRun", "kind": "briefing", "text": "Baba Ticket wants his share by evening. Collect from every bus that stops on your side. Stand in front of the ones that try to run." },
+    { "id": "brief_chase", "kind": "briefing", "text": "The driver is running with the fee. Follow the red marker, mind the people on the pavement, and grab the door." },
+    { "id": "brief_heist", "kind": "briefing", "text": "In and out, no noise. The stash is on the altar. Nobody sees you, nobody touches you, and the respect is yours." },
+    { "id": "brief_wireSprint", "kind": "briefing", "text": "The bet closes in three minutes. Three drop points across Wuse. Hit them all before the pool is cleared." },
+    { "id": "brief_raidEscape", "kind": "briefing", "text": "They are at the gate. Grab the hard drive, the laptop and the cash, and get out through the back. Do not knock anything over." },
+    { "id": "raid_efcc", "kind": "raid", "voice": "en-us", "text": "E F C C! Nobody move! Everybody on the floor!" },
+    { "id": "raid_police", "kind": "raid", "voice": "en-us", "text": "Police! Stop there! Hands where we can see them!" },
+    { "id": "raid_taskForce", "kind": "raid", "voice": "en-us", "text": "Task Force! Clear this road now now!" },
+    { "id": "raid_warning", "kind": "raid", "text": "Wahala dey o! They are coming. Run!" },
+    { "id": "raid_snitched", "kind": "raid", "text": "Somebody don talk. They know where you are." },
+    { "id": "chant_fraternity", "kind": "chant", "voice": "en-gb-scotland", "speed": 0.85, "text": "Ayeee! Who we be? We no dey fear! Who we be? We no dey fear!" },
+    { "id": "chant_turf", "kind": "chant", "voice": "en-gb-scotland", "speed": 0.85, "text": "This street na our own! Comot! Comot for here!" },
+    { "id": "chant_victory", "kind": "chant", "voice": "en-gb-scotland", "speed": 0.9, "text": "Na we get this place! Na we get am!" },
+    { "id": "callout_spotted", "kind": "callout", "voice": "en-us", "text": "Hey! Who is that? Stop there!" },
+    { "id": "callout_lost", "kind": "callout", "voice": "en-us", "text": "Where did he go? Check behind the containers." },
+    { "id": "callout_body", "kind": "callout", "voice": "en-us", "text": "Ah! Who did this? Wake up!" },
+    { "id": "radio_news", "kind": "radio", "text": "This is Baba Radio, ninety-nine point nine. Traffic on the bridge is heavy, fuel is scarce, and somebody's son don collect another loan." },
+    { "id": "radio_election", "kind": "radio", "text": "Baba Radio. Voting has closed. The results are being counted, and everybody is already celebrating." },
+    { "id": "radio_bet", "kind": "radio", "text": "Baba Radio sports desk. The pool is open. Place your bets, and may your village people not see you." },
+    { "id": "radio_raid", "kind": "radio", "text": "Breaking news. Operatives have stormed an estate in Lekki. Neighbours say they heard the gate, then they heard the generator stop." },
+    { "id": "announce_busPark", "kind": "announce", "speed": 1.0, "text": "Oshodi! Oshodi! Enter with your change! Two chance remain!" },
+    { "id": "announce_market", "kind": "announce", "speed": 1.0, "text": "Original phone, original price! Come and check, no be by force!" },
+    { "id": "announce_rally", "kind": "announce", "speed": 0.95, "text": "Our man! Our man! Vote for continuity, vote for your stomach!" },
+    { "id": "announce_campus", "kind": "announce", "text": "Attention all students. The examination begins in ten minutes. Phones, notes and expo are not allowed in the hall." }
+  ]
+}

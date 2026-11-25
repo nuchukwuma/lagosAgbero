@@ -8,6 +8,7 @@ import { randomLook } from '../../characters/look.js'
 import { GROUND_Y } from '../../world/layout.js'
 import { playerState, playGesture, shake } from '../../world/worldState.js'
 import { sfx } from '../../audio/audio.js'
+import { playVoice, preloadVoices } from '../../audio/voice/voice.js'
 import { has } from '../../systems/powerups.js'
 import { useStealth, mission } from './stealthStore.js'
 import { createMission, stepMission, START, GATE, SEE_RANGE, SEE_HALF } from './stealthLogic.js'
@@ -158,6 +159,7 @@ export default function StealthDirector({ layout }) {
     const seed = params.seed ?? Math.floor(Math.random() * 99999)
     const mm = createMission(layout, { ...params, tries: has('friendlyPorter') ? 5 : 3, spotMul: has('sleepyGuards') ? 0.6 : 1 }, seed + attempt * 101)
     mission.current = mm
+    preloadVoices(['callout_spotted', 'callout_lost', 'callout_body'])
     playerState.extraColliders = mm.cover
     playerState.sneaking = true
     placed.current = false
@@ -182,7 +184,11 @@ export default function StealthDirector({ layout }) {
     const p = playerState.position
     stepMission(mm, dt, { x: p.x, z: p.z, running: playerState.running, moving: playerState.moving })
     for (const e of mm.events) {
-      if (e.type === 'spotted') sfx('whistle')
+      if (e.type === 'spotted') {
+        sfx('whistle')
+        playVoice('callout_spotted', { fx: 'none', minGap: 6 })
+      } else if (e.type === 'lost') playVoice('callout_lost', { fx: 'none', minGap: 8 })
+      else if (e.type === 'body') playVoice('callout_body', { fx: 'none', minGap: 8 })
       else if (e.type === 'caught') {
         sfx('hurt')
         shake(0.3, 0.4)

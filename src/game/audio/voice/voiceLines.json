@@ -1,0 +1,155 @@
+{
+  "provider": "system",
+  "lines": {
+    "brief_backGate": {
+      "file": "voice/brief_backGate.mp3",
+      "kind": "briefing",
+      "text": "Night on campus. The porter has locked the hostel. Stay out of the torch beams, take the guards down from behind, and be out of the back gate before dawn.",
+      "duration": 9.63
+    },
+    "brief_feeRun": {
+      "file": "voice/brief_feeRun.mp3",
+      "kind": "briefing",
+      "text": "Baba Ticket wants his share by evening. Collect from every bus that stops on your side. Stand in front of the ones that try to run.",
+      "duration": 8.33
+    },
+    "brief_chase": {
+      "file": "voice/brief_chase.mp3",
+      "kind": "briefing",
+      "text": "The driver is running with the fee. Follow the red marker, mind the people on the pavement, and grab the door.",
+      "duration": 6.25
+    },
+    "brief_heist": {
+      "file": "voice/brief_heist.mp3",
+      "kind": "briefing",
+      "text": "In and out, no noise. The stash is on the altar. Nobody sees you, nobody touches you, and the respect is yours.",
+      "duration": 7.33
+    },
+    "brief_wireSprint": {
+      "file": "voice/brief_wireSprint.mp3",
+      "kind": "briefing",
+      "text": "The bet closes in three minutes. Three drop points across Wuse. Hit them all before the pool is cleared.",
+      "duration": 6.59
+    },
+    "brief_raidEscape": {
+      "file": "voice/brief_raidEscape.mp3",
+      "kind": "briefing",
+      "text": "They are at the gate. Grab the hard drive, the laptop and the cash, and get out through the back. Do not knock anything over.",
+      "duration": 7.48
+    },
+    "raid_efcc": {
+      "file": "voice/raid_efcc.mp3",
+      "kind": "raid",
+      "text": "E F C C! Nobody move! Everybody on the floor!",
+      "duration": 3.99
+    },
+    "raid_police": {
+      "file": "voice/raid_police.mp3",
+      "kind": "raid",
+      "text": "Police! Stop there! Hands where we can see them!",
+      "duration": 3.82
+    },
+    "raid_taskForce": {
+      "file": "voice/raid_taskForce.mp3",
+      "kind": "raid",
+      "text": "Task Force! Clear this road now now!",
+      "duration": 2.76
+    },
+    "raid_warning": {
+      "file": "voice/raid_warning.mp3",
+      "kind": "raid",
+      "text": "Wahala dey o! They are coming. Run!",
+      "duration": 2.83
+    },
+    "raid_snitched": {
+      "file": "voice/raid_snitched.mp3",
+      "kind": "raid",
+      "text": "Somebody don talk. They know where you are.",
+      "duration": 2.7
+    },
+    "chant_fraternity": {
+      "file": "voice/chant_fraternity.mp3",
+      "kind": "chant",
+      "text": "Ayeee! Who we be? We no dey fear! Who we be? We no dey fear!",
+      "duration": 5.41
+    },
+    "chant_turf": {
+      "file": "voice/chant_turf.mp3",
+      "kind": "chant",
+      "text": "This street na our own! Comot! Comot for here!",
+      "duration": 3.85
+    },
+    "chant_victory": {
+      "file": "voice/chant_victory.mp3",
+      "kind": "chant",
+      "text": "Na we get this place! Na we get am!",
+      "duration": 2.53
+    },
+    "callout_spotted": {
+      "file": "voice/callout_spotted.mp3",
+      "kind": "callout",
+      "text": "Hey! Who is that? Stop there!",
+      "duration": 2.76
+    },
+    "callout_lost": {
+      "file": "voice/callout_lost.mp3",
+      "kind": "callout",
+      "text": "Where did he go? Check behind the containers.",
+      "duration": 3.04
+    },
+    "callout_body": {
+      "file": "voice/callout_body.mp3",
+      "kind": "callout",
+      "text": "Ah! Who did this? Wake up!",
+      "duration": 2.59
+    },
+    "radio_news": {
+      "file": "voice/radio_news.mp3",
+      "kind": "radio",
+      "text": "This is Baba Radio, ninety-nine point nine. Traffic on the bridge is heavy, fuel is scarce, and somebody's son don collect another loan.",
+      "duration": 8.72
+    },
+    "radio_election": {
+      "file": "voice/radio_election.mp3",
+      "kind": "radio",
+      "text": "Baba Radio. Voting has closed. The results are being counted, and everybody is already celebrating.",
+      "duration": 6.78
+    },
+    "radio_bet": {
+      "file": "voice/radio_bet.mp3",
+      "kind": "radio",
+      "text": "Baba Radio sports desk. The pool is open. Place your bets, and may your village people not see you.",
+      "duration": 6.62
+    },
+    "radio_raid": {
+      "file": "voice/radio_raid.mp3",
+      "kind": "radio",
+      "text": "Breaking news. Operatives have stormed an estate in Lekki. Neighbours say they heard the gate, then they heard the generator stop.",
+      "duration": 7.73
+    },
+    "announce_busPark": {
+      "file": "voice/announce_busPark.mp3",
+      "kind": "announce",
+      "text": "Oshodi! Oshodi! Enter with your change! Two chance remain!",
+      "duration": 4.2
+    },
+    "announce_market": {
+      "file": "voice/announce_market.mp3",
+      "kind": "announce",
+      "text": "Original phone, original price! Come and check, no be by force!",
+      "duration": 3.94
+    },
+    "announce_rally": {
+      "file": "voice/announce_rally.mp3",
+      "kind": "announce",
+      "text": "Our man! Our man! Vote for continuity, vote for your stomach!",
+      "duration": 4.55
+    },
+    "announce_campus": {
+      "file": "voice/announce_campus.mp3",
+      "kind": "announce",
+      "text": "Attention all students. The examination begins in ten minutes. Phones, notes and expo are not allowed in the hall.",
+      "duration": 7.51
+    }
+  }
+}

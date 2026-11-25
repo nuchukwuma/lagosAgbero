@@ -13,6 +13,7 @@ import SaveSlots from './components/SaveSlots.jsx'
 import StoryScreen from './components/story/StoryScreen.jsx'
 import { AdOverlay } from './components/hud/FavourButton.jsx'
 import MockCheckout from './components/menu/MockCheckout.jsx'
+import ShareCardModal from './components/share/ShareCardModal.jsx'
 import AudioDirector from './game/audio/AudioDirector.jsx'
 
 function Screen() {
@@ -69,6 +70,7 @@ export default function App() {
       <AudioDirector />
       <AdOverlay />
       <MockCheckout />
+      <ShareCardModal />
     </>
   )
 }

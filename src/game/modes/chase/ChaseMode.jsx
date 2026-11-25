@@ -5,6 +5,7 @@ import { input } from '../../player/input.js'
 import MoveControls from '../../../components/hud/MoveControls.jsx'
 import TaskPanel from '../../../components/hud/TaskPanel.jsx'
 import PowerupOffer from '../../../components/hud/PowerupOffer.jsx'
+import { playVoice, preloadVoices } from '../../audio/voice/voice.js'
 
 // The chase on foot. Overlay: intro, stamina, distance, GRAB, result.
 export default function ChaseMode({ params, onFinish }) {
@@ -14,6 +15,7 @@ export default function ChaseMode({ params, onFinish }) {
 
   useEffect(() => {
     useChase.getState().start(params, stats || {})
+    preloadVoices(['brief_chase'])
     return () => {
       input.runButton = false
       useChase.getState().reset()
@@ -41,7 +43,13 @@ export default function ChaseMode({ params, onFinish }) {
         <p>The danfo dey crawl for go-slow. Run along the pavement, dodge people, and press <strong>GRAB</strong> when you reach the door.</p>
         <p className="muted">Running uses stamina (it starts from your energy). Walk small to catch breath. Trick: traffic go stop if you stand for road in front of am.</p>
         <PowerupOffer mode="chase" />
-        <button className="btn btn-primary" onClick={chase.begin}>
+        <button
+          className="btn btn-primary"
+          onClick={() => {
+            chase.begin()
+            playVoice('brief_chase', { fx: 'radio' })
+          }}
+        >
           Oya, run!
         </button>
       </div>

@@ -4,6 +4,7 @@ import { useGameStore } from '../../game/store/gameStore.js'
 import { storyCtx } from '../../game/narrative/storyData.js'
 import { rateRun, rateStory, storyRating } from '../../game/systems/rating.js'
 import Icon from '../Icon.jsx'
+import { openShareCard } from '../share/shareCard.js'
 
 // Shown when the story reaches an ending. Only endings finish the game.
 // After the epilogue: the game's verdict on the run (a grade and a comment,
@@ -81,6 +82,14 @@ export default function EndingScreen({ view, onTitle, onLoad, onMap }) {
             <Icon name="dodge" size={18} /> See the road you took
           </button>
         )}
+        <button
+          className="btn"
+          onClick={() =>
+            openShareCard({ kicker: 'Ending', title: view.title || 'The end', line: verdict.comment, stats: [['Grade', verdict.grade], ['Chapters', `${verdict.chapters}/${verdict.totalChapters}`], ['Endings found', `${verdict.endingsTotal - verdict.endingsLeft}/${verdict.endingsTotal}`]], tone: 'gold', shot: false })
+          }
+        >
+          Share this ending
+        </button>
         <button className="btn" onClick={onLoad}>
           Load a save: find another ending
         </button>

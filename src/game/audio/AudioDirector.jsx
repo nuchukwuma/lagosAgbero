@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { isFemale } from '../characters/look.js'
 import { useGameStore } from '../store/gameStore.js'
+import { playVoice, preloadVoices } from './voice/voice.js'
 import { useSettings } from '../store/settings.js'
 import { unlock, sfx, setMusic, setAmbience, setVolumes, suspend, duckMusic, setScene, onCall } from './audio.js'
 import { onSpeaking, voicesSupported, shout } from './voices.js'
@@ -51,6 +52,23 @@ export default function AudioDirector() {
     // (not during the run, a fight or any other activity: only the story is read out)
     onCall((line) => useSettings.getState().voices !== false && !useGameStore.getState().activity && shout(line))
     return () => onCall(null)
+  }, [])
+
+  // Baba Radio: now and then, out on the street, a recorded bulletin from somebody's radio
+  useEffect(() => {
+    const pool = ['radio_news', 'radio_raid', 'radio_bet']
+    let next = pool[Math.floor(Math.random() * pool.length)]
+    let id = 0
+    const tick = () => {
+      const { view, activity, game } = useGameStore.getState()
+      if (view?.type === 'freeRoam' && !activity) {
+        if (playVoice(next, { fx: 'radio', volume: 0.55 })) next = pool.filter((x) => x !== next)[Math.floor(Math.random() * (pool.length - 1))]
+        else if (game) preloadVoices([next]) // ready for next time
+      }
+      id = setTimeout(tick, (240 + Math.random() * 180) * 1000)
+    }
+    id = setTimeout(tick, 90 * 1000)
+    return () => clearTimeout(id)
   }, [])
 
   // settings: music / sound on-off

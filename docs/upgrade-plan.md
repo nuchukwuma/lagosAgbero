@@ -95,6 +95,16 @@ districts below.
 
 ### Phase 3: recorded voices and share cards
 
+Done: 25 recorded lines (briefings, raid warnings, chants, call-outs, Baba
+Radio, street announcements) rendered with skill-tts and the free local voice
+(`scripts/voice/lines.json`, `scripts/render-voices.mjs`: re-run it after
+editing the lines; a paid provider is one field in the script). They load only
+when a scene needs them (a cache of eight), and play with radio, megaphone or
+crowd effects while the music dips: the Back Gate briefing and guard shouts,
+the chase briefing, Baba Radio on the street now and then. Share cards
+(`src/components/share/`): Back Gate wins, online match wins and story
+endings, with a snapshot of the 3D view, Share (with the picture) and Save.
+
 - Voices with skill-tts: mission briefings, raid warnings, cult chants and
   call-outs, radio and street announcements rendered to small audio files,
   listed in a manifest and preloaded per scene, so nothing is generated while

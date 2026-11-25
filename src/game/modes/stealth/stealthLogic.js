@@ -335,6 +335,7 @@ export function stepMission(m, dt, player) {
           g.path = smooth(m.grid, findPath(m.grid, [g.x, g.z], [o.x, o.z])) || []
           g.lookT = 0
           say(g, 'Ah! Who did this?')
+          m.events.push({ type: 'body', id: g.id })
         }
 
     switch (g.state) {
@@ -383,6 +384,7 @@ export function stepMission(m, dt, player) {
           g.path = smooth(m.grid, findPath(m.grid, [g.x, g.z], g.lastSeen)) || []
           g.lookT = 0
           say(g, 'Where did he go?')
+          m.events.push({ type: 'lost', id: g.id })
         }
         break
       }

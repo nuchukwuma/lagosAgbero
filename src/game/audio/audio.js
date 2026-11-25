@@ -26,6 +26,8 @@ export function audioReady() {
 
 /** Is sound actually coming out? (Browsers keep it off until the first tap.) */
 export const audioRunning = () => Boolean(ctx && ctx.state === 'running')
+/** The audio graph for recorded voices (voice/voice.js): the context and the sound bus, once running. */
+export const audioGraph = () => (ctx && sfxBus ? { ctx, out: sfxBus } : null)
 const runningListeners = new Set()
 /** Called with true/false when sound starts or stops; returns an unsubscribe. */
 export function onAudioRunning(fn) {

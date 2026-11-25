@@ -1,5 +1,6 @@
 import { Suspense, useEffect, useMemo, useRef, useState } from 'react'
-import { Canvas, useThree } from '@react-three/fiber'
+import { Canvas, useThree, useFrame } from '@react-three/fiber'
+import { takeCaptures } from './capture.js'
 import * as THREE from 'three'
 import { PerformanceMonitor } from '@react-three/drei'
 import Lighting from './Lighting.jsx'
@@ -98,6 +99,18 @@ function useSceneTeleport(view, layout) {
 // fallback pose into breathing/walking a second later.
 const COMMON_CLIPS = ['breathingIdle', 'walk', 'run', 'talk', 'argue', 'pickUp']
 
+/** Share cards: a picture of the view, taken inside a frame (capture.js). */
+function CaptureBridge() {
+  const { gl, scene, camera } = useThree()
+  useFrame(() =>
+    takeCaptures(() => {
+      gl.render(scene, camera)
+      return gl.domElement.toDataURL('image/jpeg', 0.85)
+    }),
+  )
+  return null
+}
+
 /** While paused, redraw the still picture if the screen changes size (turning the phone clears it). */
 function FrozenFrame() {
   const { gl, scene, camera, size } = useThree()
@@ -185,6 +198,7 @@ export default function GameCanvas({ view, game, activity = null, paused = false
       }}
     >
       <ShaderWarmup />
+      <CaptureBridge />
       <PortraitStudio />
       <ReactionDirector enabled={freeRoam && !paused} />
       {capped && !paused && !fight2d && <FrameCap fps={30} />}
