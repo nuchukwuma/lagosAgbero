@@ -59,6 +59,59 @@ export const ROUTES = [
   [[16, -26], [30, -26], [30, -15]], // the car park side
 ]
 
+// ---------------------------------------------------------------- Steal Untouched (Port Harcourt arc)
+// A rival confraternity's shrine compound in the bush east of Ike's house
+// (Nkwo Agu, round the shrine spot): mud walls with a gate on the west, the
+// altar and its regalia inside, sentries in and around it. Come in from the
+// farm road, take the regalia, and get back out the way you came. Nobody sees
+// you at all: "untouched", and the respect triples.
+/** Wall segments (compoundFence, 3.8 m) along a line, leaving out a gap round `gap` [x, z]. */
+function fence(x1, z1, x2, z2, gap = null) {
+  const len = Math.hypot(x2 - x1, z2 - z1)
+  const n = Math.max(1, Math.round(len / 3.8))
+  const rot = Math.round((Math.atan2(-(z2 - z1), x2 - x1) * 180) / Math.PI)
+  const out = []
+  for (let i = 0; i < n; i++) {
+    const x = x1 + ((x2 - x1) * (i + 0.5)) / n
+    const z = z1 + ((z2 - z1) * (i + 0.5)) / n
+    if (gap && Math.hypot(x - gap[0], z - gap[1]) < 2.2) continue
+    out.push(['compoundFence', +x.toFixed(2), +z.toFixed(2), rot])
+  }
+  return out
+}
+const SHRINE_BOX = { minX: 42, maxX: 57.2, minZ: -35, maxZ: -20.6 }
+export const SHRINE_LOOT = { x: 49.6, z: -31.6 } // in front of the altar
+export const SHRINE_COVER = [
+  ...fence(SHRINE_BOX.minX, SHRINE_BOX.minZ, SHRINE_BOX.maxX, SHRINE_BOX.minZ),
+  ...fence(SHRINE_BOX.minX, SHRINE_BOX.maxZ, SHRINE_BOX.maxX, SHRINE_BOX.maxZ),
+  ...fence(SHRINE_BOX.maxX, SHRINE_BOX.minZ, SHRINE_BOX.maxX, SHRINE_BOX.maxZ),
+  ...fence(SHRINE_BOX.minX, SHRINE_BOX.minZ, SHRINE_BOX.minX, SHRINE_BOX.maxZ, [SHRINE_BOX.minX, -27.8]),
+  ['shrineAltar', 49.6, -33.4, 0],
+  ['shrinePole', 46, -33.6, 0],
+  ['shrinePole', 53.4, -33.6, 0],
+  ['crates', 36, -20, 20],
+  ['crates', 39.5, -27, -10],
+  ['cartons', 47, -24, 0],
+  ['crates', 54, -26, 90],
+  ['compoundFence', 34.5, -25, 90],
+]
+export const SHRINE_ROUTES = [
+  [[45, -32], [55, -32], [55, -23], [45, -23]], // inside, round the yard
+  [[39, -31], [39, -22]], // the gate
+  [[42, -38], [58, -38]], // behind the north wall
+  [[40, -18.5], [57, -18.5]], // the path along the south wall
+  [[46.5, -29], [53, -29]], // before the altar
+  [[33, -15], [37, -24]], // the farm road
+]
+
+// The missions this logic plays. goal: 'takedowns' (every guard asleep opens
+// the way out) or 'loot' (take it, then get out).
+export const MISSIONS = {
+  backGate: { id: 'backGate', world: 'royalCrest', start: START, exit: GATE, cover: COVER, routes: ROUTES, goal: 'takedowns', time: TIME },
+  shrineHeist: { id: 'shrineHeist', world: 'nkwoAgu', start: { x: 30, z: -9, facing: 30 }, exit: { x: 30, z: -9 }, cover: SHRINE_COVER, routes: SHRINE_ROUTES, goal: 'loot', loot: SHRINE_LOOT, time: 240 },
+}
+export const missionOf = (id) => MISSIONS[id] || MISSIONS.backGate
+
 export const coverBoxes = (cover = COVER) =>
   cover.map(([model, x, z, rot]) => {
     const s = getAsset(model)?.size || [2, 2, 2]
@@ -193,29 +246,36 @@ function clearWalk(g, a, b) {
  * A new night. params.difficulty / params.level (0..1) sets how many guards (4 to 6).
  * layout: the campus layout (colliders, bounds) from worlds.js.
  */
-export function createMission(layout, params = {}, seed = 1) {
+export function createMission(layout, params = {}, seed = 1, missionId = 'backGate') {
+  const cfg = missionOf(missionId)
   const r = rng(seed)
   const level = Math.max(0, Math.min(1, params.level ?? (params.difficulty != null ? (params.difficulty - 1) / 2 : 0.4)))
-  const cover = coverBoxes()
+  const cover = coverBoxes(cfg.cover)
   const grid = buildGrid(layout.bounds, [...layout.colliders, ...cover])
-  const count = Math.min(ROUTES.length, 4 + Math.round(level * 2))
-  const guards = ROUTES.slice(0, count).map((route, i) => {
+  const count = Math.min(cfg.routes.length, 4 + Math.round(level * 2))
+  const guards = cfg.routes.slice(0, count).map((route, i) => {
     const pts = route.map(([x, z]) => nearestFree(grid, x, z))
     // the walk between each point and the next, round the loop
     const legs = pts.map((p, k) => smooth(grid, findPath(grid, p, pts[(k + 1) % pts.length])) || [p])
     return { id: i, home: pts, legs, leg: 0, step: 1, x: pts[0][0], z: pts[0][1], ry: 0, state: 'patrol', spot: 0, path: null, lastSeen: null, lostT: 0, lookT: 0, look: 0, repath: 0, cash: 300 + Math.round((r() * 500) / 50) * 50, said: null, saidT: 0 }
   })
   return {
+    id: cfg.id,
+    cfg,
     level,
+    hasLoot: false,
+    canGrab: false,
+    spotted: false, // seen at any point (Steal Untouched: then it isn't untouched)
     spotMul: params.spotMul ?? 1,
     grid,
     cover,
     guards,
-    time: TIME + (params.extraTime || 0),
+    time: cfg.time + (params.extraTime || 0),
     tries: params.tries ?? 3,
+    startTries: params.tries ?? 3,
     cash: 0,
     takedowns: 0,
-    open: false, // the back gate
+    open: false, // the way out (all guards asleep, or the loot in hand)
     over: false,
     won: false,
     caughtT: 0, // seconds since you were caught (the screen flashes)
@@ -314,6 +374,7 @@ export function stepMission(m, dt, player) {
       g.lostT = 0
       g.repath = 0
       say(g, 'Hey! Stop there!')
+      m.spotted = true
       m.events.push({ type: 'spotted', id: g.id })
     }
     // running close by is heard: he turns to look
@@ -410,7 +471,11 @@ export function stepMission(m, dt, player) {
     }
   }
   m.canTakedown = best
-  if (m.open && Math.hypot(player.x - GATE.x, player.z - GATE.z) < GATE_RADIUS) {
+  // the loot: close enough to take it
+  const L = m.cfg.loot
+  m.canGrab = Boolean(L && !m.hasLoot && Math.hypot(player.x - L.x, player.z - L.z) < 1.8)
+  const exit = m.cfg.exit
+  if (m.open && Math.hypot(player.x - exit.x, player.z - exit.z) < GATE_RADIUS) {
     m.over = true
     m.won = true
     m.events.push({ type: 'escaped' })
@@ -450,14 +515,40 @@ export function takedown(m) {
   m.cash += g.cash
   m.canTakedown = null
   m.events.push({ type: 'down', id: g.id })
-  if (m.guards.every((x) => x.state === 'down') && !m.open) {
+  if (m.cfg.goal === 'takedowns' && m.guards.every((x) => x.state === 'down') && !m.open) {
     m.open = true
     m.events.push({ type: 'open' })
   }
   return g
 }
 
+/** Take the loot (m.canGrab): now get out. */
+export function grabLoot(m) {
+  if (!m.canGrab || m.over) return false
+  m.hasLoot = true
+  m.canGrab = false
+  m.open = true
+  m.events.push({ type: 'loot' })
+  return true
+}
+
 export function missionResult(m) {
+  if (m.cfg.goal === 'loot') {
+    const untouched = m.won && !m.spotted && m.tries === (m.startTries ?? m.tries)
+    return {
+      outcome: m.won ? 'won' : 'lost',
+      untouched,
+      score: m.takedowns * 20 + (m.won ? 200 : 0) + (untouched ? 400 : 0),
+      moneyChange: m.cash + (m.won ? 3000 : 0),
+      respectMul: untouched ? 3 : 1,
+      headline: !m.won ? (m.tries <= 0 ? 'They caught you inside their compound.' : 'First light. The sentries change shift.') : untouched ? 'Stolen untouched.' : 'You got the regalia, but they saw you.',
+      line: !m.won
+        ? `${m.takedowns} sentries down, and the regalia still on the altar.`
+        : untouched
+          ? 'Nobody saw you come, nobody saw you go. By morning the whole creek is talking. Respect ×3.'
+          : 'The regalia is yours. So is a rival confraternity that knows your face.',
+    }
+  }
   return {
     outcome: m.won ? 'won' : 'lost',
     score: m.takedowns * 30 + Math.round(m.cash / 20) + (m.won ? 100 + m.tries * 30 : 0),

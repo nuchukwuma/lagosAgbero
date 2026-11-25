@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { getLayout } from '../../world/worlds.js'
-import { createMission, stepMission, takedown, missionResult, walkable, findPath, lineOfSight, sees, START, GATE, ROUTES, TAKEDOWN } from './stealthLogic.js'
+import { createMission, stepMission, takedown, grabLoot, missionResult, walkable, findPath, lineOfSight, sees, START, GATE, ROUTES, TAKEDOWN, MISSIONS } from './stealthLogic.js'
 
 const layout = getLayout('royalCrest', false)
 const still = (x, z) => ({ x, z, running: false, moving: false })
@@ -82,5 +82,49 @@ describe('Back Gate (3D): the campus at night', () => {
     stepMission(m, 0.1, still(START.x, START.z))
     expect(m.over).toBe(true)
     expect(m.won).toBe(false)
+  })
+})
+
+describe('Steal Untouched: the shrine heist', () => {
+  const village = getLayout('nkwoAgu', false)
+  const id = 'shrineHeist'
+
+  it('the start, the regalia, the way out and every sentry round are on open ground, all joined up', () => {
+    const m = createMission(village, { level: 1 }, 2, id)
+    const { start, loot } = MISSIONS[id]
+    expect(walkable(m.grid, start.x, start.z)).toBe(true)
+    // the regalia is reached through the compound gate (round the walls)
+    const path = findPath(m.grid, [start.x, start.z], [loot.x, loot.z])
+    expect(path).toBeTruthy()
+    expect(path.length).toBeGreaterThan(15)
+    expect(m.guards).toHaveLength(6)
+    for (const g of m.guards) {
+      for (const leg of g.legs) expect(leg.length).toBeGreaterThan(0)
+      expect(findPath(m.grid, [start.x, start.z], g.home[0]), `sentry ${g.id}`).toBeTruthy()
+    }
+  })
+
+  it('the way out only opens with the regalia in hand; unseen all night it is "untouched" (respect ×3)', () => {
+    const m = createMission(village, { level: 0 }, 2, id)
+    for (const g of m.guards) g.state = 'down' // (asleep, so nobody sees the test walk)
+    const { start, loot } = MISSIONS[id]
+    stepMission(m, 1 / 30, still(start.x, start.z))
+    expect(m.over).toBe(false) // nothing in hand yet
+    stepMission(m, 1 / 30, still(loot.x, loot.z))
+    expect(m.canGrab).toBe(true)
+    expect(grabLoot(m)).toBe(true)
+    stepMission(m, 1 / 30, still(start.x, start.z))
+    expect(m.won).toBe(true)
+    const r = missionResult(m)
+    expect(r).toMatchObject({ outcome: 'won', untouched: true, respectMul: 3 })
+  })
+
+  it('seen once, even if you get away with it, is not untouched', () => {
+    const m = createMission(village, { level: 0 }, 2, id)
+    m.spotted = true
+    m.hasLoot = true
+    m.open = true
+    stepMission(m, 1 / 30, still(MISSIONS[id].exit.x, MISSIONS[id].exit.z))
+    expect(missionResult(m)).toMatchObject({ outcome: 'won', untouched: false, respectMul: 1 })
   })
 })

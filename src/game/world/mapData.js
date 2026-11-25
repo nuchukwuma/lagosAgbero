@@ -50,6 +50,7 @@ export function goalPoint(goal, layout, npcs) {
     const s = layout.spots[goal.reach]
     return { x: s.pos[0], z: s.pos[1], label: layout.raw.mapLabels?.[goal.reach] || null }
   }
+  if (goal.point) return { x: goal.point[0], z: goal.point[1], label: goal.label || null }
   if (goal.talkTo && npcs?.get(goal.talkTo)) {
     const n = npcs.get(goal.talkTo)
     return { x: n.position.x, z: n.position.z, label: null, who: goal.talkTo }

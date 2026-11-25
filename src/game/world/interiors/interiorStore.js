@@ -22,11 +22,6 @@ export function exitInterior() {
 }
 
 /** The world being shown: a building you're in, a mode's own world (Back Gate), or the story's. */
-export function currentWorld(view, modeName) {
-  const inside = useInterior.getState().id
-  return modeName === 'sneak' ? worldForMode(modeName, view?.world) : inside || worldForMode(modeName, view?.world)
-}
-export const useCurrentWorld = (view, modeName) => {
-  const inside = useInterior((s) => s.id)
-  return modeName === 'sneak' ? worldForMode(modeName, view?.world) : inside || worldForMode(modeName, view?.world)
-}
+const pick = (view, modeName, inside) => worldForMode(modeName, null) || inside || view?.world
+export const currentWorld = (view, modeName) => pick(view, modeName, useInterior.getState().id)
+export const useCurrentWorld = (view, modeName) => pick(view, modeName, useInterior((s) => s.id))

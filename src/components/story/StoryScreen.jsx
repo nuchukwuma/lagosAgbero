@@ -41,7 +41,7 @@ import RotateHint, { useTurnHint } from '../hud/RotateHint.jsx'
 import { applyOrientation } from '../../game/systems/orientation.js'
 import { useSettings } from '../../game/store/settings.js'
 
-const MAP_MODES = new Set(['feeCollection', 'chase', 'sneak']) // (fights are 2D: no map)
+const MAP_MODES = new Set(['feeCollection', 'chase', 'sneak', 'shrineHeist']) // (fights are 2D: no map)
 
 // The story screen: the 3D street + HUD + whatever the engine says to show.
 // During a freeRoam beat the player walks; otherwise the story has the floor.
@@ -114,6 +114,8 @@ export default function StoryScreen() {
   const inside = isInterior(here)
   // Back Gate: the campus map, pointing at the gate once it's open
   const gateOpen = useStealth((s) => s.hud.open)
+  // Steal Untouched: the regalia, then the way out
+  const heistGoal = gateOpen ? { point: [30, -9], label: 'The farm road' } : { point: [49.6, -31.6], label: 'The regalia' }
   const showMini = Boolean(view?.world) && (modeName ? MAP_MODES.has(modeName) : ['freeRoam', 'dialogue', 'choice'].includes(view?.type))
   useEffect(() => {
     if (!canMap) return undefined
@@ -183,7 +185,7 @@ export default function StoryScreen() {
       <div id="speech-layer" className="speech-layer" aria-live="polite" />
       {online && <OnlineHUD onMenu={() => setOverlay('menu')} hidden={Boolean(overlay)} />}
       {(!online || activity) && <HUD game={game} gamesOnly={gamesOnly} onStatus={() => setOverlay('status')} onMenu={() => setOverlay('menu')} onMap={view.world ? () => setOverlay('worldMap') : null} />}
-      {showMini && !inside && !overlay && (!gamesOnly || (online && !activity)) && <MiniMap layout={getLayout(here)} goal={modeName === 'sneak' ? (gateOpen ? { reach: 'backGate' } : null) : mapGoal} onOpen={modeName ? null : () => setOverlay('worldMap')} />}
+      {showMini && !inside && !overlay && (!gamesOnly || (online && !activity)) && <MiniMap layout={getLayout(here)} goal={modeName === 'sneak' ? (gateOpen ? { reach: 'backGate' } : null) : modeName === 'shrineHeist' ? heistGoal : mapGoal} onOpen={modeName ? null : () => setOverlay('worldMap')} />}
       {view.chapterTitle && view.type !== 'cutscene' && !gamesOnly && <div className="chapter-chip">{view.chapterTitle}</div>}
       {view.type === 'freeRoam' && !overlay && !activity && (
         <FreeRoamControls

@@ -21,6 +21,7 @@ export const DUEL_GAMES = {
   escape: { name: 'Rooftop Escape', kind: 'duel', mode: 'escape', params: { metres: 500, difficulty: 1, to: 'the Motor Park' } },
   palmClimb: { name: 'Palm Climb', kind: 'duel', mode: 'palmClimb' },
   sneak: { name: 'Back Gate', kind: 'duel', mode: 'sneak' },
+  shrineHeist: { name: 'Steal Untouched', kind: 'duel', mode: 'shrineHeist' },
   akara: { name: 'Akara Fry', kind: 'duel', mode: 'akara' },
   penalty: { name: 'Penalty Shoot-out', kind: 'duel', mode: 'penalty' },
   traffic: { name: 'Go-Slow', kind: 'duel', mode: 'traffic' },

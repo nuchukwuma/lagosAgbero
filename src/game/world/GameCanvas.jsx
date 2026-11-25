@@ -31,6 +31,7 @@ import { useRunner } from '../modes/runner/runnerStore.js'
 import ConductorDirector from '../modes/conductor/ConductorDirector.jsx'
 import { useBus } from '../modes/conductor/ConductorMode.jsx'
 import { WORLD_MODES, FULLSCREEN_MODES } from '../modes/modeRegistry.js'
+import { STEALTH_MODES } from '../modes/modeWorlds.js'
 import StealthDirector from '../modes/stealth/StealthDirector.jsx'
 import InteriorScene from './interiors/InteriorScene.jsx'
 import { useCurrentWorld, useInterior } from './interiors/interiorStore.js'
@@ -141,7 +142,7 @@ export default function GameCanvas({ view, game, activity = null, paused = false
 
   const freeRoam = view.type === 'freeRoam' && !activity
   // Back Gate: the campus at night, empty but for the guards
-  const stealth = modeName === 'sneak'
+  const stealth = STEALTH_MODES.has(modeName)
   const stealthOn = useStealth((s) => s.active && s.started && !s.ended)
   const worldMode = Boolean(modeName && WORLD_MODES.has(modeName))
   const feeRunActive = useFeeRun((s) => s.active && s.started && !s.ended)

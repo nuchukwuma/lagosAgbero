@@ -20,6 +20,17 @@ const STORY_MODES = {
     title: 'Chase',
     rules: ['Run along the pavement after the vehicle and dodge the people in the way.', 'Running burns stamina: ease off before you run dry.', 'Press GRAB when you reach the door. Run out of time and they get away.'],
   }),
+  shrineHeist: () => ({
+    title: 'Steal Untouched',
+    rules: [
+      "Night in the bush east of Nkwo Agu: a rival confraternity's walled shrine compound. Their regalia is on the altar.",
+      'Get in through the gate on the west side, take the regalia (TAKE IT, or E), and get back to the farm road.',
+      'Sentries see inside their torch beams; a ? fills, then ! and they come for you. Walls, crates and cartons block their view. Running close by is heard.',
+      "Beside a sentry who hasn't seen you: TAKE DOWN (E). A sentry who finds him comes looking.",
+      'Nobody sees you all night: untouched, and the respect is tripled. Seen once, and it is just a theft.',
+      'Move with the stick or WASD / arrows; run with RUN or Shift; drag the screen or press V to turn the camera.',
+    ],
+  }),
   sneak: () => ({
     title: 'Back Gate',
     rules: [

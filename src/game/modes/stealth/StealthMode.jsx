@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useStealth, mission } from './stealthStore.js'
 import { takedown, missionResult } from './stealthLogic.js'
-import { doTakedown } from './StealthDirector.jsx'
+import { doTakedown, doGrab } from './StealthDirector.jsx'
 import { useGameStore } from '../../store/gameStore.js'
 import { playerState } from '../../world/worldState.js'
 import { input } from '../../player/input.js'
@@ -15,9 +15,38 @@ import { playVoice, preloadVoices } from '../../audio/voice/voice.js'
 // Back Gate: the overlay for the 3D stealth mission (StealthDirector runs the
 // night inside the campus). Intro, the mission panel, TAKE DOWN, the result.
 
+// What each mission says: its intro, rules, panel, and share card.
+const TEXT = {
+  backGate: {
+    title: 'Back Gate',
+    intro: 'Night on campus. The porter has locked the hostel and the guards are walking their rounds with torches. Get out through the back gate before dawn.',
+    goal: 'Every guard asleep opens the back gate.',
+    home: 'the hostel',
+    go: 'Sneak out',
+    brief: 'brief_backGate',
+    panel: 'BACK GATE',
+    clockIcon: '🌅',
+    share: { kicker: 'Back Gate · Royal Crest', title: 'Out through the back gate', tone: 'neon' },
+  },
+  shrineHeist: {
+    title: 'Steal Untouched',
+    intro: "The rival confraternity's shrine compound, in the bush east of Ike's house. Their regalia sits on the altar. Bring it back to the farm road. Do it without one sentry seeing you, and the whole creek will talk: respect ×3.",
+    goal: 'Take the regalia from the altar, then get back to the farm road.',
+    home: 'the farm road',
+    go: 'Move in',
+    brief: 'brief_heist',
+    panel: 'STEAL UNTOUCHED',
+    clockIcon: '🌘',
+    share: { kicker: 'Creek & Confraternity', title: 'Stolen untouched', tone: 'neon' },
+  },
+}
+
 const clock = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`
 
-export default function StealthMode({ params = {}, onFinish }) {
+export default function StealthMode({ params: given = {}, onFinish, mission: missionId }) {
+  const id = missionId || given.mission || 'backGate'
+  const params = { ...given, mission: id }
+  const text = TEXT[id] || TEXT.backGate
   const active = useStealth((s) => s.active)
   const started = useStealth((s) => s.started)
   const ended = useStealth((s) => s.ended)
@@ -30,7 +59,7 @@ export default function StealthMode({ params = {}, onFinish }) {
     const home = { x: playerState.position.x, z: playerState.position.z, facing: playerState.facing }
     const world = useGameStore.getState().view?.world
     useStealth.getState().start(params)
-    preloadVoices(['brief_backGate'])
+    preloadVoices([text.brief])
     return () => {
       input.runButton = false
       useStealth.getState().reset()
@@ -46,7 +75,10 @@ export default function StealthMode({ params = {}, onFinish }) {
 
   useEffect(() => {
     const onKey = (e) => {
-      if ((e.code === 'KeyE' || e.key === 'Enter') && useStealth.getState().started) doTakedown(takedown)
+      if ((e.code === 'KeyE' || e.key === 'Enter') && useStealth.getState().started) {
+        if (useStealth.getState().hud.canGrab) doGrab()
+        else doTakedown(takedown)
+      }
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
@@ -56,8 +88,8 @@ export default function StealthMode({ params = {}, onFinish }) {
   if (!started)
     return (
       <div className="fee-intro">
-        <h2>Back Gate</h2>
-        <p>Night on campus. The porter has locked the hostel and the guards are walking their rounds with torches. Get out through the back gate before dawn.</p>
+        <h2>{text.title}</h2>
+        <p>{text.intro}</p>
         <ul className="move-list">
           <li>
             <strong>Stay out of the torch beams.</strong> In a beam, a <b>?</b> fills over the guard's head; when it's full, he runs for you. Containers, bins and walls block his view.
@@ -69,7 +101,7 @@ export default function StealthMode({ params = {}, onFinish }) {
             <strong>Take them down from behind:</strong> get next to a guard who hasn't seen you and press <b>TAKE DOWN</b> (E). He drops his money. A guard who finds a sleeping colleague comes looking.
           </li>
           <li>
-            <strong>Every guard asleep opens the back gate.</strong> Caught, you start again from the hostel ({hud.tries || 3} tries).
+            <strong>{text.goal}</strong> Caught, you start again from {text.home} ({hud.tries || 3} tries).
           </li>
         </ul>
         <p className="muted">Move with the stick or WASD / arrows; turn the camera by dragging, or V.</p>
@@ -78,10 +110,10 @@ export default function StealthMode({ params = {}, onFinish }) {
           className="btn btn-primary"
           onClick={() => {
             useStealth.getState().begin()
-            playVoice('brief_backGate', { fx: 'radio' })
+            playVoice(text.brief, { fx: 'radio' })
           }}
         >
-          Sneak out
+          {text.go}
         </button>
       </div>
     )
@@ -101,15 +133,14 @@ export default function StealthMode({ params = {}, onFinish }) {
               className="btn"
               onClick={() =>
                 openShareCard({
-                  kicker: 'Back Gate · Royal Crest',
-                  title: 'Out through the back gate',
+                  ...text.share,
+                  title: id === 'shrineHeist' && !result.untouched ? 'Got the regalia' : text.share.title,
                   line: `${result.headline}`,
                   stats: [
                     ['Guards asleep', mission.current?.takedowns ?? 0],
                     ['Taken', formatNaira(result.moneyChange || 0)],
                     ['Score', result.score],
                   ],
-                  tone: 'neon',
                 })
               }
             >
@@ -133,23 +164,35 @@ export default function StealthMode({ params = {}, onFinish }) {
   }
 
   const can = hud.canTakedown != null
+  const grab = Boolean(hud.canGrab)
   return (
     <>
       <TaskPanel className={hud.chased ? 'is-danger' : ''}>
         <div className="fee-row">
-          <strong>BACK GATE</strong>
-          <span>🌅 {clock(hud.time)}</span>
+          <strong>{text.panel}</strong>
+          <span>
+            {text.clockIcon} {clock(hud.time)}
+          </span>
         </div>
         <div className="fee-row">
-          <span>{hud.open ? 'The gate is open: go!' : `Guards awake: ${hud.left} of ${hud.total}`}</span>
+          <span>
+            {id === 'shrineHeist'
+              ? hud.hasLoot
+                ? 'The regalia is yours: back to the farm road!'
+                : `Sentries awake: ${hud.left} of ${hud.total} · the regalia is on the altar`
+              : hud.open
+                ? 'The gate is open: go!'
+                : `Guards awake: ${hud.left} of ${hud.total}`}
+          </span>
           <span>
             {'♥'.repeat(Math.max(0, hud.tries))} · {formatNaira(hud.cash)}
           </span>
         </div>
         {hud.chased && <div className="fee-row stealth-warn">He has seen you! Break his line of sight.</div>}
+        {id === 'shrineHeist' && <div className={`fee-row ${hud.spotted ? 'stealth-warn' : 'stealth-clean'}`}>{hud.spotted ? 'Seen: not untouched any more.' : 'Untouched so far.'}</div>}
       </TaskPanel>
-      {hud.caught && <div className="stealth-caught">Caught! Back to the hostel.</div>}
-      <MoveControls actionLabel={can ? 'TAKE DOWN' : null} actionIcon="fist" actionSub={can ? 'take down' : null} onAction={() => doTakedown(takedown)} />
+      {hud.caught && <div className="stealth-caught">Caught! Back to {text.home}.</div>}
+      <MoveControls actionLabel={grab ? 'TAKE IT' : can ? 'TAKE DOWN' : null} actionIcon={grab ? 'hand' : 'fist'} actionSub={grab ? 'the regalia' : can ? 'take down' : null} onAction={() => (grab ? doGrab() : doTakedown(takedown))} />
       {import.meta.env.DEV && (
         <button
           className="btn btn-small dev-end"
