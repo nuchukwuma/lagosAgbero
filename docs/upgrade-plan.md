@@ -115,6 +115,17 @@ endings, with a snapshot of the 3D view, Share (with the picture) and Save.
 
 ### Phase 4: the 3D mini-games and the big multiplayer loops
 
+Done so far, all on the shared stealth engine (`src/game/modes/stealth/`,
+missions in `stealthLogic.js`, each with tests on its real map):
+- **Steal Untouched** (Port Harcourt): a rival shrine compound in the bush
+  round Nkwo Agu at night; take the regalia unseen for respect x3.
+- **EFCC Raid Escape** (Lekki): inside the Rich Street duplex; operatives
+  come through the front door one by one; take the hard drive, the laptop
+  and the cash (each slows you down), out through the back door.
+- (Back Gate on campus, from before, is the third.)
+Both are in the Games tab and are Lagos Online duels. Next: the Wire Sprint
+(driving), then the rest of the list, elections and turf wars.
+
 - Abuja Big Boy: Beat-the-Bet Wire Sprint (driving checkpoints), Penthouse
   Raid (stealth with heavy loot), Convoy Escort (pursuit).
 - Port Harcourt: Steal Untouched (stealth shrine heist), Creek Skiff Run

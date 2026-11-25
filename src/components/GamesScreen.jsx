@@ -26,6 +26,7 @@ const ACTION = [
   { id: 'fight', mode: 'fight', label: 'Street Fight', blurb: 'A new opponent every time', params: () => ({ opponent: pick(FIGHTERS), difficulty: 1 }), best: () => (fightRecord().won ? `${fightRecord().won} won` : null) },
   { id: 'dance', mode: 'dance', label: 'Dance Battle', blurb: 'Hit the arrows on the beat', params: () => ({ name: pick(['Sweet Mother', 'DJ Jollof', 'Shaku Queen', 'Azonto Kid']), prize: 5000 }) },
   { id: 'shrineHeist', mode: 'shrineHeist', label: 'Steal Untouched', blurb: '3D stealth: take a rival shrine’s regalia, unseen', params: () => ({}) },
+  { id: 'raidEscape', mode: 'raidEscape', label: 'EFCC Raid Escape', blurb: '3D: grab the drive, the laptop and the cash, out the back', params: () => ({}) },
   { id: 'sneak3d', mode: 'sneak', label: 'Back Gate', blurb: '3D stealth: out of campus before dawn', params: () => ({}) },
   { id: 'drive', mode: 'drive', label: 'Danfo Drive', blurb: 'Load passengers, mind the fuel and the checkpoint', params: () => ({ length: 1600, stops: 3, fuel: 60, checkpoints: 1, slogan: 'NO TELLING' }) },
 ]

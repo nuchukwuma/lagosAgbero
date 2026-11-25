@@ -11,7 +11,7 @@ import { sfx } from '../../audio/audio.js'
 import { playVoice, preloadVoices } from '../../audio/voice/voice.js'
 import { has } from '../../systems/powerups.js'
 import { useStealth, mission } from './stealthStore.js'
-import { createMission, stepMission, grabLoot, SEE_RANGE, SEE_HALF } from './stealthLogic.js'
+import { createMission, stepMission, grabLoot, carrySpeed, SEE_RANGE, SEE_HALF } from './stealthLogic.js'
 
 // Back Gate inside the 3D campus at night. Runs the mission every frame:
 // guards walk their rounds with a torch beam (it stops at walls and
@@ -24,6 +24,12 @@ const beamMats = {
   calm: new THREE.MeshBasicMaterial({ color: '#ffe48a', transparent: true, opacity: 0.22, depthWrite: false, side: THREE.DoubleSide }),
   alert: new THREE.MeshBasicMaterial({ color: '#ffb020', transparent: true, opacity: 0.3, depthWrite: false, side: THREE.DoubleSide }),
   chase: new THREE.MeshBasicMaterial({ color: '#ff3b30', transparent: true, opacity: 0.32, depthWrite: false, side: THREE.DoubleSide }),
+}
+// what they wear: campus guards; confraternity sentries (red berets); EFCC operatives (black, caps)
+const UNIFORMS = {
+  sneak: null,
+  shrineHeist: { shirt: '#3a2a1e', trousers: '#1c1612', shoes: '#111111', accessories: [{ type: 'beanie', color: '#b3201f' }] },
+  raidEscape: { shirt: '#14161c', trousers: '#14161c', shoes: '#0b0b0b', accessories: [{ type: 'cap', color: '#0b0b0b' }] },
 }
 const UNIFORM = { shirt: '#2b3a55', trousers: '#1b2233', shoes: '#111111', accessories: [{ type: 'cap', color: '#1b2233' }] }
 
@@ -42,8 +48,9 @@ function Beam({ g }) {
   useFrame(() => {
     const m = mission.current
     if (!m || !mesh.current) return
-    mesh.current.visible = g.state !== 'down'
-    if (g.state === 'down') return
+    mesh.current.visible = g.state !== 'down' && !(g.wait > 0)
+    if (!mesh.current.visible) return
+    const range = m.cfg.seeRange ?? SEE_RANGE
     const pos = geo.attributes.position.array
     pos[0] = g.x
     pos[1] = GROUND_Y + 0.05
@@ -52,10 +59,10 @@ function Beam({ g }) {
       const a = g.ry - SEE_HALF + (2 * SEE_HALF * i) / RAYS
       const sx = Math.sin(a)
       const sz = Math.cos(a)
-      let len = SEE_RANGE
-      for (let d = 0.5; d <= SEE_RANGE; d += 0.5) {
-        const cx = Math.round(g.x + sx * d - m.grid.x0)
-        const cz = Math.round(g.z + sz * d - m.grid.z0)
+      let len = range
+      for (let d = 0.5; d <= range; d += 0.5) {
+        const cx = Math.round((g.x + sx * d - m.grid.x0) / m.grid.cell)
+        const cz = Math.round((g.z + sz * d - m.grid.z0) / m.grid.cell)
         if (cx < 0 || cz < 0 || cx >= m.grid.w || cz >= m.grid.h || m.grid.cells[cz * m.grid.w + cx] === 2) {
           len = d - 0.3
           break
@@ -72,14 +79,15 @@ function Beam({ g }) {
   return <mesh ref={mesh} geometry={geo} material={beamMats.calm} renderOrder={2} frustumCulled={false} />
 }
 
-function Guard({ g }) {
+function Guard({ g, uniform = UNIFORM }) {
   const ref = useRef()
   const [anim, setAnim] = useState('walk')
   const [sign, setSign] = useState({ text: '', kind: '' })
-  const look = useMemo(() => ({ ...randomLook(400 + g.id * 17), ...UNIFORM }), [g.id])
+  const look = useMemo(() => ({ ...randomLook(400 + g.id * 17), ...uniform }), [g.id, uniform])
   useFrame(() => {
     const o = ref.current
     if (!o) return
+    o.visible = !(g.wait > 0) // a raid: not through the door yet
     o.position.set(g.x, GROUND_Y, g.z)
     o.rotation.y = g.ry
     const a = g.state === 'down' ? 'knockedOut' : g.state === 'chase' ? 'run' : ['patrol', 'return', 'search'].includes(g.state) && g.path?.length ? 'walk' : 'idle'
@@ -146,22 +154,23 @@ function Gate({ open, at, label, hideShut }) {
   )
 }
 
-/** The loot (a heist): on the altar, glowing, until you take it. */
-function Loot({ at, taken }) {
+/** A thing to take (a heist): where it sits, glowing, until you take it. */
+function Loot({ item, taken }) {
   const ring = useRef()
   useFrame((st) => {
     if (ring.current) ring.current.material.opacity = 0.45 + Math.sin(st.clock.elapsedTime * 3) * 0.2
   })
   if (taken) return null
+  const [mx, my, mz] = item.at || [item.x, 0, item.z]
   return (
     <group>
-      <Model name="regalia" position={[at.x, 0.84, at.z - 1.8]} />
-      <mesh ref={ring} rotation-x={-Math.PI / 2} position={[at.x, GROUND_Y + 0.06, at.z]}>
-        <ringGeometry args={[0.9, 1.25, 32]} />
+      {item.model && <Model name={item.model} position={[mx, my, mz]} />}
+      <mesh ref={ring} rotation-x={-Math.PI / 2} position={[item.x, GROUND_Y + 0.06, item.z]}>
+        <ringGeometry args={[0.7, 1.0, 32]} />
         <meshBasicMaterial color="#ffd23a" transparent opacity={0.5} depthWrite={false} />
       </mesh>
-      <Html position={[at.x, 2.1, at.z - 1.8]} center distanceFactor={12} zIndexRange={[7, 0]} style={{ pointerEvents: 'none' }}>
-        <div className="guard-sign is-loot">THE REGALIA</div>
+      <Html position={[mx, my + 1.1, mz]} center distanceFactor={12} zIndexRange={[7, 0]} style={{ pointerEvents: 'none' }}>
+        <div className="guard-sign is-loot">{item.label}</div>
       </Html>
     </group>
   )
@@ -172,7 +181,7 @@ export default function StealthDirector({ layout }) {
   const started = useStealth((s) => s.started)
   const attempt = useStealth((s) => s.attempt)
   const open = useStealth((s) => s.hud.open)
-  const hasLoot = useStealth((s) => s.hud.hasLoot)
+  const taken = useStealth((s) => s.hud.taken || [])
   const [m, setM] = useState(null)
   const placed = useRef(false)
   const hudT = useRef(0)
@@ -190,6 +199,7 @@ export default function StealthDirector({ layout }) {
     return () => {
       playerState.extraColliders = null
       playerState.sneaking = false
+      playerState.speedBoost = 1
     }
   }, [layout, attempt]) // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -218,6 +228,9 @@ export default function StealthDirector({ layout }) {
         shake(0.3, 0.4)
         const st = mm.cfg.start
         if (!mm.over) playerState.teleport = { x: st.x, z: st.z, facing: (st.facing * Math.PI) / 180 }
+      } else if (e.type === 'arrive') {
+        sfx('door')
+        playVoice('raid_efcc', { fx: 'megaphone', minGap: 12, volume: 0.8 })
       } else if (e.type === 'open') sfx('door')
       else if (e.type === 'escaped') sfx('win')
       else if (e.type === 'dawn') sfx('lose')
@@ -228,7 +241,7 @@ export default function StealthDirector({ layout }) {
       hudT.current = 0.2
       const left = mm.guards.filter((g) => g.state !== 'down').length
       useStealth.setState({
-        hud: { time: mm.time, left, total: mm.guards.length, tries: mm.tries, cash: mm.cash, open: mm.open, canTakedown: mm.canTakedown, canGrab: mm.canGrab, hasLoot: mm.hasLoot, spotted: mm.spotted, caught: mm.caughtT > 0, chased: mm.guards.some((g) => g.state === 'chase') },
+        hud: { time: mm.time, left, total: mm.guards.length, tries: mm.tries, cash: mm.cash, open: mm.open, canTakedown: mm.canTakedown, canGrab: mm.canGrab, hasLoot: mm.hasLoot, spotted: mm.spotted, taken: mm.loot.flatMap((l, i) => (l.taken ? [i] : [])), lootLeft: mm.loot.filter((l) => !l.taken).length, carried: mm.carried, waiting: mm.guards.filter((g) => g.wait > 0).length, caught: mm.caughtT > 0, chased: mm.guards.some((g) => g.state === 'chase') },
         ...(mm.over && !useStealth.getState().ended ? { ended: { over: true } } : {}),
       })
     }
@@ -242,12 +255,14 @@ export default function StealthDirector({ layout }) {
       ))}
       {m.guards.map((g) => (
         <group key={`${attempt}-${g.id}`}>
-          <Guard g={g} />
+          <Guard g={g} uniform={UNIFORMS[m.id] || UNIFORM} />
           <Beam g={g} />
         </group>
       ))}
       <Gate open={open} at={m.cfg.exit} label={m.cfg.goal === 'loot' ? 'GET OUT' : 'BACK GATE'} hideShut={m.cfg.goal === 'loot'} />
-      {m.cfg.loot && <Loot at={m.cfg.loot} taken={hasLoot} />}
+      {m.loot.map((item, i) => (
+        <Loot key={`${attempt}-${i}`} item={item} taken={taken.includes(i)} />
+      ))}
     </group>
   )
 }
@@ -271,5 +286,7 @@ export function doGrab() {
   if (!mm || !grabLoot(mm)) return
   playGesture('pickUp', { speed: 1.3, seconds: 0.8 })
   sfx('coin')
-  useStealth.setState((s) => ({ hud: { ...s.hud, hasLoot: true, canGrab: false, open: true } }))
+  // heavier now: slower on your feet
+  playerState.speedBoost = carrySpeed(mm)
+  useStealth.setState((s) => ({ hud: { ...s.hud, hasLoot: mm.hasLoot, canGrab: false, open: mm.open, carried: mm.carried, taken: mm.loot.flatMap((l, i) => (l.taken ? [i] : [])), lootLeft: mm.loot.filter((l) => !l.taken).length } }))
 }

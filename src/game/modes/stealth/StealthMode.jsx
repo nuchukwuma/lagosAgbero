@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useStealth, mission } from './stealthStore.js'
-import { takedown, missionResult } from './stealthLogic.js'
+import { takedown, missionResult, MISSIONS } from './stealthLogic.js'
 import { doTakedown, doGrab } from './StealthDirector.jsx'
 import { useGameStore } from '../../store/gameStore.js'
 import { playerState } from '../../world/worldState.js'
@@ -39,6 +39,18 @@ const TEXT = {
     clockIcon: '🌘',
     share: { kicker: 'Creek & Confraternity', title: 'Stolen untouched', tone: 'neon' },
   },
+  raidEscape: {
+    title: 'EFCC Raid Escape',
+    intro: 'Night, in the Rich Street duplex. You hear the gate go. Operatives are coming through the front door one after another, torches up. Grab the hard drive, the laptop and the cash from the safe, and get out through the back door in the office.',
+    goal: 'Take all three (each one you carry slows you down), then out through the back door.',
+    home: 'the bedroom',
+    go: 'Move',
+    brief: 'raid_efcc',
+    brief2: 'brief_raidEscape',
+    panel: 'EFCC RAID',
+    clockIcon: '🚨',
+    share: { kicker: 'The Forbes List Trap · Lekki', title: 'Escaped the EFCC raid with ₦50M', tone: 'green' },
+  },
 }
 
 const clock = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`
@@ -59,11 +71,11 @@ export default function StealthMode({ params: given = {}, onFinish, mission: mis
     const home = { x: playerState.position.x, z: playerState.position.z, facing: playerState.facing }
     const world = useGameStore.getState().view?.world
     useStealth.getState().start(params)
-    preloadVoices([text.brief])
+    preloadVoices([text.brief, text.brief2].filter(Boolean))
     return () => {
       input.runButton = false
       useStealth.getState().reset()
-      if (world === 'royalCrest') playerState.teleport = home // same place: straight back
+      if (world === MISSIONS[id]?.world) playerState.teleport = home // same place: straight back
       else playerState.restore = home // GameCanvas puts you back once your own world is loaded again
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -76,7 +88,8 @@ export default function StealthMode({ params: given = {}, onFinish, mission: mis
   useEffect(() => {
     const onKey = (e) => {
       if ((e.code === 'KeyE' || e.key === 'Enter') && useStealth.getState().started) {
-        if (useStealth.getState().hud.canGrab) doGrab()
+        const cg = useStealth.getState().hud.canGrab
+        if (cg !== false && cg != null) doGrab()
         else doTakedown(takedown)
       }
     }
@@ -110,7 +123,8 @@ export default function StealthMode({ params: given = {}, onFinish, mission: mis
           className="btn btn-primary"
           onClick={() => {
             useStealth.getState().begin()
-            playVoice(text.brief, { fx: 'radio' })
+            playVoice(text.brief, { fx: id === 'raidEscape' ? 'megaphone' : 'radio' })
+            if (text.brief2) setTimeout(() => playVoice(text.brief2, { fx: 'radio' }), 2600)
           }}
         >
           {text.go}
@@ -164,7 +178,7 @@ export default function StealthMode({ params: given = {}, onFinish, mission: mis
   }
 
   const can = hud.canTakedown != null
-  const grab = Boolean(hud.canGrab)
+  const grab = hud.canGrab !== false && hud.canGrab != null
   return (
     <>
       <TaskPanel className={hud.chased ? 'is-danger' : ''}>
@@ -176,7 +190,11 @@ export default function StealthMode({ params: given = {}, onFinish, mission: mis
         </div>
         <div className="fee-row">
           <span>
-            {id === 'shrineHeist'
+            {id === 'raidEscape'
+              ? hud.hasLoot
+                ? 'You have everything: out the back door!'
+                : `Still to take: ${hud.lootLeft ?? 3} · operatives inside: ${hud.total - (hud.waiting ?? 0)}`
+              : id === 'shrineHeist'
               ? hud.hasLoot
                 ? 'The regalia is yours: back to the farm road!'
                 : `Sentries awake: ${hud.left} of ${hud.total} · the regalia is on the altar`
@@ -192,7 +210,7 @@ export default function StealthMode({ params: given = {}, onFinish, mission: mis
         {id === 'shrineHeist' && <div className={`fee-row ${hud.spotted ? 'stealth-warn' : 'stealth-clean'}`}>{hud.spotted ? 'Seen: not untouched any more.' : 'Untouched so far.'}</div>}
       </TaskPanel>
       {hud.caught && <div className="stealth-caught">Caught! Back to {text.home}.</div>}
-      <MoveControls actionLabel={grab ? 'TAKE IT' : can ? 'TAKE DOWN' : null} actionIcon={grab ? 'hand' : 'fist'} actionSub={grab ? 'the regalia' : can ? 'take down' : null} onAction={() => (grab ? doGrab() : doTakedown(takedown))} />
+      <MoveControls actionLabel={grab ? 'TAKE IT' : can ? 'TAKE DOWN' : null} actionIcon={grab ? 'hand' : 'fist'} actionSub={grab ? (id === 'shrineHeist' ? 'the regalia' : 'grab it') : can ? 'take down' : null} onAction={() => (grab ? doGrab() : doTakedown(takedown))} />
       {import.meta.env.DEV && (
         <button
           className="btn btn-small dev-end"

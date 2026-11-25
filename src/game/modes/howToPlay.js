@@ -20,6 +20,16 @@ const STORY_MODES = {
     title: 'Chase',
     rules: ['Run along the pavement after the vehicle and dodge the people in the way.', 'Running burns stamina: ease off before you run dry.', 'Press GRAB when you reach the door. Run out of time and they get away.'],
   }),
+  raidEscape: () => ({
+    title: 'EFCC Raid Escape',
+    rules: [
+      'Night, inside the Rich Street duplex. Operatives come through the front door one after another, torches up, and sweep the rooms.',
+      'Take the hard drive (by the server rack), the laptop (on the office desk) and the cash (on the bedroom safe): TAKE IT, or E.',
+      'Every thing you carry slows you down. With all three, the back door in the office opens: get out before they seal the house.',
+      'In a torch beam a ? fills, then ! and they come for you. Furniture and walls block their view. Running close by is heard.',
+      "Beside an operative who hasn't seen you: TAKE DOWN (E).",
+    ],
+  }),
   shrineHeist: () => ({
     title: 'Steal Untouched',
     rules: [

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import { getLayout } from '../../world/worlds.js'
-import { createMission, stepMission, takedown, grabLoot, missionResult, walkable, findPath, lineOfSight, sees, START, GATE, ROUTES, TAKEDOWN, MISSIONS } from './stealthLogic.js'
+import { createMission, stepMission, takedown, grabLoot, missionResult, walkable, findPath, lineOfSight, sees, START, GATE, ROUTES, TAKEDOWN, MISSIONS, carrySpeed } from './stealthLogic.js'
 
 const layout = getLayout('royalCrest', false)
 const still = (x, z) => ({ x, z, running: false, moving: false })
@@ -111,7 +111,7 @@ describe('Steal Untouched: the shrine heist', () => {
     stepMission(m, 1 / 30, still(start.x, start.z))
     expect(m.over).toBe(false) // nothing in hand yet
     stepMission(m, 1 / 30, still(loot.x, loot.z))
-    expect(m.canGrab).toBe(true)
+    expect(m.canGrab).toBe(0) // standing at the first (and only) thing to take
     expect(grabLoot(m)).toBe(true)
     stepMission(m, 1 / 30, still(start.x, start.z))
     expect(m.won).toBe(true)
@@ -126,5 +126,47 @@ describe('Steal Untouched: the shrine heist', () => {
     m.open = true
     stepMission(m, 1 / 30, still(MISSIONS[id].exit.x, MISSIONS[id].exit.z))
     expect(missionResult(m)).toMatchObject({ outcome: 'won', untouched: false, respectMul: 1 })
+  })
+})
+
+describe('EFCC Raid Escape: the duplex', () => {
+  const duplex = getLayout('duplex', false)
+  const id = 'raidEscape'
+
+  it('every thing to take, the back door and every operative round can be reached from where you start', () => {
+    const m = createMission(duplex, { level: 1 }, 4, id)
+    const { start, exit } = MISSIONS[id]
+    expect(walkable(m.grid, start.x, start.z)).toBe(true)
+    for (const l of m.loot) expect(findPath(m.grid, [start.x, start.z], [l.x, l.z]), l.label).toBeTruthy()
+    expect(findPath(m.grid, [start.x, start.z], [exit.x, exit.z]), 'the back door').toBeTruthy()
+    for (const g of m.guards) expect(findPath(m.grid, [start.x, start.z], g.home[0]), `operative ${g.id}`).toBeTruthy()
+  })
+
+  it('they come in one after another', () => {
+    const m = createMission(duplex, { level: 1 }, 4, id)
+    expect(m.guards[0].wait).toBeGreaterThan(5) // a head start
+    expect(m.guards[3].wait).toBeGreaterThan(m.guards[1].wait)
+    let arrived = 0
+    for (let i = 0; i < 30 * 20; i++) {
+      stepMission(m, 1 / 30, still(-7, 5)) // out of the way, in a corner
+      arrived += m.events.filter((e) => e.type === 'arrive').length
+      if (m.over) break
+    }
+    expect(arrived).toBeGreaterThanOrEqual(1)
+  })
+
+  it('all three taken (each one slower) opens the back door, and out', () => {
+    const m = createMission(duplex, { level: 0 }, 4, id)
+    for (const g of m.guards) g.state = 'down'
+    expect(carrySpeed(m)).toBe(1)
+    for (const l of m.loot) {
+      stepMission(m, 1 / 30, still(l.x, l.z))
+      expect(grabLoot(m), l.label).toBe(true)
+    }
+    expect(carrySpeed(m)).toBeCloseTo(0.7)
+    expect(m.open).toBe(true)
+    stepMission(m, 1 / 30, still(MISSIONS[id].exit.x, MISSIONS[id].exit.z))
+    expect(m.won).toBe(true)
+    expect(missionResult(m)).toMatchObject({ outcome: 'won', moneyChange: 50000 })
   })
 })
