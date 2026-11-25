@@ -25,6 +25,7 @@ const ACTION = [
   { id: 'escape', mode: 'escape', label: 'Rooftop Escape', blurb: 'Platformer: jump, roll, fight, get away', params: () => ({ metres: 700, difficulty: 1, to: 'the Motor Park' }) },
   { id: 'fight', mode: 'fight', label: 'Street Fight', blurb: 'A new opponent every time', params: () => ({ opponent: pick(FIGHTERS), difficulty: 1 }), best: () => (fightRecord().won ? `${fightRecord().won} won` : null) },
   { id: 'dance', mode: 'dance', label: 'Dance Battle', blurb: 'Hit the arrows on the beat', params: () => ({ name: pick(['Sweet Mother', 'DJ Jollof', 'Shaku Queen', 'Azonto Kid']), prize: 5000 }) },
+  { id: 'wireSprint', mode: 'wireSprint', label: 'Beat-the-Bet Wire Sprint', blurb: '3D race across Wuse: three drops before the bet closes', params: () => ({}) },
   { id: 'shrineHeist', mode: 'shrineHeist', label: 'Steal Untouched', blurb: '3D stealth: take a rival shrine’s regalia, unseen', params: () => ({}) },
   { id: 'raidEscape', mode: 'raidEscape', label: 'EFCC Raid Escape', blurb: '3D: grab the drive, the laptop and the cash, out the back', params: () => ({}) },
   { id: 'sneak3d', mode: 'sneak', label: 'Back Gate', blurb: '3D stealth: out of campus before dawn', params: () => ({}) },

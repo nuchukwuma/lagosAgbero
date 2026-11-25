@@ -13,7 +13,7 @@ import characters from '../data/characters.json'
 
 const TENSE = new Set(['fight', 'chase', 'runner'])
 // what you hear around you, by activity, then by place (audio.js SCENES)
-const SCENE_OF_MODE = { feeCollection: 'busPark', conductor: 'busPark', chase: 'chase', fight: 'fight', runner: 'runner', drive: 'drive', rally: 'rally', begging: 'market' }
+const SCENE_OF_MODE = { feeCollection: 'busPark', conductor: 'busPark', chase: 'chase', fight: 'fight', runner: 'runner', drive: 'drive', wireSprint: 'drive', rally: 'rally', begging: 'market' }
 const SCENE_OF_WORLD = { iyanaWahala: 'market', nkwoAgu: 'village', royalCrest: 'campus' }
 const ROLLING = new Set(['drive', 'conductor'])
 

@@ -23,6 +23,7 @@ export const DUEL_GAMES = {
   sneak: { name: 'Back Gate', kind: 'duel', mode: 'sneak' },
   shrineHeist: { name: 'Steal Untouched', kind: 'duel', mode: 'shrineHeist' },
   raidEscape: { name: 'EFCC Raid Escape', kind: 'duel', mode: 'raidEscape' },
+  wireSprint: { name: 'Wire Sprint', kind: 'duel', mode: 'wireSprint' },
   akara: { name: 'Akara Fry', kind: 'duel', mode: 'akara' },
   penalty: { name: 'Penalty Shoot-out', kind: 'duel', mode: 'penalty' },
   traffic: { name: 'Go-Slow', kind: 'duel', mode: 'traffic' },

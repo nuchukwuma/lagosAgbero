@@ -24,6 +24,8 @@ import { useChase } from '../modes/chase/chaseStore.js'
 import { useFight, opponentProfile } from '../modes/fight/fightStore.js'
 import RunnerScene from '../modes/runner/RunnerScene.jsx'
 import DriveScene from '../modes/drive/DriveScene.jsx'
+import WireSprintScene from '../modes/wireSprint/WireSprintScene.jsx'
+import { useSprint } from '../modes/wireSprint/wireSprintStore.js'
 import { useDrive } from '../modes/drive/driveStore.js'
 import { useSettings, renderProfile } from '../store/settings.js'
 import { withAllegiance } from '../characters/look.js'
@@ -153,6 +155,7 @@ export default function GameCanvas({ view, game, activity = null, paused = false
   const runnerOn = useRunner((s) => s.active) && modeName === 'runner'
   const busOn = useBus((s) => s.active) && modeName === 'conductor'
   const driveOn = useDrive((s) => s.active) && modeName === 'drive'
+  const sprintOn = useSprint((s) => s.active) && modeName === 'wireSprint'
   const fightOpponent = useFight((s) => (s.active ? opponentProfile(s.params.opponent).character : null))
   const talking = DIALOGUE_VIEWS.has(view.type)
   const speaker = talking ? view.speaker : null
@@ -205,12 +208,16 @@ export default function GameCanvas({ view, game, activity = null, paused = false
       {capped && !paused && !fight2d && <FrameCap fps={30} />}
       {(paused || fight2d) && <FrozenFrame />}
       {settled && profile.dpr.min !== profile.dpr.max && <PerformanceMonitor onDecline={() => setDpr(range.min)} onIncline={() => setDpr(range.max)} flipflops={3} bounds={capped ? () => [22, 29] : undefined} onFallback={() => setDpr(range.min)} />}
-      <Lighting time={stealth ? 'night' : view.time} raining={Boolean(game.flags.raining)} />
+      <Lighting time={stealth ? 'night' : sprintOn ? 'dusk' : view.time} raining={Boolean(game.flags.raining)} />
       <Sky />
       <BlobShadows />
       {driveOn ? (
         <Suspense fallback={null}>
           <DriveScene />
+        </Suspense>
+      ) : sprintOn ? (
+        <Suspense fallback={null}>
+          <WireSprintScene />
         </Suspense>
       ) : runnerOn ? (
         <Suspense fallback={null}>
@@ -244,7 +251,7 @@ export default function GameCanvas({ view, game, activity = null, paused = false
         </Suspense>
       )}
       {freeRoam && <GoalTracker key={view.key} goal={view.goal} layout={layout} onReached={onGoalReached} />}
-      <CameraRig mode={driveOn ? 'drive' : busOn ? 'vehicle' : runnerOn ? 'runner' : talking ? 'dialogue' : 'follow'} speaker={speaker} ceiling={runnerOn || driveOn ? null : layout.raw.flyover} obstacles={runnerOn || driveOn ? null : layout.shadows} />
+      <CameraRig mode={sprintOn ? 'chase' : driveOn ? 'drive' : busOn ? 'vehicle' : runnerOn ? 'runner' : talking ? 'dialogue' : 'follow'} speaker={speaker} ceiling={runnerOn || driveOn || sprintOn ? null : layout.raw.flyover} obstacles={runnerOn || driveOn || sprintOn ? null : layout.shadows} />
     </Canvas>
   )
 }

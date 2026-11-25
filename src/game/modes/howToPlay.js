@@ -20,6 +20,16 @@ const STORY_MODES = {
     title: 'Chase',
     rules: ['Run along the pavement after the vehicle and dodge the people in the way.', 'Running burns stamina: ease off before you run dry.', 'Press GRAB when you reach the door. Run out of time and they get away.'],
   }),
+  wireSprint: () => ({
+    title: 'Beat-the-Bet Wire Sprint',
+    rules: [
+      'A race across a Wuse street grid. Hit the three drop points (the green beams), in any order, before the bet closes.',
+      "If either rival bettor's driver hits all three first, the pool is cleared and you lose.",
+      'Blue arrows on the road: a few seconds of boost. Police roadblocks close some avenues; alleys through the blocks are shortcuts the rivals do not take, with carts in the way.',
+      'Walls and barriers kill your speed. The radar (top right) shows the drops, the rivals and you, north up.',
+      'Arrows / WASD: steer, gas, brake (Space brakes). On a phone: the pedals.',
+    ],
+  }),
   raidEscape: () => ({
     title: 'EFCC Raid Escape',
     rules: [

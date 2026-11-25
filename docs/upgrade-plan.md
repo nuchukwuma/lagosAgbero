@@ -123,8 +123,12 @@ missions in `stealthLogic.js`, each with tests on its real map):
   come through the front door one by one; take the hard drive, the laptop
   and the cash (each slows you down), out through the back door.
 - (Back Gate on campus, from before, is the third.)
-Both are in the Games tab and are Lagos Online duels. Next: the Wire Sprint
-(driving), then the rest of the list, elections and turf wars.
+- **Beat-the-Bet Wire Sprint** (Abuja): a race across a Wuse street grid at
+  dusk (its own 3D scene, `src/game/modes/wireSprint/`): three drop points in
+  any order before the 90-second clock and before two rival bettors' drivers
+  (who route along the avenues round the roadblocks); boosts, police
+  roadblocks, alley shortcuts with carts, a radar, a chase camera.
+Both are in the Games tab and are Lagos Online duels. Next: the rest of the list, then elections and turf wars.
 
 - Abuja Big Boy: Beat-the-Bet Wire Sprint (driving checkpoints), Penthouse
   Raid (stealth with heavy loot), Convoy Escort (pursuit).

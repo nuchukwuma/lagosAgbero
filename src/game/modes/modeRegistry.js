@@ -24,6 +24,7 @@ import { ARCADE_MODES } from './arcade/index.js'
 import StealthMode from './stealth/StealthMode.jsx'
 import ShrineHeistMode from './stealth/ShrineHeistMode.jsx'
 import RaidEscapeMode from './stealth/RaidEscapeMode.jsx'
+import WireSprintMode from './wireSprint/WireSprintMode.jsx'
 
 export const MODES = {
   feeCollection: FeeCollectionMode,
@@ -43,17 +44,18 @@ export const MODES = {
   sneak: StealthMode, // Back Gate: a 3D stealth mission on the campus at night
   shrineHeist: ShrineHeistMode, // Steal Untouched: the rival shrine, in the bush round the village at night
   raidEscape: RaidEscapeMode, // EFCC Raid Escape: inside the Rich Street duplex, operatives at the door
+  wireSprint: WireSprintMode, // Beat-the-Bet Wire Sprint: a race across a Wuse street grid (its own 3D scene)
 }
 
 // Modes drawn as a full-screen 2D scene over the frozen street (the street HUD steps aside).
 export const FULLSCREEN_MODES = new Set(['dance', ...Object.keys(ARCADE_MODES)])
 
 // Modes played inside the 3D street (the player walks with joystick/keys).
-export const WORLD_MODES = new Set(['feeCollection', 'chase', 'fight', 'runner', 'conductor', 'drive', 'sneak', 'shrineHeist', 'raidEscape'])
+export const WORLD_MODES = new Set(['feeCollection', 'chase', 'fight', 'runner', 'conductor', 'drive', 'sneak', 'shrineHeist', 'raidEscape', 'wireSprint'])
 
 export { worldForMode } from './modeWorlds.js' // modes with a world of their own (Back Gate: the campus)
 
-export const PLANNED_MODES = [...Object.keys(ARCADE_MODES), 'sneak', 'shrineHeist', 'raidEscape', 'chase', 'fight', 'runner', 'raid', 'conductor', 'feeCollection', 'begging', 'rally', 'initiation', 'drive', 'bluff', 'exam', 'haggle', 'dance', 'shop']
+export const PLANNED_MODES = [...Object.keys(ARCADE_MODES), 'wireSprint', 'sneak', 'shrineHeist', 'raidEscape', 'chase', 'fight', 'runner', 'raid', 'conductor', 'feeCollection', 'begging', 'rally', 'initiation', 'drive', 'bluff', 'exam', 'haggle', 'dance', 'shop']
 
 export function modeComponent(name) {
   return MODES[name] || StandInMode

@@ -4943,3 +4943,102 @@ svg .is-chase { fill: #e53935; stroke: #fff; stroke-width: 0.6; animation: map-p
   gap: 8px;
   justify-content: center;
 }
+
+/* Wire Sprint */
+.sprint-hud {
+  position: fixed;
+  top: calc(60px + env(safe-area-inset-top));
+  left: calc(10px + env(safe-area-inset-left));
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  z-index: 12;
+  pointer-events: none;
+  font-family: 'Space Grotesk', system-ui, sans-serif;
+}
+.sprint-clock {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  background: rgba(12, 14, 18, 0.8);
+  border-radius: 10px;
+  padding: 6px 12px;
+  color: #f3ead2;
+}
+.sprint-clock strong {
+  font: 400 34px/1 'Bebas Neue', Impact, sans-serif;
+  color: var(--danfo);
+}
+.sprint-clock strong.is-late {
+  color: #ff5a4a;
+}
+.sprint-drops,
+.sprint-rivals {
+  list-style: none;
+  margin: 0;
+  padding: 6px 10px;
+  background: rgba(12, 14, 18, 0.72);
+  border-radius: 10px;
+  color: #f3ead2;
+  font-size: 13px;
+}
+.sprint-drops li.is-hit {
+  color: #8ff0a4;
+}
+.sprint-drops small {
+  color: var(--danfo);
+  margin-left: 4px;
+}
+.sprint-rivals li {
+  color: #ff8a7a;
+}
+.sprint-radar {
+  position: fixed;
+  top: calc(60px + env(safe-area-inset-top));
+  right: calc(10px + env(safe-area-inset-right));
+  width: 130px;
+  height: 130px;
+  border-radius: 12px;
+  border: 2px solid rgba(242, 195, 0, 0.5);
+  z-index: 12;
+  pointer-events: none;
+}
+.sprint-pedals {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: max(14px, env(safe-area-inset-bottom));
+  display: flex;
+  justify-content: space-between;
+  padding: 0 14px;
+  z-index: 12;
+  pointer-events: none;
+}
+.sprint-steer,
+.sprint-feet {
+  display: flex;
+  gap: 10px;
+  pointer-events: auto;
+}
+.sprint-pedal {
+  min-width: 70px;
+  height: 70px;
+  border-radius: 16px;
+  border: 3px solid rgba(26, 20, 8, 0.85);
+  background: rgba(246, 236, 210, 0.88);
+  color: #1a1408;
+  font: 900 20px/1 system-ui, sans-serif;
+  touch-action: none;
+  user-select: none;
+}
+.sprint-pedal.is-gas {
+  background: #2ecc71;
+  color: #fff;
+  min-width: 84px;
+  height: 84px;
+}
+.sprint-pedal.is-brake {
+  background: #e2553a;
+  color: #fff;
+  font-size: 14px;
+}

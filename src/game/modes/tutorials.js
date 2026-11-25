@@ -31,6 +31,11 @@ export const TUTORIALS = {
     { at: null, text: 'The yellow patch in front of a guard is his torch. Inside it a ? fills over his head; when it is full he runs for you. Containers, bins and walls block his view.' },
     { at: null, text: 'Come up behind a guard who has not seen you: TAKE DOWN appears (or press E). He sleeps till morning and drops his money.' },
   ],
+  wireSprint: [
+    { at: '.sprint-pedals', text: 'Steer with ◀ ▶, GAS and BRAKE (or the arrows / WASD, Space to brake).' },
+    { at: '.sprint-radar', text: 'The radar, north up: green dots are the drops, red the rivals, yellow you. Red marks are police roadblocks.' },
+    { at: '.sprint-hud', text: 'The clock, your speed, the drops still to hit and how far, and how far the rivals have got. All three drops first wins the pool.' },
+  ],
   shrineHeist: [
     { at: '.joystick, .controls', text: 'Move with the stick (or WASD / arrows). You walk crouched; running (hold RUN, or Shift) is quicker but guards close by hear it. Drag the screen (or V) to turn the camera.' },
     { at: '.task-panel', text: 'Sentries awake, time till first light, your tries, and whether you are still untouched. Take the regalia from the altar, then back to the farm road.' },
