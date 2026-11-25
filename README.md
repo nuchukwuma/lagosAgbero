@@ -337,7 +337,7 @@ players: Iyana-Wahala, Nkwo Agu and the campus joined by buses, live Draughts
 and Ayò, score duels in the other games, stakes and bets (game money only),
 groups and quests from the stories, a shop and leaderboards. It needs the
 small server in `server/`: `npm run server` locally; how to put it online is
-in `docs/online.md`.
+in `docs/online.md`. Private rooms with 4-letter codes and WhatsApp invites, sending naira, and a live board (net worth, respect, influence, heists) are described there too. The bigger upgrade (new cities and stories, enterable buildings, voices, 3D mini-games, elections and turf wars) is planned in `docs/upgrade-plan.md`.
 
 ## Docs
 

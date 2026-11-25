@@ -26,10 +26,13 @@ export const useOnline = create(() => ({
   liveInbox: [], // moves from the other player in a live game, oldest first
   nearGiver: null, // the quest giver you're standing next to (QuestGivers.jsx)
   guide: null, // the quest giver you asked the way to
+  lobby: null, // the private room you're in: { code, host, hostName, members } (null: the public world)
+  lobbyMissing: null, // a code that didn't open a room
+  board: [], // the live board for your room: [{ id, name, worth, respect, influence, heists, wins, map }]
 }))
 
 let ws = null
-let wanted = null // { name, look } while we want to be connected
+let wanted = null // { name, look, room } while we want to be connected; room: { create: true } | { code }
 let retry = 0
 let toastId = 0
 let tokenWaiter = null // spendToken()'s answer
@@ -73,6 +76,21 @@ function onMessage(msg) {
     case 'welcome':
       set({ status: 'online', error: null })
       retry = 0
+      // into the room we asked for (again, after a reconnect)
+      if (wanted?.room?.create) send({ t: 'createRoom' })
+      else if (wanted?.room?.code) send({ t: 'joinRoom', code: wanted.room.code })
+      break
+    case 'lobby':
+      if (msg.code) {
+        if (wanted) wanted.room = { code: msg.code } // a reconnect goes back to the same room
+        set({ lobby: msg, lobbyMissing: null })
+      } else {
+        if (wanted) wanted.room = null
+        set({ lobby: null, lobbyMissing: msg.missing || null })
+      }
+      break
+    case 'board':
+      set({ board: msg.rows || [] })
       break
     case 'me':
       set({ me: msg.me })
@@ -131,10 +149,17 @@ function onMessage(msg) {
   }
 }
 
-/** Connect (or stay connected) as this name and look. */
-export function connect({ name, look }) {
-  wanted = { name, look }
-  if (ws && ws.readyState <= 1) return
+/** Connect (or stay connected) as this name and look; room: { create: true } or { code } for a private room. */
+export function connect({ name, look, room = null }) {
+  wanted = { name, look, room }
+  useOnline.setState({ lobbyMissing: null })
+  if (ws && ws.readyState === 1) {
+    // already connected: just go to the room asked for
+    if (room?.create) send({ t: 'createRoom' })
+    else if (room?.code) send({ t: 'joinRoom', code: room.code })
+    return
+  }
+  if (ws && ws.readyState === 0) return // connecting: the welcome will take us there
   useOnline.setState({ status: 'connecting', error: null })
   let sock
   try {
@@ -167,7 +192,7 @@ export function disconnect() {
   wanted = null
   if (ws) ws.close()
   ws = null
-  useOnline.setState({ status: 'off', players: {}, map: null, match: null, invites: [], guide: null, nearGiver: null })
+  useOnline.setState({ status: 'off', players: {}, map: null, match: null, invites: [], guide: null, nearGiver: null, lobby: null, board: [] })
 }
 
 // the things you can do
@@ -199,3 +224,8 @@ export function spendToken() {
   })
 }
 export const clearEnd = () => useOnline.setState({ lastEnd: null })
+export const createRoom = () => send({ t: 'createRoom' })
+export const joinRoom = (code) => send({ t: 'joinRoom', code })
+export const leaveRoom = () => send({ t: 'leaveRoom' })
+export const give = (to, amount) => send({ t: 'give', to, amount })
+export const askBoard = () => send({ t: 'board' })

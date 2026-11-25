@@ -36,6 +36,8 @@
   },
   "homepage": "https://github.com/nuchukwuma/lagosAgbero#readme",
   "dependencies": {
+    "@fontsource/bebas-neue": "^5.1.0",
+    "@fontsource/space-grotesk": "^5.1.0",
     "@react-three/drei": "^9.114.0",
     "@react-three/fiber": "^8.17.10",
     "react": "^18.3.1",

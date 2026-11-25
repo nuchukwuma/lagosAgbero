@@ -8,6 +8,8 @@
 import { START_MONEY, DAILY_BONUS, MAX_STAKE, MAPS, DUEL_GAMES, GROUPS, QUESTS, SHOP, groupWinBonus, questCounts } from '../src/game/online/catalog.js'
 import { turnsFor, VARIANTS, initialBoard } from '../src/game/modes/arcade/games/draughts.js'
 import { play as ayoPlay, legal as ayoLegal } from '../src/game/modes/arcade/games/ayo.js'
+import { Lobbies, ROOM_LIMIT, normCode } from './lobbies.js'
+import { ensureStats, boardRow, giveProblem, netWorth } from './economy.js'
 
 const today = (now) => new Date(now).toISOString().slice(0, 10)
 const clean = (s, n) =>
@@ -20,6 +22,9 @@ const BAD = /\b(fuck|shit|bitch|nigger|cunt)\b/gi // keep the street talk, lose 
 const DUEL_TIMEOUT = 6 * 60 * 1000
 const LEAVE_GRACE = 45 * 1000 // a dropped phone gets this long to come back to a live match
 
+/** Where a connection is: its room ('' = the public world) and place in it. */
+const placeOf = (c) => (c?.map ? `${c.room || ''}|${c.map}` : null)
+
 export class World {
   constructor({ store, send, now = () => Date.now(), random = Math.random } = {}) {
     this.store = store // { players: { [token]: profile } }, save()
@@ -30,6 +35,8 @@ export class World {
     this.invites = new Map()
     this.matches = new Map()
     this.seq = 1
+    this.lobbies = new Lobbies({ now, random })
+    this.dirtyBoards = new Set() // rooms whose live board changed
   }
 
   // ---------------------------------------------------------------- helpers
@@ -44,8 +51,14 @@ export class World {
   publicOf(p, c) {
     return { id: p.id, name: p.name, look: p.look, group: p.group || null, x: c?.x ?? 0, z: c?.z ?? 0, ry: c?.ry ?? 0, anim: c?.anim || 'idle', wins: p.stats.wins }
   }
-  toRoom(map, msg, except = null) {
-    for (const [cid, c] of this.clients) if (c.map === map && cid !== except) this.send(cid, msg)
+  /** Everyone in this place (room + map). */
+  toPlace(place, msg, except = null) {
+    if (!place) return
+    for (const [cid, c] of this.clients) if (placeOf(c) === place && cid !== except) this.send(cid, msg)
+  }
+  /** Everyone in this room, whichever place in it. */
+  toLobby(room, msg) {
+    for (const [cid, c] of this.clients) if (c.token && (c.room || '') === room) this.send(cid, msg)
   }
   meMsg(p) {
     const me = { ...p }
@@ -54,7 +67,9 @@ export class World {
   }
   pushMe(cid) {
     const p = this.profile(cid)
-    if (p) this.send(cid, this.meMsg(p))
+    if (!p) return
+    this.send(cid, this.meMsg(p))
+    this.markBoard(this.clients.get(cid).room || '') // money or standing changed: the live board too
   }
   toast(cid, text) {
     this.send(cid, { t: 'toast', text })
@@ -77,12 +92,13 @@ export class World {
 
   // ---------------------------------------------------------------- connections
   connect(cid) {
-    this.clients.set(cid, { token: null, id: null, map: null, x: 0, z: 0, ry: 0, anim: 'idle', lastSay: 0, lastMove: 0 })
+    this.clients.set(cid, { token: null, id: null, room: '', map: null, x: 0, z: 0, ry: 0, anim: 'idle', lastSay: 0, lastMove: 0 })
   }
   disconnect(cid) {
     const c = this.clients.get(cid)
     if (!c) return
-    if (c.map) this.toRoom(c.map, { t: 'left', id: c.id }, cid)
+    if (c.map) this.toPlace(placeOf(c), { t: 'left', id: c.id }, cid)
+    this.markBoard(c.room || '')
     // live matches: a short grace to come back, then it's a forfeit
     for (const m of this.matches.values())
       if (m.kind === 'live' && !m.over && m.players.some((pl) => pl.id === c.id)) {
@@ -92,6 +108,7 @@ export class World {
         m.awayTimer?.unref?.()
       }
     this.clients.delete(cid)
+    if (c.room) this.sendLobby(c.room)
   }
 
   handle(cid, msg) {
@@ -117,6 +134,11 @@ export class World {
       useToken: this.useToken,
       leaders: this.leaders,
       forfeit: this.forfeit,
+      createRoom: this.createRoom,
+      joinRoom: this.joinRoom,
+      leaveRoom: this.leaveRoom,
+      give: this.give,
+      board: this.boardFor,
     }[msg.t]
     if (fn) fn.call(this, cid, msg)
   }
@@ -141,6 +163,7 @@ export class World {
         created: this.now(),
       }
     }
+    ensureStats(p)
     const nm = clean(name, 16).replace(BAD, '***')
     if (nm.length >= 2) p.name = nm
     if (look && typeof look === 'object') p.look = { ...clean2(look), ...(p.lookExtra || {}) }
@@ -164,20 +187,27 @@ export class World {
     }
     this.resetDaily(p)
     this.save()
-    this.send(cid, { t: 'welcome', maps: Object.fromEntries(Object.keys(MAPS).map((m) => [m, [...this.clients.values()].filter((x) => x.map === m).length])) })
+    this.send(cid, { t: 'welcome', maps: Object.fromEntries(Object.keys(MAPS).map((m) => [m, [...this.clients.values()].filter((x) => !x.room && x.map === m).length])) })
     this.pushMe(cid)
   }
 
   join(cid, { map, x = 0, z = 0 }) {
     if (!MAPS[map]) return this.err(cid, 'No such place.')
     const c = this.clients.get(cid)
-    const p = this.profile(cid)
-    if (c.map) this.toRoom(c.map, { t: 'left', id: c.id }, cid)
+    if (c.map) this.toPlace(placeOf(c), { t: 'left', id: c.id }, cid)
     Object.assign(c, { map, x: num(x), z: num(z) })
+    this.arrive(cid)
+  }
+  /** Tell a connection who is in its place, and the place that it's here. */
+  arrive(cid) {
+    const c = this.clients.get(cid)
+    const p = this.profile(cid)
+    const place = placeOf(c)
     const here = []
-    for (const [other, oc] of this.clients) if (other !== cid && oc.map === map && oc.token) here.push(this.publicOf(this.store.players[oc.token], oc))
-    this.send(cid, { t: 'room', map, players: here, matches: this.openMatches(map) })
-    this.toRoom(map, { t: 'joined', player: this.publicOf(p, c) }, cid)
+    for (const [other, oc] of this.clients) if (other !== cid && placeOf(oc) === place && oc.token) here.push(this.publicOf(this.store.players[oc.token], oc))
+    this.send(cid, { t: 'room', map: c.map, code: c.room || null, players: here, matches: this.openMatches(place) })
+    this.toPlace(place, { t: 'joined', player: this.publicOf(p, c) }, cid)
+    if (c.room) this.sendLobby(c.room)
   }
 
   move(cid, { x, z, ry, anim }) {
@@ -187,7 +217,7 @@ export class World {
     if (t - c.lastMove < 50) return // at most 20 a second
     c.lastMove = t
     Object.assign(c, { x: num(x), z: num(z), ry: num(ry), anim: clean(anim, 16) || 'idle' })
-    this.toRoom(c.map, { t: 'moved', id: c.id, x: c.x, z: c.z, ry: c.ry, anim: c.anim }, cid)
+    this.toPlace(placeOf(c), { t: 'moved', id: c.id, x: c.x, z: c.z, ry: c.ry, anim: c.anim }, cid)
   }
 
   say(cid, { text }) {
@@ -199,7 +229,7 @@ export class World {
     c.lastSay = t
     const msg = clean(text, 120).replace(BAD, '***')
     if (!msg) return
-    this.toRoom(c.map, { t: 'chat', id: p.id, name: p.name, group: p.group, text: msg, at: t })
+    this.toPlace(placeOf(c), { t: 'chat', id: p.id, name: p.name, group: p.group, text: msg, at: t })
   }
 
   // ---------------------------------------------------------------- challenges
@@ -210,7 +240,7 @@ export class World {
     const s = Math.max(0, Math.min(MAX_STAKE, Math.round(num(stake) / 100) * 100))
     if (s > p.money) return this.err(cid, "You don't have that much.")
     const tcid = this.clientOf(to)
-    if (!tcid || to === p.id) return this.err(cid, "They're not around.")
+    if (!tcid || to === p.id || (this.clients.get(tcid).room || '') !== (this.clients.get(cid).room || '')) return this.err(cid, "They're not around.")
     const id = `i${this.seq++}`
     this.invites.set(id, { id, from: p.id, to, game, stake: s, at: this.now() })
     this.send(tcid, { t: 'invite', id, from: p.id, name: p.name, game, gameName: g.name, stake: s })
@@ -242,6 +272,8 @@ export class World {
       game: inv.game,
       kind: g.kind,
       map: this.clients.get(fcid).map,
+      room: this.clients.get(fcid).room || '',
+      place: placeOf(this.clients.get(fcid)),
       stake: inv.stake,
       seed: Math.floor(this.random() * 99999) + 1,
       players: [
@@ -267,7 +299,7 @@ export class World {
         this.pushMe(x)
       }
     }
-    this.toRoom(m.map, { t: 'matches', matches: this.openMatches(m.map) })
+    this.toPlace(m.place, { t: 'matches', matches: this.openMatches(m.place) })
     this.save()
   }
 
@@ -275,8 +307,8 @@ export class World {
     const seat = m.players.findIndex((pl) => pl.id === viewer)
     return { id: m.id, game: m.game, gameName: DUEL_GAMES[m.game].name, kind: m.kind, stake: m.stake, seed: m.seed, players: m.players, seat, over: m.over, live: m.live ? { turn: m.live.turn } : null }
   }
-  openMatches(map) {
-    return [...this.matches.values()].filter((m) => !m.over && m.map === map).map((m) => ({ id: m.id, game: m.game, gameName: DUEL_GAMES[m.game].name, stake: m.stake, players: m.players, pool: [0, 1].map((k) => m.bets.filter((b) => b.on === k).reduce((a, b) => a + b.amount, 0)) }))
+  openMatches(place) {
+    return [...this.matches.values()].filter((m) => !m.over && m.place === place).map((m) => ({ id: m.id, game: m.game, gameName: DUEL_GAMES[m.game].name, stake: m.stake, players: m.players, pool: [0, 1].map((k) => m.bets.filter((b) => b.on === k).reduce((a, b) => a + b.amount, 0)) }))
   }
 
   // ---------------------------------------------------------------- live board games
@@ -379,6 +411,9 @@ export class World {
       if (!pr) continue
       pr.stats.played++
       this.progress(pr, { event: 'play', game: m.game })
+      ensureStats(pr)
+      // street respect: winning earns it, showing up earns a little
+      pr.stats.respect += winnerId == null ? 3 : pl.id === winnerId ? 10 + Math.min(20, Math.floor(m.stake / 1000)) : 2
       if (winnerId == null) {
         pr.money += m.stake
         payouts[pl.id] = m.stake
@@ -427,8 +462,8 @@ export class World {
         this.pushMe(x)
       }
     }
-    this.toRoom(m.map, { t: 'matches', matches: this.openMatches(m.map) })
-    this.toRoom(m.map, { t: 'chat', id: 'news', name: 'Baba Radio', text: winnerName ? `${winnerName} wins the ${DUEL_GAMES[m.game].name} (${why}).` : `The ${DUEL_GAMES[m.game].name} ends in a draw.`, at: this.now() })
+    this.toPlace(m.place, { t: 'matches', matches: this.openMatches(m.place) })
+    this.toPlace(m.place, { t: 'chat', id: 'news', name: 'Baba Radio', text: winnerName ? `${winnerName} wins the ${DUEL_GAMES[m.game].name} (${why}).` : `The ${DUEL_GAMES[m.game].name} ends in a draw.`, at: this.now() })
     setTimeout(() => this.matches.delete(m.id), 60000)?.unref?.()
   }
   playerById(id) {
@@ -440,7 +475,7 @@ export class World {
   bet(cid, { id, on, amount }) {
     const m = this.matches.get(id)
     const p = this.profile(cid)
-    if (!m || m.over) return this.err(cid, 'Betting is closed.')
+    if (!m || m.over || m.room !== (this.clients.get(cid).room || '')) return this.err(cid, 'Betting is closed.')
     if (m.players.some((pl) => pl.id === p.id)) return this.err(cid, "You can't bet on your own match.")
     const a = Math.round(num(amount) / 100) * 100
     if (![0, 1].includes(on) || a < 100 || a > MAX_STAKE) return this.err(cid, 'Bet ₦100 to ₦50,000 on one of the two.')
@@ -451,7 +486,7 @@ export class World {
     this.save()
     this.pushMe(cid)
     this.toast(cid, `₦${a.toLocaleString('en-NG')} on ${m.players[on].name}.`)
-    this.toRoom(m.map, { t: 'matches', matches: this.openMatches(m.map) })
+    this.toPlace(m.place, { t: 'matches', matches: this.openMatches(m.place) })
   }
 
   // ---------------------------------------------------------------- solo games, groups, quests, shop
@@ -459,6 +494,13 @@ export class World {
     const p = this.profile(cid)
     if (!DUEL_GAMES[game]) return
     this.progress(p, { event: 'solo', game, score: num(score) })
+    // a Back Gate night won counts as a heist (at most one a minute: the score comes from the player's game)
+    if (game === 'sneak' && num(score) >= 100 && this.now() - (p.lastHeist || 0) > 60000) {
+      p.lastHeist = this.now()
+      p.stats.heists++
+      p.stats.respect += 5
+      this.markBoard(this.clients.get(cid).room || '')
+    }
     this.save()
     this.pushMe(cid)
   }
@@ -470,7 +512,7 @@ export class World {
     this.pushMe(cid)
     this.toast(cid, `Welcome to ${GROUPS[group].name}. ${GROUPS[group].perkText}.`)
     const c = this.clients.get(cid)
-    if (c.map) this.toRoom(c.map, { t: 'joined', player: this.publicOf(p, c) }, cid)
+    if (c.map) this.toPlace(placeOf(c), { t: 'joined', player: this.publicOf(p, c) }, cid)
   }
   leaveGroup(cid) {
     const p = this.profile(cid)
@@ -488,6 +530,10 @@ export class World {
     const pay = Math.round(q.reward * (1 + (GROUPS[p.group]?.perk?.quests || 0)))
     p.money += pay
     p.quests.claimed[id] = true
+    // politicians' favours build influence; everybody else's, respect
+    if (q.story === 'The Honourable') p.stats.influence += 10
+    else p.stats.respect += 5
+    this.markBoard(this.clients.get(cid).room || '')
     this.save()
     this.pushMe(cid)
     this.toast(cid, `Quest done: +₦${pay.toLocaleString('en-NG')}`)
@@ -528,7 +574,109 @@ export class World {
     const groups = Object.keys(GROUPS)
       .map((g) => ({ group: g, name: GROUPS[g].name, value: all.filter((p) => p.group === g).reduce((a, p) => a + p.stats.wins, 0), members: all.filter((p) => p.group === g).length }))
       .sort((a, b) => b.value - a.value)
-    this.send(cid, { t: 'leaders', richest: top('money', (p) => p.money), winners: top('wins', (p) => p.stats.wins), groups })
+    this.send(cid, {
+      t: 'leaders',
+      richest: top('worth', netWorth),
+      respected: top('respect', (p) => p.stats.respect || 0),
+      influential: top('influence', (p) => p.stats.influence || 0),
+      heists: top('heists', (p) => p.stats.heists || 0),
+      winners: top('wins', (p) => p.stats.wins),
+      groups,
+    })
+  }
+
+  // ---------------------------------------------------------------- rooms (4-letter codes)
+  /** Move a connection into a room ('' = the public world), keeping its place. */
+  setRoom(cid, code) {
+    const c = this.clients.get(cid)
+    const old = c.room || ''
+    if (old === code) return
+    if (c.map) this.toPlace(placeOf(c), { t: 'left', id: c.id }, cid)
+    c.room = code
+    if (old) this.sendLobby(old)
+    this.markBoard(old)
+    this.markBoard(code)
+    if (code) this.sendLobby(code)
+    else this.send(cid, { t: 'lobby', code: null })
+    if (c.map) this.arrive(cid)
+  }
+  lobbyMembers(code) {
+    const out = []
+    for (const c of this.clients.values()) if (c.token && c.room === code) out.push({ id: c.id, name: this.store.players[c.token]?.name, map: c.map })
+    return out
+  }
+  sendLobby(code) {
+    const r = this.lobbies.get(code)
+    if (!r) return
+    this.toLobby(code, { t: 'lobby', code, host: r.host, hostName: r.hostName, members: this.lobbyMembers(code) })
+  }
+  createRoom(cid) {
+    const p = this.profile(cid)
+    const r = this.lobbies.create(p.id, p.name)
+    this.setRoom(cid, r.code)
+    this.toast(cid, `Room ${r.code} is yours. Send the code to your friends.`)
+  }
+  joinRoom(cid, { code }) {
+    const r = this.lobbies.get(code)
+    if (!r) {
+      this.send(cid, { t: 'lobby', code: null, missing: normCode(code) || String(code ?? '').slice(0, 8) })
+      return this.err(cid, 'No room with that code. Check the letters, or create a new room.')
+    }
+    if (this.lobbyMembers(r.code).length >= ROOM_LIMIT && (this.clients.get(cid).room || '') !== r.code) return this.err(cid, `Room ${r.code} is full (${ROOM_LIMIT} people).`)
+    this.setRoom(cid, r.code)
+  }
+  leaveRoom(cid) {
+    this.setRoom(cid, '')
+  }
+
+  // ---------------------------------------------------------------- sending money
+  give(cid, { to, amount }) {
+    const p = this.profile(cid)
+    const c = this.clients.get(cid)
+    const a = Math.round(num(amount) / 100) * 100
+    const tcid = this.clientOf(to)
+    if (!tcid || to === p.id || (this.clients.get(tcid).room || '') !== (c.room || '')) return this.err(cid, "They're not in your room.")
+    const d = today(this.now())
+    const problem = giveProblem(p, a, d)
+    if (problem) return this.err(cid, problem)
+    const q = this.store.players[this.clients.get(tcid).token]
+    ensureStats(q)
+    p.money -= a
+    q.money += a
+    p.sent = { day: d, amount: (p.sent?.day === d ? p.sent.amount : 0) + a }
+    p.stats.given += a
+    q.stats.received += a
+    if (a >= 1000) p.stats.influence += 1 // big men share: it buys a little influence
+    this.save()
+    this.pushMe(cid)
+    this.pushMe(tcid)
+    this.toast(cid, `Sent ₦${a.toLocaleString('en-NG')} to ${q.name}.`)
+    this.toast(tcid, `${p.name} sent you ₦${a.toLocaleString('en-NG')}.`)
+    this.markBoard(c.room || '')
+  }
+
+  // ---------------------------------------------------------------- the live board
+  markBoard(room) {
+    this.dirtyBoards.add(room || '')
+  }
+  /** The board for one room: everyone connected in it (the public world: the top 20). */
+  boardRows(room) {
+    const rows = []
+    for (const c of this.clients.values()) if (c.token && (c.room || '') === room) rows.push(boardRow(this.store.players[c.token], { map: c.map }))
+    rows.sort((a, b) => b.worth - a.worth)
+    return room ? rows : rows.slice(0, 20)
+  }
+  boardFor(cid) {
+    const room = this.clients.get(cid).room || ''
+    this.send(cid, { t: 'board', code: room || null, rows: this.boardRows(room) })
+  }
+  /** Send the boards that changed (index.js calls this every second), and close rooms left empty. */
+  flushBoards() {
+    for (const room of this.dirtyBoards) this.toLobby(room, { t: 'board', code: room || null, rows: this.boardRows(room) })
+    this.dirtyBoards.clear()
+    const counts = new Map()
+    for (const c of this.clients.values()) if (c.room) counts.set(c.room, (counts.get(c.room) || 0) + 1)
+    this.lobbies.sweep(counts)
   }
 }
 

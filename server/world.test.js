@@ -159,3 +159,84 @@ describe('Lagos Online: the world', () => {
     expect(again.me().money).toBe(START_MONEY + DAILY_BONUS) // no second daily bonus today
   })
 })
+
+describe('Lagos Online: rooms, sending money, the live board', () => {
+  let W
+  beforeEach(() => (W = setup()))
+  const code = (pl) => pl.last('lobby')?.code
+
+  it('a 4-letter room: friends join with the code, see only each other, and chat only there', () => {
+    const a = W.join('Ada')
+    const b = W.join('Bayo')
+    const c = W.join('Chi') // stays in the public world
+    a.send({ t: 'createRoom' })
+    const k = code(a)
+    expect(k).toMatch(/^[BCDFGHJKLMNPQRSTVWXZ]{4}$/)
+    expect(c.last('left').id).toBe(a.me().id) // Ada left the public street
+    b.send({ t: 'joinRoom', code: k.toLowerCase() })
+    expect(code(b)).toBe(k)
+    expect(b.last('room').players.map((p) => p.name)).toEqual(['Ada'])
+    expect(b.last('lobby').members.map((m) => m.name).sort()).toEqual(['Ada', 'Bayo'])
+    b.send({ t: 'say', text: 'Our room!' })
+    expect(a.last('chat').text).toBe('Our room!')
+    expect(c.all('chat').filter((m) => m.text === 'Our room!')).toHaveLength(0)
+    // challenges don't cross rooms
+    c.send({ t: 'challenge', to: a.me().id, game: 'akara', stake: 0 })
+    expect(c.last('error').text).toMatch(/not around/)
+    // back to the public world
+    b.send({ t: 'leaveRoom' })
+    expect(b.last('lobby').code).toBe(null)
+    expect(b.last('room').players.map((p) => p.name)).toEqual(['Chi'])
+  })
+
+  it('a wrong code says so', () => {
+    const a = W.join('Ada')
+    a.send({ t: 'joinRoom', code: 'ZZZZ' })
+    expect(a.last('error').text).toMatch(/No room/)
+    expect(a.last('lobby').missing).toBe('ZZZZ')
+  })
+
+  it('sending naira: to someone in your room, within the limits', () => {
+    const a = W.join('Ada')
+    const b = W.join('Bayo')
+    const start = a.me().money
+    a.send({ t: 'give', to: b.me().id, amount: 2500 })
+    expect(a.me().money).toBe(start - 2500)
+    expect(b.me().money).toBe(start + 2500)
+    expect(b.last('toast').text).toMatch(/Ada sent you ₦2,500/)
+    expect(a.me().stats.given).toBe(2500)
+    a.send({ t: 'give', to: b.me().id, amount: 40 })
+    expect(a.last('error').text).toMatch(/at a time/)
+    a.send({ t: 'give', to: b.me().id, amount: 999999 })
+    expect(a.last('error').text).toMatch(/at a time/)
+    a.send({ t: 'give', to: a.me().id, amount: 500 })
+    expect(a.last('error').text).toMatch(/not in your room/)
+    // someone in another room can't be paid
+    b.send({ t: 'createRoom' })
+    a.send({ t: 'give', to: b.me().id, amount: 500 })
+    expect(a.last('error').text).toMatch(/not in your room/)
+  })
+
+  it('the live board: everyone in the room with net worth, respect, influence and heists; it updates', () => {
+    const a = W.join('Ada')
+    const b = W.join('Bayo')
+    a.send({ t: 'createRoom' })
+    b.send({ t: 'joinRoom', code: code(a) })
+    W.world.flushBoards()
+    const rows = a.last('board').rows
+    expect(rows.map((r) => r.name).sort()).toEqual(['Ada', 'Bayo'])
+    expect(rows[0]).toMatchObject({ worth: expect.any(Number), respect: 0, influence: 0, heists: 0 })
+    // a duel won: respect; a Back Gate night won: a heist
+    a.send({ t: 'challenge', to: b.me().id, game: 'akara', stake: 1000 })
+    b.send({ t: 'respond', id: b.last('invite').id, accept: true })
+    const m = a.last('match').match
+    a.send({ t: 'duelResult', id: m.id, score: 50 })
+    b.send({ t: 'duelResult', id: m.id, score: 10 })
+    a.send({ t: 'soloResult', game: 'sneak', score: 250 })
+    W.world.flushBoards()
+    const ada = b.last('board').rows.find((r) => r.name === 'Ada')
+    expect(ada.respect).toBeGreaterThan(10)
+    expect(ada.heists).toBe(1)
+    expect(b.last('board').rows[0].name).toBe('Ada') // richest first
+  })
+})

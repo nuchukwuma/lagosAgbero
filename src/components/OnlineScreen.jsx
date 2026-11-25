@@ -3,6 +3,7 @@ import { SKIN_TONES } from '../game/characters/look.js'
 import { useGameStore } from '../game/store/gameStore.js'
 import { useOnline, connect, disconnect, serverUrl } from '../game/online/net.js'
 import { MAPS } from '../game/online/catalog.js'
+import { useRoomIntent, setRoomIntent } from '../game/online/invite.js'
 import CharacterPreview from './CharacterPreview.jsx'
 
 // Lagos Online: the open world shared with other players. Pick a name and a
@@ -48,23 +49,59 @@ export default function OnlineScreen({ onBack }) {
   const [shirt, setShirt] = useState(saved.shirt || SHIRTS[1])
   const [body, setBody] = useState(saved.body || OUTFITS[0][0])
   const [going, setGoing] = useState(false)
+  // a private room: made here, or joined with a code (from the landing page or an invite link)
+  const intent = useRoomIntent((s) => s.intent)
+  const [codeInput, setCodeInput] = useState(intent?.code || '')
   const clean = name.trim().slice(0, 16)
   const look = { trousers: '#2c3e50', shoes: '#1e1e1e', accessories: [], body, skin, shirt }
 
   // connected and the server knows us: onto the street
+  const lobby = useOnline((s) => s.lobby)
+  const missing = useOnline((s) => s.lobbyMissing)
+  const [roomError, setRoomError] = useState(null)
   useEffect(() => {
-    if (going && status === 'online' && me) {
-      setGoing(false)
-      useGameStore.getState().startOnline({ name: me.name, look: { ...look, ...(me.look || {}) } })
+    if (!going || status !== 'online' || !me) return
+    // a room was asked for: wait until we're in it (or hear that the code is wrong)
+    if (intent && !lobby) {
+      if (missing) {
+        setGoing(false)
+        setRoomError(`No room ${missing} is open. Check the code with your friend, or open a new room.`)
+        disconnect()
+      }
+      return
     }
-  }, [going, status, me]) // eslint-disable-line react-hooks/exhaustive-deps
+    setGoing(false)
+    setRoomIntent(null)
+    useGameStore.getState().startOnline({ name: me.name, look: { ...look, ...(me.look || {}) } })
+  }, [going, status, me, lobby, missing]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="screen new-game-screen hero-screen online-screen">
       <CharacterPreview look={look} className="hero-preview" />
       <div className="hero-form">
         <div className="chapter-tag">Lagos Online</div>
-        <h2>Enter the street</h2>
+        <h2>{intent?.create ? 'Open a private room' : intent?.code ? `Join room ${intent.code}` : 'Enter the street'}</h2>
+        <div className="room-pick" role="radiogroup" aria-label="Where to play">
+          <button type="button" className={`chip ${!intent ? 'on' : ''}`} aria-pressed={!intent} onClick={() => setRoomIntent(null)}>
+            Public street
+          </button>
+          <button type="button" className={`chip ${intent?.create ? 'on' : ''}`} aria-pressed={Boolean(intent?.create)} onClick={() => setRoomIntent({ create: true })}>
+            New private room
+          </button>
+          <span className={`room-code-field ${intent?.code ? 'on' : ''}`}>
+            <input
+              value={codeInput}
+              maxLength={4}
+              placeholder="CODE"
+              aria-label="Room code"
+              onChange={(e) => {
+                const v = e.target.value.toUpperCase().replace(/[^A-Z]/g, '').slice(0, 4)
+                setCodeInput(v)
+                setRoomIntent(v.length === 4 ? { code: v } : null)
+              }}
+            />
+          </span>
+        </div>
         <p className="muted">
           One open world with other players: {Object.values(MAPS)
             .map((m) => m.name)
@@ -78,8 +115,9 @@ export default function OnlineScreen({ onBack }) {
             if (clean.length < 2) return
             remember(NAME_KEY, clean)
             remember(LOOK_KEY, { skin, shirt, body })
+            setRoomError(null)
             setGoing(true)
-            connect({ name: clean, look })
+            connect({ name: clean, look, room: intent })
           }}
         >
           <input className="text-input" value={name} onChange={(e) => setName(e.target.value)} placeholder="Your street name" maxLength={16} autoFocus aria-label="Your street name" />
@@ -106,6 +144,7 @@ export default function OnlineScreen({ onBack }) {
           <button className="btn btn-primary" type="submit" disabled={clean.length < 2 || (going && status === 'connecting')}>
             {going && status === 'connecting' ? 'Connecting…' : 'Go online'}
           </button>
+          {roomError && <p className="warn">{roomError}</p>}
           {status === 'error' && (
             <p className="warn">
               {error} <small>({serverUrl()})</small>

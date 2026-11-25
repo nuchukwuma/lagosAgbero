@@ -4,7 +4,8 @@ import AboutScreen from './components/AboutScreen.jsx'
 import EndingsScreen from './components/EndingsScreen.jsx'
 import GamesScreen from './components/GamesScreen.jsx'
 import OnlineScreen from './components/OnlineScreen.jsx'
-import { lazy, Suspense } from 'react'
+import { lazy, Suspense, useEffect } from 'react'
+import { roomFromUrl, setRoomIntent } from './game/online/invite.js'
 // dev tool: loaded only when opened, so it stays out of the main bundle
 const AssetBrowser = lazy(() => import('./components/AssetBrowser.jsx'))
 import NewGameScreen from './components/NewGameScreen.jsx'
@@ -54,6 +55,14 @@ function Screen() {
 }
 
 export default function App() {
+  // an invite link (?room=ABCD): straight to joining that room
+  useEffect(() => {
+    const code = roomFromUrl()
+    if (code) {
+      setRoomIntent({ code })
+      useGameStore.getState().goTo('online')
+    }
+  }, [])
   return (
     <>
       <Screen />

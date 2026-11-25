@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from 'react'
 import { useGameStore } from '../../game/store/gameStore.js'
 import { formatNaira } from '../../game/narrative/stats.js'
 import characters from '../../game/data/characters.json'
-import { useOnline, say, challenge, answerInvite, bet, joinGroup, leaveGroup, claimQuest, buy, askLeaders, clearEnd, dismissToast } from '../../game/online/net.js'
+import { useOnline, say, challenge, answerInvite, bet, joinGroup, leaveGroup, claimQuest, buy, askLeaders, clearEnd, dismissToast, createRoom, joinRoom, leaveRoom, give, askBoard } from '../../game/online/net.js'
+import { whatsappLink, shareRoom, copyRoomLink } from '../../game/online/invite.js'
 import { DUEL_GAMES, GROUPS, QUESTS, SHOP, MAPS, MAX_STAKE, QUEST_GIVERS, giverState } from '../../game/online/catalog.js'
 
 // Lagos Online, on top of the street: who you are and what you have, the
@@ -10,6 +11,8 @@ import { DUEL_GAMES, GROUPS, QUESTS, SHOP, MAPS, MAX_STAKE, QUEST_GIVERS, giverS
 // leaderboards. Matches you accept start here too.
 
 const TABS = [
+  ['room', '🔑', 'Room & invites'],
+  ['board', '📊', 'Live board'],
   ['people', '👥', 'People'],
   ['chat', '💬', 'Chat'],
   ['bets', '🎲', 'Matches & bets'],
@@ -65,6 +68,7 @@ function People({ me }) {
   const [open, setOpen] = useState(null)
   const [game, setGame] = useState('draughts')
   const [stake, setStake] = useState(500)
+  const [gift, setGift] = useState(1000)
   const list = Object.values(players)
   const max = Math.min(MAX_STAKE, me.money)
   if (!list.length) return <p className="muted">Nobody else here right now. Take a bus to another place, or share the game with friends.</p>
@@ -78,9 +82,30 @@ function People({ me }) {
               {GROUPS[p.group]?.name || 'No group'} · {p.wins || 0} wins
             </small>
           </div>
-          <button className="btn btn-small btn-primary" onClick={() => setOpen(open === p.id ? null : p.id)}>
-            Challenge
-          </button>
+          <div className="ol-btns">
+            <button className="btn btn-small btn-primary" onClick={() => setOpen(open === p.id ? null : p.id)}>
+              Challenge
+            </button>
+            <button className="btn btn-small" onClick={() => setOpen(open === `give-${p.id}` ? null : `give-${p.id}`)}>
+              Send ₦
+            </button>
+          </div>
+          {open === `give-${p.id}` && (
+            <div className="ol-form">
+              <span className="muted">Send {p.name}</span>
+              <Stake value={Math.min(gift, me.money)} onChange={setGift} max={Math.min(50000, me.money)} />
+              <button
+                className="btn btn-small btn-primary"
+                disabled={gift < 100 || gift > me.money}
+                onClick={() => {
+                  give(p.id, Math.min(gift, me.money))
+                  setOpen(null)
+                }}
+              >
+                Send
+              </button>
+            </div>
+          )}
           {open === p.id && (
             <div className="ol-form">
               <select value={game} onChange={(e) => setGame(e.target.value)}>
@@ -294,6 +319,112 @@ function Shop({ me }) {
   )
 }
 
+function Room({ me }) {
+  const lobby = useOnline((s) => s.lobby)
+  const [code, setCode] = useState('')
+  const [note, setNote] = useState(null)
+  if (!lobby)
+    return (
+      <div className="ol-list">
+        <p className="muted">You're on the public street with everybody. Open a private room for you and your friends: they join with its 4-letter code.</p>
+        <button className="btn btn-primary" onClick={createRoom}>
+          Open a private room
+        </button>
+        <form
+          className="ol-form"
+          onSubmit={(e) => {
+            e.preventDefault()
+            if (code.length === 4) joinRoom(code)
+          }}
+        >
+          <input className="ol-code" value={code} maxLength={4} placeholder="CODE" aria-label="Room code" onChange={(e) => setCode(e.target.value.toUpperCase().replace(/[^A-Z]/g, '').slice(0, 4))} />
+          <button className="btn btn-small btn-primary" disabled={code.length !== 4}>
+            Join room
+          </button>
+        </form>
+      </div>
+    )
+  return (
+    <div className="ol-list">
+      <div className="ol-room-code">
+        <small>Room code</small>
+        <b>{lobby.code}</b>
+        <small>{lobby.host === me.id ? 'Your room' : `${lobby.hostName}'s room`}</small>
+      </div>
+      <div className="ol-btns ol-invite-btns">
+        <a className="btn btn-whatsapp" href={whatsappLink(lobby.code)} target="_blank" rel="noopener noreferrer">
+          WhatsApp invite
+        </a>
+        <button className="btn" onClick={async () => setNote((await shareRoom(lobby.code)) === 'copied' ? 'Invite copied: paste it anywhere.' : null)}>
+          Share…
+        </button>
+        <button className="btn" onClick={async () => setNote((await copyRoomLink(lobby.code)) === 'copied' ? 'Invite copied: paste it anywhere.' : "Couldn't copy here: send the code.")}>
+          Copy link
+        </button>
+      </div>
+      {note && <p className="muted">{note}</p>}
+      <h3>In the room ({lobby.members.length})</h3>
+      {lobby.members.map((m) => (
+        <div key={m.id} className="ol-row">
+          <div className="ol-info">
+            <strong>
+              {m.name}
+              {m.id === lobby.host ? ' (host)' : ''}
+              {m.id === me.id ? ' (you)' : ''}
+            </strong>
+            <small>{MAPS[m.map]?.name || 'arriving…'}</small>
+          </div>
+        </div>
+      ))}
+      <button className="btn btn-small" onClick={leaveRoom}>
+        Leave the room (back to the public street)
+      </button>
+    </div>
+  )
+}
+
+const METRICS = [
+  ['worth', 'Net worth', formatNaira],
+  ['respect', 'Respect', (v) => v],
+  ['influence', 'Influence', (v) => v],
+  ['heists', 'Heists & turf', (v) => v],
+]
+
+function Board({ me }) {
+  const rows = useOnline((s) => s.board)
+  const lobby = useOnline((s) => s.lobby)
+  const [metric, setMetric] = useState('worth')
+  useEffect(() => {
+    askBoard()
+  }, [])
+  const [, label, fmt] = METRICS.find((m) => m[0] === metric)
+  const sorted = [...rows].sort((a, b) => b[metric] - a[metric] || b.worth - a.worth)
+  return (
+    <div>
+      <p className="muted">{lobby ? `Everyone in room ${lobby.code}, live.` : 'The top 20 on the public street right now, live.'}</p>
+      <div className="ol-metrics" role="tablist">
+        {METRICS.map(([id, name]) => (
+          <button key={id} role="tab" aria-selected={metric === id} className={`chip ${metric === id ? 'on' : ''}`} onClick={() => setMetric(id)}>
+            {name}
+          </button>
+        ))}
+      </div>
+      <ol className="ol-board ol-live">
+        {sorted.map((r) => (
+          <li key={r.id} className={r.id === me.id ? 'is-me' : ''}>
+            <span>
+              {r.name}
+              {GROUPS[r.group] ? <small> · {GROUPS[r.group].name}</small> : null}
+            </span>
+            <b title={label}>{fmt(r[metric])}</b>
+          </li>
+        ))}
+      </ol>
+      <p className="muted ol-how">Net worth: cash and what you own. Respect: matches won, Back Gate nights, quests. Influence: political favours and sharing money. Heists: Back Gate nights (turf wars and heists are coming).</p>
+    </div>
+  )
+}
+
 function Leaders() {
   const leaders = useOnline((s) => s.leaders)
   useEffect(() => {
@@ -312,8 +443,14 @@ function Leaders() {
   )
   return (
     <div>
-      <h3>Richest</h3>
+      <h3>Net worth</h3>
       {list(leaders.richest, formatNaira)}
+      <h3>Street respect</h3>
+      {list(leaders.respected || [], (v) => v)}
+      <h3>Political influence</h3>
+      {list(leaders.influential || [], (v) => v)}
+      <h3>Heists &amp; turf</h3>
+      {list(leaders.heists || [], (v) => v)}
       <h3>Most wins</h3>
       {list(leaders.winners, (v) => v)}
       <h3>Groups (wins)</h3>
@@ -417,6 +554,7 @@ export default function OnlineHUD({ onMenu, hidden = false }) {
   const matches = useOnline((s) => s.matches.length)
   const activity = useGameStore((s) => s.activity)
   const nearGiver = useOnline((s) => s.nearGiver)
+  const lobby = useOnline((s) => s.lobby)
   const [tab, setTab] = useState(null)
   useMatchStarter()
   useLiveEndCloser()
@@ -437,6 +575,11 @@ export default function OnlineHUD({ onMenu, hidden = false }) {
           <span className="ol-money">{formatNaira(me.money)}</span>
           <small>
             {MAPS[map]?.name || '…'} · {count + 1} here
+            {lobby ? (
+              <button className="ol-room-chip" onClick={() => setTab('room')} title="Room and invites">
+                🔑 {lobby.code}
+              </button>
+            ) : null}
           </small>
         </>
       ) : (
@@ -488,6 +631,8 @@ export default function OnlineHUD({ onMenu, hidden = false }) {
               ✕
             </button>
           </div>
+          {tab === 'room' && <Room me={me} />}
+          {tab === 'board' && <Board me={me} />}
           {tab === 'people' && <People me={me} />}
           {tab === 'chat' && <Chat />}
           {tab === 'bets' && <Bets me={me} />}

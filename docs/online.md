@@ -42,7 +42,27 @@ Money in Lagos Online is game money only. It can't be bought or cashed out, and
 it's separate from the stories' money. (Betting with real money would need a
 gaming licence.)
 
-## Running it
+## Rooms, invites, sending money, the live board
+
+- **Private rooms.** "Create room" (on the landing page, or the 🔑 tab in the
+  game) opens your own copy of the open world with a 4-letter code (no vowels,
+  no I or O, so codes never spell words). Friends join with the code, or by
+  opening the invite link (`?room=CODE`). People in a room only see, chat
+  with, challenge and bet with each other. Up to 24 people; a room closes 30
+  minutes after the last person leaves. Code: `server/lobbies.js`.
+- **Invites.** The 🔑 tab has WhatsApp (`https://wa.me/?text=...` with the
+  code and the link), the phone's share sheet, and Copy link. A custom server
+  set with `?server=` travels inside the link. Code: `src/game/online/invite.js`.
+- **Sending naira.** People → Send ₦, to anyone in your room: ₦100 to ₦50,000
+  at a time, up to ₦200,000 a day (so nobody farms daily bonuses through
+  fresh guests). Code: `server/economy.js`.
+- **The live board** (📊): everyone in your room (the top 20 on the public
+  street) by net worth (cash and what you own), street respect (matches,
+  Back Gate nights, quests), political influence (political favours, sharing
+  money) and heists & turf (Back Gate nights now; heists and turf wars later).
+  It updates as things happen. The 🏆 Leaders tab has the all-time city boards.
+
+
 
 The server is `server/` (Node, the `ws` package; the rules are in
 `server/world.js`, the catalogue of games, groups, quests and shop items in

@@ -63,10 +63,13 @@ const ping = setInterval(() => {
     ws.ping()
   }
 }, 30000)
+// the live boards (net worth, respect, influence, heists) and closing empty rooms
+const boards = setInterval(() => world.flushBoards(), 1000)
 
 server.listen(PORT, () => console.log(`Lagos Online listening on :${PORT}`))
 const stop = () => {
   clearInterval(ping)
+  clearInterval(boards)
   store.flush()
   process.exit(0)
 }

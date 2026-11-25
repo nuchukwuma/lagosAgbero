@@ -46,8 +46,16 @@ function StorySelect({ onPick, onBack }) {
   )
 }
 
+// the landing page's archetype cards open a story straight at its hero screen
+let preset = null
+export const presetStory = (id) => (preset = id)
+
 export default function NewGameScreen({ onStart, onBack }) {
-  const [campaign, setCampaign] = useState(null)
+  const [campaign, setCampaign] = useState(() => {
+    const c = preset && CAMPAIGNS.find((x) => x.id === preset)
+    preset = null
+    return c || null
+  })
   if (!campaign) return <StorySelect onPick={setCampaign} onBack={onBack} />
   return <HeroScreen key={campaign.id} campaign={campaign} onStart={onStart} onBack={() => setCampaign(null)} />
 }
