@@ -123,6 +123,13 @@ missions in `stealthLogic.js`, each with tests on its real map):
   come through the front door one by one; take the hard drive, the laptop
   and the cash (each slows you down), out through the back door.
 - (Back Gate on campus, from before, is the third.)
+- **Penthouse Raid** (Abuja), **Warehouse Stock Heist** (Computer Village),
+  **Exam-Hall Sneak** (campus), **Server-Room Breakers** (Lekki): four more
+  stealth missions, each in a building of its own (`data/world/interiors/`:
+  penthouse, warehouse, examHall, serverRoom). New in the engine: CCTV
+  cameras that sweep and ring the alarm (sending the guards), jobs you must
+  stand still to finish (a safe, a ledger, breakers), heavy loot, and the exam
+  hall's rule (move in a sightline: fail).
 - **Beat-the-Bet Wire Sprint** (Abuja): a race across a Wuse street grid at
   dusk (its own 3D scene, `src/game/modes/wireSprint/`): three drop points in
   any order before the 90-second clock and before two rival bettors' drivers

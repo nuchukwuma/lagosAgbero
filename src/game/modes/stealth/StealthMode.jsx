@@ -51,6 +51,50 @@ const TEXT = {
     clockIcon: '🚨',
     share: { kicker: 'The Forbes List Trap · Lekki', title: 'Escaped the EFCC raid with ₦50M', tone: 'green' },
   },
+  penthouseRaid: {
+    title: 'Penthouse Raid',
+    intro: 'The top floor of a Maitama tower, at night. Security walks the rooms; cameras watch the lounge and the study. Crack the safe in the study (stand still at it), take the gold from the bedroom, and leave over the balcony.',
+    goal: 'Crack the safe and take the gold (heavy: you will be slow), then out over the balcony at the east end of the study.',
+    home: 'the front door',
+    go: 'Go in',
+    brief: 'brief_heist',
+    panel: 'PENTHOUSE RAID',
+    clockIcon: '🌃',
+    share: { kicker: 'The Maitama Mirage · Abuja', title: 'Emptied a Maitama penthouse', tone: 'gold' },
+  },
+  warehouseHeist: {
+    title: 'Warehouse Stock Heist',
+    intro: "A Computer Village warehouse after closing. Containers stacked like streets, night watchmen with torches. Take the phone cartons, the laptops and copy the ledger, and leave through the loading dock.",
+    goal: 'The phone cartons, the laptops, the ledger (stand still to copy it), then the loading dock at the far end.',
+    home: 'the side door',
+    go: 'Slip in',
+    brief: 'brief_heist',
+    panel: 'WAREHOUSE',
+    clockIcon: '🌙',
+    share: { kicker: "Oga Master's Apprentice · Computer Village", title: 'Cleared the warehouse', tone: 'gold' },
+  },
+  examSneak: {
+    title: 'Exam-Hall Sneak',
+    intro: "The exam hall, ten minutes before the paper. Invigilators walk the aisles. Take the question paper from their table and swap your script onto the marking pile. Walk inside an invigilator's sightline and it is over: stand still if one turns to you.",
+    goal: 'The question paper (front table), then swap your script (the marking table), then back out the door. Never move while an invigilator can see you.',
+    home: 'the door',
+    go: 'Go in',
+    brief: 'announce_campus',
+    panel: 'EXAM HALL',
+    clockIcon: '📝',
+    share: { kicker: 'Sort or Carryover · Royal Crest', title: 'Sorted the exam', tone: 'neon' },
+  },
+  serverBreak: {
+    title: 'Server-Room Breakers',
+    intro: 'A Lekki tech hub, after hours. Flip the three overload breakers and pull the two drives before the lockdown doors seal. Security sweeps the aisles; a camera watches the far corner.',
+    goal: 'Flip three breakers (stand still at each), pull two drives, then out the door before the lockdown.',
+    home: 'the door',
+    go: 'Go in',
+    brief: 'brief_raidEscape',
+    panel: 'SERVER ROOM',
+    clockIcon: '⏳',
+    share: { kicker: 'The Forbes List Trap · Lekki', title: 'Broke the server room', tone: 'green' },
+  },
 }
 
 const clock = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`
@@ -190,7 +234,11 @@ export default function StealthMode({ params: given = {}, onFinish, mission: mis
         </div>
         <div className="fee-row">
           <span>
-            {id === 'raidEscape'
+            {TEXT[id] && !['raidEscape', 'shrineHeist', 'backGate'].includes(id)
+              ? hud.hasLoot
+                ? 'All done: get out!'
+                : `Still to do: ${hud.lootLeft ?? '?'} · guards awake: ${hud.left} of ${hud.total}${hud.cameras ? ` · ${hud.cameras} camera${hud.cameras > 1 ? 's' : ''}` : ''}`
+              : id === 'raidEscape'
               ? hud.hasLoot
                 ? 'You have everything: out the back door!'
                 : `Still to take: ${hud.lootLeft ?? 3} · operatives inside: ${hud.total - (hud.waiting ?? 0)}`
@@ -207,10 +255,18 @@ export default function StealthMode({ params: given = {}, onFinish, mission: mis
           </span>
         </div>
         {hud.chased && <div className="fee-row stealth-warn">He has seen you! Break his line of sight.</div>}
+        {hud.working && (
+          <div className="fee-row stealth-work">
+            <span>{hud.working.label}… stand still</span>
+            <span className="stealth-bar">
+              <i style={{ width: `${Math.round(hud.working.p * 100)}%` }} />
+            </span>
+          </div>
+        )}
         {id === 'shrineHeist' && <div className={`fee-row ${hud.spotted ? 'stealth-warn' : 'stealth-clean'}`}>{hud.spotted ? 'Seen: not untouched any more.' : 'Untouched so far.'}</div>}
       </TaskPanel>
       {hud.caught && <div className="stealth-caught">Caught! Back to {text.home}.</div>}
-      <MoveControls actionLabel={grab ? 'TAKE IT' : can ? 'TAKE DOWN' : null} actionIcon={grab ? 'hand' : 'fist'} actionSub={grab ? (id === 'shrineHeist' ? 'the regalia' : 'grab it') : can ? 'take down' : null} onAction={() => (grab ? doGrab() : doTakedown(takedown))} />
+      <MoveControls actionLabel={grab ? hud.grabVerb || 'TAKE IT' : can ? 'TAKE DOWN' : null} actionIcon={grab ? 'hand' : 'fist'} actionSub={grab ? (id === 'shrineHeist' ? 'the regalia' : (hud.grabVerb || 'grab it').toLowerCase()) : can ? 'take down' : null} onAction={() => (grab ? doGrab() : doTakedown(takedown))} />
       {import.meta.env.DEV && (
         <button
           className="btn btn-small dev-end"

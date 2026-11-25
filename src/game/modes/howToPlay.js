@@ -20,6 +20,39 @@ const STORY_MODES = {
     title: 'Chase',
     rules: ['Run along the pavement after the vehicle and dodge the people in the way.', 'Running burns stamina: ease off before you run dry.', 'Press GRAB when you reach the door. Run out of time and they get away.'],
   }),
+  penthouseRaid: () => ({
+    title: 'Penthouse Raid',
+    rules: [
+      'Night on the top floor of a Maitama tower. Security walks the rooms; CCTV cameras sweep the lounge and the study.',
+      'Crack the safe in the study: CRACK IT, then stand still beside it until it opens. Take the gold from the bedroom. Both are heavy: you will be slow.',
+      'Then out over the balcony at the east end of the study.',
+      'A camera that fills its ? rings the alarm and sends every guard to where you were. Cameras cannot be taken down; guards can, from behind.',
+    ],
+  }),
+  warehouseHeist: () => ({
+    title: 'Warehouse Stock Heist',
+    rules: [
+      'A Computer Village warehouse after closing: container aisles and night watchmen with torches.',
+      'Take the phone cartons and the laptops, copy the ledger (stand still at the desk), then out through the loading dock.',
+      'Containers block their view: move from aisle to aisle when the torches turn away.',
+    ],
+  }),
+  examSneak: () => ({
+    title: 'Exam-Hall Sneak',
+    rules: [
+      'Invigilators walk the aisles of the exam hall.',
+      'Take the question paper from their table and swap your script onto the marking pile (stand still at each), then out the door.',
+      'Move while an invigilator can see you and it is over at once. Standing still in a sightline only fills their ?: they will come to look.',
+    ],
+  }),
+  serverBreak: () => ({
+    title: 'Server-Room Breakers',
+    rules: [
+      'A Lekki tech hub server room, after hours, before the lockdown.',
+      'Flip the three breakers on the walls (stand still at each) and pull the two drives from the racks, then out the door.',
+      'Security walks the aisles; a camera watches the far corner and rings the alarm if it sees you.',
+    ],
+  }),
   wireSprint: () => ({
     title: 'Beat-the-Bet Wire Sprint',
     rules: [

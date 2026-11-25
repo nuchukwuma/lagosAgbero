@@ -1,0 +1,29 @@
+{
+  "id": "serverRoom",
+  "name": "Lekki tech hub server room",
+  "notes": "Interior. Two rows of server racks with a gap in the middle of each, breaker switches on the walls, the door in the middle of the south wall.",
+  "interior": {
+    "setting": "estate",
+    "height": 3.0,
+    "wall": "#c9ced4",
+    "trim": "#2d3238",
+    "rooms": [{ "name": "room", "x": -8, "z": -6, "w": 16, "d": 12, "floor": "#4b5058" }],
+    "walls": [[-8, 6, -1, 6], [1, 6, 8, 6], [-8, -6, 8, -6], [-8, -6, -8, 6], [8, -6, 8, 6]],
+    "lights": [[-4, 0], [4, 0]]
+  },
+  "bounds": { "minX": -9, "maxX": 9, "minZ": -7, "maxZ": 7.5 },
+  "spawn": { "pos": [0, 5.1], "facing": 180 },
+  "traffic": false,
+  "roads": [],
+  "buildings": [],
+  "props": [
+    { "model": "serverRack", "solid": true, "at": [[-5.6, -2.6, 90], [-4.6, -2.6, 90], [-3.6, -2.6, 90], [-2.6, -2.6, 90], [2.6, -2.6, 90], [3.6, -2.6, 90], [4.6, -2.6, 90], [5.6, -2.6, 90], [-5.6, 1.8, -90], [-4.6, 1.8, -90], [-3.6, 1.8, -90], [2.6, 1.8, -90], [3.6, 1.8, -90], [4.6, 1.8, -90], [5.6, 1.8, -90]] },
+    { "model": "desk", "solid": true, "at": [[-6.4, 5.3, 180]] },
+    { "model": "officeChair", "at": [[-6.4, 4.5, 0]] },
+    { "model": "filingCabinet", "solid": true, "at": [[7.4, 5.3, 180]] }
+  ],
+  "spots": { "door": { "pos": [0, 5.5], "radius": 1.1 } },
+  "activities": [
+    { "id": "exit_serverRoom", "label": "GO OUTSIDE", "icon": "door", "spot": "door", "mode": "exit", "minutes": 0, "where": "the door" }
+  ]
+}

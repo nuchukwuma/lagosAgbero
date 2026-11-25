@@ -48,6 +48,30 @@ export const TUTORIALS = {
     { at: null, text: 'The yellow patch in front of a guard is his torch. Inside it a ? fills over his head; when it is full he runs for you. Containers, bins and walls block his view.' },
     { at: null, text: 'Come up behind a guard who has not seen you: TAKE DOWN appears (or press E). He sleeps till morning and drops his money.' },
   ],
+  penthouseRaid: [
+    { at: '.joystick, .controls', text: 'Move with the stick (or WASD / arrows). You walk crouched; running (hold RUN, or Shift) is quicker but guards close by hear it. Drag the screen (or V) to turn the camera.' },
+    { at: '.task-panel', text: 'Guards awake, cameras, and what is still to do. CRACK the safe and take the gold (heavy), then over the balcony.' },
+    { at: null, text: 'The yellow patch in front of a guard is his torch. Inside it a ? fills over his head; when it is full he runs for you. Containers, bins and walls block his view.' },
+    { at: null, text: 'Come up behind a guard who has not seen you: TAKE DOWN appears (or press E). He sleeps till morning and drops his money.' },
+  ],
+  warehouseHeist: [
+    { at: '.joystick, .controls', text: 'Move with the stick (or WASD / arrows). You walk crouched; running (hold RUN, or Shift) is quicker but guards close by hear it. Drag the screen (or V) to turn the camera.' },
+    { at: '.task-panel', text: 'What is still to do and the watchmen awake. Cartons, laptops, the ledger, then the loading dock.' },
+    { at: null, text: 'The yellow patch in front of a guard is his torch. Inside it a ? fills over his head; when it is full he runs for you. Containers, bins and walls block his view.' },
+    { at: null, text: 'Come up behind a guard who has not seen you: TAKE DOWN appears (or press E). He sleeps till morning and drops his money.' },
+  ],
+  examSneak: [
+    { at: '.joystick, .controls', text: 'Move with the stick (or WASD / arrows). You walk crouched; running (hold RUN, or Shift) is quicker but guards close by hear it. Drag the screen (or V) to turn the camera.' },
+    { at: '.task-panel', text: 'What is still to do. Never move while an invigilator can see you: it fails at once.' },
+    { at: null, text: 'The yellow patch in front of a guard is his torch. Inside it a ? fills over his head; when it is full he runs for you. Containers, bins and walls block his view.' },
+    { at: null, text: 'Come up behind a guard who has not seen you: TAKE DOWN appears (or press E). He sleeps till morning and drops his money.' },
+  ],
+  serverBreak: [
+    { at: '.joystick, .controls', text: 'Move with the stick (or WASD / arrows). You walk crouched; running (hold RUN, or Shift) is quicker but guards close by hear it. Drag the screen (or V) to turn the camera.' },
+    { at: '.task-panel', text: 'Breakers and drives still to do, and the clock till lockdown.' },
+    { at: null, text: 'The yellow patch in front of a guard is his torch. Inside it a ? fills over his head; when it is full he runs for you. Containers, bins and walls block his view.' },
+    { at: null, text: 'Come up behind a guard who has not seen you: TAKE DOWN appears (or press E). He sleeps till morning and drops his money.' },
+  ],
   change: [
     { at: BOARD, text: 'A passenger pays: work out their change (fare taken from what they paid).' },
     { at: '.arcade-pad', text: 'Tap the notes to make up the change. ↶ takes the last one back.' },

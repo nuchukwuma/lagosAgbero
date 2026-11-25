@@ -170,3 +170,63 @@ describe('EFCC Raid Escape: the duplex', () => {
     expect(missionResult(m)).toMatchObject({ outcome: 'won', moneyChange: 50000 })
   })
 })
+
+describe('more missions on the same engine', () => {
+  for (const id of ['penthouseRaid', 'warehouseHeist', 'examSneak', 'serverBreak']) {
+    it(`${id}: start, every objective, the way out and every round reachable; doing it all wins`, () => {
+      const cfg = MISSIONS[id]
+      const L = getLayout(cfg.world, false)
+      const m = createMission(L, { level: 1 }, 5, id)
+      expect(walkable(m.grid, cfg.start.x, cfg.start.z), 'start').toBe(true)
+      for (const l of m.loot) expect(findPath(m.grid, [cfg.start.x, cfg.start.z], [l.x, l.z]), l.label).toBeTruthy()
+      expect(findPath(m.grid, [cfg.start.x, cfg.start.z], [cfg.exit.x, cfg.exit.z]), 'way out').toBeTruthy()
+      for (const g of m.guards) if (!g.fixed) expect(findPath(m.grid, [cfg.start.x, cfg.start.z], g.home[0]), `guard ${g.id}`).toBeTruthy()
+      // with everybody looking away: do every job (standing still for the slow ones), then leave
+      for (const g of m.guards) g.state = g.fixed ? 'patrol' : 'down'
+      for (const g of m.guards) if (g.fixed) g.cool = 9999
+      for (const l of m.loot) {
+        stepMission(m, 1 / 30, still(l.x, l.z))
+        expect(grabLoot(m), l.label).toBe(true)
+        for (let i = 0; i < 30 * ((l.work || 0) + 0.2); i++) stepMission(m, 1 / 30, still(l.x, l.z))
+        expect(l.taken, l.label).toBe(true)
+      }
+      expect(m.open).toBe(true)
+      stepMission(m, 1 / 30, still(cfg.exit.x, cfg.exit.z))
+      expect(m.won).toBe(true)
+      expect(missionResult(m).outcome).toBe('won')
+    })
+  }
+
+  it('a slow job stops if you move; a camera raises the alarm and sends the guards; the exam hall fails you for walking in a sightline', () => {
+    const cfg = MISSIONS.penthouseRaid
+    const m = createMission(getLayout('penthouse', false), { level: 0 }, 5, 'penthouseRaid')
+    for (const g of m.guards) if (!g.fixed) g.state = 'down'
+    const safe = m.loot[0]
+    stepMission(m, 1 / 30, still(safe.x, safe.z))
+    grabLoot(m)
+    expect(m.working).toBeTruthy()
+    stepMission(m, 1 / 30, { x: safe.x, z: safe.z, moving: true, running: false })
+    expect(m.working).toBe(null)
+    expect(safe.taken).toBe(false)
+    // the lounge camera sees you standing in front of it
+    const cam = m.guards.find((g) => g.fixed)
+    for (const g of m.guards) if (!g.fixed) g.state = 'patrol'
+    const before = m.guards.filter((g) => !g.fixed).map((g) => g.state)
+    let alarm = false
+    for (let i = 0; i < 30 * 6 && !alarm; i++) {
+      stepMission(m, 1 / 30, still(cam.x + Math.sin(cam.ry) * 3, cam.z + Math.cos(cam.ry) * 3))
+      alarm = m.events.some((e) => e.type === 'alarm')
+    }
+    expect(alarm).toBe(true)
+    expect(before.length).toBeGreaterThan(0)
+    expect(m.guards.some((g) => !g.fixed && g.state === 'search')).toBe(true)
+    // the exam hall
+    const e = createMission(getLayout('examHall', false), { level: 0 }, 5, 'examSneak')
+    const inv = e.guards[0]
+    inv.ry = 0
+    stepMission(e, 1 / 30, { x: inv.x, z: inv.z + 3, moving: true, running: false })
+    expect(e.over).toBe(true)
+    expect(e.won).toBe(false)
+    expect(cfg.loot.length).toBe(2)
+  })
+})

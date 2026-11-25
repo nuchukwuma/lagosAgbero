@@ -1,0 +1,36 @@
+{
+  "id": "warehouse",
+  "name": "Computer Village warehouse",
+  "notes": "Interior. A big shed of containers and cartons. The side door is at the west end of the south wall; the loading dock opens at the east end of the north wall.",
+  "interior": {
+    "setting": "campus",
+    "height": 4.0,
+    "wall": "#9aa1a6",
+    "trim": "#4b5257",
+    "rooms": [{ "name": "floor", "x": -14, "z": -10, "w": 28, "d": 20, "floor": "#6f6a62" }],
+    "walls": [
+      [-14, 10, -12, 10], [-10, 10, 14, 10],
+      [-14, -10, 8, -10], [12, -10, 14, -10],
+      [-14, -10, -14, 10], [14, -10, 14, 10]
+    ],
+    "lights": [[-8, -6], [3, -6], [-8, 4], [5, 4], [10, -2]]
+  },
+  "bounds": { "minX": -15, "maxX": 15, "minZ": -12, "maxZ": 11 },
+  "spawn": { "pos": [-11, 9], "facing": 180 },
+  "traffic": false,
+  "roads": [],
+  "buildings": [],
+  "props": [
+    { "model": "shippingContainerA", "solid": true, "at": [[-10, -6, 90], [-2.5, -6, 90]] },
+    { "model": "shippingContainerB", "solid": true, "at": [[-7, -0.5, 90], [1.5, -0.5, 90], [10, -0.5, 90]] },
+    { "model": "shippingContainerA", "solid": true, "at": [[-4, 5, 90], [6, 5, 90]] },
+    { "model": "cartons", "solid": true, "at": [[-2.5, -9.4, 0], [12.6, 3, 90], [4.5, -7.6, 0], [-12.8, 3.5, 90], [9, 8.6, 0]] },
+    { "model": "crates", "solid": true, "at": [[5.2, -9.2, 0], [-12.6, -2, 90], [1, 8.6, 0]] },
+    { "model": "desk", "solid": true, "at": [[-12.6, -8.6, 90]] },
+    { "model": "laptop", "y": 0.765, "at": [[-12.6, -8.6, 90]] }
+  ],
+  "spots": { "door": { "pos": [-11, 9.4], "radius": 1.2 } },
+  "activities": [
+    { "id": "exit_warehouse", "label": "GO OUTSIDE", "icon": "door", "spot": "door", "mode": "exit", "minutes": 0, "where": "the side door" }
+  ]
+}

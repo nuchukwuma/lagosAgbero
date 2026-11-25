@@ -79,6 +79,40 @@ function Beam({ g }) {
   return <mesh ref={mesh} geometry={geo} material={beamMats.calm} renderOrder={2} frustumCulled={false} />
 }
 
+/** A CCTV camera on a wall bracket, its red light on, turning as it sweeps. */
+function Cctv({ g }) {
+  const ref = useRef()
+  const [sign, setSign] = useState('')
+  useFrame(() => {
+    if (ref.current) ref.current.rotation.y = g.ry
+    const s = g.saidT > 0 ? g.said : g.spot > 0.03 ? `?${Math.round(g.spot * 100)}` : ''
+    if (s !== sign) setSign(s)
+  })
+  return (
+    <group position={[g.x, 0, g.z]}>
+      <mesh position-y={1.4}>
+        <cylinderGeometry args={[0.05, 0.05, 2.8, 6]} />
+        <meshStandardMaterial color="#2b2f35" />
+      </mesh>
+      <group ref={ref} position-y={2.75}>
+        <mesh position-z={0.18}>
+          <boxGeometry args={[0.22, 0.2, 0.5]} />
+          <meshStandardMaterial color="#e9e6df" />
+        </mesh>
+        <mesh position={[0, 0, 0.44]}>
+          <sphereGeometry args={[0.05, 8, 6]} />
+          <meshBasicMaterial color="#ff3b30" />
+        </mesh>
+      </group>
+      {sign && (
+        <Html position={[0, 3.3, 0]} center distanceFactor={10} zIndexRange={[7, 0]} style={{ pointerEvents: 'none' }}>
+          <div className={`guard-sign ${sign.startsWith('?') ? 'is-spot' : 'is-chase'}`}>{sign.startsWith('?') ? <><b>?</b><i style={{ width: `${sign.slice(1)}%` }} /></> : sign}</div>
+        </Html>
+      )}
+    </group>
+  )
+}
+
 function Guard({ g, uniform = UNIFORM }) {
   const ref = useRef()
   const [anim, setAnim] = useState('walk')
@@ -232,6 +266,10 @@ export default function StealthDirector({ layout }) {
         sfx('door')
         playVoice('raid_efcc', { fx: 'megaphone', minGap: 12, volume: 0.8 })
       } else if (e.type === 'open') sfx('door')
+      else if (e.type === 'alarm') {
+        sfx('siren')
+        shake(0.12, 0.4)
+      } else if (e.type === 'workStarted') sfx('click')
       else if (e.type === 'escaped') sfx('win')
       else if (e.type === 'dawn') sfx('lose')
     }
@@ -239,9 +277,12 @@ export default function StealthDirector({ layout }) {
     hudT.current -= dt
     if (hudT.current <= 0 || mm.events.length || mm.over) {
       hudT.current = 0.2
-      const left = mm.guards.filter((g) => g.state !== 'down').length
+      const people = mm.guards.filter((g) => !g.fixed)
+      const left = people.filter((g) => g.state !== 'down').length
+      const item = mm.canGrab !== false ? mm.loot[mm.canGrab] : null
+      const work = mm.working ? { label: mm.loot[mm.working.index].label, p: mm.working.t / mm.loot[mm.working.index].work } : null
       useStealth.setState({
-        hud: { time: mm.time, left, total: mm.guards.length, tries: mm.tries, cash: mm.cash, open: mm.open, canTakedown: mm.canTakedown, canGrab: mm.canGrab, hasLoot: mm.hasLoot, spotted: mm.spotted, taken: mm.loot.flatMap((l, i) => (l.taken ? [i] : [])), lootLeft: mm.loot.filter((l) => !l.taken).length, carried: mm.carried, waiting: mm.guards.filter((g) => g.wait > 0).length, caught: mm.caughtT > 0, chased: mm.guards.some((g) => g.state === 'chase') },
+        hud: { time: mm.time, left, total: people.length, cameras: mm.guards.length - people.length, grabVerb: item?.verb || null, grabLabel: item?.label || null, working: work, tries: mm.tries, cash: mm.cash, open: mm.open, canTakedown: mm.canTakedown, canGrab: mm.canGrab, hasLoot: mm.hasLoot, spotted: mm.spotted, taken: mm.loot.flatMap((l, i) => (l.taken ? [i] : [])), lootLeft: mm.loot.filter((l) => !l.taken).length, carried: mm.carried, waiting: mm.guards.filter((g) => g.wait > 0).length, caught: mm.caughtT > 0, chased: mm.guards.some((g) => g.state === 'chase') },
         ...(mm.over && !useStealth.getState().ended ? { ended: { over: true } } : {}),
       })
     }
@@ -255,7 +296,7 @@ export default function StealthDirector({ layout }) {
       ))}
       {m.guards.map((g) => (
         <group key={`${attempt}-${g.id}`}>
-          <Guard g={g} uniform={UNIFORMS[m.id] || UNIFORM} />
+          {g.fixed ? <Cctv g={g} /> : <Guard g={g} uniform={UNIFORMS[m.id] || UNIFORM} />}
           <Beam g={g} />
         </group>
       ))}

@@ -134,6 +134,113 @@ export const CARRY_SLOW = 0.1 // each thing carried: 10% slower
 // you start in the bedroom, away from the front door; the first operative comes in 8 seconds after the gate goes
 MISSIONS.raidEscape = { id: 'raidEscape', world: 'duplex', start: { x: -2.4, z: -2.6, facing: 180 }, exit: { x: 6.5, z: -7.5 }, exitRadius: 1.3, cover: [], routes: RAID_ROUTES, goal: 'loot', loot: RAID_LOOT, time: 150, arrive: 8, firstAt: 8, seeRange: 7 }
 
+// ---------------------------------------------------------------- more missions, same engine
+// Each: where it is, where you start and leave, the guards (and cameras), what
+// to take (work: seconds standing still to do it; weight: how much it slows
+// you), and the words for the result.
+MISSIONS.penthouseRaid = {
+  id: 'penthouseRaid',
+  world: 'penthouse',
+  start: { x: 0, z: 8.4, facing: 180 },
+  exit: { x: 12.9, z: -5.4 },
+  exitRadius: 1.3,
+  cover: [],
+  routes: [
+    { camera: [-11.5, 9.5], face: 135, sweep: 45 },
+    { camera: [11.5, -0.6], face: -135, sweep: 40 },
+    [[-8, 7.4], [-3, 7.8], [-2, 3], [-9, 3]],
+    [[3, -3], [10, -3], [10, -7], [2, -7]],
+    [[-10, -3], [-3, -3], [-3, -6]],
+    [[4, 8.4], [10.4, 8.4], [10.4, 2.6]],
+  ],
+  minGuards: 4,
+  extraGuards: 2,
+  goal: 'loot',
+  loot: [
+    { x: 9, z: -8.3, label: 'THE SAFE', verb: 'CRACK IT', work: 4, weight: 2 },
+    { x: -5.2, z: -7.4, model: 'cashStack', at: [-5.6, 0.02, -8.4], label: 'THE GOLD', weight: 2 },
+  ],
+  time: 180,
+  seeRange: 8,
+  texts: { money: 40000, won: 'Out over the balcony.', wonLine: 'The safe, the gold, and a long climb down. Maitama sleeps on.', lost: 'Security has the lift.', caught: 'Cuffed on a Persian rug.' },
+}
+MISSIONS.warehouseHeist = {
+  id: 'warehouseHeist',
+  world: 'warehouse',
+  start: { x: -11, z: 8.4, facing: 180 },
+  exit: { x: 10, z: -10.9 },
+  exitRadius: 1.5,
+  cover: [],
+  routes: [
+    [[-12, -3], [0, -3], [12, -3]],
+    [[-12, 8], [12, 8]],
+    [[-1, -8.3], [3, -8.3]],
+    [[5.7, 2.4], [12.6, 2.4]],
+    [[-12.4, -4], [-12.4, 6.8]],
+  ],
+  minGuards: 3,
+  extraGuards: 2,
+  goal: 'loot',
+  loot: [
+    { x: -2.5, z: -8.4, label: 'THE PHONE CARTONS' },
+    { x: 11.4, z: 3, label: 'THE LAPTOPS' },
+    { x: -11.4, z: -8.6, label: 'THE LEDGER', verb: 'COPY IT', work: 1.2, weight: 0 },
+  ],
+  time: 180,
+  seeRange: 9,
+  texts: { money: 30000, won: 'Out through the loading dock.', wonLine: 'Phones, laptops and the ledger that says none of it was ever here. Oga Master will be proud. Or worried.', lost: 'The night watchmen have the doors.', caught: 'The watchmen sit on you till morning.' },
+}
+MISSIONS.examSneak = {
+  id: 'examSneak',
+  world: 'examHall',
+  start: { x: -8.4, z: 5.8, facing: 180 },
+  exit: { x: -8.4, z: 6.6 },
+  exitRadius: 1.0,
+  cover: [],
+  routes: [
+    [[-9, -3.4], [9, -3.4]],
+    [[0, 6.2], [0, -0.1]],
+    [[9.1, 6], [9.1, 0.5]],
+  ],
+  minGuards: 2,
+  extraGuards: 1,
+  instantFail: true, // walk inside an invigilator's sightline and it's over
+  goal: 'loot',
+  loot: [
+    { x: 0, z: -5.1, label: 'THE QUESTION PAPER', work: 1.5, weight: 0 },
+    { x: 8.6, z: -5.1, label: 'SWAP YOUR SCRIPT', verb: 'SWAP IT', work: 1.5, weight: 0 },
+  ],
+  time: 150,
+  seeRange: 8,
+  texts: { money: 15000, won: 'Sorted.', wonLine: 'The question paper in your sock, your script on the marking pile. An A is coming, from somewhere.', lost: 'The exam started without you.', caught: 'Carryover. And a panel.' },
+}
+MISSIONS.serverBreak = {
+  id: 'serverBreak',
+  world: 'serverRoom',
+  start: { x: 0, z: 5.0, facing: 180 },
+  exit: { x: 0, z: 6.6 },
+  exitRadius: 1.0,
+  cover: [],
+  routes: [
+    { camera: [7.5, -5.5], face: -135, sweep: 40 },
+    [[-6.6, -4.4], [6.6, -4.4], [6.6, 4.0], [-6.6, 4.0]],
+    [[0, -4.4], [0, 4.0]],
+  ],
+  minGuards: 2,
+  extraGuards: 1,
+  goal: 'loot',
+  loot: [
+    { x: -7.2, z: -5.0, label: 'BREAKER 1', verb: 'FLIP IT', work: 1.2, weight: 0 },
+    { x: 7.2, z: -5.0, label: 'BREAKER 2', verb: 'FLIP IT', work: 1.2, weight: 0 },
+    { x: 7.2, z: 3.6, label: 'BREAKER 3', verb: 'FLIP IT', work: 1.2, weight: 0 },
+    { x: -3.6, z: -1.6, label: 'DRIVE A', verb: 'PULL IT' },
+    { x: 3.6, z: 0.9, label: 'DRIVE B', verb: 'PULL IT' },
+  ],
+  time: 75,
+  seeRange: 7,
+  texts: { money: 35000, won: 'Out before the lockdown.', wonLine: 'Three breakers down, two drives in your pocket, and a server room full of very confused lights.', lost: 'The lockdown doors sealed.', caught: 'Security walks you to the lobby. Slowly.' },
+}
+
 export const missionOf = (id) => MISSIONS[id] || MISSIONS.backGate
 /** A mission's loot as a list (one thing or several). */
 export const lootOf = (cfg) => (cfg.loot ? (Array.isArray(cfg.loot) ? cfg.loot : [cfg.loot]) : [])
@@ -288,8 +395,15 @@ export function createMission(layout, params = {}, seed = 1, missionId = 'backGa
   const cover = coverBoxes(cfg.cover)
   // inside a building: a finer grid, so guards (and paths) fit through doorways
   const grid = layout.raw?.interior ? buildGrid(layout.bounds, [...layout.colliders, ...cover], 0.5, 0.3) : buildGrid(layout.bounds, [...layout.colliders, ...cover])
-  const count = Math.min(cfg.routes.length, 4 + Math.round(level * 2))
+  // cameras always; the people on foot: 4 to 6 as it gets harder (or the mission's own count)
+  const count = Math.min(cfg.routes.length, (cfg.minGuards ?? 4) + Math.round(level * (cfg.extraGuards ?? 2)))
   const guards = cfg.routes.slice(0, count).map((route, i) => {
+    // a CCTV camera: fixed, sweeping its view to and fro; it can't chase or be taken down, it raises the alarm
+    if (route.camera) {
+      const [cx, cz] = route.camera
+      const face = (route.face * Math.PI) / 180
+      return { id: i, fixed: true, face, sweep: ((route.sweep ?? 40) * Math.PI) / 180, wait: 0, home: [[cx, cz]], legs: [[[cx, cz]]], leg: 0, x: cx, z: cz, ry: face, state: 'patrol', spot: 0, path: null, lastSeen: null, lostT: 0, lookT: 0, repath: 0, cash: 0, said: null, saidT: 0, cool: 0 }
+    }
     const pts = route.map(([x, z]) => nearestFree(grid, x, z))
     // the walk between each point and the next, round the loop
     const legs = pts.map((p, k) => smooth(grid, findPath(grid, p, pts[(k + 1) % pts.length])) || [p])
@@ -407,6 +521,19 @@ export function stepMission(m, dt, player) {
     if (g.saidT > 0) g.saidT -= dt
     const d = Math.hypot(player.x - g.x, player.z - g.z)
     const inBeam = sees(m, g, player.x, player.z, m.cfg.seeRange)
+    if (g.fixed) {
+      stepCamera(m, g, dt, inBeam, d, player)
+      continue
+    }
+    // the exam hall: walking inside an invigilator's sightline is the end
+    if (m.cfg.instantFail && inBeam && player.moving) {
+      say(g, 'You! Bring that paper!')
+      m.spotted = true
+      m.failed = 'seen'
+      m.over = true
+      m.events.push({ type: 'spotted', id: g.id }, { type: 'caught' })
+      return m
+    }
     // being seen: the ? fills, faster up close and when you run; crouched and still is hardest to see
     if (inBeam && g.state !== 'chase') {
       const near = 1 - d / SEE_RANGE
@@ -514,7 +641,7 @@ export function stepMission(m, dt, player) {
       default:
     }
     // close enough, and he isn't after you: a takedown
-    if (g.state !== 'chase' && d < bestD && !(inBeam && g.spot > 0.6)) {
+    if (!g.fixed && g.state !== 'chase' && d < bestD && !(inBeam && g.spot > 0.6)) {
       best = g.id
       bestD = d
     }
@@ -522,7 +649,22 @@ export function stepMission(m, dt, player) {
   m.canTakedown = best
   // the loot: close enough to take it
   const near = m.loot.findIndex((l) => !l.taken && Math.hypot(player.x - l.x, player.z - l.z) < 1.8)
-  m.canGrab = near >= 0 ? near : false
+  m.canGrab = near >= 0 && !m.working ? near : false
+  // working at something (a safe, a switch): stand still beside it until it's done
+  if (m.working) {
+    const w = m.working
+    const item = m.loot[w.index]
+    if (player.moving || Math.hypot(player.x - item.x, player.z - item.z) > 2) {
+      m.working = null
+      m.events.push({ type: 'workStopped', label: item.label })
+    } else {
+      w.t += dt
+      if (w.t >= item.work) {
+        m.working = null
+        take(m, w.index)
+      }
+    }
+  }
   const exit = m.cfg.exit
   if (m.open && Math.hypot(player.x - exit.x, player.z - exit.z) < (m.cfg.exitRadius || GATE_RADIUS)) {
     m.over = true
@@ -576,8 +718,21 @@ export function grabLoot(m) {
   if (m.canGrab === false || m.over) return false
   const item = m.loot[m.canGrab]
   if (!item || item.taken) return false
+  // some things take time (cracking a safe, flipping a breaker): stand still till it's done
+  if (item.work) {
+    m.working = { index: m.canGrab, t: 0 }
+    m.canGrab = false
+    m.events.push({ type: 'workStarted', label: item.label })
+    return true
+  }
+  take(m, m.canGrab)
+  return true
+}
+
+function take(m, index) {
+  const item = m.loot[index]
   item.taken = true
-  m.carried++
+  m.carried += item.weight ?? 1
   m.canGrab = false
   m.events.push({ type: 'loot', label: item.label })
   if (m.loot.every((l) => l.taken)) {
@@ -585,13 +740,51 @@ export function grabLoot(m) {
     m.open = true
     m.events.push({ type: 'open' })
   }
-  return true
 }
 
-/** How fast you move carrying what you've taken (1 = free hands). */
-export const carrySpeed = (m) => Math.max(0.55, 1 - CARRY_SLOW * (m?.carried || 0))
+/** A CCTV camera: sweeps; if it fills its ?, the alarm sends the guards to where you were. */
+function stepCamera(m, g, dt, inBeam, d, player) {
+  g.ry = g.face + Math.sin(m.cfg.time - m.time) * g.sweep * 0.9
+  if (g.cool > 0) {
+    g.cool -= dt
+    return
+  }
+  if (inBeam) {
+    g.spot += dt * (0.9 + (1 - d / (m.cfg.seeRange || SEE_RANGE)) * 1.8) * (player.moving ? 1 : 0.5) * m.spotMul
+    g.lastSeen = [player.x, player.z]
+  } else g.spot = Math.max(0, g.spot - dt * 0.4)
+  if (g.spot >= 1) {
+    g.spot = 0
+    g.cool = 5 // it rings, then watches again
+    m.spotted = true
+    say(g, 'ALARM!')
+    m.events.push({ type: 'alarm', id: g.id })
+    for (const o of m.guards) {
+      if (o.fixed || o.state === 'down' || o.wait > 0 || o.state === 'chase') continue
+      o.state = 'search'
+      o.spot = Math.max(o.spot, 0.5)
+      o.lastSeen = [player.x, player.z]
+      o.path = smooth(m.grid, findPath(m.grid, [o.x, o.z], o.lastSeen)) || []
+      o.lookT = 0
+    }
+  }
+}
+
+/** How fast you move carrying what you've taken (1 = free hands; heavy things count more). */
+export const carrySpeed = (m) => Math.max(0.45, 1 - CARRY_SLOW * (m?.carried || 0))
 
 export function missionResult(m) {
+  const tx = m.cfg.texts
+  if (tx) {
+    const got = m.loot.filter((l) => l.taken).length
+    return {
+      outcome: m.won ? 'won' : 'lost',
+      score: got * 100 + m.takedowns * 30 + (m.won ? 300 + Math.round(m.time) * 2 + (m.spotted ? 0 : 200) : 0),
+      moneyChange: m.won ? tx.money : 0,
+      headline: m.won ? tx.won : m.failed || m.tries <= 0 ? tx.caught : tx.lost,
+      line: m.won ? `${tx.wonLine}${m.spotted ? '' : ' Nobody saw a thing.'}` : `${got} of ${m.loot.length} done when it ended.`,
+    }
+  }
   if (m.id === 'raidEscape') {
     const got = m.loot.filter((l) => l.taken).length
     return {

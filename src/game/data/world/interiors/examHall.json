@@ -1,0 +1,33 @@
+{
+  "id": "examHall",
+  "name": "Exam hall, Royal Crest",
+  "notes": "Interior. The big lecture theatre set for an exam: rows of desks, four pillars, the invigilators' table at the front (north), a marking table in the north-east corner. The door is at the west end of the south wall.",
+  "interior": {
+    "setting": "campus",
+    "height": 3.6,
+    "wall": "#e3dccb",
+    "trim": "#6b5a45",
+    "rooms": [{ "name": "hall", "x": -10, "z": -7, "w": 20, "d": 14, "floor": "#a8946f" }],
+    "walls": [
+      [-10, 7, -9.2, 7], [-7.6, 7, 10, 7], [-10, -7, 10, -7], [-10, -7, -10, 7], [10, -7, 10, 7],
+      [-8.4, -0.4, -7.6, -0.4], [7.6, -0.4, 8.4, -0.4], [-8.4, 3.6, -7.6, 3.6], [7.6, 3.6, 8.4, 3.6]
+    ],
+    "lights": [[-5, -3], [5, -3], [-5, 3], [5, 3]]
+  },
+  "bounds": { "minX": -11, "maxX": 11, "minZ": -8, "maxZ": 8.5 },
+  "spawn": { "pos": [-8.4, 6.2], "facing": 180 },
+  "traffic": false,
+  "roads": [],
+  "buildings": [],
+  "props": [
+    { "model": "lectureDesk", "solid": true, "at": [[-5.6, -1.6, 0], [-2.2, -1.6, 0], [2.2, -1.6, 0], [5.6, -1.6, 0], [-5.6, 1.6, 0], [-2.2, 1.6, 0], [2.2, 1.6, 0], [5.6, 1.6, 0], [-5.6, 4.6, 0], [-2.2, 4.6, 0], [2.2, 4.6, 0], [5.6, 4.6, 0]] },
+    { "model": "desk", "solid": true, "at": [[0, -6.1, 180], [8.6, -6.1, 180]] },
+    { "model": "officeChair", "at": [[0, -5.3, 0]] },
+    { "model": "filingCabinet", "solid": true, "at": [[-9.4, -6.4, 90]] },
+    { "model": "plant", "solid": true, "at": [[9.3, 6.3, 0]] }
+  ],
+  "spots": { "door": { "pos": [-8.4, 6.6], "radius": 1.1 } },
+  "activities": [
+    { "id": "exit_examHall", "label": "GO OUTSIDE", "icon": "door", "spot": "door", "mode": "exit", "minutes": 0, "where": "the door" }
+  ]
+}
