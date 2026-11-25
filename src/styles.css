@@ -4882,3 +4882,36 @@ svg .is-chase { fill: #e53935; stroke: #fff; stroke-width: 0.6; animation: map-p
     grid-template-columns: 1fr;
   }
 }
+.ol-furn-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+  gap: 6px;
+}
+.ol-furn-grid .btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 6px;
+  font-size: 12px;
+  line-height: 1.15;
+}
+.ol-furn-grid .btn small {
+  color: var(--danfo);
+}
+.ol-furnish {
+  bottom: calc(150px + env(safe-area-inset-bottom));
+}
+.ol-visiting {
+  position: fixed;
+  top: calc(64px + env(safe-area-inset-top));
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(26, 20, 8, 0.85);
+  border: 1px solid var(--danfo);
+  color: var(--danfo);
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-weight: 700;
+  z-index: 12;
+}

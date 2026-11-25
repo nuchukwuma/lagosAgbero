@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest'
 import { World, flipMove } from './world.js'
 import { memoryStore } from './store.js'
-import { START_MONEY, DAILY_BONUS, GROUPS, SHOP } from '../src/game/online/catalog.js'
+import { START_MONEY, DAILY_BONUS, GROUPS, SHOP, PROPERTIES, FURNITURE_SHOP } from '../src/game/online/catalog.js'
 import { turnsFor, VARIANTS, initialBoard } from '../src/game/modes/arcade/games/draughts.js'
 
 // a little harness: clients with inboxes
@@ -238,5 +238,46 @@ describe('Lagos Online: rooms, sending money, the live board', () => {
     expect(ada.respect).toBeGreaterThan(10)
     expect(ada.heists).toBe(1)
     expect(b.last('board').rows[0].name).toBe('Ada') // richest first
+  })
+})
+
+describe('Lagos Online: property', () => {
+  let W
+  beforeEach(() => (W = setup()))
+  const fund = (name, money) => (W.world.store.players[`token-${name}-0123456789`].money = money)
+
+  it('buy a place, furnish it, take a piece back, and a friend in the room can visit', () => {
+    const a = W.join('Ada')
+    const b = W.join('Bayo')
+    a.send({ t: 'buyProperty', id: 'duplex' })
+    expect(a.last('error').text).toMatch(/don't have/) // ₦60,000 is a lot for a new guest
+    fund('Ada', 100000)
+    a.send({ t: 'buyProperty', id: 'duplex' })
+    expect(a.me().money).toBe(100000 - PROPERTIES.duplex.price)
+    expect(a.me().properties.duplex.furniture).toEqual([])
+    a.send({ t: 'buyProperty', id: 'duplex' })
+    expect(a.last('error').text).toMatch(/already/)
+    // furnish: a sofa (paid), placed where she stands
+    a.send({ t: 'furnish', id: 'duplex', model: 'sofa', x: 1.234, z: -2, rot: 90 })
+    expect(a.me().properties.duplex.furniture).toEqual([{ model: 'sofa', x: 1.23, z: -2, rot: 90 }])
+    expect(a.me().money).toBe(100000 - PROPERTIES.duplex.price - FURNITURE_SHOP.sofa)
+    a.send({ t: 'furnish', id: 'duplex', model: 'goldThrone', x: 0, z: 0 })
+    expect(a.last('error').text).toMatch(/No such/)
+    a.send({ t: 'furnish', id: 'hostelRoom', model: 'sofa', x: 0, z: 0 })
+    expect(a.last('error').text).toMatch(/isn't yours/)
+    // what she owns counts on the board
+    W.world.flushBoards()
+    const row = a.last('board').rows.find((r) => r.name === 'Ada')
+    expect(row.worth).toBe(a.me().money + PROPERTIES.duplex.price + FURNITURE_SHOP.sofa)
+    // Bayo sees she has a place and visits
+    expect(b.last('joined')?.player?.places || b.last('room').players.find((p) => p.name === 'Ada')?.places).toBeTruthy()
+    b.send({ t: 'visit', owner: a.me().id, id: 'duplex' })
+    expect(b.last('place')).toMatchObject({ ownerName: 'Ada', id: 'duplex', furniture: [{ model: 'sofa' }] })
+    expect(a.last('toast').text).toMatch(/Bayo is visiting/)
+    // half back for a piece taken out
+    const m = a.me().money
+    a.send({ t: 'unfurnish', id: 'duplex', index: 0 })
+    expect(a.me().money).toBe(m + FURNITURE_SHOP.sofa / 2)
+    expect(a.me().properties.duplex.furniture).toEqual([])
   })
 })

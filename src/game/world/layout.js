@@ -103,7 +103,9 @@ export function parseLayout(json, { reserved = [], lite = false } = {}) {
     ...(json.extras || []).map((n) => [n.pos[0], n.pos[1]]),
     [json.spawn.pos[0], json.spawn.pos[1], 3],
   ]
-  const fill = generateFill(json, colliders, marks, { lite })
+  // an interior (a building you walk into): its walls block, and nothing is generated around it
+  if (json.interior) colliders.push(...interiorWalls(json.interior))
+  const fill = json.interior ? { groups: [], prims: [], colliders: [], blocks: [], lights: [], shadows: [], people: [] } : generateFill(json, colliders, marks, { lite })
   groups.push(...fill.groups)
   // market stalls: containers join the batched models, the rest the props
   const stalls = buildStalls(json.stalls)
@@ -113,6 +115,17 @@ export function parseLayout(json, { reserved = [], lite = false } = {}) {
   shadows.push(...fill.shadows)
 
   return { id: json.id, name: json.name, bounds: json.bounds, spawn: json.spawn, groups, colliders, shadows, fill, spots: json.spots || {}, raw: json }
+}
+
+export const WALL_THICKNESS = 0.2
+
+/** An interior's walls as colliders: each [x1, z1, x2, z2] is a thin box along that line. */
+export function interiorWalls(interior) {
+  return (interior.walls || []).map(([x1, z1, x2, z2]) => {
+    const len = Math.hypot(x2 - x1, z2 - z1)
+    // the box's x axis runs along the wall: its angle is the turn from +x to the wall (about y, three.js sense)
+    return { x: (x1 + x2) / 2, z: (z1 + z2) / 2, hw: len / 2 + WALL_THICKNESS / 2, hd: WALL_THICKNESS / 2, angle: -Math.atan2(z2 - z1, x2 - x1), wall: true }
+  })
 }
 
 /** Push a circle (player) out of every collider and keep it inside bounds. */

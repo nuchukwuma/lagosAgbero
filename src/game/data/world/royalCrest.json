@@ -1555,6 +1555,18 @@
         "scene": "village"
       },
       "where": "the bus to Nkwo Agu"
+    },
+    {
+      "id": "enter_hostel",
+      "label": "HOSTEL ROOM",
+      "icon": "door",
+      "spot": "hostel",
+      "mode": "enter",
+      "minutes": 0,
+      "params": {
+        "interior": "hostelRoom"
+      },
+      "where": "the hostel"
     }
   ],
   "mapLabels": {

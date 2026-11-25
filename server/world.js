@@ -5,7 +5,7 @@
 //
 // Players are guests: a private token (kept on their device) finds their
 // profile again. Money is in-game naira only.
-import { START_MONEY, DAILY_BONUS, MAX_STAKE, MAPS, DUEL_GAMES, GROUPS, QUESTS, SHOP, groupWinBonus, questCounts } from '../src/game/online/catalog.js'
+import { START_MONEY, DAILY_BONUS, MAX_STAKE, MAPS, DUEL_GAMES, GROUPS, QUESTS, SHOP, PROPERTIES, FURNITURE_SHOP, MAX_FURNITURE, groupWinBonus, questCounts } from '../src/game/online/catalog.js'
 import { turnsFor, VARIANTS, initialBoard } from '../src/game/modes/arcade/games/draughts.js'
 import { play as ayoPlay, legal as ayoLegal } from '../src/game/modes/arcade/games/ayo.js'
 import { Lobbies, ROOM_LIMIT, normCode } from './lobbies.js'
@@ -49,7 +49,7 @@ export class World {
     return null
   }
   publicOf(p, c) {
-    return { id: p.id, name: p.name, look: p.look, group: p.group || null, x: c?.x ?? 0, z: c?.z ?? 0, ry: c?.ry ?? 0, anim: c?.anim || 'idle', wins: p.stats.wins }
+    return { id: p.id, name: p.name, look: p.look, group: p.group || null, x: c?.x ?? 0, z: c?.z ?? 0, ry: c?.ry ?? 0, anim: c?.anim || 'idle', wins: p.stats.wins, places: Object.keys(p.properties || {}) }
   }
   /** Everyone in this place (room + map). */
   toPlace(place, msg, except = null) {
@@ -139,6 +139,10 @@ export class World {
       leaveRoom: this.leaveRoom,
       give: this.give,
       board: this.boardFor,
+      buyProperty: this.buyProperty,
+      furnish: this.furnish,
+      unfurnish: this.unfurnish,
+      visit: this.visit,
     }[msg.t]
     if (fn) fn.call(this, cid, msg)
   }
@@ -653,6 +657,58 @@ export class World {
     this.toast(cid, `Sent ₦${a.toLocaleString('en-NG')} to ${q.name}.`)
     this.toast(tcid, `${p.name} sent you ₦${a.toLocaleString('en-NG')}.`)
     this.markBoard(c.room || '')
+  }
+
+  // ---------------------------------------------------------------- property
+  buyProperty(cid, { id }) {
+    const p = this.profile(cid)
+    const it = PROPERTIES[id]
+    if (!it) return this.err(cid, 'No such place.')
+    p.properties ??= {}
+    if (p.properties[id]) return this.err(cid, 'You own it already.')
+    if (it.price > p.money) return this.err(cid, "You don't have that much.")
+    p.money -= it.price
+    p.properties[id] = { bought: this.now(), furniture: [] }
+    p.stats.respect += 5
+    this.save()
+    this.pushMe(cid)
+    this.toast(cid, `The keys are yours: ${it.name}. Go in and furnish it.`)
+  }
+  /** Put a piece of furniture in a place you own (x, z: metres inside it; rot: degrees). */
+  furnish(cid, { id, model, x, z, rot = 0 }) {
+    const p = this.profile(cid)
+    const place = p.properties?.[id]
+    if (!place) return this.err(cid, "That isn't yours.")
+    const price = FURNITURE_SHOP[model]
+    if (price == null) return this.err(cid, 'No such thing.')
+    if (place.furniture.length >= MAX_FURNITURE) return this.err(cid, `Room full: ${MAX_FURNITURE} pieces at most.`)
+    if (price > p.money) return this.err(cid, "You don't have that much.")
+    const c = (v) => Math.max(-14, Math.min(14, Math.round(num(v) * 100) / 100))
+    p.money -= price
+    place.furniture.push({ model, x: c(x), z: c(z), rot: Math.round(num(rot)) % 360 })
+    this.save()
+    this.pushMe(cid)
+  }
+  /** Take a piece back out (half its price back). */
+  unfurnish(cid, { id, index }) {
+    const p = this.profile(cid)
+    const place = p.properties?.[id]
+    const f = place?.furniture?.[index]
+    if (!f) return
+    place.furniture.splice(index, 1)
+    p.money += Math.floor((FURNITURE_SHOP[f.model] || 0) / 2)
+    this.save()
+    this.pushMe(cid)
+  }
+  /** Visit someone's place (they have to be in your room). */
+  visit(cid, { owner, id }) {
+    const tcid = this.clientOf(owner)
+    if (!tcid || (this.clients.get(tcid).room || '') !== (this.clients.get(cid).room || '')) return this.err(cid, "They're not in your room.")
+    const q = this.store.players[this.clients.get(tcid).token]
+    const place = q.properties?.[id]
+    if (!place) return this.err(cid, `${q.name} doesn't own that.`)
+    this.send(cid, { t: 'place', owner: q.id, ownerName: q.name, id, furniture: place.furniture })
+    this.toast(tcid, `${this.profile(cid).name} is visiting your ${PROPERTIES[id].name.split(',')[0].toLowerCase()}.`)
   }
 
   // ---------------------------------------------------------------- the live board

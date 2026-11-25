@@ -13,9 +13,10 @@ import EnergyTicker from '../hud/EnergyTicker.jsx'
 import ShopPanel from '../hud/ShopPanel.jsx'
 import { useFeeRun } from '../../game/modes/feeCollection/feeRunStore.js'
 import { useChase } from '../../game/modes/chase/chaseStore.js'
-import { modeComponent, FULLSCREEN_MODES, worldForMode } from '../../game/modes/modeRegistry.js'
+import { modeComponent, FULLSCREEN_MODES } from '../../game/modes/modeRegistry.js'
 import { useStealth } from '../../game/modes/stealth/stealthStore.js'
-import { worldJson, getLayout } from '../../game/world/worlds.js'
+import { useCurrentWorld } from '../../game/world/interiors/interiorStore.js'
+import { worldJson, getLayout, isInterior } from '../../game/world/worlds.js'
 import { MiniMap, MapScreen, useMapStore } from '../hud/WorldMap.jsx'
 import Confrontation from '../hud/Confrontation.jsx'
 import DialogueBox from './DialogueBox.jsx'
@@ -108,6 +109,9 @@ export default function StoryScreen() {
   const guide = useOnline((s) => s.guide)
   const guideHere = online && guide && view?.world && QUEST_GIVERS[guide]?.map === mapForWorld(view.world)
   const mapGoal = guideHere ? { talkTo: guide } : view?.type === 'freeRoam' ? view.goal : null
+  // the world on screen: the story's, a mode's own (Back Gate), or the building you're in
+  const here = useCurrentWorld(view, modeName)
+  const inside = isInterior(here)
   // Back Gate: the campus map, pointing at the gate once it's open
   const gateOpen = useStealth((s) => s.hud.open)
   const showMini = Boolean(view?.world) && (modeName ? MAP_MODES.has(modeName) : ['freeRoam', 'dialogue', 'choice'].includes(view?.type))
@@ -179,7 +183,7 @@ export default function StoryScreen() {
       <div id="speech-layer" className="speech-layer" aria-live="polite" />
       {online && <OnlineHUD onMenu={() => setOverlay('menu')} hidden={Boolean(overlay)} />}
       {(!online || activity) && <HUD game={game} gamesOnly={gamesOnly} onStatus={() => setOverlay('status')} onMenu={() => setOverlay('menu')} onMap={view.world ? () => setOverlay('worldMap') : null} />}
-      {showMini && !overlay && (!gamesOnly || (online && !activity)) && <MiniMap layout={getLayout(worldForMode(modeName, view.world))} goal={modeName === 'sneak' ? (gateOpen ? { reach: 'backGate' } : null) : mapGoal} onOpen={modeName ? null : () => setOverlay('worldMap')} />}
+      {showMini && !inside && !overlay && (!gamesOnly || (online && !activity)) && <MiniMap layout={getLayout(here)} goal={modeName === 'sneak' ? (gateOpen ? { reach: 'backGate' } : null) : mapGoal} onOpen={modeName ? null : () => setOverlay('worldMap')} />}
       {view.chapterTitle && view.type !== 'cutscene' && !gamesOnly && <div className="chapter-chip">{view.chapterTitle}</div>}
       {view.type === 'freeRoam' && !overlay && !activity && (
         <FreeRoamControls
@@ -188,7 +192,7 @@ export default function StoryScreen() {
           onShop={(v) => setOverlay(`shop:${v}`)}
           onQuest={(q) => useGameStore.getState().startQuest(q)}
           onActivity={(id) => {
-            const a = (worldJson(view.world).activities || []).find((x) => x.id === id)
+            const a = (worldJson(here).activities || []).find((x) => x.id === id)
             if (a) startActivity({ ...a, key: `${a.id}-${Date.now()}` })
           }}
         />

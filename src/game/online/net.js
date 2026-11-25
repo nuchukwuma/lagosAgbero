@@ -28,6 +28,7 @@ export const useOnline = create(() => ({
   guide: null, // the quest giver you asked the way to
   lobby: null, // the private room you're in: { code, host, hostName, members } (null: the public world)
   lobbyMissing: null, // a code that didn't open a room
+  visiting: null, // someone's place you're in: { owner, ownerName, id, furniture }
   board: [], // the live board for your room: [{ id, name, worth, respect, influence, heists, wins, map }]
 }))
 
@@ -91,6 +92,11 @@ function onMessage(msg) {
       break
     case 'board':
       set({ board: msg.rows || [] })
+      break
+    case 'place':
+      // their place: walk in (the furniture they've put there comes with it)
+      set({ visiting: msg })
+      import('../world/interiors/interiorStore.js').then(({ enterInterior }) => enterInterior(msg.id, { owner: msg.owner }))
       break
     case 'me':
       set({ me: msg.me })
@@ -229,3 +235,7 @@ export const joinRoom = (code) => send({ t: 'joinRoom', code })
 export const leaveRoom = () => send({ t: 'leaveRoom' })
 export const give = (to, amount) => send({ t: 'give', to, amount })
 export const askBoard = () => send({ t: 'board' })
+export const buyProperty = (id) => send({ t: 'buyProperty', id })
+export const furnish = (id, model, x, z, rot) => send({ t: 'furnish', id, model, x, z, rot })
+export const unfurnish = (id, index) => send({ t: 'unfurnish', id, index })
+export const visit = (owner, id) => send({ t: 'visit', owner, id })

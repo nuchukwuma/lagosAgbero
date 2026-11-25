@@ -2334,6 +2334,18 @@
         "scene": "campus"
       },
       "where": "the bus to Campus"
+    },
+    {
+      "id": "enter_duplex",
+      "label": "ENTER THE DUPLEX",
+      "icon": "door",
+      "spot": "richStreet",
+      "mode": "enter",
+      "minutes": 0,
+      "params": {
+        "interior": "duplex"
+      },
+      "where": "the duplex on Rich Street"
     }
   ],
   "rows": [

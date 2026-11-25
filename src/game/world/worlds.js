@@ -11,7 +11,10 @@ import { parseLayout } from './layout.js'
 import { storyCtx } from '../narrative/storyData.js'
 import { useSettings, effectiveQuality } from '../store/settings.js'
 
-export const WORLDS = { iyanaWahala, nkwoAgu, royalCrest }
+// buildings you can walk into: small worlds of their own (data/world/interiors/*.json)
+const INTERIORS = Object.fromEntries(Object.values(import.meta.glob('../data/world/interiors/*.json', { eager: true, import: 'default' })).map((w) => [w.id, w]))
+export const WORLDS = { iyanaWahala, nkwoAgu, royalCrest, ...INTERIORS }
+export const isInterior = (id) => Boolean(WORLDS[id]?.interior)
 export const DEFAULT_WORLD = 'iyanaWahala'
 const cache = new Map()
 

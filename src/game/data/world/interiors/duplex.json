@@ -1,0 +1,54 @@
+{
+  "id": "duplex",
+  "name": "Rich Street duplex",
+  "notes": "Interior. Metres, +X east, +Z south; the front door is in the middle of the south wall. Living room (west) and kitchen-dining (east) at the front, bedroom (west) and office (east) at the back.",
+  "interior": {
+    "height": 2.8,
+    "wall": "#e7ddc9",
+    "trim": "#8a6a45",
+    "rooms": [
+      { "name": "living", "x": -8, "z": -1, "w": 9, "d": 7, "floor": "#b98a5a" },
+      { "name": "kitchen", "x": 1, "z": -1, "w": 7, "d": 7, "floor": "#d8d2c4" },
+      { "name": "bedroom", "x": -8, "z": -6, "w": 8, "d": 5, "floor": "#8f6a4a" },
+      { "name": "office", "x": 0, "z": -6, "w": 8, "d": 5, "floor": "#6f7680" }
+    ],
+    "walls": [
+      [-8, 6, -1, 6], [1, 6, 8, 6], [-8, -6, 8, -6], [-8, -6, -8, 6], [8, -6, 8, 6],
+      [-8, -1, -4.6, -1], [-3.4, -1, 3.4, -1], [4.6, -1, 8, -1],
+      [1, -1, 1, 1.8], [1, 3.6, 1, 6],
+      [0, -6, 0, -1]
+    ],
+    "lights": [[-3.5, 2.5], [4.5, 2.5], [-4, -3.5], [4, -3.5]]
+  },
+  "bounds": { "minX": -9, "maxX": 9, "minZ": -7, "maxZ": 8 },
+  "spawn": { "pos": [0, 4.6], "facing": 180 },
+  "traffic": false,
+  "roads": [],
+  "buildings": [],
+  "props": [
+    { "model": "rug", "at": [[-3.4, 2.5, 90]] },
+    { "model": "sofa", "solid": true, "at": [[-6.9, 2.5, 90]] },
+    { "model": "coffeeTable", "solid": true, "at": [[-3.7, 2.5, 90]] },
+    { "model": "armchair", "solid": true, "at": [[-3.7, 0.0, 0], [-3.7, 5.0, 180]] },
+    { "model": "tvStand", "solid": true, "at": [[0.4, 2.5, -90]] },
+    { "model": "plant", "solid": true, "at": [[-7.3, 5.3, 0], [7.3, 5.3, 0]] },
+    { "model": "kitchenCounter", "solid": true, "at": [[5.2, -0.6, 0]] },
+    { "model": "fridge", "solid": true, "at": [[7.4, -0.5, 0]] },
+    { "model": "diningTable", "solid": true, "at": [[4.6, 3.4, 0]] },
+    { "model": "chair", "solid": true, "at": [[3.9, 4.3, 180], [5.3, 4.3, 180], [3.9, 2.5, 0], [5.3, 2.5, 0]] },
+    { "model": "bed", "solid": true, "at": [[-5.2, -4.9, 0]] },
+    { "model": "wardrobe", "solid": true, "at": [[-1.0, -5.6, 0]] },
+    { "model": "safe", "solid": true, "at": [[-7.5, -1.7, 90]] },
+    { "model": "desk", "solid": true, "at": [[4.0, -5.3, 0]] },
+    { "model": "officeChair", "at": [[4.0, -4.4, 180]] },
+    { "model": "laptop", "y": 0.765, "at": [[3.7, -5.25, 0]] },
+    { "model": "serverRack", "solid": true, "at": [[7.4, -4.0, -90]] },
+    { "model": "filingCabinet", "solid": true, "at": [[1.0, -5.6, 0]] }
+  ],
+  "spots": {
+    "door": { "pos": [0, 5.3], "radius": 1.3 }
+  },
+  "activities": [
+    { "id": "exit_duplex", "label": "GO OUTSIDE", "icon": "door", "spot": "door", "mode": "exit", "minutes": 0, "where": "the front door" }
+  ]
+}

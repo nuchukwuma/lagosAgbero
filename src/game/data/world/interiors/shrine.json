@@ -1,0 +1,31 @@
+{
+  "id": "shrine",
+  "name": "The shrine compound",
+  "notes": "Interior. A walled mud compound with the altar at the back (north); the entrance is in the south wall.",
+  "interior": {
+    "height": 2.3,
+    "wall": "#8a5a3a",
+    "trim": "#5e3b22",
+    "rooms": [{ "name": "yard", "x": -7, "z": -5, "w": 14, "d": 10, "floor": "#7a5232" }],
+    "walls": [[-7, 5, -1, 5], [1, 5, 7, 5], [-7, -5, 7, -5], [-7, -5, -7, 5], [7, -5, 7, 5]],
+    "lights": [[0, -3], [-4, 1], [4, 1]]
+  },
+  "bounds": { "minX": -8, "maxX": 8, "minZ": -6, "maxZ": 7 },
+  "spawn": { "pos": [0, 3.8], "facing": 180 },
+  "traffic": false,
+  "roads": [],
+  "buildings": [],
+  "props": [
+    { "model": "shrineAltar", "solid": true, "at": [[0, -4.2, 0]] },
+    { "model": "regalia", "y": 0.83, "at": [[0.1, -4.1, 0]] },
+    { "model": "shrinePole", "solid": true, "at": [[-3, -3.8, 0], [3, -3.8, 0], [-5.8, 2.5, 0], [5.8, 2.5, 0]] },
+    { "model": "crates", "solid": true, "at": [[-5.8, -3.6, 20]] },
+    { "model": "plant", "solid": true, "at": [[5.9, -4.1, 0]] }
+  ],
+  "spots": {
+    "door": { "pos": [0, 4.3], "radius": 1.2 }
+  },
+  "activities": [
+    { "id": "exit_shrine", "label": "GO OUTSIDE", "icon": "door", "spot": "door", "mode": "exit", "minutes": 0, "where": "the gate" }
+  ]
+}

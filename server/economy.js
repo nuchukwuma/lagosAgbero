@@ -1,6 +1,6 @@
 // Lagos Online: the street economy's numbers. Sending naira between players,
 // what someone is worth, and the three reputations the boards track.
-import { SHOP } from '../src/game/online/catalog.js'
+import { SHOP, PROPERTIES, FURNITURE_SHOP } from '../src/game/online/catalog.js'
 
 export const GIVE_MIN = 100
 export const GIVE_MAX = 50000 // in one go
@@ -13,13 +13,18 @@ export function ensureStats(p) {
   return p
 }
 
-/** Cash plus what they own (shop items at their price; property comes later). */
+/** Cash plus what they own (shop items, property and its furniture, at what they cost). */
 export function netWorth(p) {
   let worth = p.money
   for (const [id, have] of Object.entries(p.items || {})) {
     const it = SHOP[id]
     if (!it || !have) continue
     worth += it.kind === 'uses' ? it.price * have : it.price
+  }
+  // property, and what's in it
+  for (const [id, place] of Object.entries(p.properties || {})) {
+    worth += PROPERTIES[id]?.price || 0
+    for (const f of place.furniture || []) worth += FURNITURE_SHOP[f.model] || 0
   }
   return worth
 }

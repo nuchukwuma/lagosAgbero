@@ -58,8 +58,38 @@ const indProp = (file, use, extra = {}) => ({ file: `city-kit-industrial/${file}
 const sub = (file, use, extra = {}) => ({ file: `city-kit-suburban/${file}.glb`, category: 'building', use, ...extra })
 const subProp = (file, use, extra = {}) => ({ file: `city-kit-suburban/${file}.glb`, category: 'prop', use, ...extra })
 const nature = (file, use, extra = {}) => ({ file: `city-kit-suburban/${file}.glb`, category: 'nature', use, ...extra })
+// interior furniture, built by scripts/build-furniture.mjs (1 unit = 1 metre)
+const furn = (file, use, extra = {}) => ({ file: `furniture/${file}.glb`, category: 'furniture', use, ...extra })
 
 export const MODELS = {
+  // ---------------- Interior furniture (scripts/build-furniture.mjs) ----------------
+  sofa: furn('sofa', 'Three-seater in red leather'),
+  armchair: furn('armchair', 'Armchair'),
+  bed: furn('bed', 'Double bed, wrapper-print blanket'),
+  bunkBed: furn('bunkBed', 'Hostel bunk'),
+  desk: furn('desk', 'Desk with drawers'),
+  officeChair: furn('officeChair', 'Office chair'),
+  chair: furn('chair', 'Dining chair'),
+  diningTable: furn('diningTable', 'Dining table'),
+  coffeeTable: furn('coffeeTable', 'Glass-and-gold coffee table'),
+  tvStand: furn('tvStand', 'TV on a stand'),
+  wardrobe: furn('wardrobe', 'Wardrobe'),
+  fridge: furn('fridge', 'Fridge'),
+  kitchenCounter: furn('kitchenCounter', 'Kitchen counter with sink and gas rings'),
+  safe: furn('safe', 'Wall safe (heists)'),
+  serverRack: furn('serverRack', 'Server rack with blinking lights'),
+  shrineAltar: furn('shrineAltar', 'Shrine altar: red cloth, calabashes, mask, candles'),
+  regalia: furn('regalia', 'The shrine stash: beret, beads, staff (heist loot)'),
+  shrinePole: furn('shrinePole', 'Carved shrine pole'),
+  crates: furn('crates', 'Stacked market crates'),
+  cartons: furn('cartons', 'Electronics cartons (warehouse)'),
+  cashStack: furn('cashStack', 'Bundles of naira (loot)'),
+  laptop: furn('laptop', 'Laptop (loot)'),
+  hardDrive: furn('hardDrive', 'Hard drive (loot)'),
+  rug: furn('rug', 'Rug'),
+  plant: furn('plant', 'Potted plant'),
+  lectureDesk: furn('lectureDesk', 'Lecture-hall desk and bench'),
+  filingCabinet: furn('filingCabinet', 'Filing cabinet'),
   // ---------------- Vehicles (car-kit) ----------------
   danfo: car('van', 'Danfo bus: yellow, black side stripe, body stretched ~5.7 m', {
     tweak: { recolor: { from: [7, 1], to: 'danfoYellow' }, stripe: 'black', stretch: [1, 1.08, 1.3], weathering: 0.25 },

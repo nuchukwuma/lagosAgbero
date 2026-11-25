@@ -6,6 +6,7 @@ import { worldJson } from '../../game/world/worlds.js'
 import { QUESTS } from '../../game/systems/quests.js'
 import ObjectiveBanner from './ObjectiveBanner.jsx'
 import Icon from '../Icon.jsx'
+import { useCurrentWorld } from '../../game/world/interiors/interiorStore.js'
 
 // On-screen controls while walking around: objective, joystick, RUN, TALK.
 // Keyboard: WASD / arrows to move, Shift to run, E or Enter to talk.
@@ -15,9 +16,10 @@ export default function FreeRoamControls({ view, onTalk, onShop, onActivity, onQ
   const nearVendor = useWorldStore((s) => s.nearVendor)
   const vendorName = nearVendor ? characters[nearVendor]?.name || nearVendor : null
   const nearActivity = useWorldStore((s) => s.nearActivity)
-  const activity = nearActivity ? (worldJson(view.world).activities || []).find((a) => a.id === nearActivity) : null
+  const here = worldJson(useCurrentWorld(view, null)) // the street, or the building you're in
+  const activity = nearActivity ? (here.activities || []).find((a) => a.id === nearActivity) : null
   const nearActivities = useWorldStore((s) => s.nearActivities)
-  const others = canTalk ? [] : nearActivities.slice(1).map((id) => (worldJson(view.world).activities || []).find((a) => a.id === id)).filter(Boolean)
+  const others = canTalk ? [] : nearActivities.slice(1).map((id) => (here.activities || []).find((a) => a.id === id)).filter(Boolean)
   const nearQuest = useWorldStore((s) => s.nearQuest)
   const quest = !canTalk && nearQuest ? QUESTS.find((q) => q.id === nearQuest) : null
 

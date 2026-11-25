@@ -2,9 +2,12 @@ import { useEffect, useRef, useState } from 'react'
 import { useGameStore } from '../../game/store/gameStore.js'
 import { formatNaira } from '../../game/narrative/stats.js'
 import characters from '../../game/data/characters.json'
-import { useOnline, say, challenge, answerInvite, bet, joinGroup, leaveGroup, claimQuest, buy, askLeaders, clearEnd, dismissToast, createRoom, joinRoom, leaveRoom, give, askBoard } from '../../game/online/net.js'
+import { useOnline, say, challenge, answerInvite, bet, joinGroup, leaveGroup, claimQuest, buy, askLeaders, clearEnd, dismissToast, createRoom, joinRoom, leaveRoom, give, askBoard, buyProperty, furnish, unfurnish, visit } from '../../game/online/net.js'
 import { whatsappLink, shareRoom, copyRoomLink } from '../../game/online/invite.js'
-import { DUEL_GAMES, GROUPS, QUESTS, SHOP, MAPS, MAX_STAKE, QUEST_GIVERS, giverState } from '../../game/online/catalog.js'
+import { useInterior } from '../../game/world/interiors/interiorStore.js'
+import { playerState } from '../../game/world/worldState.js'
+import { MODELS } from '../../assets/assetManifest.js'
+import { DUEL_GAMES, GROUPS, QUESTS, SHOP, MAPS, MAX_STAKE, QUEST_GIVERS, giverState, PROPERTIES, FURNITURE_SHOP, MAX_FURNITURE } from '../../game/online/catalog.js'
 
 // Lagos Online, on top of the street: who you are and what you have, the
 // people here, chat, challenges and bets, groups, quests, the shop and the
@@ -13,6 +16,7 @@ import { DUEL_GAMES, GROUPS, QUESTS, SHOP, MAPS, MAX_STAKE, QUEST_GIVERS, giverS
 const TABS = [
   ['room', '🔑', 'Room & invites'],
   ['board', '📊', 'Live board'],
+  ['places', '🏠', 'Places'],
   ['people', '👥', 'People'],
   ['chat', '💬', 'Chat'],
   ['bets', '🎲', 'Matches & bets'],
@@ -89,6 +93,11 @@ function People({ me }) {
             <button className="btn btn-small" onClick={() => setOpen(open === `give-${p.id}` ? null : `give-${p.id}`)}>
               Send ₦
             </button>
+            {(p.places || []).map((id) => (
+              <button key={id} className="btn btn-small" onClick={() => visit(p.id, id)} title={PROPERTIES[id]?.name}>
+                Visit their {PROPERTIES[id]?.name.split(',')[0].toLowerCase() || 'place'}
+              </button>
+            ))}
           </div>
           {open === `give-${p.id}` && (
             <div className="ol-form">
@@ -383,6 +392,72 @@ function Room({ me }) {
   )
 }
 
+function Places({ me }) {
+  const owned = me.properties || {}
+  return (
+    <div className="ol-list">
+      <p className="muted">Buy a place, walk in through its door, and furnish it. Friends in your room can visit (People → Visit).</p>
+      {Object.entries(PROPERTIES).map(([id, pl]) => (
+        <div key={id} className={`ol-row ${owned[id] ? 'ol-mine' : ''}`}>
+          <div className="ol-info">
+            <strong>{pl.name}</strong>
+            <small>{pl.blurb}</small>
+            <small>
+              {owned[id] ? `Yours · ${owned[id].furniture.length} pieces of furniture · its door is in ${MAPS[pl.map].name}` : formatNaira(pl.price)}
+            </small>
+          </div>
+          {owned[id] ? (
+            <span className="ol-tick">✓</span>
+          ) : (
+            <button className="btn btn-small btn-primary" disabled={pl.price > me.money} onClick={() => buyProperty(id)}>
+              Buy
+            </button>
+          )}
+        </div>
+      ))}
+    </div>
+  )
+}
+
+const furnitureName = (m) => (MODELS[m]?.use || m).split(/[:(,]/)[0].trim()
+
+/** Inside your own place: put furniture down in front of you, or take it back out. */
+function Furnish({ me, id }) {
+  const placed = me.properties?.[id]?.furniture || []
+  const put = (model) => {
+    const p = playerState.position
+    const f = playerState.facing
+    // a step and a bit in front of you, turned to face you
+    furnish(id, model, p.x + Math.sin(f) * 1.4, p.z + Math.cos(f) * 1.4, Math.round(((f * 180) / Math.PI + 180) / 15) * 15)
+  }
+  return (
+    <div className="ol-list">
+      <p className="muted">
+        It goes down in front of you, facing you: walk to where you want it first. {placed.length}/{MAX_FURNITURE} pieces. Taking one out gives half its price back.
+      </p>
+      <div className="ol-furn-grid">
+        {Object.entries(FURNITURE_SHOP).map(([model, price]) => (
+          <button key={model} className="btn btn-small" disabled={price > me.money || placed.length >= MAX_FURNITURE} onClick={() => put(model)}>
+            {furnitureName(model)}
+            <small>{formatNaira(price)}</small>
+          </button>
+        ))}
+      </div>
+      {placed.length > 0 && <h3>In here</h3>}
+      {placed.map((f, i) => (
+        <div key={`${i}-${f.model}`} className="ol-row">
+          <div className="ol-info">
+            <strong>{furnitureName(f.model)}</strong>
+          </div>
+          <button className="btn btn-small" onClick={() => unfurnish(id, i)}>
+            Take out
+          </button>
+        </div>
+      ))}
+    </div>
+  )
+}
+
 const METRICS = [
   ['worth', 'Net worth', formatNaira],
   ['respect', 'Respect', (v) => v],
@@ -555,6 +630,10 @@ export default function OnlineHUD({ onMenu, hidden = false }) {
   const activity = useGameStore((s) => s.activity)
   const nearGiver = useOnline((s) => s.nearGiver)
   const lobby = useOnline((s) => s.lobby)
+  const insideId = useInterior((s) => s.id)
+  const insideOwner = useInterior((s) => s.owner)
+  const visiting = useOnline((s) => s.visiting)
+  const myPlace = insideId && !insideOwner && me?.properties?.[insideId] ? insideId : null
   const [tab, setTab] = useState(null)
   useMatchStarter()
   useLiveEndCloser()
@@ -617,6 +696,12 @@ export default function OnlineHUD({ onMenu, hidden = false }) {
         </div>
       )}
       {!tab && <ChatTicker onOpen={() => setTab('chat')} />}
+      {myPlace && tab !== 'furnish' && (
+        <button className="ol-talk ol-furnish" onClick={() => setTab('furnish')}>
+          🛋 Furnish your place
+        </button>
+      )}
+      {insideOwner && visiting && <div className="ol-visiting">{visiting.ownerName}'s place</div>}
       {nearGiver && me && tab !== 'quests' && (
         <button className={`ol-talk ${giverState(nearGiver, me) === 'ready' ? 'is-ready' : ''}`} onClick={() => setTab('quests')}>
           💬 Talk to {who(nearGiver)}
@@ -626,12 +711,14 @@ export default function OnlineHUD({ onMenu, hidden = false }) {
       {tab && me && (
         <div className="ol-panel">
           <div className="panel-head">
-            <h2>{TABS.find((t) => t[0] === tab)[2]}</h2>
+            <h2>{tab === 'furnish' ? 'Furnish your place' : TABS.find((t) => t[0] === tab)?.[2]}</h2>
             <button className="icon-btn" onClick={() => setTab(null)} aria-label="Close">
               ✕
             </button>
           </div>
           {tab === 'room' && <Room me={me} />}
+          {tab === 'places' && <Places me={me} />}
+          {tab === 'furnish' && myPlace && <Furnish me={me} id={myPlace} />}
           {tab === 'board' && <Board me={me} />}
           {tab === 'people' && <People me={me} />}
           {tab === 'chat' && <Chat />}

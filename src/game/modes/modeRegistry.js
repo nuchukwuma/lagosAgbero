@@ -47,10 +47,7 @@ export const FULLSCREEN_MODES = new Set(['dance', ...Object.keys(ARCADE_MODES)])
 // Modes played inside the 3D street (the player walks with joystick/keys).
 export const WORLD_MODES = new Set(['feeCollection', 'chase', 'fight', 'runner', 'conductor', 'drive', 'sneak'])
 
-// Modes played in a world of their own, whatever world the story is in
-// (Back Gate is always the Royal Crest campus, at night).
-const MODE_WORLD = { sneak: 'royalCrest' }
-export const worldForMode = (mode, world) => MODE_WORLD[mode] || world
+export { worldForMode } from './modeWorlds.js' // modes with a world of their own (Back Gate: the campus)
 
 export const PLANNED_MODES = [...Object.keys(ARCADE_MODES), 'sneak', 'chase', 'fight', 'runner', 'raid', 'conductor', 'feeCollection', 'begging', 'rally', 'initiation', 'drive', 'bluff', 'exam', 'haggle', 'dance', 'shop']
 

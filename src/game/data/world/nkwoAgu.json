@@ -1465,6 +1465,18 @@
         "scene": "campus"
       },
       "where": "the bus to Campus"
+    },
+    {
+      "id": "enter_shrine",
+      "label": "ENTER THE SHRINE",
+      "icon": "door",
+      "spot": "shrine",
+      "mode": "enter",
+      "minutes": 0,
+      "params": {
+        "interior": "shrine"
+      },
+      "where": "the shrine compound"
     }
   ],
   "mapLabels": {

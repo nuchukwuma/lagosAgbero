@@ -76,6 +76,21 @@ export const QUEST_GIVERS = {
   babaGate: { map: 'campus', place: 'the main gate' },
 }
 
+// Property: places you can buy (each is a building you walk into, data/world/interiors)
+// and furnish. Friends in your room can visit.
+export const PROPERTIES = {
+  hostelRoom: { name: 'Hostel room, Royal Crest', map: 'campus', price: 5000, blurb: 'Six bunks, one window, endless noise.' },
+  shrine: { name: 'Shrine compound, Nkwo Agu', map: 'village', price: 25000, blurb: 'The elders will talk. Let them talk.' },
+  duplex: { name: 'Rich Street duplex, Iyana-Wahala', map: 'lagos', price: 60000, blurb: 'Four rooms, a safe, and a gateman who salutes.' },
+}
+// What you can put in a place you own, and its price.
+export const FURNITURE_SHOP = {
+  plant: 300, chair: 400, crates: 300, rug: 700, filingCabinet: 700, officeChair: 800, coffeeTable: 900, desk: 1200,
+  armchair: 1500, bunkBed: 1500, diningTable: 1500, laptop: 1500, wardrobe: 1800, bed: 2500, fridge: 2500,
+  sofa: 3000, tvStand: 4000, safe: 5000, shrinePole: 600, serverRack: 8000,
+}
+export const MAX_FURNITURE = 30 // pieces in one place
+
 // The shop. Advantages are small and fair; looks are just for style.
 //   kind: perm (keep it) · uses (spent as used) · look (changes how you look)
 export const SHOP = {

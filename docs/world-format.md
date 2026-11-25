@@ -83,3 +83,33 @@ ID card) lie near the named `spots` of the world, never inside a building.
 They change with the day and the chapter. What they are and what they give
 is in `src/game/data/finds.json`; a kind can be limited to some campaigns
 with `"campaigns": ["grace"]`.
+
+
+## Interiors (buildings you walk into)
+
+An interior is a small world of its own in `src/game/data/world/interiors/<id>.json`,
+in the same format, plus an `interior` block:
+
+```json
+"interior": {
+  "height": 2.8,                       // wall height (m)
+  "wall": "#e7ddc9", "trim": "#8a6a45", // colours
+  "rooms": [{ "name": "living", "x": -8, "z": -1, "w": 9, "d": 7, "floor": "#b98a5a" }],
+  "walls": [[x1, z1, x2, z2], ...],    // each a straight wall; leave gaps for doors
+  "lights": [[x, z], ...]              // warm ceiling lights
+}
+```
+
+- Furniture goes in `props` like any prop (`"solid": true` to block); the
+  models come from `scripts/build-furniture.mjs` (`public/assets/furniture/`).
+- A door into it is an activity in the street's world: `"mode": "enter"`,
+  `"params": { "interior": "<id>" }`, at a spot. Inside, an activity with
+  `"mode": "exit"` at the door spot takes you back out to where you came in.
+- No roof: the camera looks in from above, and any wall between it and you
+  drops to a stub (`InteriorScene.jsx`).
+- `src/game/world/interiors/interiors.test.js` checks every interior: you
+  arrive on open floor, the way out is reachable, every wall blocks, every
+  room has floor to stand on.
+
+Now: the Rich Street duplex (Iyana-Wahala), a hostel room (Royal Crest), the
+shrine compound (Nkwo Agu).

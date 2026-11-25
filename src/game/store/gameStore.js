@@ -26,6 +26,7 @@ import { clearPowerups } from '../systems/powerups.js'
 import { recordPlay, practiceBump, rewardMulFor } from '../systems/records.js'
 import { ARCADE_IDS } from '../modes/arcade/ids.js'
 import { duelResult, soloResult, forfeit } from '../online/net.js'
+import { enterInterior, exitInterior } from '../world/interiors/interiorStore.js'
 import { DUEL_GAMES } from '../online/catalog.js'
 
 // did this story game go your way? (for practice: wins make it harder and pay more)
@@ -232,6 +233,9 @@ export const useGameStore = create((set, get) => {
     startActivity: (activity) => {
       // the open world's buses: off to another place (Lagos Online)
       if (activity.mode === 'travel') return get().interrupt(`online_world:${activity.params.scene}`)
+      // a door: into the building, or back out to the street
+      if (activity.mode === 'enter') return enterInterior(activity.params.interior)
+      if (activity.mode === 'exit') return exitInterior()
       // online: no story heat or practice tuning; everybody plays the same game
       if (get().game?.flags?.online) return set({ activity })
       // repeat runs get hot (systems/heat.js): harder, or staked out for a while

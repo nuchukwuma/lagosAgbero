@@ -29,8 +29,20 @@ import { withAllegiance } from '../characters/look.js'
 import { useRunner } from '../modes/runner/runnerStore.js'
 import ConductorDirector from '../modes/conductor/ConductorDirector.jsx'
 import { useBus } from '../modes/conductor/ConductorMode.jsx'
-import { WORLD_MODES, FULLSCREEN_MODES, worldForMode } from '../modes/modeRegistry.js'
+import { WORLD_MODES, FULLSCREEN_MODES } from '../modes/modeRegistry.js'
 import StealthDirector from '../modes/stealth/StealthDirector.jsx'
+import InteriorScene from './interiors/InteriorScene.jsx'
+import { useCurrentWorld, useInterior } from './interiors/interiorStore.js'
+import PlacedFurniture from './interiors/PlacedFurniture.jsx'
+import { useOnline } from '../online/net.js'
+
+/** Lagos Online: the furniture in this place, if it's yours or you're visiting whoever owns it. */
+function OwnedPlace({ id }) {
+  const owner = useInterior((s) => s.owner)
+  const mine = useOnline((s) => s.me?.properties?.[id]?.furniture)
+  const theirs = useOnline((s) => (s.visiting?.id === id ? s.visiting.furniture : null))
+  return <PlacedFurniture items={owner ? theirs : mine} />
+}
 import { useStealth } from '../modes/stealth/stealthStore.js'
 import { LOW_ENERGY } from '../systems/energy.js'
 import VendorTracker from './VendorTracker.jsx'
@@ -98,7 +110,17 @@ function FrozenFrame() {
 export default function GameCanvas({ view, game, activity = null, paused = false, onGoalReached, safeGl = false }) {
   // a street mode started by the story, or by the player (activity)
   const modeName = activity ? activity.mode : view.type === 'mode' ? view.mode : null
-  const layout = getLayout(worldForMode(modeName, view.world)) // Iyana-Wahala, the village, the campus...
+  // Iyana-Wahala, the village, the campus... or the building you've walked into
+  const worldId = useCurrentWorld(view, modeName)
+  const layout = getLayout(worldId)
+  const inside = Boolean(layout.raw.interior)
+  // a new chapter or a different world: you're back out on the street
+  const lastPlace = useRef(`${view.world}/${view.chapterId}`)
+  useEffect(() => {
+    const place = `${view.world}/${view.chapterId}`
+    if (place !== lastPlace.current && useInterior.getState().id) useInterior.setState({ id: null, from: null, owner: null })
+    lastPlace.current = place
+  }, [view.world, view.chapterId])
   useSceneTeleport(view, layout)
   useEffect(() => {
     loadClips(COMMON_CLIPS, 'kenney').catch(() => {}) // everyone wears a Kenney Mini body (clipSets.json)
@@ -181,7 +203,8 @@ export default function GameCanvas({ view, game, activity = null, paused = false
         </Suspense>
       ) : (
       <Suspense fallback={null}>
-          <StreetScene key={`scene-${layout.id}`} layout={layout} />
+          {inside ? <InteriorScene key={`inside-${layout.id}`} layout={layout} /> : <StreetScene key={`scene-${layout.id}`} layout={layout} />}
+          {inside && game.flags.online && <OwnedPlace id={layout.id} />}
           <group userData={{ tag: 'npcs' }}>
           {!stealth && <NPCs layout={layout} flags={game.flags} positions={view.positions} goalNpc={view.type === 'freeRoam' ? view.goal?.talkTo || null : null} speaker={speaker} mood={view.mood} hidden={fightOpponent ? [fightOpponent] : []} lite={quality === 'low'} />}
           </group>
@@ -192,11 +215,11 @@ export default function GameCanvas({ view, game, activity = null, paused = false
           {freeRoam && <QuestTracker key={`quests-${layout.id}`} game={game} />}
           {freeRoam && <Pickups layout={layout} game={game} />}
           <group userData={{ tag: 'traffic' }}>
-            {layout.raw.traffic !== false && !stealth && <Traffic key={`traffic-${layout.id}`} density={Math.min(layout.raw.traffic?.density ?? 3, quality === 'low' ? 2 : 9)} paused={paused} raining={Boolean(game.flags.raining)} />}
+            {layout.raw.traffic !== false && !stealth && !inside && <Traffic key={`traffic-${layout.id}`} density={Math.min(layout.raw.traffic?.density ?? 3, quality === 'low' ? 2 : 9)} paused={paused} raining={Boolean(game.flags.raining)} />}
           </group>
           <Suspense fallback={null}>
             <group userData={{ tag: 'crowd' }}>
-              {!stealth && <Crowd key={`crowd-${layout.id}`} layout={layout} quality={quality} paused={paused} />}
+              {!stealth && !inside && <Crowd key={`crowd-${layout.id}`} layout={layout} quality={quality} paused={paused} />}
             </group>
           </Suspense>
           {worldMode && modeName === 'feeCollection' && <FeeRunDirector />}

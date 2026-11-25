@@ -73,6 +73,12 @@ without a browser and cheap at runtime.
 
 ### Phase 2: the bigger city, enterable buildings, furniture, property
 
+Done so far: 27 furniture models made by script (`scripts/build-furniture.mjs`),
+the interior system (walk in through a door, wall cutaway, colliders), three
+interiors (Rich Street duplex, hostel room, shrine compound), and property in
+Lagos Online (buy, furnish, visit). Still to come in this phase: the new
+districts below.
+
 - New districts as their own worlds, joined to the others by road and bus:
   Lekki (gated estates, tech hub, bank, bureau de change, EFCC field office),
   Maitama/Wuse in Abuja (duplexes, penthouse tower, secretariat, campaign
@@ -121,19 +127,15 @@ browser check.
 
 ## Decisions that need you
 
-1. **Voice provider (phase 3).** skill-tts can render with free local voices
-   (robotic) or a paid provider (ElevenLabs, OpenAI or Gemini sound natural)
-   using your API key, entered in the environment's settings, never in chat.
-2. **Blender (phase 2).** The blender-skills pack drives a running Blender
-   through Blender MCP. This cloud session has no Blender. Either connect
-   Blender on your computer (then the skills build and export the furniture),
-   or the furniture is made here as low-poly GLB by script in the same Kenney
-   style as the rest of the city.
-3. **The existing 2D games.** The brief says to replace abstract UI games
-   (no memory cards or rhythm games). That would remove the dance battle and
-   some 2D arcade games the stories use today. Replace them, or keep them and
-   add the 3D ones beside them?
-4. **Hosting.** Rooms, transfers and elections all live on the Lagos Online
+Decided:
+
+1. **Voices:** the free local voice (skill-tts with espeak), rendered ahead of time.
+2. **Furniture:** low-poly GLB made by script here, in the city's Kenney style.
+3. **The existing 2D games stay;** the 3D games are added beside them (new arcs, the Games tab).
+
+Still open:
+
+- **Hosting.** Rooms, transfers and elections all live on the Lagos Online
    server, which still needs to be hosted (docs/online.md) for the public site.
 
 ## Ground rules kept throughout

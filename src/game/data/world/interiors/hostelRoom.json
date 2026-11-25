@@ -1,0 +1,32 @@
+{
+  "id": "hostelRoom",
+  "name": "Hostel room, Royal Crest",
+  "notes": "Interior. A six-bunk hostel room; the door is in the middle of the south wall.",
+  "interior": {
+    "height": 2.7,
+    "wall": "#cfd8c4",
+    "trim": "#5c6b52",
+    "rooms": [{ "name": "room", "x": -5, "z": -4, "w": 10, "d": 8, "floor": "#9c8f7a" }],
+    "walls": [[-5, 4, -0.8, 4], [0.8, 4, 5, 4], [-5, -4, 5, -4], [-5, -4, -5, 4], [5, -4, 5, 4]],
+    "lights": [[0, 0]]
+  },
+  "bounds": { "minX": -6, "maxX": 6, "minZ": -5, "maxZ": 6 },
+  "spawn": { "pos": [0, 2.8], "facing": 180 },
+  "traffic": false,
+  "roads": [],
+  "buildings": [],
+  "props": [
+    { "model": "bunkBed", "solid": true, "at": [[-4.3, -2.8, 0], [-4.3, 1.2, 0], [4.3, -2.8, 0], [4.3, 1.2, 0]] },
+    { "model": "desk", "solid": true, "at": [[-1.6, -3.5, 0], [1.6, -3.5, 0]] },
+    { "model": "chair", "solid": true, "at": [[-1.6, -2.7, 180], [1.6, -2.7, 180]] },
+    { "model": "laptop", "y": 0.765, "at": [[1.4, -3.45, 0]] },
+    { "model": "wardrobe", "solid": true, "at": [[-2.6, 3.6, 180]] },
+    { "model": "plant", "solid": true, "at": [[4.4, 3.4, 0]] }
+  ],
+  "spots": {
+    "door": { "pos": [0, 3.4], "radius": 1.2 }
+  },
+  "activities": [
+    { "id": "exit_hostel", "label": "GO OUTSIDE", "icon": "door", "spot": "door", "mode": "exit", "minutes": 0, "where": "the door" }
+  ]
+}
