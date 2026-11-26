@@ -45,6 +45,15 @@ const STORY_MODES = {
       'Move while an invigilator can see you and it is over at once. Standing still in a sightline only fills their ?: they will come to look.',
     ],
   }),
+  droneDodge: () => ({
+    title: 'Estate Gate & Drone Dodge',
+    rules: [
+      'Pearl Estate, Lekki, at night. In through the gate (its camera watches the way in), tear the page out of the gate log at the guard post, then plant a tracker on the Chairman\'s SUV (stand still at each).',
+      'Then out to the keke waiting on the expressway.',
+      'Drones fly over the estate, lighting a circle on the ground. Stand in it and a ? fills (slower if you keep still); full, it marks you, rings the alarm, and follows you for a few seconds.',
+      'Security walks the streets with torches. Walls and houses block their view (not the drones\'). From behind, a guard who has not seen you can be taken down.',
+    ],
+  }),
   serverBreak: () => ({
     title: 'Server-Room Breakers',
     rules: [

@@ -30,6 +30,7 @@ const UNIFORMS = {
   sneak: null,
   shrineHeist: { shirt: '#3a2a1e', trousers: '#1c1612', shoes: '#111111', accessories: [{ type: 'beanie', color: '#b3201f' }] },
   raidEscape: { shirt: '#14161c', trousers: '#14161c', shoes: '#0b0b0b', accessories: [{ type: 'cap', color: '#0b0b0b' }] },
+  droneDodge: { shirt: '#e8e2d0', trousers: '#2b3a55', shoes: '#111111', accessories: [{ type: 'beret', color: '#7a1f1f' }] }, // estate security
 }
 const UNIFORM = { shirt: '#2b3a55', trousers: '#1b2233', shoes: '#111111', accessories: [{ type: 'cap', color: '#1b2233' }] }
 
@@ -109,6 +110,74 @@ function Cctv({ g }) {
           <div className={`guard-sign ${sign.startsWith('?') ? 'is-spot' : 'is-chase'}`}>{sign.startsWith('?') ? <><b>?</b><i style={{ width: `${sign.slice(1)}%` }} /></> : sign}</div>
         </Html>
       )}
+    </group>
+  )
+}
+
+const DRONE_Y = 6.5
+const droneMats = {
+  calm: new THREE.MeshBasicMaterial({ color: '#bfe3ff', transparent: true, opacity: 0.22, depthWrite: false }),
+  alert: new THREE.MeshBasicMaterial({ color: '#ffb020', transparent: true, opacity: 0.3, depthWrite: false }),
+  marked: new THREE.MeshBasicMaterial({ color: '#ff3b30', transparent: true, opacity: 0.34, depthWrite: false }),
+}
+const coneMat = new THREE.MeshBasicMaterial({ color: '#dff1ff', transparent: true, opacity: 0.07, depthWrite: false, side: THREE.DoubleSide })
+
+/** A security drone: four rotors, blinking lights, and its light a circle on the ground below. */
+function Drone({ g }) {
+  const body = useRef()
+  const spot = useRef()
+  const rotors = useRef([])
+  const [sign, setSign] = useState('')
+  useFrame((st) => {
+    const t = st.clock.elapsedTime
+    if (body.current) {
+      body.current.position.set(g.x, DRONE_Y + Math.sin(t * 2 + g.id) * 0.15, g.z)
+      body.current.rotation.y = g.ry
+    }
+    for (const r of rotors.current) if (r) r.rotation.y = t * 40
+    if (spot.current) {
+      spot.current.position.set(g.x, GROUND_Y + 0.06, g.z)
+      spot.current.material = g.trackT > 0 ? droneMats.marked : g.spot > 0.05 ? droneMats.alert : droneMats.calm
+    }
+    const s = g.saidT > 0 ? g.said : g.spot > 0.03 ? `?${Math.round(g.spot * 100)}` : ''
+    if (s !== sign) setSign(s)
+  })
+  return (
+    <group>
+      <group ref={body}>
+        <mesh>
+          <boxGeometry args={[0.7, 0.2, 0.7]} />
+          <meshStandardMaterial color="#2a2d33" />
+        </mesh>
+        {[[-0.55, -0.55], [0.55, -0.55], [-0.55, 0.55], [0.55, 0.55]].map(([x, z], i) => (
+          <group key={i} position={[x, 0.12, z]}>
+            <mesh rotation-y={Math.PI / 4} position={[-x / 2, -0.06, -z / 2]}>
+              <boxGeometry args={[0.08, 0.05, 0.75]} />
+              <meshStandardMaterial color="#3a3e45" />
+            </mesh>
+            <mesh ref={(el) => (rotors.current[i] = el)}>
+              <boxGeometry args={[0.7, 0.02, 0.08]} />
+              <meshBasicMaterial color="#9aa0a8" />
+            </mesh>
+          </group>
+        ))}
+        <mesh position={[0, -0.14, 0.3]}>
+          <sphereGeometry args={[0.07, 8, 6]} />
+          <meshBasicMaterial color="#ff3b30" />
+        </mesh>
+        {/* the beam down to the ground */}
+        <mesh position-y={-DRONE_Y / 2} material={coneMat}>
+          <cylinderGeometry args={[0.25, g.radius, DRONE_Y, 20, 1, true]} />
+        </mesh>
+        {sign && (
+          <Html position={[0, 1, 0]} center distanceFactor={14} zIndexRange={[7, 0]} style={{ pointerEvents: 'none' }}>
+            <div className={`guard-sign ${sign.startsWith('?') ? 'is-spot' : 'is-chase'}`}>{sign.startsWith('?') ? <><b>?</b><i style={{ width: `${sign.slice(1)}%` }} /></> : sign}</div>
+          </Html>
+        )}
+      </group>
+      <mesh ref={spot} rotation-x={-Math.PI / 2} material={droneMats.calm} renderOrder={2}>
+        <circleGeometry args={[g.radius, 32]} />
+      </mesh>
     </group>
   )
 }
@@ -285,7 +354,7 @@ export default function StealthDirector({ layout }) {
       const target = mm.open || !todo ? { x: mm.cfg.exit.x, z: mm.cfg.exit.z, label: mm.cfg.exitLabel || 'The way out' } : { x: todo.x, z: todo.z, label: todo.label }
       const work = mm.working ? { label: mm.loot[mm.working.index].label, p: mm.working.t / mm.loot[mm.working.index].work } : null
       useStealth.setState({
-        hud: { target, time: mm.time, left, total: people.length, cameras: mm.guards.length - people.length, grabVerb: item?.verb || null, grabLabel: item?.label || null, working: work, tries: mm.tries, cash: mm.cash, open: mm.open, canTakedown: mm.canTakedown, canGrab: mm.canGrab, hasLoot: mm.hasLoot, spotted: mm.spotted, taken: mm.loot.flatMap((l, i) => (l.taken ? [i] : [])), lootLeft: mm.loot.filter((l) => !l.taken).length, carried: mm.carried, waiting: mm.guards.filter((g) => g.wait > 0).length, caught: mm.caughtT > 0, chased: mm.guards.some((g) => g.state === 'chase') },
+        hud: { target, time: mm.time, left, total: people.length, cameras: mm.guards.filter((g) => g.fixed && !g.drone).length, drones: mm.guards.filter((g) => g.drone).length, grabVerb: item?.verb || null, grabLabel: item?.label || null, working: work, tries: mm.tries, cash: mm.cash, open: mm.open, canTakedown: mm.canTakedown, canGrab: mm.canGrab, hasLoot: mm.hasLoot, spotted: mm.spotted, taken: mm.loot.flatMap((l, i) => (l.taken ? [i] : [])), lootLeft: mm.loot.filter((l) => !l.taken).length, carried: mm.carried, waiting: mm.guards.filter((g) => g.wait > 0).length, caught: mm.caughtT > 0, chased: mm.guards.some((g) => g.state === 'chase') },
         ...(mm.over && !useStealth.getState().ended ? { ended: { over: true } } : {}),
       })
     }
@@ -299,8 +368,8 @@ export default function StealthDirector({ layout }) {
       ))}
       {m.guards.map((g) => (
         <group key={`${attempt}-${g.id}`}>
-          {g.fixed ? <Cctv g={g} /> : <Guard g={g} uniform={UNIFORMS[m.id] || UNIFORM} />}
-          <Beam g={g} />
+          {g.drone ? <Drone g={g} /> : g.fixed ? <Cctv g={g} /> : <Guard g={g} uniform={UNIFORMS[m.id] || UNIFORM} />}
+          {!g.drone && <Beam g={g} />}
         </group>
       ))}
       <Gate open={open} at={m.cfg.exit} label={m.cfg.exitLabel || (m.cfg.goal === 'loot' ? 'GET OUT' : 'BACK GATE')} hideShut={m.cfg.goal === 'loot'} />

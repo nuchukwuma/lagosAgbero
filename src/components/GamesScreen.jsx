@@ -33,6 +33,7 @@ const ACTION = [
   { id: 'penthouseRaid', mode: 'penthouseRaid', label: 'Penthouse Raid', blurb: '3D: crack a Maitama safe past guards and cameras', params: () => ({}) },
   { id: 'warehouseHeist', mode: 'warehouseHeist', label: 'Warehouse Stock Heist', blurb: '3D: container aisles, night watchmen, the loading dock', params: () => ({}) },
   { id: 'examSneak', mode: 'examSneak', label: 'Exam-Hall Sneak', blurb: '3D: never move in an invigilator’s sightline', params: () => ({}) },
+  { id: 'droneDodge', mode: 'droneDodge', label: 'Estate Gate & Drone Dodge', blurb: '3D: into a Lekki estate past the gate, security and drones', params: () => ({}) },
   { id: 'serverBreak', mode: 'serverBreak', label: 'Server-Room Breakers', blurb: '3D: breakers and drives before the lockdown', params: () => ({}) },
   { id: 'hostelDash', mode: 'hostelDash', label: 'Midnight Hostel Dash', blurb: '3D: across campus to your bunk before roll call', params: () => ({}) },
   { id: 'paperRelay', mode: 'paperRelay', label: 'Paper-Drop Relay', blurb: '3D: three sealed packets, three drop zones, one bell', params: () => ({}) },

@@ -1467,6 +1467,19 @@
       "where": "the bus to Campus"
     },
     {
+      "id": "travel_lekki",
+      "label": "BUS TO LEKKI",
+      "icon": "wheel",
+      "spot": "junction",
+      "if": "online",
+      "mode": "travel",
+      "minutes": 0,
+      "params": {
+        "scene": "lekki"
+      },
+      "where": "the bus to Lekki"
+    },
+    {
       "id": "enter_shrine",
       "label": "ENTER THE SHRINE",
       "icon": "door",

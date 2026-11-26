@@ -8,3 +8,4 @@ export const ExamSneakMode = (props) => <StealthMode {...props} mission="examSne
 export const ServerBreakMode = (props) => <StealthMode {...props} mission="serverBreak" />
 export const HostelDashMode = (props) => <StealthMode {...props} mission="hostelDash" />
 export const PaperRelayMode = (props) => <StealthMode {...props} mission="paperRelay" />
+export const DroneDodgeMode = (props) => <StealthMode {...props} mission="droneDodge" />

@@ -147,7 +147,17 @@ missions in `stealthLogic.js`, each with tests on its real map):
   - **Convoy Escort** (Abuja): drive ahead of the convoy and ram the blockers
     off the road before it reaches them.
 All are in the Games tab and are Lagos Online duels (same seed, same course).
-Next: Estate Gate & Drone Dodge, Turf Flag Brawl, then elections and turf wars.
+- **Lekki** (the first new district, `data/world/lekki.json`): the Lekki-Epe
+  expressway; Pearl Estate behind its wall and gate (big houses round a
+  cross street, a guard post); the Admiralty strip (a tech hub, a bank, a
+  bureau de change, suya); the beach. In Lagos Online it is a fourth map,
+  with buses to and from the other three.
+- **Estate Gate & Drone Dodge** (Lekki, night): the stealth engine gained
+  drones (they fly a loop over the walls; stand in the circle of light and
+  they mark you, ring the alarm and follow you). In past the gate camera,
+  tear the page out of the gate log, plant a tracker on the Chairman's SUV,
+  out to the keke.
+Next: Turf Flag Brawl, the other districts, then elections and turf wars.
 
 - Abuja Big Boy: Beat-the-Bet Wire Sprint (driving checkpoints), Penthouse
   Raid (stealth with heavy loot), Convoy Escort (pursuit).

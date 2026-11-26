@@ -106,6 +106,16 @@ const TEXT = {
     clockIcon: '🔔',
     share: { kicker: 'Sort or Carryover · Royal Crest', title: 'Every packet delivered', tone: 'neon' },
   },
+  droneDodge: {
+    title: 'Estate Gate & Drone Dodge',
+    intro: "Pearl Estate, Lekki, after midnight. Estate security walks the streets, a camera watches the gate, and three drones circle overhead. Somebody wants the Chairman followed.",
+    goal: "Tear the night's page out of the gate log (at the guard post), plant a tracker on the Chairman's SUV, then out to the keke on the expressway.",
+    home: 'the expressway',
+    go: 'Over the wall',
+    panel: 'PEARL ESTATE',
+    clockIcon: '⏳',
+    share: { kicker: 'The Forbes List Trap · Lekki', title: 'Past the drones', tone: 'green' },
+  },
   serverBreak: {
     title: 'Server-Room Breakers',
     intro: 'A Lekki tech hub, after hours. Flip the three overload breakers and pull the two drives before the lockdown doors seal. Security sweeps the aisles; a camera watches the far corner.',
@@ -261,7 +271,7 @@ export default function StealthMode({ params: given = {}, onFinish, mission: mis
               : TEXT[id] && !['raidEscape', 'shrineHeist', 'backGate'].includes(id)
               ? hud.hasLoot
                 ? 'All done: get out!'
-                : `Still to do: ${hud.lootLeft ?? '?'} · guards awake: ${hud.left} of ${hud.total}${hud.cameras ? ` · ${hud.cameras} camera${hud.cameras > 1 ? 's' : ''}` : ''}`
+                : `Still to do: ${hud.lootLeft ?? '?'} · guards awake: ${hud.left} of ${hud.total}${hud.cameras ? ` · ${hud.cameras} camera${hud.cameras > 1 ? 's' : ''}` : ''}${hud.drones ? ` · ${hud.drones} drone${hud.drones > 1 ? 's' : ''}` : ''}`
               : id === 'raidEscape'
               ? hud.hasLoot
                 ? 'You have everything: out the back door!'

@@ -172,7 +172,7 @@ describe('EFCC Raid Escape: the duplex', () => {
 })
 
 describe('more missions on the same engine', () => {
-  for (const id of ['penthouseRaid', 'warehouseHeist', 'examSneak', 'serverBreak', 'hostelDash', 'paperRelay']) {
+  for (const id of ['penthouseRaid', 'warehouseHeist', 'examSneak', 'serverBreak', 'hostelDash', 'paperRelay', 'droneDodge']) {
     it(`${id}: start, every objective, the way out and every round reachable; doing it all wins`, () => {
       const cfg = MISSIONS[id]
       const L = getLayout(cfg.world, false)
@@ -228,5 +228,31 @@ describe('more missions on the same engine', () => {
     expect(e.over).toBe(true)
     expect(e.won).toBe(false)
     expect(cfg.loot.length).toBe(2)
+  })
+
+  it('a drone flies its loop over the walls; stand in its light and it marks you, rings the alarm and follows you', () => {
+    const m = createMission(getLayout('lekki', false), { level: 1 }, 5, 'droneDodge')
+    const d = m.guards.find((g) => g.drone)
+    expect(d).toBeTruthy()
+    const far = still(-34, -6)
+    const x0 = d.x
+    for (let i = 0; i < 30; i++) stepMission(m, 1 / 30, far)
+    expect(d.x).not.toBe(x0) // it moves
+    // under it: the ? fills, then the alarm
+    let alarm = false
+    for (let i = 0; i < 30 * 4 && !alarm; i++) {
+      stepMission(m, 1 / 30, { x: d.x, z: d.z, moving: true, running: false })
+      alarm = m.events.some((e) => e.type === 'alarm' && e.id === d.id)
+    }
+    expect(alarm).toBe(true)
+    expect(d.trackT).toBeGreaterThan(0)
+    expect(m.guards.some((g) => !g.fixed && g.state === 'search')).toBe(true)
+    // it follows: run away and it closes in
+    const me = { x: d.x + 6, z: d.z, moving: true, running: true }
+    const before = Math.hypot(me.x - d.x, me.z - d.z)
+    for (let i = 0; i < 30; i++) stepMission(m, 1 / 30, me)
+    expect(Math.hypot(me.x - d.x, me.z - d.z)).toBeLessThan(before)
+    // no takedown on a drone
+    expect(m.canTakedown).not.toBe(d.id)
   })
 })

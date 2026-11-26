@@ -9,6 +9,7 @@ export const MAPS = {
   lagos: { name: 'Iyana-Wahala, Lagos', world: 'iyanaWahala' },
   village: { name: 'Nkwo Agu village', world: 'nkwoAgu' },
   campus: { name: 'Royal Crest University', world: 'royalCrest' },
+  lekki: { name: 'Pearl Estate, Lekki', world: 'lekki' },
 }
 
 // The games you can play against someone.
@@ -32,6 +33,7 @@ export const DUEL_GAMES = {
   warehouseHeist: { name: 'Warehouse Heist', kind: 'duel', mode: 'warehouseHeist' },
   examSneak: { name: 'Exam-Hall Sneak', kind: 'duel', mode: 'examSneak' },
   serverBreak: { name: 'Server-Room Breakers', kind: 'duel', mode: 'serverBreak' },
+  droneDodge: { name: 'Estate Gate & Drone Dodge', kind: 'duel', mode: 'droneDodge' },
   hostelDash: { name: 'Midnight Hostel Dash', kind: 'duel', mode: 'hostelDash' },
   paperRelay: { name: 'Paper-Drop Relay', kind: 'duel', mode: 'paperRelay' },
   akara: { name: 'Akara Fry', kind: 'duel', mode: 'akara' },

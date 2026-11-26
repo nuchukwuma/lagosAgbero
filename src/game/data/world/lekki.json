@@ -1,0 +1,1258 @@
+{
+  "id": "lekki",
+  "name": "Lekki Pearl Estate",
+  "notes": "Lekki, Lagos. The Lekki-Epe expressway runs east-west along z=0. North (z<0): Pearl Estate, a walled, gated estate of big houses round a cross street (z=-26) and the avenue up from the gate (x=0). South: the Admiralty strip (a tech hub, a bank, a bureau de change) and, behind it, the beach.",
+  "bounds": {
+    "minX": -60,
+    "maxX": 60,
+    "minZ": -45,
+    "maxZ": 45
+  },
+  "spawn": {
+    "pos": [
+      -40,
+      6
+    ],
+    "facing": 90
+  },
+  "traffic": {
+    "density": 3
+  },
+  "roads": [
+    {
+      "model": "roadStraight",
+      "rotation": 0,
+      "line": {
+        "from": [
+          -92,
+          0
+        ],
+        "to": [
+          92,
+          0
+        ],
+        "step": 8
+      }
+    }
+  ],
+  "pavements": [
+    {
+      "rect": [
+        -49,
+        -44,
+        98,
+        34
+      ],
+      "color": "#5f8f45",
+      "texture": "earth"
+    },
+    {
+      "rect": [
+        -60,
+        -8,
+        120,
+        4
+      ],
+      "color": "#b9b3a8"
+    },
+    {
+      "rect": [
+        -60,
+        4,
+        120,
+        4
+      ],
+      "color": "#b9b3a8"
+    },
+    {
+      "rect": [
+        -4,
+        -44,
+        8,
+        34
+      ],
+      "color": "#3d3e42"
+    },
+    {
+      "rect": [
+        -48,
+        -30,
+        96,
+        8
+      ],
+      "color": "#3d3e42"
+    },
+    {
+      "rect": [
+        -60,
+        8,
+        120,
+        16
+      ],
+      "color": "#c9c3b8"
+    },
+    {
+      "rect": [
+        -60,
+        26,
+        120,
+        12
+      ],
+      "color": "#e3cf9a",
+      "texture": "earth"
+    },
+    {
+      "rect": [
+        -60,
+        38,
+        120,
+        7
+      ],
+      "color": "#2f7f9a"
+    }
+  ],
+  "props": [
+    {
+      "model": "compoundFence",
+      "rotation": 0,
+      "solid": true,
+      "at": [
+        [
+          -48.08,
+          -10.0
+        ],
+        [
+          -44.23,
+          -10.0
+        ],
+        [
+          -40.38,
+          -10.0
+        ],
+        [
+          -36.54,
+          -10.0
+        ],
+        [
+          -32.69,
+          -10.0
+        ],
+        [
+          -28.85,
+          -10.0
+        ],
+        [
+          -25.0,
+          -10.0
+        ],
+        [
+          -21.15,
+          -10.0
+        ],
+        [
+          -17.31,
+          -10.0
+        ],
+        [
+          -13.46,
+          -10.0
+        ],
+        [
+          -9.62,
+          -10.0
+        ],
+        [
+          -5.77,
+          -10.0
+        ],
+        [
+          5.77,
+          -10.0
+        ],
+        [
+          9.62,
+          -10.0
+        ],
+        [
+          13.46,
+          -10.0
+        ],
+        [
+          17.31,
+          -10.0
+        ],
+        [
+          21.15,
+          -10.0
+        ],
+        [
+          25.0,
+          -10.0
+        ],
+        [
+          28.85,
+          -10.0
+        ],
+        [
+          32.69,
+          -10.0
+        ],
+        [
+          36.54,
+          -10.0
+        ],
+        [
+          40.38,
+          -10.0
+        ],
+        [
+          44.23,
+          -10.0
+        ],
+        [
+          48.08,
+          -10.0
+        ]
+      ]
+    },
+    {
+      "model": "compoundFence",
+      "rotation": 0,
+      "solid": true,
+      "at": [
+        [
+          -48.08,
+          -44.0
+        ],
+        [
+          -44.23,
+          -44.0
+        ],
+        [
+          -40.38,
+          -44.0
+        ],
+        [
+          -36.54,
+          -44.0
+        ],
+        [
+          -32.69,
+          -44.0
+        ],
+        [
+          -28.85,
+          -44.0
+        ],
+        [
+          -25.0,
+          -44.0
+        ],
+        [
+          -21.15,
+          -44.0
+        ],
+        [
+          -17.31,
+          -44.0
+        ],
+        [
+          -13.46,
+          -44.0
+        ],
+        [
+          -9.62,
+          -44.0
+        ],
+        [
+          -5.77,
+          -44.0
+        ],
+        [
+          -1.92,
+          -44.0
+        ],
+        [
+          1.92,
+          -44.0
+        ],
+        [
+          5.77,
+          -44.0
+        ],
+        [
+          9.62,
+          -44.0
+        ],
+        [
+          13.46,
+          -44.0
+        ],
+        [
+          17.31,
+          -44.0
+        ],
+        [
+          21.15,
+          -44.0
+        ],
+        [
+          25.0,
+          -44.0
+        ],
+        [
+          28.85,
+          -44.0
+        ],
+        [
+          32.69,
+          -44.0
+        ],
+        [
+          36.54,
+          -44.0
+        ],
+        [
+          40.38,
+          -44.0
+        ],
+        [
+          44.23,
+          -44.0
+        ],
+        [
+          48.08,
+          -44.0
+        ]
+      ]
+    },
+    {
+      "model": "compoundFence",
+      "rotation": 90,
+      "solid": true,
+      "at": [
+        [
+          -50.0,
+          -42.11
+        ],
+        [
+          -50.0,
+          -38.33
+        ],
+        [
+          -50.0,
+          -34.56
+        ],
+        [
+          -50.0,
+          -30.78
+        ],
+        [
+          -50.0,
+          -27.0
+        ],
+        [
+          -50.0,
+          -23.22
+        ],
+        [
+          -50.0,
+          -19.44
+        ],
+        [
+          -50.0,
+          -15.67
+        ],
+        [
+          -50.0,
+          -11.89
+        ]
+      ]
+    },
+    {
+      "model": "compoundFence",
+      "rotation": 90,
+      "solid": true,
+      "at": [
+        [
+          50.0,
+          -42.11
+        ],
+        [
+          50.0,
+          -38.33
+        ],
+        [
+          50.0,
+          -34.56
+        ],
+        [
+          50.0,
+          -30.78
+        ],
+        [
+          50.0,
+          -27.0
+        ],
+        [
+          50.0,
+          -23.22
+        ],
+        [
+          50.0,
+          -19.44
+        ],
+        [
+          50.0,
+          -15.67
+        ],
+        [
+          50.0,
+          -11.89
+        ]
+      ]
+    },
+    {
+      "model": "checkpointBarrier",
+      "rotation": 90,
+      "at": [
+        [
+          -1.6,
+          -9.6
+        ]
+      ]
+    },
+    {
+      "model": "streetLamp",
+      "scale": 1.2,
+      "rotation": 180,
+      "at": [
+        [
+          -40,
+          -4.6
+        ],
+        [
+          -12,
+          -4.6
+        ],
+        [
+          16,
+          -4.6
+        ],
+        [
+          44,
+          -4.6
+        ]
+      ]
+    },
+    {
+      "model": "streetLamp",
+      "scale": 1.2,
+      "rotation": 0,
+      "at": [
+        [
+          -28,
+          4.6
+        ],
+        [
+          0,
+          4.6
+        ],
+        [
+          28,
+          4.6
+        ]
+      ]
+    },
+    {
+      "model": "streetLamp",
+      "rotation": 90,
+      "at": [
+        [
+          -4.6,
+          -18
+        ],
+        [
+          -4.6,
+          -38
+        ],
+        [
+          4.6,
+          -30
+        ]
+      ]
+    },
+    {
+      "model": "streetLamp",
+      "rotation": 0,
+      "at": [
+        [
+          -36,
+          -21.6
+        ],
+        [
+          -14,
+          -21.6
+        ],
+        [
+          14,
+          -21.6
+        ],
+        [
+          36,
+          -21.6
+        ]
+      ]
+    },
+    {
+      "model": "planter",
+      "rotation": 0,
+      "at": [
+        [
+          -6,
+          -12
+        ],
+        [
+          6,
+          -12
+        ],
+        [
+          -8,
+          9
+        ],
+        [
+          8,
+          9
+        ]
+      ]
+    },
+    {
+      "model": "billboardTall",
+      "rotation": 0,
+      "solid": true,
+      "at": [
+        [
+          52,
+          10
+        ]
+      ]
+    }
+  ],
+  "buildings": [
+    {
+      "model": "richManHouse",
+      "rotation": 180,
+      "solid": true,
+      "at": [
+        [
+          -38,
+          -16
+        ]
+      ]
+    },
+    {
+      "model": "bigManDuplex",
+      "rotation": 180,
+      "solid": true,
+      "at": [
+        [
+          -18,
+          -16
+        ]
+      ]
+    },
+    {
+      "model": "richManHouseB",
+      "rotation": 180,
+      "solid": true,
+      "at": [
+        [
+          18,
+          -16
+        ]
+      ]
+    },
+    {
+      "model": "fixerDuplex",
+      "rotation": 180,
+      "solid": true,
+      "at": [
+        [
+          38,
+          -16
+        ]
+      ]
+    },
+    {
+      "model": "politicianMansion",
+      "rotation": 0,
+      "solid": true,
+      "at": [
+        [
+          -30,
+          -37.5
+        ]
+      ]
+    },
+    {
+      "model": "chairmanHouse",
+      "rotation": 0,
+      "solid": true,
+      "at": [
+        [
+          -12,
+          -37.5
+        ]
+      ]
+    },
+    {
+      "model": "richManHouseC",
+      "rotation": 0,
+      "solid": true,
+      "at": [
+        [
+          14,
+          -37.5
+        ]
+      ]
+    },
+    {
+      "model": "richManHouse",
+      "rotation": 0,
+      "solid": true,
+      "at": [
+        [
+          34,
+          -37.5
+        ]
+      ]
+    },
+    {
+      "model": "officeBlock",
+      "rotation": 180,
+      "solid": true,
+      "at": [
+        [
+          -38,
+          17
+        ]
+      ]
+    },
+    {
+      "model": "agencyTower",
+      "rotation": 180,
+      "solid": true,
+      "at": [
+        [
+          -16,
+          17
+        ]
+      ]
+    },
+    {
+      "model": "shopRow",
+      "rotation": 180,
+      "solid": true,
+      "at": [
+        [
+          6,
+          16
+        ]
+      ]
+    },
+    {
+      "model": "officeSmall",
+      "rotation": 180,
+      "solid": true,
+      "at": [
+        [
+          23,
+          22
+        ]
+      ]
+    },
+    {
+      "model": "officeBlock",
+      "rotation": 180,
+      "solid": true,
+      "at": [
+        [
+          44,
+          17
+        ]
+      ]
+    }
+  ],
+  "vehicles": [
+    {
+      "model": "bigManSuv",
+      "rotation": 90,
+      "solid": true,
+      "at": [
+        [
+          -30,
+          -27.5
+        ]
+      ]
+    },
+    {
+      "model": "bigManSportsCar",
+      "rotation": 270,
+      "solid": true,
+      "at": [
+        [
+          22,
+          -24.5
+        ]
+      ]
+    },
+    {
+      "model": "privateCar",
+      "rotation": 0,
+      "solid": true,
+      "at": [
+        [
+          -30,
+          11
+        ],
+        [
+          34,
+          11
+        ]
+      ]
+    },
+    {
+      "model": "bigManSuv",
+      "rotation": 0,
+      "solid": true,
+      "at": [
+        [
+          -22,
+          11
+        ]
+      ]
+    }
+  ],
+  "skyline": {
+    "rings": [
+      26,
+      50
+    ],
+    "seed": 61
+  },
+  "placed": [
+    {
+      "kind": "gatehouse",
+      "at": [
+        7,
+        -13.5,
+        180
+      ]
+    },
+    {
+      "kind": "tree",
+      "at": [
+        -46,
+        -40,
+        0
+      ],
+      "seed": 1
+    },
+    {
+      "kind": "tree",
+      "at": [
+        -20,
+        -24,
+        0
+      ],
+      "seed": 2
+    },
+    {
+      "kind": "tree",
+      "at": [
+        26,
+        -40,
+        0
+      ],
+      "seed": 3
+    },
+    {
+      "kind": "tree",
+      "at": [
+        44,
+        -24,
+        0
+      ],
+      "seed": 4
+    },
+    {
+      "kind": "tree",
+      "at": [
+        -44,
+        -24,
+        0
+      ],
+      "seed": 5
+    },
+    {
+      "kind": "tree",
+      "at": [
+        8,
+        -40,
+        0
+      ],
+      "seed": 6
+    },
+    {
+      "kind": "bench",
+      "at": [
+        -20,
+        30,
+        180
+      ]
+    },
+    {
+      "kind": "bench",
+      "at": [
+        12,
+        30,
+        180
+      ]
+    },
+    {
+      "kind": "bench",
+      "at": [
+        36,
+        30,
+        180
+      ]
+    },
+    {
+      "kind": "generator",
+      "at": [
+        45,
+        -40,
+        0
+      ]
+    }
+  ],
+  "noClutter": [
+    [
+      -60,
+      -4.2,
+      120,
+      8.4
+    ],
+    [
+      -50,
+      -44,
+      100,
+      35
+    ],
+    [
+      -60,
+      8,
+      120,
+      16
+    ],
+    [
+      -60,
+      38,
+      120,
+      7
+    ]
+  ],
+  "clutter": [
+    {
+      "rect": [
+        -58,
+        28,
+        116,
+        8
+      ],
+      "count": 18,
+      "kinds": [
+        "umbrella",
+        "palmTree",
+        "umbrella",
+        "kegs"
+      ],
+      "seed": 81,
+      "face": 180,
+      "spin": 30
+    },
+    {
+      "rect": [
+        -58,
+        4.8,
+        30,
+        2
+      ],
+      "count": 4,
+      "kinds": [
+        "kiosk",
+        "okada",
+        "signboard"
+      ],
+      "seed": 82,
+      "face": 180,
+      "spin": 8
+    }
+  ],
+  "stalls": [
+    {
+      "id": "suya",
+      "at": [
+        16,
+        6.8,
+        180
+      ],
+      "color": "#c0392b",
+      "goods": "food",
+      "small": true,
+      "sign": "MALLAM SUYA"
+    }
+  ],
+  "signs": [
+    {
+      "at": [
+        0,
+        -10.6,
+        0
+      ],
+      "y": 4.6,
+      "size": [
+        7,
+        1.2
+      ],
+      "post": false,
+      "bg": "#1d2a3a",
+      "fg": "#e8c46a",
+      "lines": [
+        "PEARL ESTATE",
+        "Residents only \u00b7 All visitors report to security"
+      ]
+    },
+    {
+      "at": [
+        -38,
+        11.7,
+        180
+      ],
+      "y": 4.5,
+      "size": [
+        6,
+        0.9
+      ],
+      "bg": "#0e2a40",
+      "fg": "#7fd3ff",
+      "lines": [
+        "YABA-LEKKI TECH HUB"
+      ]
+    },
+    {
+      "at": [
+        -16,
+        11.3,
+        180
+      ],
+      "y": 4.5,
+      "size": [
+        5,
+        0.9
+      ],
+      "bg": "#5b1a1a",
+      "fg": "#ffffff",
+      "lines": [
+        "FIRST LAGOON BANK"
+      ]
+    },
+    {
+      "at": [
+        26,
+        12.2,
+        180
+      ],
+      "y": 4.0,
+      "size": [
+        5,
+        0.9
+      ],
+      "bg": "#1e6b3a",
+      "fg": "#ffffff",
+      "lines": [
+        "DOLLAR SHOP BDC"
+      ]
+    },
+    {
+      "at": [
+        -58,
+        0,
+        90
+      ],
+      "y": 5.2,
+      "size": [
+        10,
+        1.4
+      ],
+      "post": true,
+      "bg": "#1e5a2a",
+      "fg": "#ffffff",
+      "lines": [
+        "LEKKI-EPE EXPRESSWAY",
+        "Ajah \u2190 \u2192 Victoria Island"
+      ]
+    }
+  ],
+  "shelters": [],
+  "spots": {
+    "arrival": {
+      "pos": [
+        -40,
+        6
+      ],
+      "facing": 90,
+      "radius": 3.5
+    },
+    "estateGate": {
+      "pos": [
+        0,
+        -6
+      ],
+      "facing": 180,
+      "radius": 3.5
+    },
+    "techHub": {
+      "pos": [
+        -38,
+        9.5
+      ],
+      "facing": 0,
+      "radius": 3.5
+    },
+    "bank": {
+      "pos": [
+        -16,
+        9.5
+      ],
+      "facing": 0,
+      "radius": 3
+    },
+    "bdc": {
+      "pos": [
+        26,
+        9.5
+      ],
+      "facing": 0,
+      "radius": 3
+    },
+    "beach": {
+      "pos": [
+        0,
+        32
+      ],
+      "facing": 0,
+      "radius": 4
+    },
+    "chairman": {
+      "pos": [
+        -30,
+        -24
+      ],
+      "facing": 180,
+      "radius": 3.5
+    }
+  },
+  "npcs": [],
+  "extras": [
+    {
+      "seed": 601,
+      "pos": [
+        -36,
+        8.5
+      ],
+      "facing": 180,
+      "anim": "talk"
+    },
+    {
+      "seed": 603,
+      "pos": [
+        -34.5,
+        9
+      ],
+      "facing": 200,
+      "anim": "idle"
+    },
+    {
+      "seed": 605,
+      "pos": [
+        24,
+        8.6
+      ],
+      "facing": 180,
+      "anim": "idle"
+    },
+    {
+      "seed": 607,
+      "pos": [
+        4,
+        30
+      ],
+      "facing": 0,
+      "anim": "idle"
+    },
+    {
+      "seed": 609,
+      "pos": [
+        3,
+        -6.5
+      ],
+      "facing": 180,
+      "anim": "idle"
+    }
+  ],
+  "gatherings": [
+    {
+      "at": [
+        -20,
+        31
+      ],
+      "n": 3
+    },
+    {
+      "at": [
+        24,
+        32
+      ],
+      "n": 4
+    },
+    {
+      "at": [
+        10,
+        8
+      ],
+      "n": 2,
+      "r": 0.7
+    }
+  ],
+  "walkways": [
+    {
+      "from": [
+        -78,
+        -6
+      ],
+      "to": [
+        78,
+        -6
+      ],
+      "wrap": true,
+      "n": 4
+    },
+    {
+      "from": [
+        -78,
+        6
+      ],
+      "to": [
+        78,
+        6
+      ],
+      "wrap": true,
+      "n": 6
+    },
+    {
+      "from": [
+        -50,
+        33
+      ],
+      "to": [
+        50,
+        33
+      ],
+      "n": 5
+    }
+  ],
+  "activities": [
+    {
+      "id": "estateJob",
+      "label": "THE ESTATE JOB",
+      "icon": "quest",
+      "spot": "estateGate",
+      "mode": "droneDodge",
+      "minutes": 120,
+      "params": {},
+      "where": "Pearl Estate gate"
+    },
+    {
+      "id": "serverJob",
+      "label": "SERVER ROOM",
+      "icon": "quest",
+      "spot": "techHub",
+      "mode": "serverBreak",
+      "minutes": 60,
+      "params": {},
+      "where": "The tech hub"
+    },
+    {
+      "id": "beachDance",
+      "label": "BEACH PARTY",
+      "icon": "music",
+      "spot": "beach",
+      "mode": "dance",
+      "minutes": 60,
+      "params": {
+        "name": "DJ Lekki",
+        "prize": 6000
+      },
+      "where": "Lekki beach"
+    },
+    {
+      "id": "travel_lagos",
+      "label": "BUS TO LAGOS",
+      "icon": "wheel",
+      "spot": "arrival",
+      "if": "online",
+      "mode": "travel",
+      "minutes": 0,
+      "params": {
+        "scene": "lagos"
+      },
+      "where": "the bus to Lagos"
+    },
+    {
+      "id": "travel_village",
+      "label": "BUS TO NKWO AGU",
+      "icon": "wheel",
+      "spot": "arrival",
+      "if": "online",
+      "mode": "travel",
+      "minutes": 0,
+      "params": {
+        "scene": "village"
+      },
+      "where": "the bus to Nkwo Agu"
+    },
+    {
+      "id": "travel_campus",
+      "label": "BUS TO CAMPUS",
+      "icon": "wheel",
+      "spot": "arrival",
+      "if": "online",
+      "mode": "travel",
+      "minutes": 0,
+      "params": {
+        "scene": "campus"
+      },
+      "where": "the bus to the campus"
+    }
+  ],
+  "mapLabels": {
+    "arrival": "Bus stop",
+    "estateGate": "Pearl Estate gate",
+    "techHub": "Tech hub",
+    "bank": "Bank",
+    "bdc": "Bureau de change",
+    "beach": "Lekki beach",
+    "chairman": "The Chairman's house"
+  }
+}

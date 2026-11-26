@@ -2,7 +2,7 @@
   "id": "online_world",
   "act": 0,
   "title": "Lagos Online",
-  "description": "The open world, shared with other players: Iyana-Wahala, Nkwo Agu and Royal Crest, joined by bus routes. Not part of any story.",
+  "description": "The open world, shared with other players: Iyana-Wahala, Nkwo Agu, Royal Crest and Lekki, joined by bus routes. Not part of any story.",
   "startScene": "lagos",
   "scenes": {
     "lagos": {
@@ -29,6 +29,15 @@
       "time": "day",
       "beats": [
         { "type": "freeRoam", "objective": "Royal Crest University. Akara, penalties, the back gate. Buses at the main gate." },
+        { "type": "endChapter", "title": "See you on the street" }
+      ]
+    },
+    "lekki": {
+      "world": "lekki",
+      "location": "arrival",
+      "time": "day",
+      "beats": [
+        { "type": "freeRoam", "objective": "Lekki: the expressway, Pearl Estate behind its wall, the beach. Buses at the stop by the tech hub." },
         { "type": "endChapter", "title": "See you on the street" }
       ]
     }

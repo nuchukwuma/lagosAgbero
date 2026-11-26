@@ -277,6 +277,45 @@ MISSIONS.paperRelay = {
   texts: { money: 12000, won: 'Every packet delivered.', wonLine: 'Three sealed envelopes where they needed to be, and you at the senate building before the exam bell.', lost: 'The exam bell rang.', caught: 'Security found the packets on you.' },
 }
 
+// Lekki at night: Pearl Estate. In past the gate (its guard post and camera),
+// security on foot round the streets, and drones overhead lighting circles on
+// the ground. Tear the night's page out of the gate log, plant a tracker on the
+// Chairman's SUV, and out to the keke waiting on the expressway.
+MISSIONS.droneDodge = {
+  id: 'droneDodge',
+  world: 'lekki',
+  start: { x: -34, z: -6, facing: 90 },
+  exit: { x: 34, z: -6 },
+  exitRadius: 2.5,
+  exitLabel: 'THE KEKE',
+  cover: [
+    ['shippingContainerB', 12, -26, 0], // a builder's container on the cross street
+    ['dumpster', -8, -20, 90],
+    ['dumpster', 28, -31, 0],
+    ['crates', 4, -34, 0],
+  ],
+  routes: [
+    { camera: [3.5, -11.2], face: -160, sweep: 45 },
+    { drone: [[-40, -20], [-10, -33], [-40, -34]], speed: 3.2, radius: 3.4 },
+    [[1.5, -14], [1.5, -40]],
+    { drone: [[40, -20], [12, -30], [40, -38], [20, -14]], speed: 3.6, radius: 3.4 },
+    [[-44, -26], [44, -26]],
+    [[-8, -13], [12, -13]],
+    { drone: [[-22, -20], [22, -20], [22, -33], [-22, -33]], speed: 2.8, radius: 3.6 },
+    [[30, -34], [44, -34], [44, -21]],
+  ],
+  minGuards: 5,
+  extraGuards: 3,
+  goal: 'loot',
+  loot: [
+    { x: 6.5, z: -16.2, label: 'THE GATE LOG', verb: 'TEAR IT OUT', work: 1.5, weight: 0 },
+    { x: -26.6, z: -27.5, label: "THE CHAIRMAN'S SUV", verb: 'PLANT THE TRACKER', work: 2.5, weight: 0 },
+  ],
+  time: 210,
+  seeRange: 9,
+  texts: { money: 30000, won: 'Out to the keke.', wonLine: "The gate log has a page missing and the Chairman's SUV has a new passenger that blinks.", lost: 'The estate locks down at five.', caught: 'Estate security, and then the police, and then a long night.' },
+}
+
 export const missionOf = (id) => MISSIONS[id] || MISSIONS.backGate
 /** A mission's loot as a list (one thing or several). */
 export const lootOf = (cfg) => (cfg.loot ? (Array.isArray(cfg.loot) ? cfg.loot : [cfg.loot]) : [])
@@ -434,6 +473,11 @@ export function createMission(layout, params = {}, seed = 1, missionId = 'backGa
   // cameras always; the people on foot: 4 to 6 as it gets harder (or the mission's own count)
   const count = Math.min(cfg.routes.length, (cfg.minGuards ?? 4) + Math.round(level * (cfg.extraGuards ?? 2)))
   const guards = cfg.routes.slice(0, count).map((route, i) => {
+    // a security drone: flies its loop over everything, lighting a circle on the ground under it
+    if (route.drone) {
+      const pts = route.drone
+      return { id: i, fixed: true, drone: true, speed: route.speed ?? 3, radius: route.radius ?? 3.2, wait: 0, home: pts, legs: pts.map((p) => [p]), leg: 1 % pts.length, x: pts[0][0], z: pts[0][1], ry: 0, state: 'patrol', spot: 0, path: null, lastSeen: null, lostT: 0, lookT: 0, repath: 0, cash: 0, said: null, saidT: 0, cool: 0, trackT: 0 }
+    }
     // a CCTV camera: fixed, sweeping its view to and fro; it can't chase or be taken down, it raises the alarm
     if (route.camera) {
       const [cx, cz] = route.camera
@@ -555,6 +599,10 @@ export function stepMission(m, dt, player) {
       continue
     }
     if (g.saidT > 0) g.saidT -= dt
+    if (g.drone) {
+      stepDrone(m, g, dt, player)
+      continue
+    }
     const d = Math.hypot(player.x - g.x, player.z - g.z)
     const inBeam = sees(m, g, player.x, player.z, m.cfg.seeRange)
     if (g.fixed) {
@@ -727,6 +775,7 @@ function caught(m) {
     g.path = null
     g.state = 'patrol'
     g.spot = 0
+    g.trackT = 0
   }
   m.events.push({ type: 'reset' })
 }
@@ -792,17 +841,58 @@ function stepCamera(m, g, dt, inBeam, d, player) {
   if (g.spot >= 1) {
     g.spot = 0
     g.cool = 5 // it rings, then watches again
-    m.spotted = true
-    say(g, 'ALARM!')
-    m.events.push({ type: 'alarm', id: g.id })
-    for (const o of m.guards) {
-      if (o.fixed || o.state === 'down' || o.wait > 0 || o.state === 'chase') continue
-      o.state = 'search'
-      o.spot = Math.max(o.spot, 0.5)
-      o.lastSeen = [player.x, player.z]
-      o.path = smooth(m.grid, findPath(m.grid, [o.x, o.z], o.lastSeen)) || []
-      o.lookT = 0
-    }
+    raiseAlarm(m, g, player, 'ALARM!')
+  }
+}
+
+/** A camera or a drone has you: everyone on foot comes to look where you were. */
+function raiseAlarm(m, g, player, line) {
+  m.spotted = true
+  say(g, line)
+  m.events.push({ type: 'alarm', id: g.id })
+  for (const o of m.guards) {
+    if (o.fixed || o.state === 'down' || o.wait > 0 || o.state === 'chase') continue
+    o.state = 'search'
+    o.spot = Math.max(o.spot, 0.5)
+    o.lastSeen = [player.x, player.z]
+    o.path = smooth(m.grid, findPath(m.grid, [o.x, o.z], o.lastSeen)) || []
+    o.lookT = 0
+  }
+}
+
+export const DRONE_TRACK = 4 // seconds a drone follows you after it has marked you
+
+/**
+ * A security drone: flies its loop (walls don't stop it), its light a circle
+ * on the ground. Stand in the light and its ? fills (slower if you keep still);
+ * full, it marks you: the alarm, and it follows you for a few seconds.
+ */
+function stepDrone(m, g, dt, player) {
+  const tracking = g.trackT > 0
+  if (tracking) g.trackT -= dt
+  const [tx, tz] = tracking ? [player.x, player.z] : g.home[g.leg]
+  const d = Math.hypot(tx - g.x, tz - g.z)
+  if (!tracking && d < 0.3) g.leg = (g.leg + 1) % g.home.length
+  else if (d > 0.01) {
+    const k = Math.min(1, (g.speed * (tracking ? 0.85 : 1) * dt) / d)
+    g.x += (tx - g.x) * k
+    g.z += (tz - g.z) * k
+    g.ry = Math.atan2(tx - g.x, tz - g.z)
+  }
+  if (g.cool > 0) {
+    g.cool -= dt
+    return
+  }
+  const pd = Math.hypot(player.x - g.x, player.z - g.z)
+  if (pd < g.radius) {
+    g.spot += dt * (1.1 + (1 - pd / g.radius) * 1.6) * (player.running ? 1.3 : player.moving ? 1 : 0.45) * m.spotMul
+    g.lastSeen = [player.x, player.z]
+  } else g.spot = Math.max(0, g.spot - dt * 0.5)
+  if (g.spot >= 1) {
+    g.spot = 0
+    g.cool = 6
+    g.trackT = DRONE_TRACK
+    raiseAlarm(m, g, player, 'TARGET MARKED')
   }
 }
 
