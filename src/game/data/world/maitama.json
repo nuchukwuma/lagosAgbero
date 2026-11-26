@@ -1,0 +1,883 @@
+{
+  "id": "maitama",
+  "name": "Maitama & Wuse, Abuja",
+  "notes": "Abuja: a wide avenue east-west along z=0. North (Maitama): big walled houses on lawns, a penthouse tower. South (Wuse): the federal secretariat, a bank, a bureau de change, the police post and the EFCC office. A checkpoint on the avenue at the east end.",
+  "bounds": {
+    "minX": -60,
+    "maxX": 60,
+    "minZ": -45,
+    "maxZ": 45
+  },
+  "spawn": {
+    "pos": [
+      -44,
+      6
+    ],
+    "facing": 90
+  },
+  "traffic": {
+    "density": 3
+  },
+  "roads": [
+    {
+      "model": "roadStraight",
+      "rotation": 0,
+      "line": {
+        "from": [
+          -92,
+          0
+        ],
+        "to": [
+          92,
+          0
+        ],
+        "step": 8
+      }
+    }
+  ],
+  "pavements": [
+    {
+      "rect": [
+        -60,
+        -45,
+        120,
+        37
+      ],
+      "color": "#5f8f45",
+      "texture": "earth"
+    },
+    {
+      "rect": [
+        -60,
+        8,
+        120,
+        37
+      ],
+      "color": "#6a9a4c",
+      "texture": "earth"
+    },
+    {
+      "rect": [
+        -60,
+        -8,
+        120,
+        4
+      ],
+      "color": "#b9b3a8"
+    },
+    {
+      "rect": [
+        -60,
+        4,
+        120,
+        4
+      ],
+      "color": "#b9b3a8"
+    },
+    {
+      "rect": [
+        -60,
+        8,
+        120,
+        5
+      ],
+      "color": "#c9c3b8"
+    }
+  ],
+  "props": [
+    {
+      "model": "streetLamp",
+      "scale": 1.2,
+      "rotation": 180,
+      "at": [
+        [
+          -40,
+          -4.6
+        ],
+        [
+          -12,
+          -4.6
+        ],
+        [
+          16,
+          -4.6
+        ],
+        [
+          44,
+          -4.6
+        ]
+      ]
+    },
+    {
+      "model": "streetLamp",
+      "scale": 1.2,
+      "rotation": 0,
+      "at": [
+        [
+          -28,
+          4.6
+        ],
+        [
+          0,
+          4.6
+        ],
+        [
+          28,
+          4.6
+        ]
+      ]
+    },
+    {
+      "model": "compoundFenceLow",
+      "rotation": 0,
+      "at": [
+        [
+          -40,
+          -12
+        ],
+        [
+          -20,
+          -12
+        ],
+        [
+          22,
+          -12
+        ],
+        [
+          42,
+          -12
+        ]
+      ]
+    },
+    {
+      "model": "checkpointBarrier",
+      "rotation": 0,
+      "at": [
+        [
+          50,
+          -1.8
+        ],
+        [
+          50,
+          1.8
+        ]
+      ]
+    },
+    {
+      "model": "checkpointCone",
+      "rotation": 0,
+      "at": [
+        [
+          48,
+          -3
+        ],
+        [
+          48,
+          3
+        ]
+      ]
+    },
+    {
+      "model": "planter",
+      "rotation": 0,
+      "at": [
+        [
+          -26,
+          9
+        ],
+        [
+          -2,
+          9
+        ],
+        [
+          16,
+          9
+        ],
+        [
+          34,
+          9
+        ]
+      ]
+    }
+  ],
+  "buildings": [
+    {
+      "model": "politicianMansion",
+      "rotation": 0,
+      "solid": true,
+      "at": [
+        [
+          -40,
+          -22
+        ]
+      ]
+    },
+    {
+      "model": "richManHouse",
+      "rotation": 0,
+      "solid": true,
+      "at": [
+        [
+          -20,
+          -22
+        ]
+      ]
+    },
+    {
+      "model": "agencyTower",
+      "rotation": 0,
+      "solid": true,
+      "at": [
+        [
+          2,
+          -22
+        ]
+      ]
+    },
+    {
+      "model": "chairmanHouse",
+      "rotation": 0,
+      "solid": true,
+      "at": [
+        [
+          22,
+          -22
+        ]
+      ]
+    },
+    {
+      "model": "richManHouseB",
+      "rotation": 0,
+      "solid": true,
+      "at": [
+        [
+          42,
+          -22
+        ]
+      ]
+    },
+    {
+      "model": "partySecretariat",
+      "rotation": 180,
+      "solid": true,
+      "at": [
+        [
+          -38,
+          22
+        ]
+      ]
+    },
+    {
+      "model": "officeBlock",
+      "rotation": 180,
+      "solid": true,
+      "at": [
+        [
+          -14,
+          22
+        ]
+      ]
+    },
+    {
+      "model": "agencyTower",
+      "rotation": 180,
+      "solid": true,
+      "at": [
+        [
+          6,
+          21
+        ]
+      ]
+    },
+    {
+      "model": "officeSmall",
+      "rotation": 180,
+      "solid": true,
+      "at": [
+        [
+          24,
+          24
+        ]
+      ]
+    },
+    {
+      "model": "officeSmall",
+      "rotation": 180,
+      "solid": true,
+      "at": [
+        [
+          42,
+          24
+        ]
+      ]
+    }
+  ],
+  "vehicles": [
+    {
+      "model": "bigManSuv",
+      "rotation": 90,
+      "solid": true,
+      "at": [
+        [
+          -34,
+          10.6
+        ],
+        [
+          -30,
+          10.6
+        ]
+      ]
+    },
+    {
+      "model": "taskForceVan",
+      "rotation": 90,
+      "solid": true,
+      "at": [
+        [
+          54,
+          10.6
+        ]
+      ]
+    }
+  ],
+  "rows": [],
+  "placed": [
+    {
+      "kind": "tree",
+      "at": [
+        -50,
+        -12,
+        0
+      ],
+      "seed": 0
+    },
+    {
+      "kind": "tree",
+      "at": [
+        -30,
+        -11,
+        0
+      ],
+      "seed": 1
+    },
+    {
+      "kind": "tree",
+      "at": [
+        -10,
+        -11,
+        0
+      ],
+      "seed": 2
+    },
+    {
+      "kind": "tree",
+      "at": [
+        12,
+        -11,
+        0
+      ],
+      "seed": 3
+    },
+    {
+      "kind": "tree",
+      "at": [
+        32,
+        -11,
+        0
+      ],
+      "seed": 4
+    },
+    {
+      "kind": "tree",
+      "at": [
+        52,
+        -12,
+        0
+      ],
+      "seed": 5
+    },
+    {
+      "kind": "tree",
+      "at": [
+        -48,
+        34,
+        0
+      ],
+      "seed": 6
+    },
+    {
+      "kind": "tree",
+      "at": [
+        -26,
+        34,
+        0
+      ],
+      "seed": 7
+    },
+    {
+      "kind": "tree",
+      "at": [
+        16,
+        36,
+        0
+      ],
+      "seed": 8
+    },
+    {
+      "kind": "tree",
+      "at": [
+        34,
+        36,
+        0
+      ],
+      "seed": 9
+    },
+    {
+      "kind": "gatehouse",
+      "at": [
+        53,
+        -6,
+        0
+      ]
+    }
+  ],
+  "noClutter": [
+    [
+      -60,
+      -4.2,
+      120,
+      8.4
+    ],
+    [
+      -60,
+      -45,
+      120,
+      90
+    ]
+  ],
+  "clutter": [],
+  "stalls": [],
+  "signs": [
+    {
+      "at": [
+        -58,
+        0,
+        90
+      ],
+      "y": 5.2,
+      "size": [
+        10,
+        1.4
+      ],
+      "post": true,
+      "bg": "#1e5a2a",
+      "fg": "#ffffff",
+      "lines": [
+        "MAITAMA \u00b7 WUSE",
+        "Federal Capital Territory"
+      ]
+    },
+    {
+      "at": [
+        -38,
+        16.4,
+        180
+      ],
+      "y": 4.4,
+      "size": [
+        7.9799999999999995,
+        0.9
+      ],
+      "post": false,
+      "bg": "#1d2a3a",
+      "fg": "#e8c46a",
+      "lines": [
+        "FEDERAL SECRETARIAT"
+      ]
+    },
+    {
+      "at": [
+        -14,
+        16.8,
+        180
+      ],
+      "y": 4.4,
+      "size": [
+        7.56,
+        0.9
+      ],
+      "post": false,
+      "bg": "#5b1a1a",
+      "fg": "#ffffff",
+      "lines": [
+        "CAPITAL TRUST BANK"
+      ]
+    },
+    {
+      "at": [
+        6,
+        15.3,
+        180
+      ],
+      "y": 4.4,
+      "size": [
+        7.9799999999999995,
+        0.9
+      ],
+      "post": false,
+      "bg": "#14161c",
+      "fg": "#f2c300",
+      "lines": [
+        "EFCC \u00b7 ZONAL OFFICE"
+      ]
+    },
+    {
+      "at": [
+        24,
+        13.8,
+        180
+      ],
+      "y": 4.4,
+      "size": [
+        7.56,
+        0.9
+      ],
+      "post": false,
+      "bg": "#1e6b3a",
+      "fg": "#ffffff",
+      "lines": [
+        "NAIRA & DOLLAR BDC"
+      ]
+    },
+    {
+      "at": [
+        42,
+        13.8,
+        180
+      ],
+      "y": 4.4,
+      "size": [
+        6.3,
+        0.9
+      ],
+      "post": false,
+      "bg": "#1b2233",
+      "fg": "#ffffff",
+      "lines": [
+        "POLICE DIVISION"
+      ]
+    },
+    {
+      "at": [
+        2,
+        -16.3,
+        0
+      ],
+      "y": 4.4,
+      "size": [
+        10.5,
+        0.9
+      ],
+      "post": false,
+      "bg": "#2b2f35",
+      "fg": "#e8c46a",
+      "lines": [
+        "THE PINNACLE \u00b7 PENTHOUSES"
+      ]
+    }
+  ],
+  "shelters": [],
+  "spots": {
+    "arrival": {
+      "pos": [
+        -44,
+        6
+      ],
+      "facing": 90,
+      "radius": 3.5
+    },
+    "secretariat": {
+      "pos": [
+        -38,
+        10.5
+      ],
+      "facing": 180,
+      "radius": 3.5
+    },
+    "bank": {
+      "pos": [
+        -14,
+        10.5
+      ],
+      "facing": 180,
+      "radius": 3
+    },
+    "efcc": {
+      "pos": [
+        6,
+        10.5
+      ],
+      "facing": 180,
+      "radius": 3
+    },
+    "bdc": {
+      "pos": [
+        24,
+        10.5
+      ],
+      "facing": 180,
+      "radius": 3
+    },
+    "police": {
+      "pos": [
+        42,
+        10.5
+      ],
+      "facing": 180,
+      "radius": 3
+    },
+    "pinnacle": {
+      "pos": [
+        2,
+        -9.5
+      ],
+      "facing": 0,
+      "radius": 3.5
+    },
+    "checkpoint": {
+      "pos": [
+        46,
+        -6
+      ],
+      "facing": 90,
+      "radius": 3.5
+    },
+    "mansion": {
+      "pos": [
+        -40,
+        -9.5
+      ],
+      "facing": 0,
+      "radius": 3.5
+    }
+  },
+  "npcs": [],
+  "extras": [
+    {
+      "seed": 801,
+      "pos": [
+        -36,
+        10
+      ],
+      "facing": 180,
+      "anim": "talk"
+    },
+    {
+      "seed": 803,
+      "pos": [
+        -35,
+        10.4
+      ],
+      "facing": 200,
+      "anim": "idle"
+    },
+    {
+      "seed": 805,
+      "pos": [
+        8,
+        10.4
+      ],
+      "facing": 180,
+      "anim": "idle"
+    },
+    {
+      "seed": 807,
+      "pos": [
+        44,
+        10
+      ],
+      "facing": 180,
+      "anim": "idle"
+    },
+    {
+      "seed": 809,
+      "pos": [
+        47,
+        -5.5
+      ],
+      "facing": 270,
+      "anim": "idle"
+    }
+  ],
+  "gatherings": [
+    {
+      "at": [
+        -12,
+        6.5
+      ],
+      "n": 3
+    },
+    {
+      "at": [
+        24,
+        6.5
+      ],
+      "n": 2,
+      "r": 0.7
+    }
+  ],
+  "walkways": [
+    {
+      "from": [
+        -78,
+        -6
+      ],
+      "to": [
+        78,
+        -6
+      ],
+      "wrap": true,
+      "n": 5
+    },
+    {
+      "from": [
+        -78,
+        6
+      ],
+      "to": [
+        78,
+        6
+      ],
+      "wrap": true,
+      "n": 5
+    }
+  ],
+  "activities": [
+    {
+      "id": "betSprint",
+      "label": "BEAT THE BET",
+      "icon": "wheel",
+      "spot": "bdc",
+      "mode": "wireSprint",
+      "minutes": 30,
+      "params": {},
+      "where": "The bureau de change"
+    },
+    {
+      "id": "penthouseJob",
+      "label": "THE PENTHOUSE",
+      "icon": "quest",
+      "spot": "pinnacle",
+      "mode": "penthouseRaid",
+      "minutes": 90,
+      "params": {},
+      "where": "The Pinnacle"
+    },
+    {
+      "id": "convoyDuty",
+      "label": "CONVOY DUTY",
+      "icon": "wheel",
+      "spot": "mansion",
+      "mode": "convoyEscort",
+      "minutes": 60,
+      "params": {},
+      "where": "Oga's mansion"
+    },
+    {
+      "id": "travel_lagos",
+      "label": "BUS TO LAGOS",
+      "icon": "wheel",
+      "spot": "arrival",
+      "if": "online",
+      "mode": "travel",
+      "minutes": 0,
+      "params": {
+        "scene": "lagos"
+      },
+      "where": "the bus to Lagos"
+    },
+    {
+      "id": "travel_village",
+      "label": "BUS TO NKWO AGU",
+      "icon": "wheel",
+      "spot": "arrival",
+      "if": "online",
+      "mode": "travel",
+      "minutes": 0,
+      "params": {
+        "scene": "village"
+      },
+      "where": "the bus to Nkwo Agu"
+    },
+    {
+      "id": "travel_campus",
+      "label": "BUS TO CAMPUS",
+      "icon": "wheel",
+      "spot": "arrival",
+      "if": "online",
+      "mode": "travel",
+      "minutes": 0,
+      "params": {
+        "scene": "campus"
+      },
+      "where": "the bus to the campus"
+    },
+    {
+      "id": "travel_lekki",
+      "label": "BUS TO LEKKI",
+      "icon": "wheel",
+      "spot": "arrival",
+      "if": "online",
+      "mode": "travel",
+      "minutes": 0,
+      "params": {
+        "scene": "lekki"
+      },
+      "where": "the bus to Lekki"
+    },
+    {
+      "id": "travel_ikeja",
+      "label": "BUS TO COMPUTER VILLAGE",
+      "icon": "wheel",
+      "spot": "arrival",
+      "if": "online",
+      "mode": "travel",
+      "minutes": 0,
+      "params": {
+        "scene": "ikeja"
+      },
+      "where": "the bus to Computer Village"
+    },
+    {
+      "id": "travel_ph",
+      "label": "FLIGHT TO PORT HARCOURT",
+      "icon": "wheel",
+      "spot": "arrival",
+      "if": "online",
+      "mode": "travel",
+      "minutes": 0,
+      "params": {
+        "scene": "ph"
+      },
+      "where": "the flight to Port Harcourt"
+    }
+  ],
+  "mapLabels": {
+    "arrival": "Airport shuttle",
+    "secretariat": "Federal Secretariat",
+    "bank": "Bank",
+    "efcc": "EFCC office",
+    "bdc": "Bureau de change",
+    "police": "Police division",
+    "pinnacle": "The Pinnacle (penthouses)",
+    "checkpoint": "Checkpoint",
+    "mansion": "Oga's mansion"
+  },
+  "skyline": {
+    "rings": [
+      28,
+      52
+    ],
+    "seed": 81
+  }
+}

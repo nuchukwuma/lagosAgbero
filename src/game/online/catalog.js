@@ -10,6 +10,9 @@ export const MAPS = {
   village: { name: 'Nkwo Agu village', world: 'nkwoAgu' },
   campus: { name: 'Royal Crest University', world: 'royalCrest' },
   lekki: { name: 'Pearl Estate, Lekki', world: 'lekki' },
+  ikeja: { name: 'Computer Village, Ikeja', world: 'computerVillage' },
+  abuja: { name: 'Maitama & Wuse, Abuja', world: 'maitama' },
+  ph: { name: 'Port Harcourt waterfront', world: 'phWaterfront' },
 }
 
 // The games you can play against someone.

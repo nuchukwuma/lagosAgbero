@@ -14,7 +14,7 @@ import characters from '../data/characters.json'
 const TENSE = new Set(['fight', 'chase', 'runner'])
 // what you hear around you, by activity, then by place (audio.js SCENES)
 const SCENE_OF_MODE = { feeCollection: 'busPark', conductor: 'busPark', chase: 'chase', fight: 'fight', runner: 'runner', drive: 'drive', wireSprint: 'drive', customsBreakout: 'drive', convoyEscort: 'drive', cartDash: 'market', creekRun: 'quiet', turfBrawl: 'fight', rally: 'rally', begging: 'market' }
-const SCENE_OF_WORLD = { iyanaWahala: 'market', nkwoAgu: 'village', royalCrest: 'campus', lekki: 'street' }
+const SCENE_OF_WORLD = { iyanaWahala: 'market', nkwoAgu: 'village', royalCrest: 'campus', lekki: 'street', computerVillage: 'market', maitama: 'street', phWaterfront: 'village' }
 const ROLLING = new Set(['drive', 'conductor'])
 
 function voicePitch(speaker) {

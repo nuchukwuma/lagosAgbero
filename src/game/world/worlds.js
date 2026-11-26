@@ -8,13 +8,16 @@ import iyanaWahala from '../data/world/iyanaWahala.json'
 import nkwoAgu from '../data/world/nkwoAgu.json'
 import royalCrest from '../data/world/royalCrest.json'
 import lekki from '../data/world/lekki.json'
+import computerVillage from '../data/world/computerVillage.json'
+import maitama from '../data/world/maitama.json'
+import phWaterfront from '../data/world/phWaterfront.json'
 import { parseLayout } from './layout.js'
 import { storyCtx } from '../narrative/storyData.js'
 import { useSettings, effectiveQuality } from '../store/settings.js'
 
 // buildings you can walk into: small worlds of their own (data/world/interiors/*.json)
 const INTERIORS = Object.fromEntries(Object.values(import.meta.glob('../data/world/interiors/*.json', { eager: true, import: 'default' })).map((w) => [w.id, w]))
-export const WORLDS = { iyanaWahala, nkwoAgu, royalCrest, lekki, ...INTERIORS }
+export const WORLDS = { iyanaWahala, nkwoAgu, royalCrest, lekki, computerVillage, maitama, phWaterfront, ...INTERIORS }
 export const isInterior = (id) => Boolean(WORLDS[id]?.interior)
 export const DEFAULT_WORLD = 'iyanaWahala'
 const cache = new Map()

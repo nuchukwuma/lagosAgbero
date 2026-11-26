@@ -1,0 +1,750 @@
+{
+  "id": "computerVillage",
+  "name": "Computer Village, Ikeja",
+  "notes": "Ikeja, Lagos: Otigba Street runs east-west along z=0. South: the phone market, stalls packed under umbrellas in front of shop rows, a lane down to the loading bay. North: warehouses and the container yard behind the shops; a customs post by the yard gate.",
+  "bounds": {
+    "minX": -60,
+    "maxX": 60,
+    "minZ": -45,
+    "maxZ": 45
+  },
+  "spawn": {
+    "pos": [
+      -44,
+      6
+    ],
+    "facing": 90
+  },
+  "traffic": {
+    "density": 4
+  },
+  "roads": [
+    {
+      "model": "roadStraight",
+      "rotation": 0,
+      "line": {
+        "from": [
+          -92,
+          0
+        ],
+        "to": [
+          92,
+          0
+        ],
+        "step": 8
+      }
+    }
+  ],
+  "pavements": [
+    {
+      "rect": [
+        -60,
+        -8,
+        120,
+        4
+      ],
+      "color": "#b9b3a8"
+    },
+    {
+      "rect": [
+        -60,
+        4,
+        120,
+        4
+      ],
+      "color": "#b9b3a8"
+    },
+    {
+      "rect": [
+        -60,
+        8,
+        120,
+        10
+      ],
+      "color": "#a8a094"
+    },
+    {
+      "rect": [
+        26,
+        -44,
+        34,
+        34
+      ],
+      "color": "#8c877d"
+    },
+    {
+      "rect": [
+        -6,
+        8,
+        8,
+        34
+      ],
+      "color": "#9b9387"
+    }
+  ],
+  "props": [
+    {
+      "model": "streetLamp",
+      "scale": 1.2,
+      "rotation": 180,
+      "at": [
+        [
+          -40,
+          -4.6
+        ],
+        [
+          -12,
+          -4.6
+        ],
+        [
+          16,
+          -4.6
+        ],
+        [
+          44,
+          -4.6
+        ]
+      ]
+    },
+    {
+      "model": "streetLamp",
+      "scale": 1.2,
+      "rotation": 0,
+      "at": [
+        [
+          -28,
+          4.6
+        ],
+        [
+          0,
+          4.6
+        ],
+        [
+          28,
+          4.6
+        ]
+      ]
+    },
+    {
+      "model": "shippingContainerA",
+      "rotation": 0,
+      "solid": true,
+      "at": [
+        [
+          34,
+          -20
+        ],
+        [
+          34,
+          -34
+        ],
+        [
+          50,
+          -30
+        ]
+      ]
+    },
+    {
+      "model": "shippingContainerB",
+      "rotation": 90,
+      "solid": true,
+      "at": [
+        [
+          44,
+          -20
+        ],
+        [
+          42,
+          -38
+        ]
+      ]
+    },
+    {
+      "model": "checkpointBarrier",
+      "rotation": 90,
+      "at": [
+        [
+          30,
+          -9
+        ]
+      ]
+    },
+    {
+      "model": "checkpointCone",
+      "rotation": 0,
+      "at": [
+        [
+          28,
+          -9.5
+        ],
+        [
+          32.5,
+          -9.5
+        ]
+      ]
+    },
+    {
+      "model": "billboardTall",
+      "rotation": 0,
+      "solid": true,
+      "at": [
+        [
+          -52,
+          10
+        ]
+      ]
+    }
+  ],
+  "buildings": [
+    {
+      "model": "warehouseA",
+      "rotation": 0,
+      "solid": true,
+      "at": [
+        [
+          -40,
+          -36
+        ]
+      ]
+    },
+    {
+      "model": "warehouseB",
+      "rotation": 0,
+      "solid": true,
+      "at": [
+        [
+          -14,
+          -36
+        ]
+      ]
+    },
+    {
+      "model": "warehouseArched",
+      "rotation": 0,
+      "solid": true,
+      "at": [
+        [
+          10,
+          -36
+        ]
+      ]
+    }
+  ],
+  "vehicles": [
+    {
+      "model": "boxTruck",
+      "rotation": 90,
+      "solid": true,
+      "at": [
+        [
+          40,
+          -26
+        ]
+      ]
+    },
+    {
+      "model": "lorry",
+      "rotation": 0,
+      "solid": true,
+      "at": [
+        [
+          -2,
+          32
+        ]
+      ]
+    }
+  ],
+  "rows": [
+    {
+      "from": [
+        -58,
+        24
+      ],
+      "to": [
+        -8,
+        24
+      ],
+      "face": 180,
+      "set": "mixed",
+      "gap": 1.5,
+      "seed": 701,
+      "solid": true,
+      "jitter": 0.3
+    },
+    {
+      "from": [
+        6,
+        24
+      ],
+      "to": [
+        58,
+        24
+      ],
+      "face": 180,
+      "set": "mixed",
+      "gap": 1.5,
+      "seed": 702,
+      "solid": true,
+      "jitter": 0.3
+    },
+    {
+      "from": [
+        -58,
+        -16
+      ],
+      "to": [
+        20,
+        -16
+      ],
+      "face": 0,
+      "set": "industrial",
+      "gap": 2,
+      "seed": 703,
+      "solid": true,
+      "jitter": 0.3
+    }
+  ],
+  "placed": [
+    {
+      "kind": "gatehouse",
+      "at": [
+        24,
+        -9.5,
+        0
+      ]
+    },
+    {
+      "kind": "generator",
+      "at": [
+        -30,
+        17,
+        0
+      ]
+    }
+  ],
+  "noClutter": [
+    [
+      -60,
+      -4.2,
+      120,
+      8.4
+    ],
+    [
+      -6,
+      8,
+      8,
+      34
+    ],
+    [
+      26,
+      -44,
+      34,
+      34
+    ]
+  ],
+  "clutter": [
+    {
+      "rect": [
+        -58,
+        9.5,
+        48,
+        6
+      ],
+      "count": 26,
+      "kinds": [
+        "umbrella",
+        "kiosk",
+        "signboard",
+        "umbrella",
+        "crates",
+        "generator"
+      ],
+      "seed": 711,
+      "face": 180,
+      "spin": 10
+    },
+    {
+      "rect": [
+        6,
+        9.5,
+        52,
+        6
+      ],
+      "count": 26,
+      "kinds": [
+        "umbrella",
+        "kiosk",
+        "signboard",
+        "umbrella",
+        "crates",
+        "okada"
+      ],
+      "seed": 712,
+      "face": 180,
+      "spin": 10
+    }
+  ],
+  "stalls": [
+    {
+      "id": "phoneStall",
+      "at": [
+        -20,
+        9.6,
+        180
+      ],
+      "color": "#2980b9",
+      "goods": "phones",
+      "small": true,
+      "sign": "ORIGINAL PHONES"
+    }
+  ],
+  "signs": [
+    {
+      "at": [
+        -58,
+        0,
+        90
+      ],
+      "y": 5.2,
+      "size": [
+        10,
+        1.4
+      ],
+      "post": true,
+      "bg": "#1d3c6e",
+      "fg": "#f2c300",
+      "lines": [
+        "COMPUTER VILLAGE",
+        "Otigba Street \u00b7 Ikeja"
+      ]
+    },
+    {
+      "at": [
+        30,
+        -10.8,
+        0
+      ],
+      "y": 4.4,
+      "size": [
+        13.44,
+        0.9
+      ],
+      "post": false,
+      "bg": "#1e5a2a",
+      "fg": "#ffffff",
+      "lines": [
+        "NIGERIA CUSTOMS \u00b7 CONTAINER YARD"
+      ]
+    },
+    {
+      "at": [
+        -2,
+        8.6,
+        180
+      ],
+      "y": 4.4,
+      "size": [
+        5.46,
+        0.9
+      ],
+      "post": false,
+      "bg": "#5b1a1a",
+      "fg": "#ffffff",
+      "lines": [
+        "LOADING BAY \u2193"
+      ]
+    }
+  ],
+  "shelters": [],
+  "spots": {
+    "arrival": {
+      "pos": [
+        -44,
+        6
+      ],
+      "facing": 90,
+      "radius": 3.5
+    },
+    "otigba": {
+      "pos": [
+        -20,
+        6.5
+      ],
+      "facing": 180,
+      "radius": 3.5
+    },
+    "loadingBay": {
+      "pos": [
+        -2,
+        26
+      ],
+      "facing": 180,
+      "radius": 3.5
+    },
+    "warehouse": {
+      "pos": [
+        -14,
+        -26
+      ],
+      "facing": 180,
+      "radius": 3.5
+    },
+    "containerYard": {
+      "pos": [
+        30,
+        -6
+      ],
+      "facing": 180,
+      "radius": 3.5
+    },
+    "fixer": {
+      "pos": [
+        20,
+        6.5
+      ],
+      "facing": 180,
+      "radius": 3
+    }
+  },
+  "npcs": [],
+  "extras": [
+    {
+      "seed": 721,
+      "pos": [
+        -34,
+        7
+      ],
+      "facing": 180,
+      "anim": "talk"
+    },
+    {
+      "seed": 723,
+      "pos": [
+        -33,
+        7
+      ],
+      "facing": 180,
+      "anim": "idle"
+    },
+    {
+      "seed": 725,
+      "pos": [
+        -8,
+        7
+      ],
+      "facing": 180,
+      "anim": "argue"
+    },
+    {
+      "seed": 727,
+      "pos": [
+        12,
+        7
+      ],
+      "facing": 180,
+      "anim": "talk"
+    },
+    {
+      "seed": 729,
+      "pos": [
+        36,
+        7
+      ],
+      "facing": 180,
+      "anim": "idle"
+    },
+    {
+      "seed": 731,
+      "pos": [
+        44,
+        7
+      ],
+      "facing": 180,
+      "anim": "talk"
+    }
+  ],
+  "gatherings": [
+    {
+      "at": [
+        -26,
+        6.5
+      ],
+      "n": 4
+    },
+    {
+      "at": [
+        8,
+        6.6
+      ],
+      "n": 3
+    },
+    {
+      "at": [
+        40,
+        6.6
+      ],
+      "n": 4
+    }
+  ],
+  "walkways": [
+    {
+      "from": [
+        -78,
+        -6
+      ],
+      "to": [
+        78,
+        -6
+      ],
+      "wrap": true,
+      "n": 5
+    },
+    {
+      "from": [
+        -78,
+        6
+      ],
+      "to": [
+        78,
+        6
+      ],
+      "wrap": true,
+      "n": 5
+    }
+  ],
+  "activities": [
+    {
+      "id": "cartRun",
+      "label": "CART DELIVERY",
+      "icon": "run",
+      "spot": "loadingBay",
+      "mode": "cartDash",
+      "minutes": 45,
+      "params": {},
+      "where": "The loading bay"
+    },
+    {
+      "id": "stockHeist",
+      "label": "THE WAREHOUSE JOB",
+      "icon": "quest",
+      "spot": "warehouse",
+      "mode": "warehouseHeist",
+      "minutes": 90,
+      "params": {},
+      "where": "The warehouses"
+    },
+    {
+      "id": "containerRun",
+      "label": "THE CONTAINER RUN",
+      "icon": "wheel",
+      "spot": "containerYard",
+      "mode": "customsBreakout",
+      "minutes": 60,
+      "params": {},
+      "where": "The container yard"
+    },
+    {
+      "id": "spotFake",
+      "label": "ORIGINAL OR FAKE?",
+      "icon": "naira",
+      "spot": "fixer",
+      "mode": "fakeParts",
+      "minutes": 30,
+      "params": {},
+      "where": "The fixer's stall"
+    },
+    {
+      "id": "travel_lagos",
+      "label": "BUS TO LAGOS",
+      "icon": "wheel",
+      "spot": "arrival",
+      "if": "online",
+      "mode": "travel",
+      "minutes": 0,
+      "params": {
+        "scene": "lagos"
+      },
+      "where": "the bus to Lagos"
+    },
+    {
+      "id": "travel_village",
+      "label": "BUS TO NKWO AGU",
+      "icon": "wheel",
+      "spot": "arrival",
+      "if": "online",
+      "mode": "travel",
+      "minutes": 0,
+      "params": {
+        "scene": "village"
+      },
+      "where": "the bus to Nkwo Agu"
+    },
+    {
+      "id": "travel_campus",
+      "label": "BUS TO CAMPUS",
+      "icon": "wheel",
+      "spot": "arrival",
+      "if": "online",
+      "mode": "travel",
+      "minutes": 0,
+      "params": {
+        "scene": "campus"
+      },
+      "where": "the bus to the campus"
+    },
+    {
+      "id": "travel_lekki",
+      "label": "BUS TO LEKKI",
+      "icon": "wheel",
+      "spot": "arrival",
+      "if": "online",
+      "mode": "travel",
+      "minutes": 0,
+      "params": {
+        "scene": "lekki"
+      },
+      "where": "the bus to Lekki"
+    },
+    {
+      "id": "travel_abuja",
+      "label": "FLIGHT TO ABUJA",
+      "icon": "wheel",
+      "spot": "arrival",
+      "if": "online",
+      "mode": "travel",
+      "minutes": 0,
+      "params": {
+        "scene": "abuja"
+      },
+      "where": "the flight to Abuja"
+    },
+    {
+      "id": "travel_ph",
+      "label": "FLIGHT TO PORT HARCOURT",
+      "icon": "wheel",
+      "spot": "arrival",
+      "if": "online",
+      "mode": "travel",
+      "minutes": 0,
+      "params": {
+        "scene": "ph"
+      },
+      "where": "the flight to Port Harcourt"
+    }
+  ],
+  "mapLabels": {
+    "arrival": "Bus stop",
+    "otigba": "Otigba Street",
+    "loadingBay": "Loading bay",
+    "warehouse": "Warehouses",
+    "containerYard": "Customs container yard",
+    "fixer": "The fixer's stall"
+  },
+  "skyline": {
+    "rings": [
+      24,
+      46
+    ],
+    "seed": 71
+  }
+}

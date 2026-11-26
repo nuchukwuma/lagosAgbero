@@ -1480,6 +1480,45 @@
       "where": "the bus to Lekki"
     },
     {
+      "id": "travel_ikeja",
+      "label": "BUS TO COMPUTER VILLAGE",
+      "icon": "wheel",
+      "spot": "junction",
+      "if": "online",
+      "mode": "travel",
+      "minutes": 0,
+      "params": {
+        "scene": "ikeja"
+      },
+      "where": "the bus to Computer Village"
+    },
+    {
+      "id": "travel_abuja",
+      "label": "FLIGHT TO ABUJA",
+      "icon": "wheel",
+      "spot": "junction",
+      "if": "online",
+      "mode": "travel",
+      "minutes": 0,
+      "params": {
+        "scene": "abuja"
+      },
+      "where": "the flight to Abuja"
+    },
+    {
+      "id": "travel_ph",
+      "label": "FLIGHT TO PORT HARCOURT",
+      "icon": "wheel",
+      "spot": "junction",
+      "if": "online",
+      "mode": "travel",
+      "minutes": 0,
+      "params": {
+        "scene": "ph"
+      },
+      "where": "the flight to Port Harcourt"
+    },
+    {
       "id": "enter_shrine",
       "label": "ENTER THE SHRINE",
       "icon": "door",

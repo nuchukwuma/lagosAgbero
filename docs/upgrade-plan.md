@@ -162,9 +162,21 @@ All are in the Games tab and are Lagos Online duels (same seed, same course).
   Barracudas (fictional). Stand in a ring to raise your colour; held flags
   score; SHOVE knocks them back, and off the yard they go in the creek for a
   few seconds. First to 90 or ahead after two minutes.
-That completes the fifteen 3D games on the list. Next: the other districts
-(Maitama/Wuse, the Port Harcourt creek, Computer Village), then elections,
-turf wars and the other multiplayer modes, then the new story arcs.
+That completes the fifteen 3D games on the list.
+- **Three more districts**, each a world of its own and a Lagos Online map
+  (buses within Lagos, flights to Abuja and Port Harcourt), with the new
+  games as things to do there:
+  - **Computer Village, Ikeja**: Otigba Street's phone market, the loading
+    bay (Market Cart Dash), the warehouses (Warehouse Stock Heist), the
+    customs container yard (Customs Breakout), the fixer (Original or Fake?).
+  - **Maitama & Wuse, Abuja**: the federal secretariat, a bank, the EFCC
+    office, a bureau de change (Wire Sprint), the police division, a
+    checkpoint, big houses (Convoy Escort) and the Pinnacle penthouses
+    (Penthouse Raid).
+  - **Port Harcourt waterfront**: the jetty (Creek Skiff Run), the boathouse
+    yard (Turf Flag Brawl), the bars and fish market.
+Next: elections, turf wars and the other multiplayer modes, then the new
+story arcs set in these districts.
 
 - Abuja Big Boy: Beat-the-Bet Wire Sprint (driving checkpoints), Penthouse
   Raid (stealth with heavy loot), Convoy Escort (pursuit).

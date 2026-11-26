@@ -930,7 +930,7 @@
       "fg": "#e8c46a",
       "lines": [
         "PEARL ESTATE",
-        "Residents only \u00b7 All visitors report to security"
+        "Residents only · All visitors report to security"
       ]
     },
     {
@@ -1000,7 +1000,7 @@
       "fg": "#ffffff",
       "lines": [
         "LEKKI-EPE EXPRESSWAY",
-        "Ajah \u2190 \u2192 Victoria Island"
+        "Ajah ← → Victoria Island"
       ]
     }
   ],
@@ -1244,6 +1244,45 @@
         "scene": "campus"
       },
       "where": "the bus to the campus"
+    },
+    {
+      "id": "travel_ikeja",
+      "label": "BUS TO COMPUTER VILLAGE",
+      "icon": "wheel",
+      "spot": "arrival",
+      "if": "online",
+      "mode": "travel",
+      "minutes": 0,
+      "params": {
+        "scene": "ikeja"
+      },
+      "where": "the bus to Computer Village"
+    },
+    {
+      "id": "travel_abuja",
+      "label": "FLIGHT TO ABUJA",
+      "icon": "wheel",
+      "spot": "arrival",
+      "if": "online",
+      "mode": "travel",
+      "minutes": 0,
+      "params": {
+        "scene": "abuja"
+      },
+      "where": "the flight to Abuja"
+    },
+    {
+      "id": "travel_ph",
+      "label": "FLIGHT TO PORT HARCOURT",
+      "icon": "wheel",
+      "spot": "arrival",
+      "if": "online",
+      "mode": "travel",
+      "minutes": 0,
+      "params": {
+        "scene": "ph"
+      },
+      "where": "the flight to Port Harcourt"
     }
   ],
   "mapLabels": {

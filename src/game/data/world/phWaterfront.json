@@ -1,0 +1,628 @@
+{
+  "id": "phWaterfront",
+  "name": "Port Harcourt waterfront",
+  "notes": "Port Harcourt: the waterfront road east-west along z=0. North: the creek, plank jetties and boats, the turf yard by the boathouse. South: shacks and bars, a market, palms.",
+  "bounds": {
+    "minX": -60,
+    "maxX": 60,
+    "minZ": -45,
+    "maxZ": 45
+  },
+  "spawn": {
+    "pos": [
+      -44,
+      6
+    ],
+    "facing": 90
+  },
+  "traffic": {
+    "density": 2
+  },
+  "roads": [
+    {
+      "model": "roadStraight",
+      "rotation": 0,
+      "line": {
+        "from": [
+          -92,
+          0
+        ],
+        "to": [
+          92,
+          0
+        ],
+        "step": 8
+      }
+    }
+  ],
+  "pavements": [
+    {
+      "rect": [
+        -60,
+        -45,
+        120,
+        33
+      ],
+      "color": "#3f8f8c"
+    },
+    {
+      "rect": [
+        -60,
+        -12,
+        120,
+        4
+      ],
+      "color": "#9a7a52",
+      "texture": "earth"
+    },
+    {
+      "rect": [
+        -60,
+        -8,
+        120,
+        4
+      ],
+      "color": "#b9b3a8"
+    },
+    {
+      "rect": [
+        -60,
+        4,
+        120,
+        4
+      ],
+      "color": "#b9b3a8"
+    },
+    {
+      "rect": [
+        -60,
+        8,
+        120,
+        37
+      ],
+      "color": "#8a6a48",
+      "texture": "earth"
+    },
+    {
+      "rect": [
+        -26,
+        -32,
+        4,
+        20
+      ],
+      "color": "#7a5a3a"
+    },
+    {
+      "rect": [
+        -29,
+        -33,
+        10,
+        3
+      ],
+      "color": "#6e5134"
+    },
+    {
+      "rect": [
+        -2,
+        -32,
+        4,
+        20
+      ],
+      "color": "#7a5a3a"
+    },
+    {
+      "rect": [
+        -5,
+        -33,
+        10,
+        3
+      ],
+      "color": "#6e5134"
+    },
+    {
+      "rect": [
+        22,
+        -32,
+        4,
+        20
+      ],
+      "color": "#7a5a3a"
+    },
+    {
+      "rect": [
+        19,
+        -33,
+        10,
+        3
+      ],
+      "color": "#6e5134"
+    }
+  ],
+  "props": [
+    {
+      "model": "streetLamp",
+      "scale": 1.2,
+      "rotation": 0,
+      "at": [
+        [
+          -28,
+          4.6
+        ],
+        [
+          0,
+          4.6
+        ],
+        [
+          28,
+          4.6
+        ]
+      ]
+    }
+  ],
+  "buildings": [],
+  "vehicles": [],
+  "rows": [
+    {
+      "from": [
+        -58,
+        22
+      ],
+      "to": [
+        -10,
+        22
+      ],
+      "face": 180,
+      "set": "houses",
+      "gap": 2,
+      "seed": 901,
+      "solid": true,
+      "jitter": 0.5
+    },
+    {
+      "from": [
+        10,
+        22
+      ],
+      "to": [
+        58,
+        22
+      ],
+      "face": 180,
+      "set": "houses",
+      "gap": 2,
+      "seed": 902,
+      "solid": true,
+      "jitter": 0.5
+    }
+  ],
+  "placed": [
+    {
+      "kind": "tree",
+      "at": [
+        -50,
+        14,
+        0
+      ],
+      "seed": 0
+    },
+    {
+      "kind": "tree",
+      "at": [
+        -30,
+        14,
+        0
+      ],
+      "seed": 1
+    },
+    {
+      "kind": "tree",
+      "at": [
+        30,
+        14,
+        0
+      ],
+      "seed": 2
+    },
+    {
+      "kind": "tree",
+      "at": [
+        50,
+        14,
+        0
+      ],
+      "seed": 3
+    }
+  ],
+  "noClutter": [
+    [
+      -60,
+      -4.2,
+      120,
+      8.4
+    ],
+    [
+      -60,
+      -45,
+      120,
+      37
+    ],
+    [
+      -10,
+      8,
+      20,
+      37
+    ]
+  ],
+  "clutter": [
+    {
+      "rect": [
+        -58,
+        9.5,
+        46,
+        5
+      ],
+      "count": 16,
+      "kinds": [
+        "kiosk",
+        "umbrella",
+        "drums",
+        "kegs",
+        "palmTree"
+      ],
+      "seed": 911,
+      "face": 180,
+      "spin": 14
+    },
+    {
+      "rect": [
+        12,
+        9.5,
+        46,
+        5
+      ],
+      "count": 16,
+      "kinds": [
+        "kiosk",
+        "umbrella",
+        "drums",
+        "kegs",
+        "palmTree",
+        "okada"
+      ],
+      "seed": 912,
+      "face": 180,
+      "spin": 14
+    }
+  ],
+  "stalls": [
+    {
+      "id": "fishStall",
+      "at": [
+        0,
+        9.6,
+        180
+      ],
+      "color": "#c0392b",
+      "goods": "food",
+      "small": true,
+      "sign": "FRESH FISH & BOLE"
+    }
+  ],
+  "signs": [
+    {
+      "at": [
+        -58,
+        0,
+        90
+      ],
+      "y": 5.2,
+      "size": [
+        10,
+        1.4
+      ],
+      "post": true,
+      "bg": "#1e5a2a",
+      "fg": "#ffffff",
+      "lines": [
+        "PORT HARCOURT",
+        "Garden City \u00b7 Waterfront"
+      ]
+    },
+    {
+      "at": [
+        -24,
+        -11,
+        0
+      ],
+      "y": 4.4,
+      "size": [
+        11.34,
+        0.9
+      ],
+      "post": false,
+      "bg": "#2f5d8a",
+      "fg": "#ffffff",
+      "lines": [
+        "JETTY \u00b7 BOATS TO THE CREEKS"
+      ]
+    },
+    {
+      "at": [
+        24,
+        -11,
+        0
+      ],
+      "y": 4.4,
+      "size": [
+        5.88,
+        0.9
+      ],
+      "post": false,
+      "bg": "#7a1f1f",
+      "fg": "#ffffff",
+      "lines": [
+        "BOATHOUSE YARD"
+      ]
+    }
+  ],
+  "shelters": [],
+  "spots": {
+    "arrival": {
+      "pos": [
+        -44,
+        6
+      ],
+      "facing": 90,
+      "radius": 3.5
+    },
+    "jetty": {
+      "pos": [
+        -24,
+        -9.5
+      ],
+      "facing": 0,
+      "radius": 3.5
+    },
+    "boathouse": {
+      "pos": [
+        24,
+        -9.5
+      ],
+      "facing": 0,
+      "radius": 3.5
+    },
+    "bar": {
+      "pos": [
+        0,
+        6.5
+      ],
+      "facing": 180,
+      "radius": 3.5
+    },
+    "market": {
+      "pos": [
+        -30,
+        7
+      ],
+      "facing": 180,
+      "radius": 3.5
+    }
+  },
+  "npcs": [],
+  "extras": [
+    {
+      "seed": 931,
+      "pos": [
+        -22,
+        -9.8
+      ],
+      "facing": 0,
+      "anim": "idle"
+    },
+    {
+      "seed": 933,
+      "pos": [
+        2,
+        7
+      ],
+      "facing": 180,
+      "anim": "talk"
+    },
+    {
+      "seed": 935,
+      "pos": [
+        3,
+        7.4
+      ],
+      "facing": 200,
+      "anim": "idle"
+    },
+    {
+      "seed": 937,
+      "pos": [
+        26,
+        -9.8
+      ],
+      "facing": 0,
+      "anim": "idle"
+    },
+    {
+      "seed": 939,
+      "pos": [
+        -32,
+        7.2
+      ],
+      "facing": 180,
+      "anim": "talk"
+    }
+  ],
+  "gatherings": [
+    {
+      "at": [
+        0,
+        7
+      ],
+      "n": 4
+    },
+    {
+      "at": [
+        -30,
+        7
+      ],
+      "n": 3
+    }
+  ],
+  "walkways": [
+    {
+      "from": [
+        -78,
+        -6
+      ],
+      "to": [
+        78,
+        -6
+      ],
+      "wrap": true,
+      "n": 5
+    },
+    {
+      "from": [
+        -78,
+        6
+      ],
+      "to": [
+        78,
+        6
+      ],
+      "wrap": true,
+      "n": 5
+    }
+  ],
+  "activities": [
+    {
+      "id": "skiffRun",
+      "label": "THE SKIFF RUN",
+      "icon": "wheel",
+      "spot": "jetty",
+      "mode": "creekRun",
+      "minutes": 45,
+      "params": {},
+      "where": "The jetty"
+    },
+    {
+      "id": "turfYard",
+      "label": "TURF FLAG BRAWL",
+      "icon": "fist",
+      "spot": "boathouse",
+      "mode": "turfBrawl",
+      "minutes": 45,
+      "params": {},
+      "where": "The boathouse yard"
+    },
+    {
+      "id": "barDance",
+      "label": "WATERFRONT PARTY",
+      "icon": "music",
+      "spot": "bar",
+      "mode": "dance",
+      "minutes": 60,
+      "params": {
+        "name": "Rivers Queen",
+        "prize": 6000
+      },
+      "where": "The waterfront bar"
+    },
+    {
+      "id": "travel_lagos",
+      "label": "BUS TO LAGOS",
+      "icon": "wheel",
+      "spot": "arrival",
+      "if": "online",
+      "mode": "travel",
+      "minutes": 0,
+      "params": {
+        "scene": "lagos"
+      },
+      "where": "the bus to Lagos"
+    },
+    {
+      "id": "travel_village",
+      "label": "BUS TO NKWO AGU",
+      "icon": "wheel",
+      "spot": "arrival",
+      "if": "online",
+      "mode": "travel",
+      "minutes": 0,
+      "params": {
+        "scene": "village"
+      },
+      "where": "the bus to Nkwo Agu"
+    },
+    {
+      "id": "travel_campus",
+      "label": "BUS TO CAMPUS",
+      "icon": "wheel",
+      "spot": "arrival",
+      "if": "online",
+      "mode": "travel",
+      "minutes": 0,
+      "params": {
+        "scene": "campus"
+      },
+      "where": "the bus to the campus"
+    },
+    {
+      "id": "travel_lekki",
+      "label": "BUS TO LEKKI",
+      "icon": "wheel",
+      "spot": "arrival",
+      "if": "online",
+      "mode": "travel",
+      "minutes": 0,
+      "params": {
+        "scene": "lekki"
+      },
+      "where": "the bus to Lekki"
+    },
+    {
+      "id": "travel_ikeja",
+      "label": "BUS TO COMPUTER VILLAGE",
+      "icon": "wheel",
+      "spot": "arrival",
+      "if": "online",
+      "mode": "travel",
+      "minutes": 0,
+      "params": {
+        "scene": "ikeja"
+      },
+      "where": "the bus to Computer Village"
+    },
+    {
+      "id": "travel_abuja",
+      "label": "FLIGHT TO ABUJA",
+      "icon": "wheel",
+      "spot": "arrival",
+      "if": "online",
+      "mode": "travel",
+      "minutes": 0,
+      "params": {
+        "scene": "abuja"
+      },
+      "where": "the flight to Abuja"
+    }
+  ],
+  "mapLabels": {
+    "arrival": "Airport shuttle",
+    "jetty": "The jetty",
+    "boathouse": "Boathouse yard",
+    "bar": "Waterfront bar",
+    "market": "Fish market"
+  },
+  "skyline": {
+    "rings": [
+      24,
+      44
+    ],
+    "seed": 91
+  }
+}
