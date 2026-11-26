@@ -84,7 +84,7 @@ function Bar({ value, max, color, label, right, fx }) {
   );
 }
 
-function HoldButton({ action, icon, label, className = "" }) {
+function HoldButton({ action, icon, label, className = "", keyName = null }) {
   return (
     <button
       className={`fight-btn ${className}`}
@@ -93,20 +93,24 @@ function HoldButton({ action, icon, label, className = "" }) {
       onPointerDown={(e) => {
         e.preventDefault();
         if (action === "block") fightInput.block = true;
+        else if (action === "crouch") fightInput.crouch = true;
         else if (action === "left") fightInput.move = -1;
         else if (action === "right") fightInput.move = 1;
         else fightInput[action] = true;
       }}
       onPointerUp={() => {
         if (action === "block") fightInput.block = false;
+        if (action === "crouch") fightInput.crouch = false;
         if (action === "left" || action === "right") fightInput.move = 0;
       }}
       onPointerLeave={() => {
         if (action === "block") fightInput.block = false;
+        if (action === "crouch") fightInput.crouch = false;
         if (action === "left" || action === "right") fightInput.move = 0;
       }}
     >
       <PixelIcon name={icon} size={className.includes("big") ? 44 : 32} />
+      {keyName && <kbd className="fight-key">{keyName}</kbd>}
     </button>
   );
 }
@@ -318,54 +322,42 @@ export default function FightMode({ params, onFinish }) {
         />
         <span>{special >= 100 ? "SPECIAL READY!" : "Special"}</span>
       </div>
-      {touch ? (
-        <div className="fight-controls">
-          <div className="fight-move">
+      {/* the same buttons on a laptop (click them, or use the keys printed on them) */}
+      <div className={`fight-controls ${touch ? "" : "fight-controls-keys"}`}>
+        <div className="fight-move">
+          {touch ? (
             <Joystick onMove={onStick} className="fight-stick" />
-          </div>
-          <div className="fight-actions">
-            <HoldButton
-              action="block"
-              icon="shield"
-              label="Block (hold)"
-              className="block"
-            />
-            <HoldButton action="dodge" icon="dodge" label="Dodge" />
-            <HoldButton action="jump" icon="up" label="Jump" />
-            <HoldButton action="kick" icon="boot" label="Kick" />
-            <HoldButton
-              action="punch"
-              icon="fist"
-              label="Punch"
-              className="big"
-            />
-            <HoldButton
-              action="special"
-              icon="bolt"
-              label="Special move"
-              className={special >= 100 ? "ready" : "dim"}
-            />
-            {fight.canThrow && (
-              <button
-                className="fight-btn throw ready"
-                aria-label="Throw"
-                title="Throw"
-                onPointerDown={(e) => {
-                  e.preventDefault();
-                  fightInput.throw = true;
-                }}
-              >
-                THROW
-              </button>
-            )}
-          </div>
+          ) : (
+            <>
+              <HoldButton action="left" icon="left" label="Walk left" keyName="A" />
+              <HoldButton action="crouch" icon="down" label="Squat (hold)" keyName="S" />
+              <HoldButton action="right" icon="right" label="Walk right" keyName="D" />
+            </>
+          )}
         </div>
-      ) : (
-        <div className="keyboard-hint">
-          A/D move · W jump · S squat · J punch · K kick · L block · Space dodge
-          · U special{fight.canThrow ? " · T THROW" : " · (stand by something to throw it: T)"}
+        <div className="fight-actions">
+          <HoldButton action="block" icon="shield" label="Block (hold)" className="block" keyName={touch ? null : "L"} />
+          <HoldButton action="dodge" icon="dodge" label="Dodge" keyName={touch ? null : "Space"} />
+          <HoldButton action="jump" icon="up" label="Jump" keyName={touch ? null : "W"} />
+          <HoldButton action="kick" icon="boot" label="Kick" keyName={touch ? null : "K"} />
+          <HoldButton action="punch" icon="fist" label="Punch" className="big" keyName={touch ? null : "J"} />
+          <HoldButton action="special" icon="bolt" label="Special move" className={special >= 100 ? "ready" : "dim"} keyName={touch ? null : "U"} />
+          {fight.canThrow && (
+            <button
+              className="fight-btn throw ready"
+              aria-label="Throw"
+              title="Throw"
+              onPointerDown={(e) => {
+                e.preventDefault();
+                fightInput.throw = true;
+              }}
+            >
+              THROW
+              {!touch && <kbd className="fight-key">T</kbd>}
+            </button>
+          )}
         </div>
-      )}
+      </div>
       {import.meta.env.DEV && (
         <button
           className="btn btn-small dev-end"

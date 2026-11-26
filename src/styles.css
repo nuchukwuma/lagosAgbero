@@ -5069,4 +5069,31 @@ svg .is-chase { fill: #e53935; stroke: #fff; stroke-width: 0.6; animation: map-p
   display: block;
   height: 100%;
   background: var(--danfo);
+/* fights on a laptop: the buttons are there too, with their keys */
+.fight-btn {
+  position: relative;
+}
+.fight-key {
+  position: absolute;
+  bottom: -6px;
+  right: -6px;
+  min-width: 22px;
+  padding: 1px 5px;
+  border-radius: 6px;
+  background: #1a1408;
+  color: var(--danfo);
+  border: 1px solid var(--danfo);
+  font: 800 11px/16px system-ui, sans-serif;
+  pointer-events: none;
+}
+.fight-controls-keys .fight-btn {
+  min-width: 54px;
+  height: 54px;
+}
+.fight-controls-keys .fight-btn.big {
+  min-width: 66px;
+  height: 66px;
+}
+.fight-controls-keys .fight-actions {
+  max-width: 330px;
 }
