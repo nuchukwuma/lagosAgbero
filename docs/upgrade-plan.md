@@ -135,7 +135,19 @@ missions in `stealthLogic.js`, each with tests on its real map):
   any order before the 90-second clock and before two rival bettors' drivers
   (who route along the avenues round the roadblocks); boosts, police
   roadblocks, alley shortcuts with carts, a radar, a chase camera.
-Both are in the Games tab and are Lagos Online duels. Next: the rest of the list, then elections and turf wars.
+- **Course runs** (`src/game/modes/course/`): one engine for the games that
+  are "get down this winding way in one piece", each in its own 3D scene (the
+  way drawn as a ribbon, its banks and what stands on them, a chase camera):
+  - **Creek Skiff Run** (Port Harcourt): a speedboat down mangrove creeks,
+    floating logs and drums, boost arrows, two rival boats closing in.
+  - **Customs Checkpoint Breakout** (Computer Village): a container truck down
+    the expressway, customs lines with one lane open, tyre spikes, police cars.
+  - **Market Cart Dash** (Computer Village): a loaded pushcart through the
+    market; corner too fast and crates fall; shoppers and Task Force lines.
+  - **Convoy Escort** (Abuja): drive ahead of the convoy and ram the blockers
+    off the road before it reaches them.
+All are in the Games tab and are Lagos Online duels (same seed, same course).
+Next: Estate Gate & Drone Dodge, Turf Flag Brawl, then elections and turf wars.
 
 - Abuja Big Boy: Beat-the-Bet Wire Sprint (driving checkpoints), Penthouse
   Raid (stealth with heavy loot), Convoy Escort (pursuit).

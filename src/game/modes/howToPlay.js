@@ -61,6 +61,22 @@ const STORY_MODES = {
     title: 'Paper-Drop Relay',
     rules: ['Drop a sealed packet at each drop zone (the library, the chapel, the field): DROP IT.', 'Then get to the senate building before the exam bell.', 'Security walks the grounds with torches: stay out of the beams. The minimap and the green rings show the zones.'],
   }),
+  creekRun: () => ({
+    title: 'Creek Skiff Run',
+    rules: ['A speedboat down the Port Harcourt creeks to the pick-up point, two rival boats behind you. If one comes alongside, it is over.', 'Floating logs and drums hole the boat: four hits and she sinks. Blue arrows give a burst of speed.', 'Bends push you to the outside bank: steer into them.', 'Arrows / WASD: steer, gas, brake (Space brakes). On a phone: the pedals.'],
+  }),
+  customsBreakout: () => ({
+    title: 'Customs Checkpoint Breakout',
+    rules: ['A container truck down the expressway out of Computer Village, before they radio ahead.', 'Every customs line has one lane open, under the green gantry. Barriers, tyre spikes and police cars dent the truck: five and it is finished.', 'The truck is wide and slow to turn: line up early.', 'Arrows / WASD: steer, gas, brake (Space brakes). On a phone: the pedals.'],
+  }),
+  cartDash: () => ({
+    title: 'Market Cart Dash',
+    rules: ['Push a cart of six crates through the market lanes to the shop before it closes.', 'Corner too fast or swerve hard and the load leans: a crate falls. Shoppers stop you dead; the Task Force seizes a crate if you hit their line.', 'Squeeze through the gap the Task Force leaves.', 'Arrows / WASD: steer, gas, brake (Space brakes). On a phone: the pedals.'],
+  }),
+  convoyEscort: () => ({
+    title: 'Convoy Escort',
+    rules: ["Drive ahead of Oga's convoy through Maitama. Red cars pull out to block the road: ram them off, fast (over 30 km/h).", 'Every blocker the convoy runs into costs it a car; lose all three and it is stuck.', 'Stay ahead of the convoy: you can only clear what is in front of it.', 'Arrows / WASD: steer, gas, brake (Space brakes). On a phone: the pedals.'],
+  }),
   wireSprint: () => ({
     title: 'Beat-the-Bet Wire Sprint',
     rules: [

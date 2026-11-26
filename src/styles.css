@@ -5042,6 +5042,17 @@ svg .is-chase { fill: #e53935; stroke: #fff; stroke-width: 0.6; animation: map-p
   color: #fff;
   font-size: 14px;
 }
+.course-progress {
+  align-items: center;
+  min-width: 190px;
+}
+.course-progress span {
+  font-size: 13px;
+}
+.sprint-drops li.course-tip {
+  color: #ff5a4a;
+  font-weight: 700;
+}
 .stealth-work {
   align-items: center;
   color: var(--danfo);

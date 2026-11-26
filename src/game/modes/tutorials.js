@@ -31,6 +31,22 @@ export const TUTORIALS = {
     { at: null, text: 'The yellow patch in front of a guard is his torch. Inside it a ? fills over his head; when it is full he runs for you. Containers, bins and walls block his view.' },
     { at: null, text: 'Come up behind a guard who has not seen you: TAKE DOWN appears (or press E). He sleeps till morning and drops his money.' },
   ],
+  creekRun: [
+    { at: '.sprint-pedals', text: 'Steer with ◀ ▶, GAS and BRAKE (or the arrows / WASD, Space to brake).' },
+    { at: '.sprint-hud', text: 'The clock, your speed, how far down the creek you are, how many more hits the boat can take, and how close the rival boats are.' },
+  ],
+  customsBreakout: [
+    { at: '.sprint-pedals', text: 'Steer with ◀ ▶, GAS and BRAKE (or the arrows / WASD, Space to brake).' },
+    { at: '.sprint-hud', text: 'The clock, your speed, how far you have got, and how many more dents the truck can take. Aim for the open lane under each green gantry.' },
+  ],
+  cartDash: [
+    { at: '.sprint-pedals', text: 'Steer with ◀ ▶, PUSH and BRAKE (or the arrows / WASD, Space to brake).' },
+    { at: '.sprint-hud', text: 'The clock, how far to the shop, and the crates still on the cart. LEANING! means slow down now or lose a crate.' },
+  ],
+  convoyEscort: [
+    { at: '.sprint-pedals', text: 'Steer with ◀ ▶, GAS and BRAKE (or the arrows / WASD, Space to brake).' },
+    { at: '.sprint-hud', text: 'How far the convoy has got, how many of its cars are still fine, and how far ahead of it you are. Ram the red blockers off before it reaches them.' },
+  ],
   wireSprint: [
     { at: '.sprint-pedals', text: 'Steer with ◀ ▶, GAS and BRAKE (or the arrows / WASD, Space to brake).' },
     { at: '.sprint-radar', text: 'The radar, north up: green dots are the drops, red the rivals, yellow you. Red marks are police roadblocks.' },
