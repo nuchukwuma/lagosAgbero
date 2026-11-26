@@ -157,7 +157,14 @@ All are in the Games tab and are Lagos Online duels (same seed, same course).
   they mark you, ring the alarm and follow you). In past the gate camera,
   tear the page out of the gate log, plant a tracker on the Chairman's SUV,
   out to the keke.
-Next: Turf Flag Brawl, the other districts, then elections and turf wars.
+- **Turf Flag Brawl** (Port Harcourt, `modes/turf/`): a creekside yard at dusk
+  in its own 3D scene, three flags, your crew of three against the
+  Barracudas (fictional). Stand in a ring to raise your colour; held flags
+  score; SHOVE knocks them back, and off the yard they go in the creek for a
+  few seconds. First to 90 or ahead after two minutes.
+That completes the fifteen 3D games on the list. Next: the other districts
+(Maitama/Wuse, the Port Harcourt creek, Computer Village), then elections,
+turf wars and the other multiplayer modes, then the new story arcs.
 
 - Abuja Big Boy: Beat-the-Bet Wire Sprint (driving checkpoints), Penthouse
   Raid (stealth with heavy loot), Convoy Escort (pursuit).

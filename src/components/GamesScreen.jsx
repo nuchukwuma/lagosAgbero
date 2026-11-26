@@ -26,6 +26,7 @@ const ACTION = [
   { id: 'fight', mode: 'fight', label: 'Street Fight', blurb: 'A new opponent every time', params: () => ({ opponent: pick(FIGHTERS), difficulty: 1 }), best: () => (fightRecord().won ? `${fightRecord().won} won` : null) },
   { id: 'dance', mode: 'dance', label: 'Dance Battle', blurb: 'Hit the arrows on the beat', params: () => ({ name: pick(['Sweet Mother', 'DJ Jollof', 'Shaku Queen', 'Azonto Kid']), prize: 5000 }) },
   { id: 'wireSprint', mode: 'wireSprint', label: 'Beat-the-Bet Wire Sprint', blurb: '3D race across Wuse: three drops before the bet closes', params: () => ({}) },
+  { id: 'turfBrawl', mode: 'turfBrawl', label: 'Turf Flag Brawl', blurb: '3D: three flags on a creek yard; shove their crew into the water', params: () => ({ seed: Math.floor(Math.random() * 1000) }) },
   { id: 'creekRun', mode: 'creekRun', label: 'Creek Skiff Run', blurb: '3D: a speedboat down the Port Harcourt creeks, rivals behind', params: () => ({ seed: Math.floor(Math.random() * 1000) }) },
   { id: 'customsBreakout', mode: 'customsBreakout', label: 'Customs Checkpoint Breakout', blurb: '3D: a container truck through the customs lines', params: () => ({ seed: Math.floor(Math.random() * 1000) }) },
   { id: 'cartDash', mode: 'cartDash', label: 'Market Cart Dash', blurb: '3D: push the loaded cart through the market, keep the crates', params: () => ({ seed: Math.floor(Math.random() * 1000) }) },

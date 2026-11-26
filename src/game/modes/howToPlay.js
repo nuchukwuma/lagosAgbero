@@ -70,6 +70,16 @@ const STORY_MODES = {
     title: 'Paper-Drop Relay',
     rules: ['Drop a sealed packet at each drop zone (the library, the chapel, the field): DROP IT.', 'Then get to the senate building before the exam bell.', 'Security walks the grounds with torches: stay out of the beams. The minimap and the green rings show the zones.'],
   }),
+  turfBrawl: () => ({
+    title: 'Turf Flag Brawl',
+    rules: [
+      'A creekside yard in Port Harcourt: three flags, your crew of three against theirs.',
+      "Stand in a flag's ring with none of them in it and your colour goes up (faster with two of you). Both sides in the ring: it does not move.",
+      'A flag you hold scores a point a second. First to 90, or ahead after two minutes, takes the turf.',
+      'SHOVE (Space or E) knocks them back; shoved off the yard, they are in the creek and out for a few seconds. So are you.',
+      'WASD / arrows to move. On a phone: the stick and SHOVE.',
+    ],
+  }),
   creekRun: () => ({
     title: 'Creek Skiff Run',
     rules: ['A speedboat down the Port Harcourt creeks to the pick-up point, two rival boats behind you. If one comes alongside, it is over.', 'Floating logs and drums hole the boat: four hits and she sinks. Blue arrows give a burst of speed.', 'Bends push you to the outside bank: steer into them.', 'Arrows / WASD: steer, gas, brake (Space brakes). On a phone: the pedals.'],

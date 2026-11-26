@@ -26,6 +26,7 @@ export const DUEL_GAMES = {
   raidEscape: { name: 'EFCC Raid Escape', kind: 'duel', mode: 'raidEscape' },
   wireSprint: { name: 'Wire Sprint', kind: 'duel', mode: 'wireSprint' },
   creekRun: { name: 'Creek Skiff Run', kind: 'duel', mode: 'creekRun' },
+  turfBrawl: { name: 'Turf Flag Brawl', kind: 'duel', mode: 'turfBrawl' },
   customsBreakout: { name: 'Customs Breakout', kind: 'duel', mode: 'customsBreakout' },
   cartDash: { name: 'Market Cart Dash', kind: 'duel', mode: 'cartDash' },
   convoyEscort: { name: 'Convoy Escort', kind: 'duel', mode: 'convoyEscort' },

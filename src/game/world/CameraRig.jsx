@@ -136,11 +136,11 @@ export default function CameraRig({ mode = 'follow', speaker = null, ceiling = n
     if (mode === 'chase' && playerState.chaseView) {
       // behind a car that can face any way (the Wire Sprint): pulls back as the speed rises
       const v = playerState.chaseView
-      const back = (portrait ? 11 : 9) + Math.abs(v.speed || 0) * 0.16
+      const back = v.back ?? (portrait ? 11 : 9) + Math.abs(v.speed || 0) * 0.16
       const fx = Math.sin(v.heading)
       const fz = Math.cos(v.heading)
       tmpLook.set(v.x + fx * 8, 1.4, v.z + fz * 8)
-      tmpPos.set(v.x - fx * back, portrait ? 6.2 : 4.8, v.z - fz * back)
+      tmpPos.set(v.x - fx * back, v.up ?? (portrait ? 6.2 : 4.8), v.z - fz * back)
       const t2 = 1 - Math.exp(-delta * 5)
       camera.position.lerp(tmpPos, t2)
       lookAt.lerp(tmpLook, t2)

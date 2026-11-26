@@ -31,6 +31,11 @@ export const TUTORIALS = {
     { at: null, text: 'The yellow patch in front of a guard is his torch. Inside it a ? fills over his head; when it is full he runs for you. Containers, bins and walls block his view.' },
     { at: null, text: 'Come up behind a guard who has not seen you: TAKE DOWN appears (or press E). He sleeps till morning and drops his money.' },
   ],
+  turfBrawl: [
+    { at: '.turf-controls', text: 'Move with the stick (or WASD / arrows). SHOVE (or Space / E) knocks the other crew back: off the yard and into the creek, and they are out for a few seconds.' },
+    { at: '.sprint-hud', text: 'The clock, the score (yours red, theirs blue, first to 90) and the three flags: ours, theirs, contested, or how far up the pole.' },
+    { at: null, text: 'Stand in a flag ring with none of them in it to raise your colour. A held flag scores a point every second.' },
+  ],
   creekRun: [
     { at: '.sprint-pedals', text: 'Steer with ◀ ▶, GAS and BRAKE (or the arrows / WASD, Space to brake).' },
     { at: '.sprint-hud', text: 'The clock, your speed, how far down the creek you are, how many more hits the boat can take, and how close the rival boats are.' },
