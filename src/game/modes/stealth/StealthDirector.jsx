@@ -280,9 +280,12 @@ export default function StealthDirector({ layout }) {
       const people = mm.guards.filter((g) => !g.fixed)
       const left = people.filter((g) => g.state !== 'down').length
       const item = mm.canGrab !== false ? mm.loot[mm.canGrab] : null
+      // where to go next (the minimap): the nearest thing still to do, or the way out
+      const todo = mm.loot.filter((l) => !l.taken).sort((a, b) => Math.hypot(a.x - playerState.position.x, a.z - playerState.position.z) - Math.hypot(b.x - playerState.position.x, b.z - playerState.position.z))[0]
+      const target = mm.open || !todo ? { x: mm.cfg.exit.x, z: mm.cfg.exit.z, label: mm.cfg.exitLabel || 'The way out' } : { x: todo.x, z: todo.z, label: todo.label }
       const work = mm.working ? { label: mm.loot[mm.working.index].label, p: mm.working.t / mm.loot[mm.working.index].work } : null
       useStealth.setState({
-        hud: { time: mm.time, left, total: people.length, cameras: mm.guards.length - people.length, grabVerb: item?.verb || null, grabLabel: item?.label || null, working: work, tries: mm.tries, cash: mm.cash, open: mm.open, canTakedown: mm.canTakedown, canGrab: mm.canGrab, hasLoot: mm.hasLoot, spotted: mm.spotted, taken: mm.loot.flatMap((l, i) => (l.taken ? [i] : [])), lootLeft: mm.loot.filter((l) => !l.taken).length, carried: mm.carried, waiting: mm.guards.filter((g) => g.wait > 0).length, caught: mm.caughtT > 0, chased: mm.guards.some((g) => g.state === 'chase') },
+        hud: { target, time: mm.time, left, total: people.length, cameras: mm.guards.length - people.length, grabVerb: item?.verb || null, grabLabel: item?.label || null, working: work, tries: mm.tries, cash: mm.cash, open: mm.open, canTakedown: mm.canTakedown, canGrab: mm.canGrab, hasLoot: mm.hasLoot, spotted: mm.spotted, taken: mm.loot.flatMap((l, i) => (l.taken ? [i] : [])), lootLeft: mm.loot.filter((l) => !l.taken).length, carried: mm.carried, waiting: mm.guards.filter((g) => g.wait > 0).length, caught: mm.caughtT > 0, chased: mm.guards.some((g) => g.state === 'chase') },
         ...(mm.over && !useStealth.getState().ended ? { ended: { over: true } } : {}),
       })
     }
@@ -300,7 +303,7 @@ export default function StealthDirector({ layout }) {
           <Beam g={g} />
         </group>
       ))}
-      <Gate open={open} at={m.cfg.exit} label={m.cfg.goal === 'loot' ? 'GET OUT' : 'BACK GATE'} hideShut={m.cfg.goal === 'loot'} />
+      <Gate open={open} at={m.cfg.exit} label={m.cfg.exitLabel || (m.cfg.goal === 'loot' ? 'GET OUT' : 'BACK GATE')} hideShut={m.cfg.goal === 'loot'} />
       {m.loot.map((item, i) => (
         <Loot key={`${attempt}-${i}`} item={item} taken={taken.includes(i)} />
       ))}

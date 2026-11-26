@@ -25,7 +25,7 @@ import StealthMode from './stealth/StealthMode.jsx'
 import ShrineHeistMode from './stealth/ShrineHeistMode.jsx'
 import RaidEscapeMode from './stealth/RaidEscapeMode.jsx'
 import WireSprintMode from './wireSprint/WireSprintMode.jsx'
-import { PenthouseRaidMode, WarehouseHeistMode, ExamSneakMode, ServerBreakMode } from './stealth/MissionModes.jsx'
+import { PenthouseRaidMode, WarehouseHeistMode, ExamSneakMode, ServerBreakMode, HostelDashMode, PaperRelayMode } from './stealth/MissionModes.jsx'
 
 export const MODES = {
   feeCollection: FeeCollectionMode,
@@ -49,6 +49,8 @@ export const MODES = {
   warehouseHeist: WarehouseHeistMode, // Computer Village: container aisles, night watchmen
   examSneak: ExamSneakMode, // campus: move in an invigilator's sightline and it's over
   serverBreak: ServerBreakMode, // Lekki: breakers and drives before the lockdown
+  hostelDash: HostelDashMode, // campus at night: the meet-up to your hostel, past security
+  paperRelay: PaperRelayMode, // campus at night: three sealed packets to three drop zones before the bell
   wireSprint: WireSprintMode, // Beat-the-Bet Wire Sprint: a race across a Wuse street grid (its own 3D scene)
 }
 
@@ -56,11 +58,11 @@ export const MODES = {
 export const FULLSCREEN_MODES = new Set(['dance', ...Object.keys(ARCADE_MODES)])
 
 // Modes played inside the 3D street (the player walks with joystick/keys).
-export const WORLD_MODES = new Set(['feeCollection', 'chase', 'fight', 'runner', 'conductor', 'drive', 'sneak', 'shrineHeist', 'raidEscape', 'wireSprint', 'penthouseRaid', 'warehouseHeist', 'examSneak', 'serverBreak'])
+export const WORLD_MODES = new Set(['feeCollection', 'chase', 'fight', 'runner', 'conductor', 'drive', 'sneak', 'shrineHeist', 'raidEscape', 'wireSprint', 'penthouseRaid', 'warehouseHeist', 'examSneak', 'serverBreak', 'hostelDash', 'paperRelay'])
 
 export { worldForMode } from './modeWorlds.js' // modes with a world of their own (Back Gate: the campus)
 
-export const PLANNED_MODES = [...Object.keys(ARCADE_MODES), 'penthouseRaid', 'warehouseHeist', 'examSneak', 'serverBreak', 'wireSprint', 'sneak', 'shrineHeist', 'raidEscape', 'chase', 'fight', 'runner', 'raid', 'conductor', 'feeCollection', 'begging', 'rally', 'initiation', 'drive', 'bluff', 'exam', 'haggle', 'dance', 'shop']
+export const PLANNED_MODES = [...Object.keys(ARCADE_MODES), 'penthouseRaid', 'warehouseHeist', 'examSneak', 'serverBreak', 'hostelDash', 'paperRelay', 'wireSprint', 'sneak', 'shrineHeist', 'raidEscape', 'chase', 'fight', 'runner', 'raid', 'conductor', 'feeCollection', 'begging', 'rally', 'initiation', 'drive', 'bluff', 'exam', 'haggle', 'dance', 'shop']
 
 export function modeComponent(name) {
   return MODES[name] || StandInMode

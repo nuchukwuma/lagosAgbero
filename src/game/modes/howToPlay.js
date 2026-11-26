@@ -53,6 +53,14 @@ const STORY_MODES = {
       'Security walks the aisles; a camera watches the far corner and rings the alarm if it sees you.',
     ],
   }),
+  hostelDash: () => ({
+    title: 'Midnight Hostel Dash',
+    rules: ['From the syndicate meet-up behind the senate to your hostel door (the green ring) before roll call.', 'Campus security walks the grounds with torches: stay out of the beams. Running is quicker, but they hear it.', 'Containers, bins and walls block their view. From behind, a guard who has not seen you can be taken down.'],
+  }),
+  paperRelay: () => ({
+    title: 'Paper-Drop Relay',
+    rules: ['Drop a sealed packet at each drop zone (the library, the chapel, the field): DROP IT.', 'Then get to the senate building before the exam bell.', 'Security walks the grounds with torches: stay out of the beams. The minimap and the green rings show the zones.'],
+  }),
   wireSprint: () => ({
     title: 'Beat-the-Bet Wire Sprint',
     rules: [

@@ -241,6 +241,42 @@ MISSIONS.serverBreak = {
   texts: { money: 35000, won: 'Out before the lockdown.', wonLine: 'Three breakers down, two drives in your pocket, and a server room full of very confused lights.', lost: 'The lockdown doors sealed.', caught: 'Security walks you to the lobby. Slowly.' },
 }
 
+// Campus at night, on foot (Sort or Carryover): the same grounds and cover as Back Gate.
+MISSIONS.hostelDash = {
+  id: 'hostelDash',
+  world: 'royalCrest',
+  start: { x: -30, z: -27, facing: 0 },
+  exit: { x: -36, z: 28 },
+  exitRadius: 2.5,
+  exitLabel: 'YOUR HOSTEL',
+  cover: COVER,
+  routes: ROUTES,
+  goal: 'reach', // just get there
+  time: 100,
+  texts: { money: 8000, won: 'In your bed before roll call.', wonLine: 'From the syndicate meet-up to your bunk, and security never saw your face.', lost: 'Lights on in the hostel: you are not in your bed.', caught: 'Security takes your ID card.' },
+}
+MISSIONS.paperRelay = {
+  id: 'paperRelay',
+  world: 'royalCrest',
+  start: { x: 6, z: -12, facing: 0 },
+  exit: { x: 0, z: -27 },
+  exitRadius: 3,
+  exitLabel: 'THE SENATE',
+  cover: COVER,
+  routes: [ROUTES[4], ROUTES[2], ROUTES[1], ROUTES[5], ROUTES[0], ROUTES[3]],
+  minGuards: 3,
+  extraGuards: 2,
+  goal: 'loot',
+  loot: [
+    { x: 32, z: -27, label: 'DROP: THE LIBRARY', verb: 'DROP IT', weight: 0 },
+    { x: 50, z: 27, label: 'DROP: THE CHAPEL', verb: 'DROP IT', weight: 0 },
+    { x: -28, z: 14, label: 'DROP: THE FIELD', verb: 'DROP IT', weight: 0 },
+  ],
+  time: 150,
+  seeRange: 9,
+  texts: { money: 12000, won: 'Every packet delivered.', wonLine: 'Three sealed envelopes where they needed to be, and you at the senate building before the exam bell.', lost: 'The exam bell rang.', caught: 'Security found the packets on you.' },
+}
+
 export const missionOf = (id) => MISSIONS[id] || MISSIONS.backGate
 /** A mission's loot as a list (one thing or several). */
 export const lootOf = (cfg) => (cfg.loot ? (Array.isArray(cfg.loot) ? cfg.loot : [cfg.loot]) : [])
@@ -428,7 +464,7 @@ export function createMission(layout, params = {}, seed = 1, missionId = 'backGa
     startTries: params.tries ?? 3,
     cash: 0,
     takedowns: 0,
-    open: false, // the way out (all guards asleep, or the loot in hand)
+    open: cfg.goal === 'reach', // the way out (all guards asleep, the loot in hand, or just there)
     over: false,
     won: false,
     caughtT: 0, // seconds since you were caught (the screen flashes)

@@ -28,6 +28,8 @@ export const DUEL_GAMES = {
   warehouseHeist: { name: 'Warehouse Heist', kind: 'duel', mode: 'warehouseHeist' },
   examSneak: { name: 'Exam-Hall Sneak', kind: 'duel', mode: 'examSneak' },
   serverBreak: { name: 'Server-Room Breakers', kind: 'duel', mode: 'serverBreak' },
+  hostelDash: { name: 'Midnight Hostel Dash', kind: 'duel', mode: 'hostelDash' },
+  paperRelay: { name: 'Paper-Drop Relay', kind: 'duel', mode: 'paperRelay' },
   akara: { name: 'Akara Fry', kind: 'duel', mode: 'akara' },
   penalty: { name: 'Penalty Shoot-out', kind: 'duel', mode: 'penalty' },
   traffic: { name: 'Go-Slow', kind: 'duel', mode: 'traffic' },

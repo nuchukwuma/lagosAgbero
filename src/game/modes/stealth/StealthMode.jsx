@@ -84,6 +84,28 @@ const TEXT = {
     clockIcon: '📝',
     share: { kicker: 'Sort or Carryover · Royal Crest', title: 'Sorted the exam', tone: 'neon' },
   },
+  hostelDash: {
+    title: 'Midnight Hostel Dash',
+    intro: 'The syndicate meet-up ran late. Roll call is at midnight and campus security is out with torches. Get from the meet-up behind the senate to your hostel without being seen.',
+    goal: 'Reach your hostel door (the green ring) before roll call.',
+    home: 'the meet-up',
+    go: 'Run',
+    brief: 'announce_campus',
+    panel: 'HOSTEL DASH',
+    clockIcon: '🕛',
+    share: { kicker: 'Sort or Carryover · Royal Crest', title: 'Made roll call', tone: 'neon' },
+  },
+  paperRelay: {
+    title: 'Paper-Drop Relay',
+    intro: 'Three sealed packets, three drop zones: the library, the chapel, the field. Then to the senate building before the exam bell. Campus security is about.',
+    goal: 'Drop a packet at each of the three zones, then get to the senate building.',
+    home: 'the quad',
+    go: 'Go',
+    brief: 'announce_campus',
+    panel: 'PAPER DROPS',
+    clockIcon: '🔔',
+    share: { kicker: 'Sort or Carryover · Royal Crest', title: 'Every packet delivered', tone: 'neon' },
+  },
   serverBreak: {
     title: 'Server-Room Breakers',
     intro: 'A Lekki tech hub, after hours. Flip the three overload breakers and pull the two drives before the lockdown doors seal. Security sweeps the aisles; a camera watches the far corner.',
@@ -234,7 +256,9 @@ export default function StealthMode({ params: given = {}, onFinish, mission: mis
         </div>
         <div className="fee-row">
           <span>
-            {TEXT[id] && !['raidEscape', 'shrineHeist', 'backGate'].includes(id)
+            {id === 'hostelDash'
+              ? `To your hostel · security awake: ${hud.left} of ${hud.total}`
+              : TEXT[id] && !['raidEscape', 'shrineHeist', 'backGate'].includes(id)
               ? hud.hasLoot
                 ? 'All done: get out!'
                 : `Still to do: ${hud.lootLeft ?? '?'} · guards awake: ${hud.left} of ${hud.total}${hud.cameras ? ` · ${hud.cameras} camera${hud.cameras > 1 ? 's' : ''}` : ''}`

@@ -172,7 +172,7 @@ describe('EFCC Raid Escape: the duplex', () => {
 })
 
 describe('more missions on the same engine', () => {
-  for (const id of ['penthouseRaid', 'warehouseHeist', 'examSneak', 'serverBreak']) {
+  for (const id of ['penthouseRaid', 'warehouseHeist', 'examSneak', 'serverBreak', 'hostelDash', 'paperRelay']) {
     it(`${id}: start, every objective, the way out and every round reachable; doing it all wins`, () => {
       const cfg = MISSIONS[id]
       const L = getLayout(cfg.world, false)
